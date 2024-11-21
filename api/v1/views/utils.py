@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """This modules defines helper function for API"""
-from flask import request, jsonify
+from flask import abort, request, jsonify
 from datetime import timedelta
 from os import getenv
 import sib_api_v3_sdk
@@ -88,9 +88,6 @@ def role_required(roles: List[str]) -> Callable[[F], F]:
             Args:
                 *args: Positional arguments passed to the decorated function.
                 **kwargs: Keyword arguments passed to the decorated function.
-
-            Returns:
-                Tuple[Dict, int]: JSON response and HTTP status code.
             """
             # Extract claims and user identity
             claims = get_jwt()
@@ -100,9 +97,7 @@ def role_required(roles: List[str]) -> Callable[[F], F]:
 
             # Check if the user's role is allowed
             if user_role not in roles:
-                return jsonify(
-                    {"error": "Forbidden: insufficient permissions"}
-                ), 403
+                abort(403)
 
             # Pass user_id and allow kwargs to include dynamic route arguments
             return func(*args, **kwargs)
