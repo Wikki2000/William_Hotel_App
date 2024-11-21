@@ -24,7 +24,7 @@ def login_user(email_or_username: str
     user = (
         storage.get_by(User, email=email_or_username)
         if "@" in email_or_username else
-        storage.get_by(User, user=email_or_username)
+        storage.get_by(User, username=email_or_username)
     )
     return user
 
@@ -59,8 +59,10 @@ def login():
     user.is_active = True
     storage.save()
 
-    # Create JWT token
-    access_token = create_access_token(identity=user.id)
+    # Create JWT token with addditional claims
+    access_token = create_access_token(
+        identity=user.id, additional_claims={"role": user.role}
+    )
 
     # Return response with aceess token
     response =  jsonify(
