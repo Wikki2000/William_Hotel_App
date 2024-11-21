@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """Setuo Flask Appplication."""
-from flask import Flask, redirect, url_for
+from flask import Flask, redirect, url_for, jsonify
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flasgger import Swagger
@@ -24,6 +24,24 @@ Swagger(app)
 # Register blueprint
 app.register_blueprint(api_views, url_prefix="/api/v1")
 app.register_blueprint(app_views, url_prefix="/app")
+
+
+@app.errorhandler(404)
+def not_found_error(error):
+    """Not Found error handler"""
+    return jsonify({"error": "Not Found"}), 404
+
+
+@app.errorhandler(401)
+def unauthorize(error):
+    """Unauthorized error handler"""
+    return redirect(url_for('app_views.login'))
+
+
+@app.errorhandler(403)
+def forbidden(error):
+    """Forbidden error handler"""
+    return jsonify({"error": "Forbidden Access"}), 403
 
 
 @jwt.expired_token_loader
