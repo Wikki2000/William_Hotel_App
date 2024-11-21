@@ -1,0 +1,110 @@
+#!/usr/bin/python3
+"""This modules defines helper function for API"""
+from flask import request, jsonify
+from datetime import timedelta
+from os import getenv
+import sib_api_v3_sdk
+from random import randint
+from dotenv import load_dotenv
+from models import storage
+from functools import wraps
+from flask_jwt_extended import get_jwt, jwt_required, get_jwt_identity
+from typing import Dict, Union, Optional, List, Tuple, Callable, TypeVar
+
+
+load_dotenv()   # Load environ variables
+F = TypeVar("F", bound=Callable[..., any])  # Generic type for callable
+
+
+# =================================================== #
+#               Email Sending Helper Function         #
+# =================================================== #
+def send_mail(mail: str, kwargs: Dict[str, str]) -> bool:
+    """Send token to email.
+
+    Args:
+        mail (string): The mail to be sent
+        kwargs (dict): Key-value pairs of recipient info.
+    
+    Return:
+        bool: True if email successfully delivered, else false.
+    """
+    config = sib_api_v3_sdk.Configuration()
+    config.api_key["api-key"] = getenv("MAIL_API_KEY")
+    SENDER_MAIL = getenv("SENDER_MAIL")
+    # Create an instance of the API class
+    api_instance = sib_api_v3_sdk.TransactionalEmailsApi(
+        sib_api_v3_sdk.ApiClient(config)
+    )
+
+    sender = {"name": "WIS_Grader", "email": getenv("SENDER_EMAIL")}
+    email_subject = "[Wis_Grader] Complete your registration"
+    recipient = [kwargs]
+
+    send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
+        to=recipient, sender=sender, subject=email_subject,
+        html_content=mail
+    )
+    try:
+        api_response = api_instance.send_transac_email(send_smtp_email)
+        return True
+    except Exception as e:
+        print(f"Error sending email: {e}")
+        return False
+    except Exception:
+        return False
+
+
+def read_html_file(file_path: str, name: str, token: str) -> str:
+    """Read email from file and substitue placeholder."""
+    with open(file_path, "r") as f:
+        content = f.read()
+
+    # Replace content with placeholder
+    content = content.replace("{{ name }}", name).replace("{{ token }}", token)
+    return content
+
+
+# =============================================#
+#       Authentication Helper Function         #
+# ============================================ #
+def role_required(roles: List[str]) -> Callable[[F], F]:
+    """
+    Decorator to enforce role-based access control for routes.
+
+    Args:
+        roles (List[str]): A list of roles allowed to access the route.
+
+    Returns:
+        Callable[[F], F]: The decorated function with access control.
+    """
+    def decorator(func: F) -> F:
+        @wraps(func)
+        @jwt_required()  # Ensures JWT authentication is applied
+        def wrapper(*args, **kwargs) -> Tuple[Dict, int]:
+            """
+            Wrapper function to validate user role and identity.
+
+            Args:
+                *args: Positional arguments passed to the decorated function.
+                **kwargs: Keyword arguments passed to the decorated function.
+
+            Returns:
+                Tuple[Dict, int]: JSON response and HTTP status code.
+            """
+            # Extract claims and user identity
+            claims = get_jwt()
+            user_id = get_jwt_identity()  # Retrieve the user ID
+            kwargs['user_id'] = user_id  # Inject as a keyword argument
+            user_role = claims.get("role")
+
+            # Check if the user's role is allowed
+            if user_role not in roles:
+                return jsonify(
+                    {"error": "Forbidden: insufficient permissions"}
+                ), 403
+
+            # Pass user_id and allow kwargs to include dynamic route arguments
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator
