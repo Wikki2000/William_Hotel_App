@@ -2,16 +2,20 @@
 """This modules defines helper function for API"""
 from flask import abort, request, jsonify
 from datetime import timedelta
-from os import getenv
+from os import environ
 import sib_api_v3_sdk
 from random import randint
 from dotenv import load_dotenv
 from models import storage
 from functools import wraps
 from flask_jwt_extended import get_jwt, jwt_required, get_jwt_identity
-from typing import Dict, Union, Optional, List, Tuple, Callable, TypeVar
+from typing import(
+    Any, Dict, Union, Optional, List, Tuple, Callable, TypeVar
+)
+from redis import Redis
 
 
+r = Redis(host="localhost", port=6379, db=0)  # Create Redis instance
 load_dotenv()   # Load environ variables
 F = TypeVar("F", bound=Callable[..., any])  # Generic type for callable
 
@@ -25,19 +29,19 @@ def send_mail(mail: str, kwargs: Dict[str, str]) -> bool:
     Args:
         mail (string): The mail to be sent
         kwargs (dict): Key-value pairs of recipient info.
-    
+
     Return:
         bool: True if email successfully delivered, else false.
     """
     config = sib_api_v3_sdk.Configuration()
-    config.api_key["api-key"] = getenv("MAIL_API_KEY")
-    SENDER_MAIL = getenv("SENDER_MAIL")
+    config.api_key["api-key"] = environ["MAIL_API_KEY"]
+    SENDER_MAIL = environ["SENDER_EMAIL"]
     # Create an instance of the API class
     api_instance = sib_api_v3_sdk.TransactionalEmailsApi(
         sib_api_v3_sdk.ApiClient(config)
     )
 
-    sender = {"name": "WIS_Grader", "email": getenv("SENDER_EMAIL")}
+    sender = {"name": "WIS_Grader", "email": environ["SENDER_EMAIL"]}
     email_subject = "[Wis_Grader] Complete your registration"
     recipient = [kwargs]
 
@@ -55,13 +59,22 @@ def send_mail(mail: str, kwargs: Dict[str, str]) -> bool:
         return False
 
 
-def read_html_file(file_path: str, name: str, token: str) -> str:
-    """Read email from file and substitue placeholder."""
+def read_html_file(
+        file_path: str, placeholders: Dict[Any, Any] = None
+) -> str:
+    """
+    Read email from file and substitue placeholder if given.
+
+    :placeholders - Dict. of placeholder (key) and value to be interpolated
+    :return - The email content of file
+    """
     with open(file_path, "r") as f:
         content = f.read()
 
     # Replace content with placeholder
-    content = content.replace("{{ name }}", name).replace("{{ token }}", token)
+    if placeholders:
+        for key, val in placeholders.items():
+            content = content.replace(f"[ {key} ]", val)
     return content
 
 
@@ -103,3 +116,52 @@ def role_required(roles: List[str]) -> Callable[[F], F]:
             return func(*args, **kwargs)
         return wrapper
     return decorator
+
+
+def generate_token(mins: int = 60) -> str:
+    """
+    Create random numbers and cache in redis db.
+
+    :mins - Expiration time in minute for token
+    :return - The token generated
+    """
+    expiring_time = timedelta(minutes=mins)
+    token = str(randint(100000, 999999))
+    r.setex(token, expiring_time, "valid")
+    return token
+
+
+def is_valid(token: str) -> bool:
+    """
+    Check if token is valid
+
+    :token - Token whooose validity is checked.
+    :return - True if token is valid, else false.
+    """
+    if r.get(token):
+        return True
+    return False
+
+def delete_token(token: str) -> bool:
+    """Remove cache token in redis
+    """
+    return r.delete(token)
+
+
+# =============================================#
+#       Common API Helper Function             #
+# ============================================ #
+def bad_request(
+    data: Dict, required_fields: List[Any]
+) -> Optional[Dict[str, str]]:
+    """Handle response for Bad Request (400) error.
+
+    :data - The request body to API endpoint.
+    :required_fields - Required fields in request body.
+    """
+    if not data:
+        return {"error": "Empty Request Body"}
+    for field in required_fields:
+        if not data.get(field):
+            return {"error": f"{field} is required"}
+    return None
