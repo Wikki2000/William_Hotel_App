@@ -13,10 +13,9 @@ from api.v1.views.utils import (
 
 
 @api_views.route("/account/reset-token", methods=["POST"])
-@swag_from(
-    "../documentation/auth/password_recovery/sent_pwd_reset_link.yml"
-)
+@swag_from('../documentation/auth/send_token.yml')
 def pwd_reset_token():
+    """Send OTP to email for password recovery"""
 
     # Handle missing field error
     data = request.get_json()
@@ -50,6 +49,7 @@ def pwd_reset_token():
 
 
 @api_views.route("/account/validate-token", methods=["POST"])
+@swag_from('../documentation/auth/validate_token.yml')
 def validate_token():
     """Check if token is valid"""
     data = request.get_json()
@@ -71,18 +71,18 @@ def validate_token():
 
 
 @api_views.route("/account/reset-password", methods=["PUT"])
-@swag_from(
-    "../documentation/auth/password_recovery/sent_pwd_reset_link.yml"
-)
+@swag_from('../documentation/auth/update_password.yml')
 def update_password():
     """Update new password to database as enter by user."""
     data = request.get_json()
 
     # Handle 400 error
-    required_fields = ["email"]
+    required_fields = ["password"]
     response = bad_request(data, required_fields)
     if response:
         return jsonify(response), 400
+
+    email = session.get("password")
 
     email = data.get("email")
     user = storage.get_by(User, email=email)
@@ -95,7 +95,4 @@ def update_password():
     storage.save()
     session.pop("email", None)
     delete_token(token)
-    return jsonify({
-        "status": "Success",
-        "message": "Password Reset Success"
-    }), 200
+    return jsonify({"message": "Password Reset Success"}), 200

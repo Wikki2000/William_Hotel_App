@@ -3,6 +3,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from models.base_model import Base
+from models.service import Service
 from dotenv import load_dotenv
 from os import getenv
 from typing import Type, Any, List
@@ -27,9 +28,13 @@ class Storage:
         url = f'mysql+mysqldb://{username}:{password}@localhost:5432/{database}'
         self.__engine = create_engine(url, pool_pre_ping=True)
         Base.metadata.create_all(self.__engine)
+        session_factory = sessionmaker(bind=self.__engine)
+        self.__session = scoped_session(session_factory)
+        """
         if not self.__session:
             session_factory = sessionmaker(bind=self.__engine)
             self.__session = scoped_session(session_factory)
+        """
 
     def refresh(self, obj: object) -> object:
         """Refresh to get current state
