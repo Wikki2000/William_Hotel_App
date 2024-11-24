@@ -27,7 +27,7 @@ class Config:
     SECRET_KEY = os.environ['FLASK_SECRET_KEY']
     JWT_SECRET_KEY = os.environ['JWT_SECRET_KEY']
     SWAGGER = {
-        "title": "ChatWik RESTful API",
+        "title": "William's Court and Suites Management System RESTful API",
         "uiversion": 3
     }
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)

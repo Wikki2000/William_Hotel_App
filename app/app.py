@@ -1,12 +1,10 @@
 #!/usr/bin/python3
 """Setuo Flask Appplication."""
 from flask import Flask, redirect, url_for, jsonify
-from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flasgger import Swagger
 from api.v1.views import api_views
 from app.routes import app_views
-from app.routes import web_static
 from app.config import Config
 from models.storage import Storage
 

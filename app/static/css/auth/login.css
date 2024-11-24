@@ -32,12 +32,13 @@ main {
 
 .login-design {
   width: 50%;
+  /* height: 100vh; */
   /* background-color: black; */
 }
 
 .login-content {
   width: 90%;
-  height: 779px;
+  height: 76%;
   margin: 103px 0 0 67px;
   border-radius: 15px;
   /* padding: 80px 0; */
@@ -48,7 +49,7 @@ main {
 
 .login-inner-box {
   width: 67%;
-  height: 453px;
+  height: 81%;
   margin: auto;
   padding: 120px 0;
 }
@@ -69,8 +70,9 @@ p {
 
 form {
   width: 61.39%;
-  margin: 72px auto 0;
+  margin: 32px auto 0 auto;
   position: relative;
+  text-align: center;
 }
 
 form > .error-box {
@@ -107,7 +109,6 @@ form > label {
 
 form > input,
 button {
-  width: 100%;
   height: 63px;
   border-radius: 40px;
 
@@ -116,6 +117,7 @@ button {
 form > input {
   border: 1px solid black;
   padding: 0 32px;
+  width: 84.6%;
 }
 
 form > input::placeholder {
@@ -142,13 +144,15 @@ a {
 }
 
 button {
-  margin: 93px 0 0 0;
-  border: 1px solid #F9CD63;
-  background-color: #FBBC05;
+  width: 100%;
+  margin: 32px 0 0 0;
+  border: 1px solid #000;
+  background-color: #000;
   font-size: 0.8125rem;
   line-height: 1.21875rem;
   font-weight: 600;
   cursor: pointer;
+  color: #FFF;
 }
 
 svg {
@@ -171,7 +175,7 @@ svg {
 }
 
 .transparent-boxes {
-  width: 215px;
+  width: 15%;
   height: 398px;
   border-radius: 50px;
   background: #D9D9D94D;
