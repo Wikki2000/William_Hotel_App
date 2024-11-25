@@ -2,13 +2,21 @@
 """This module models the storage of the authentication API"""
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
+
 from models.base_model import Base
 from models.service import Service
+from models.customer import Customer
+from models.drink import Drink
+from models.food import Food
+from models.room import Room
+from models.room_detail import RoomDetail
+
 from dotenv import load_dotenv
 from os import getenv
 from typing import Type, Any, List
 
 load_dotenv()
+
 
 class Storage:
     """ Defines storage model using SQLAlchemy. """

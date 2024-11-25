@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """This module models the storage of user details."""
 from datetime import datetime
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String, DateTime
 from sqlalchemy.orm import declarative_base
 from uuid import uuid4
 
@@ -10,6 +10,8 @@ Base = declarative_base()
 class BaseModel:
     """Define the class models for related method and attribute."""
     id = Column(String(60), primary_key=True, default=lambda: str(uuid4()))
+    created_at = Column(DateTime, default=datetime.utcnow())
+    updated_at = Column(DateTime, default=datetime.utcnow())
 
     def __str__(self):
         """String representation of objrct."""
