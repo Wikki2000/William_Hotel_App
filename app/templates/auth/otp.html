@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="/static/css/auth/otp.css?{{ cache_id }}"/>
-    <!-- <link rel="stylesheet" href="/app/static/css/auth/otp.css"/> -->
+    <!-- <link rel="stylesheet" href="/static/css/auth/otp.css?{{ cache_id }}"/> -->
+    <link rel="stylesheet" href="/app/static/css/auth/otp.css"/>
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script type="module" src="/static/js/auth/login.js?{{ cache_id }}"></script>
@@ -114,6 +114,7 @@
       </svg>
 
       <div id="complete-modal">
+        <a href="#" id="cancel-btn">&#128473</a>
         <h2>Enter Your OTP</h2>
         <p>Invalid or Expired Token</p>
         <button id="reset-btn" type="submit">Login</button>

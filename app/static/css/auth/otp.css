@@ -155,3 +155,11 @@ padding: 32px;
 #reset-btn {
   margin-top: 4%;
 }
+
+#cancel-btn {
+  color: #000;
+  position: absolute;
+  right: 5%;
+  top: 5%;
+  text-decoration: none;
+}
