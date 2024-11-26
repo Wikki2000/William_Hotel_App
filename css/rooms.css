@@ -67,20 +67,21 @@
   flex-direction: column;
   display: flex;
   background-color: var(--orange_a100);
-  width: 17.88rem;
+  width: 19.9%;
   height: 100vh;
   position: sticky !important;
   top: 0rem;
-  overflow: auto;
+  overflow: hidden;
 }
 
 
 .sidebar__logo-row {
   align-self: stretch;
+  height: 18.94%;
 }
 
 .sidebar__logo {
-  height: 12.13rem;
+  height: 100%;
   width: 100%;
   object-fit: cover;
 }
