@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """Handle Views of Authentication."""
-from flask import render_template, session
+from flask import render_template, request
 from app.routes import app_views
 from uuid import uuid4
 
@@ -26,8 +26,11 @@ def forgot_pwd():
 @app_views.route("/account/otp")
 def get_otp():
     """Render template for OTP"""
+
+    email = request.args.get("email")
+    data = {"email": email, "cache_id": uuid4()};
     return render_template(
-        f"{AUTH_TEMPLATES_DIRECTORY}/otp.html", cache_id=uuid4()
+        f"{AUTH_TEMPLATES_DIRECTORY}/otp.html", **data
     )
 
 @app_views.route("/account/reset-password")

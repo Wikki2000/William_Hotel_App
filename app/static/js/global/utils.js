@@ -85,3 +85,30 @@ export function getBaseUrl() {
     appBaseUrl: '/app'
   }
 }
+
+/**
+ * Go back to previous page.
+ *
+ * @param {string} iconId - The ID of icon to be click.
+ */
+export function goBack(iconId) {
+  $(`#${iconId}`).click(function() {
+    window.history.back();
+  });
+}
+
+/**
+ * Retrieve a query parameter value from the current page URL.
+ *
+ * This function extracts the value of a specified query parameter from the URL's search string.
+ *
+ * @param {string} param - The name of the query parameter to retrieve.
+ * @return {string | null} - The value of the query parameter if found, or `null` if not found.
+ */
+export function getQueryParam(param) {
+  // Create an instance of URLSearchParams from the current window's search string
+  const urlParams = new URLSearchParams(window.location.search);
+
+  // Retrieve and return the value of the specified parameter
+  return urlParams.get(param);
+}

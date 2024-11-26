@@ -8,8 +8,7 @@
     <!-- <link rel="stylesheet" href="/app/static/css/auth/otp.css"/> -->
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script type="module" src="/static/js/auth/login.js?{{ cache_id }}"></script>
-
+    <script type="module" src="/static/js/auth/confirmed_email.js?{{ cache_id }}"></script>
 
     <title>Enter OTP</title>
 
@@ -47,26 +46,25 @@
           <p>A verification code has been sent to you</p>
           <br>
           <br>
-          <p>Enter The Four Digit Code Sent To Jane doh@gmail.com</p>
+	  <p>Enter the six digit code sent to {{ email }}</p>
           <br>
-          <form action="POST">
+          <form id="otp-form">
             <div class="digits">
-              <input type="text" name="first-digit" id="first-digit" placeholder="2" maxlength= "1">
-              <input type="text" name="second-digit" id="second-digit" placeholder="2" maxlength= "1">
-              <input type="text" name="third-digit" id="third-digit" placeholder="3" maxlength= "1">
-              <input type="text" name="fourth-digit" id="fourth-digit" placeholder="5" maxlength= "1">
-              <input type="text" name="fifth-digit" id="fifth-digit" placeholder="6" maxlength= "1">
-              <input type="text" name="sixth-digit" id="sixth-digit" placeholder="1" maxlength= "1">
+              <input type="text" id="first-digit" placeholder="2" maxlength= "1">
+              <input type="text" id="second-digit" placeholder="2" maxlength= "1">
+              <input type="text" id="third-digit" placeholder="3" maxlength= "1">
+              <input type="text" id="fourth-digit" placeholder="5" maxlength= "1">
+              <input type="text" id="fifth-digit" placeholder="6" maxlength= "1">
+              <input type="text"id="sixth-digit" placeholder="1" maxlength= "1">
             </div>
             <br>
 
-            <p id="resend-p">Did not receive a mail? <a href="#">Resend OTP</a></p>
-            <button type="submit">Verify</button>
+            <p id="resend-p">Did not receive a mail? <a id="resend-otp" href="#">Resend OTP</a></p>
+            <button id="otp-btn">Verify</button>
           </form>
-
+	  <div class="loader"></div>
           
         </div>
-
 
       </div>
 
@@ -116,7 +114,7 @@
       <div id="complete-modal">
         <h2>Enter Your OTP</h2>
         <p>Invalid or Expired Token</p>
-        <button id="reset-btn" type="submit">Login</button>
+        <button id="resend__token-btn">Resend Code</button>
     </div>
 
     </section>
