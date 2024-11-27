@@ -1,0 +1,20 @@
+#!/usr/bin/python3
+"""Food Module"""
+from models.base_model import Base, BaseModel
+from sqlalchemy import Column, String, Boolean, Float, ForeignKey, Integer
+from sqlalchemy.orm import relationship
+from models.booking import Booking
+
+
+class Room(BaseModel, Base):
+    """Define class for storing drinks"""
+    __tablename__ = "rooms"
+    room_type =  Column(String(20), nullable=False)
+    is_reserved = Column(Boolean, default=False)
+    is_occupied = Column(Boolean, default=False)
+    unit_cost = Column(Float, nullable=False)
+    room_number = Column(Integer, nullable=False, unique=True)
+    service_id = Column(String(60), ForeignKey('services.id'), nullable=False)
+
+    books = relationship('Booking', backref='room',
+                         cascade='all, delete-orphan')
