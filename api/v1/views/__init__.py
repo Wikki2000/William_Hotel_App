@@ -7,3 +7,4 @@ api_views = Blueprint('api_views', __name__)
 from api.v1.views.auth.login import *
 from api.v1.views.auth.logout import *
 from api.v1.views.auth.password_recovery import *
+from api.v1.views.services import *

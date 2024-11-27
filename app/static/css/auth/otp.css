@@ -174,3 +174,11 @@ padding: 32px;
   0% {transform: rotate(0deg);}
   100% {transform: rotate(360deg);}
 }
+
+#cancel-btn {
+  color: #000;
+  position: absolute;
+  right: 5%;
+  top: 5%;
+  text-decoration: none;
+}

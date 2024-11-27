@@ -7,8 +7,8 @@ import requests
 from uuid import uuid4
 
 
-@app_views.route(f"/dashboard")
-@role_required(["dmin"])
-def dashboard(user_id: str):
+@app_views.route(f"/staff-dashboard")
+@role_required(["staff"])
+def dashboard(user_role: str, user_id: str):
     """Handle views for user dashboard."""
-    return jsonify({"user_id": user_id}), 200
+    return render_template("dashboard/user_dashboard.html")

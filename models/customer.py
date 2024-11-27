@@ -3,7 +3,7 @@
 from models.base_model import Base, BaseModel
 from sqlalchemy import Column, String, Boolean, DateTime
 from sqlalchemy.orm import relationship
-
+from models.booking import Booking
 
 class Customer(BaseModel, Base):
     """Define class for storing customers"""
@@ -13,3 +13,6 @@ class Customer(BaseModel, Base):
     gender = Column(String(30))
     phone = Column(String(30))
     customer_id = Column(String(30))
+
+    books = relationship('Booking', backref='customer',
+                         cascade='all, delete-orphan')

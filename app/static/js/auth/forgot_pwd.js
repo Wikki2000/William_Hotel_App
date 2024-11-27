@@ -21,9 +21,12 @@ $(document).ready(function () {
 
     ajaxRequest(url, "POST", data,
       (response) => {
-        window.location.href = APP_BASE_URL + `/account/otp?email=${encodeURIComponent(email)}`;
+	sessionStorage.setItem('email', email);
+        window.location.href = APP_BASE_URL + '/account/otp';
       },
       (error) => {
+	$('#error-box').show();
+	$('input[type="email"]').addClass('error');
         $('.loader').hide();
         $('#forgot-password').show();
       }

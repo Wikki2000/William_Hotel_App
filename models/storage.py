@@ -6,10 +6,11 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from models.base_model import Base
 from models.service import Service
 from models.customer import Customer
+from models.user import User
 from models.drink import Drink
 from models.food import Food
 from models.room import Room
-from models.room_detail import RoomDetail
+from models.booking import Booking
 
 from dotenv import load_dotenv
 from os import getenv

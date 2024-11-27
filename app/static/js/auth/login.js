@@ -27,17 +27,14 @@ $(document).ready(function () {
         localStorage.setItem('userName', response.username);
         localStorage.setItem('role', response.role)
 
-        const msg = 'Login Successfully';
-        alertBox(alertDivClass, msg, false);
-
+	$('input').addClass('correct-password');
         setTimeout(() => {
-          window.location.href = APP_BASE_URL + '/dashboard';
+          window.location.href = APP_BASE_URL + '/staff-dashboard';
         }, 2000);
       },
       (error) => {
-        const msg = 'Invalid Email or Password';
-        alertBox(alertDivClass, msg);
-
+	$('#error-box').show();
+	$('input').addClass('error-password');
         // Hide loader and display button to user on error
         $('.loader').hide();
         $('#signin-btn').show();

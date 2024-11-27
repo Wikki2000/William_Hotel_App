@@ -1,5 +1,5 @@
 from models import storage
-from models.user import User
+from models.booking import Booking
 
 
 attr = {

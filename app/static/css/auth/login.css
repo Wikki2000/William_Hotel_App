@@ -236,7 +236,15 @@ svg {
 /* .temp-svg-house > svg {
 position: absolute;
 } */
+.error-password {
+  background: #C63F3F66;
+  border: 1px solid #C63F3F
+}
 
+.correct-password {
+  background: #07FF3D69;
+  border: 1px solid #0EFC32
+}
 /* ==== Spiner animation while waiting for server response ==== */
 .loader {
   border: 6px solid #f3f3f3;

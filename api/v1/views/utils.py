@@ -105,8 +105,11 @@ def role_required(roles: List[str]) -> Callable[[F], F]:
             # Extract claims and user identity
             claims = get_jwt()
             user_id = get_jwt_identity()  # Retrieve the user ID
-            kwargs['user_id'] = user_id  # Inject as a keyword argument
             user_role = claims.get("role")
+
+            # # Inject as a keyword argument
+            kwargs['user_role'] = user_role
+            kwargs['user_id'] = user_id
 
             # Check if the user's role is allowed
             if user_role not in roles:

@@ -38,6 +38,7 @@ $(document).ready(function() {
     const url = API_BASE_URL + '/account/validate-token';
     ajaxRequest(url, "POST", data,
       (response) => {
+	sessionStorage.removeItem('email');
         window.location.href = APP_BASE_URL + '/account/reset-password';
       },
       (error) => {
@@ -52,7 +53,7 @@ $(document).ready(function() {
 
   // Handle resending of token
   $('#resend__token-btn, #resend-otp').click(function() {
-    const email = getQueryParam('email');
+    const email = sessionStorage.getItem('email');
     const data = JSON.stringify({ email: email });
     const url = API_BASE_URL + '/account/reset-token';
 
@@ -66,4 +67,10 @@ $(document).ready(function() {
       }
     );
   });
+
+  // Cancel the pop-up modal
+  $('#cancel-btn').click(function() {
+    $('#complete-modal').hide();
+  });
+
 });

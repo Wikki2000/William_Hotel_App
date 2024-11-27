@@ -6,6 +6,7 @@ from sqlalchemy import Column, String, Boolean, LargeBinary, DateTime
 from sqlalchemy.dialects.mysql import ENUM 
 from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
+from models.booking import Booking
 
 
 class User(BaseModel, Base):
@@ -31,6 +32,9 @@ class User(BaseModel, Base):
     portfolio = Column(String(1500), nullable=False)
     is_active = Column(Boolean, default=False)
     last_active = Column(DateTime)
+
+    books = relationship('Booking', backref='user',
+                         cascade='all, delete-orphan')
 
     # ===================== Method Definition ==================== #
     def hash_password(self):
