@@ -17,7 +17,10 @@
     <link rel="stylesheet" type="text/css" href="/static/css/staff_dashboard/room_service.css" />
     <link rel="stylesheet" type="text/css" href="/static/css/public/header.css" />
     <link rel="icon" type="image/x-icon" href="/static/images/public/hotel_logo.png" />
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script defer src="/static/js/staff_dashboard/room_service.js"></script>
+    <script defer src="/static/js/staff_dashboard/side_bar.js"></script>
   </head>
   <body>
     <!-- main content section -->
@@ -79,11 +82,11 @@
             </li>
           </ul>
           <div class="sidebar__profile-row">
-            <img src="/static/images/staff_dashboard/img_joseph_gonzalez.png" alt="Profile Image" class="sidebar__profile-image" />
+            <img src="/static/images/public/profile_photo_placeholder.png" alt="Profile Image" class="sidebar__profile-image" />
             <div class="sidebar__staff-profile">
               <div class="sidebar__name-column">
-                <h6 class="sidebar__name ui heading size-headingmd">Peter Johnson</h6>
-                <p class="ui text size-textxs">Peterjohson23@gmail.com</p>
+	        <h5 id="sidebar__name" class="sidebar__name ui heading size-headingmd"><!--Name will be dynamically be loaded--></h5>
+		<h6 id="sidebar__email" class="ui text size-textxs"><!--Dynamically load email--></h6>
               </div>
               <img
                 src="/static/images/public/vertical3colons.png"

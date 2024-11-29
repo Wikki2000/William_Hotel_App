@@ -10,62 +10,34 @@ document.addEventListener("DOMContentLoaded", () => {
         // Dummy data
         const data = [
             {
-              "image": "public/images/img_waldemar_3i3mteczkdi_unsplash.png",
+              "image": "/static/images/staff_dashboard/img_waldemar_3i3mteczkdi_unsplash.png",
               "roomType": "Deluxe Room",
               "roomNumber": "#212",
               "rate": "50,000",
               "status": "occupied"
             },
             {
-              "image": "public/images/img_rhema_kallianpu.png",
+              "image": "/static/images/staff_dashboard/img_rhema_kallianpu.png",
               "roomType": "Standard Room",
               "roomNumber": "#101",
               "rate": "30,000",
               "status": "available"
             },
             {
-              "image": "public/images/img_waldemar_3i3mteczkdi_unsplash.png",
+              "image": "/static/images/staff_dashboard/img_waldemar_3i3mteczkdi_unsplash.png",
               "roomType": "Deluxe Room",
               "roomNumber": "#212",
               "rate": "50,000",
               "status": "reserved"
             },
             {
-              "image": "public/images/another_room_image.png",
+              "image": "/static/images/staff_dashboardanother_room_image.png",
               "roomType": "Standard Room",
               "roomNumber": "#101",
               "rate": "30,000",
               "status": "available"
             },
-            {
-                "image": "public/images/img_waldemar_3i3mteczkdi_unsplash.png",
-                "roomType": "Deluxe Room",
-                "roomNumber": "#212",
-                "rate": "50,000",
-                "status": "occupied"
-              },
-              {
-                "image": "public/images/another_room_image.png",
-                "roomType": "Standard Room",
-                "roomNumber": "#101",
-                "rate": "30,000",
-                "status": "available"
-              },
-              {
-                "image": "public/images/img_waldemar_3i3mteczkdi_unsplash.png",
-                "roomType": "Deluxe Room",
-                "roomNumber": "#212",
-                "rate": "50,000",
-                "status": "occupied"
-              },
-              {
-                "image": "public/images/another_room_image.png",
-                "roomType": "Standard Room",
-                "roomNumber": "#101",
-                "rate": "30,000",
-                "status": "available"
-              }
-          ]
+         ]
         
  
         // Iterate over the fetched data

@@ -33,6 +33,10 @@ div .column_two {
   justify-content: center;
   align-items: center;
   padding: var(--space-md);
+
+  margin-right: 1.5rem;
+  margin: 1rem; 
+
   border-radius: var(--radius-lg);
 }
 

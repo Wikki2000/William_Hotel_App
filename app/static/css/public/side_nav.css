@@ -107,8 +107,11 @@
 
 .sidebar__name {
   line-height: 1.56rem;
+  width: 150px;
 }
-
+#sidebar__email {
+  font-size: 12px;
+}
 .sidebar__icon--notifications {
   height: 1.75rem;
   align-self: flex-end;

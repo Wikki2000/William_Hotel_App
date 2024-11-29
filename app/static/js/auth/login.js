@@ -26,10 +26,13 @@ $(document).ready(function () {
         localStorage.setItem('userId', response.id);
         localStorage.setItem('userName', response.username);
         localStorage.setItem('role', response.role)
-
+	localStorage.setItem('email', response.email)
+	localStorage.setItem(
+	    'name', response.first_name + " " + response.last_name
+	)
 	$('input').addClass('correct-password');
         setTimeout(() => {
-          window.location.href = APP_BASE_URL + '/staff-dashboard';
+          window.location.href = APP_BASE_URL + '/dashboard';
         }, 2000);
       },
       (error) => {
