@@ -11,4 +11,10 @@ from uuid import uuid4
 @role_required(["staff"])
 def dashboard(user_role: str, user_id: str):
     """Handle views for user dashboard."""
+    return render_template("dynamic_pages/room_service.html")
+
+
+@app_views.route(f"/dashboard")
+@role_required(["staff"])
+def dashboarde(user_role: str, user_id: str):
     return render_template("dashboard/user_dashboard.html")
