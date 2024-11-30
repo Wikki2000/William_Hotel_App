@@ -3,10 +3,11 @@
 ==============================*/
 .tab__item {
   padding: var(--space-xs);
+  cursor: pointer;
+  border-radius: 15px;
 }
 
 .tab__item-2 {
-  color: var(--white_a700) !important;
   padding-left: 0.88rem;
   padding-right: 0.88rem;
 }
@@ -19,7 +20,6 @@
 
 thead, .room-table-body {
   width: auto;
-  height: 100vh;
   overflow: auto;
 }
 
@@ -50,7 +50,6 @@ thead, .room-table-body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  display: none;
 }
 
 .info {
@@ -69,25 +68,34 @@ thead, .room-table-body {
   display: flex;
   flex: 1;
 }
-
+/*
 .tab-1 > :nth-child(1) {
-  background-color: var(--blue_a700);
   padding: 5px 15px;
+  border: 2px solid var(--orange_a100);
   border-radius: 40px;
+  color: black;
 }
 
 .tab-1 > :nth-child(2) {
-  background-color: var(--green_500);
   padding: 5px 15px;
   border-radius: 40px;
+  border: 2px solid var(--orange_a100);
+  color: black;
 }
 
 .tab-1 > :nth-child(3) {
-  background-color: var(--orange_a100);
   padding: 5px 15px;
   border-radius: 40px;
+  border: 2px solid var(--orange_a100);
+  color: black;
 }
-
+.tab-1 > :nth-child(4) {
+  padding: 5px 15px;
+  border-radius: 40px;
+  border: 2px solid var(--orange_a100);
+  color: black;
+}
+*/
 .info-text {
   align-self: flex-end;
   font-style: italic;
@@ -192,7 +200,7 @@ thead, .room-table-body {
 ============================*/
 .services-section{
     margin-top: 20px;
-    #display: none;
+    display: none;
     margin-right: 1.5rem;
     margin: 1rem;
     background-color: #FDF6E4;
@@ -206,23 +214,6 @@ thead, .room-table-body {
     display: flex;
     gap: 15px;
     margin-block: 0.8rem;
-}
-.check-btn .checkin-btn{
-    background-color: #FDF6E4;
-    border: 1px solid #F5D077;
-    padding: 3px 6px;
-    border-radius: 5px;
-    color: #000;
-}
-
-/* Easy see */
-.check-btn .checkout-btn {
-    background-color: #000;
-    box-shadow: 0 4px 8px rgba(0, 0, 0);
-    padding: 3px 6px;
-    border-radius: 5px;
-    border: none;
-    color: #ffffff;
 }
 
 .guest-details{

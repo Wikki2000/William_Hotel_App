@@ -5,7 +5,7 @@
 ==========================================*/
 
 /*-------------------------------------
-  1. Text CSS
+1. Text CSS
 --------------------------------------*/
 .ui.text.size-textxs {
   font-size: 0.56rem;
@@ -23,7 +23,7 @@
 }
 
 /*-------------------------------------
-  2. Heading CSS
+2. Heading CSS
 --------------------------------------*/
 .ui.heading.size-texts {
   font-size: 0.63rem;
@@ -56,9 +56,28 @@
 }
 
 /*-------------------------------------
-  3. Table CSS
+3. Table CSS
 --------------------------------------*/
 .ui.table.size-xs tbody td {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
+}
+
+.highlight-btn {
+  background-color: #000 !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0) !important;
+  border: none !important;
+  color: #ffffff !important;
+}
+
+.filter {
+  padding: 5px 15px;
+  border-radius: 40px;
+  border: 2px solid var(--orange_a100);
+  color: black;
+  cursor: pointer;
+}
+
+.drop-down {
+  cursor: pointer;
 }
