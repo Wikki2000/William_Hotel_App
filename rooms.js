@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
   
             row.innerHTML = `
-                <td class="">
+                <td class="unique-table-data">
                 <div class="featured">
                     <img src="${room.image}" alt="Featured Image" class="room-image" />
                 </div>
