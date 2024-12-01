@@ -1,40 +1,6 @@
-/**
- * Template for rooms list table
- * @room {object} - The response object from database
- * @statusClass {string} - Class for status of room e.g., reserved, available or occupied.
- *
- * @return {string} - The table and contents
- */
-function tableTemplate(room, statusClass) {
-  // Create the table row HTML
-  const row = `
-          <tr>
-            <td>
-              <div class="featured">
-                <img src="${room.image}" alt="Featured Image" class="room-image" />
-              </div>
-            </td>
-            <td>
-              <div class="room-info">
-                <p class="ui text size-textmd">${room.roomType}</p>
-                <p class="room-number-1 ui heading size-textlg">${room.roomNumber}</p>
-              </div>
-            </td>
-            <td>
-              <p class="ui text size-textmd">${room.rate}</p>
-            </td>
-            <td>
-              <p class="${statusClass} ui text size-textmd">${room.status}</p>
-            </td>
-          </tr>
-        `;
-  return row;
-}
+import { roomTableTemplate, displayRoomData } from '../global/utils.js';
 
 $(document).ready(function () {
-  const $tableBody = $(".room-table-body");
-
-  $('#rooms').addClass('highlight-btn');
 
   // Dummy data
   const data = [
@@ -61,33 +27,6 @@ $(document).ready(function () {
     },
   ];
 
-  // Function to fetch data
-  async function fetchRoomData() {
-    try {
-      /* const response = await $.get("your-api-endpoint"); // Replace with your API endpoint
-         const data = response; */
-
-      // Iterate over the fetched data
-      data.forEach((room) => {
-        let statusClass = "";
-        if (room.status === "available") {
-          statusClass = "room-status-4";
-        } else if (room.status === "reserved") {
-          statusClass = "room-status-3";
-        } else if (room.status === "occupied") {
-          statusClass = "room-status";
-        }
-
-        // Append the row to the table body
-        $tableBody.append(tableTemplate(room, statusClass));
-      });
-    } catch (error) {
-      console.error("Error fetching room data:", error);
-    }
-  }
-  // Fetch and populate data
-  fetchRoomData();
-
   $('#dynamic__load-dashboard').on('click', '#rooms, #services', function() {
     const $clickItem = $(this);
     const clickId = $(this).attr('id');
@@ -111,7 +50,10 @@ $(document).ready(function () {
   /*=============================================================
                         Room Section
    ============================================================*/
+
+  // Filter rooms according to status
   $('#dynamic__load-dashboard').on('click', '#all__rooms, #rooms__available, #rooms__occupied, #rooms__reserved', function() {
+    const $tableBody = $(".room-table-body");
     const $clickItem = $(this);
     const clickId = $(this).attr('id');
 
@@ -123,14 +65,14 @@ $(document).ready(function () {
 
     switch (clickId) {
       case 'all__rooms': {
-        fetchRoomData();
+        displayRoomData(data);
         break;
       }
       case 'rooms__available': {
         data.forEach((room) => {
           if (room.status === 'available') {
             const statusClass = 'room-status-4';
-            $tableBody.append(tableTemplate(room, statusClass));
+            $tableBody.append(roomTableTemplate(room, statusClass));
           }
         });
         break;
@@ -139,7 +81,7 @@ $(document).ready(function () {
         data.forEach((room) => {
           if (room.status === 'occupied') {
             const statusClass = 'room-status';
-            $tableBody.append(tableTemplate(room, statusClass));
+            $tableBody.append(roomTableTemplate(room, statusClass));
           }
         });
         break;
@@ -148,12 +90,14 @@ $(document).ready(function () {
         data.forEach((room) => {
           if (room.status === 'reserved') {
             const statusClass = 'room-status-3';
-            $tableBody.append(tableTemplate(room, statusClass));
+            $tableBody.append(roomTableTemplate(room, statusClass));
           }
         });
         break;
       }
     }
+
+    //
   });
 
   /*=============================================================

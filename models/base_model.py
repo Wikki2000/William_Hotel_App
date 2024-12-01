@@ -11,6 +11,7 @@ class BaseModel:
     """Define the class models for related method and attribute."""
     id = Column(String(60), primary_key=True, default=lambda: str(uuid4()))
     created_at = Column(DateTime, default=datetime.utcnow())
+    updated_at = Column(DateTime, default=datetime.utcnow())
 
     def __str__(self):
         """String representation of objrct."""

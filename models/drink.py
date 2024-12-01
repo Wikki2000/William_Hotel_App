@@ -3,6 +3,7 @@
 from models.base_model import Base, BaseModel
 from sqlalchemy import Column, String, Integer, ForeignKey, Float
 from sqlalchemy.orm import relationship
+from module.order import Order
 
 
 class Drink(BaseModel, Base):
@@ -10,5 +11,7 @@ class Drink(BaseModel, Base):
     __tablename__ = "drinks"
     name =  Column(String(20), nullable=False)
     qty_stock = Column(Integer, nullable=False)
-    unit_price = Column(Float, nullable=False)
-    service_id = Column(String(60), ForeignKey('services.id'))
+    amount = Column(Float, nullable=False)
+    
+    order = relationship('Order', backref='drink',
+                         cascade='all, delete-orphan')

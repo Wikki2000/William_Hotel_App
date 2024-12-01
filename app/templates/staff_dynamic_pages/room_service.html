@@ -1,231 +1,95 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Room Services - Manage Your Accommodations</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Explore our room services and manage reservations efficiently. From deluxe to standard rooms, ensure a pleasant stay with complementary breakfast and top-notch amenities."
-      />
+<div class="room_service">
+  <!-- room service tabs section -->
+  <div class="tab">
+    <h1 id="rooms" class="tab__item ui heading size-headingxs filter highlight-btn">All Rooms</h1>
+    <h2 id="services" class="tab__item ui heading size-headingxs filter">Services</h2>
+  </div>
 
-    <link rel="stylesheet" type="text/css" href="/static/css/public/index.css" />
-    <link rel="stylesheet" type="text/css" href="/static/css/public/fonts.css" />
-    <link rel="stylesheet" type="text/css" href="/static/css/public/styles.css" />
-    <link rel="stylesheet" type="text/css" href="/static/css/public/components.css" />
-    <link rel="stylesheet" type="text/css" href="/static/css/public/side_nav.css" />
-    <link rel="stylesheet" type="text/css" href="/static/css/staff_dashboard/room_service.css" />
-    <link rel="stylesheet" type="text/css" href="/static/css/public/header.css" />
-    <link rel="icon" type="image/x-icon" href="/static/images/public/hotel_logo.png" />
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script defer src="/static/js/staff_dashboard/room_service.js"></script>
-  </head>
-  <body>
-    <!-- main content section -->
-    <div class="container">
-      <div class="row">
-        <!-- sidebar navigation section -->
-        <aside class="sidebar">
-          <div class="sidebar__logo-row">
-            <img src="/static/images/public/hotel_logo.png" alt="Hotel Logo" class="sidebar__logo" />
-          </div>
-          <ul class="sidebar__menu">
-            <li>
-              <a>
-                <img src="/static/images/public/dashboard_icon.png" alt="Dashboard Icon" class="sidebar__icon--dashboard" />
-                <span> Dashboard</span>
-              </a>
-            </li>
-            <li>
-              <a>
-                <img src="/static/images/staff_dashboard/room_services_icon.png" alt="Services Icon" class="sidebar__icon--services" />
-                <span> Room & Services </span>
-              </a>
-            </li>
-            <li>
-              <a>
-                <img src="/static/images/staff_dashboard/reservations_icon.png" alt="Reservations Icon" class="sidebar__icon--services" />
-                <span> Reservations</span>
-              </a>
-            </li>
-            <li>
-              <a>
-                <img src="/static/images/staff_dashboard/guests_icon.png" alt="Guests Icon" class="sidebar__icon--guests" />
-                <span> Guests </span>
-              </a>
-            </li>
-            <li>
-              <a>
-                <img src="/static/images/staff_dashboard/restaurant_icon.png" alt="Restaurant Icon" class="sidebar__icon--services" />
-                <span> Restaurant </span>
-              </a>
-            </li>
-            <li>
-              <a>
-                <img src="/static/images/staff_dashboard/orders_icon.png" alt="Orders Icon" class="sidebar__icon--orders" />
-                <span> Orders</span>
-              </a>
-            </li>
-            <li>
-              <a>
-                <img src="/static/images/public/help_icon.png" alt="Help Icon" class="sidebar__icon--services" />
-                <span> Help</span>
-              </a>
-            </li>
-            <li>
-              <a>
-                <img src="/static/images/public/logout_icon.png" alt="Logout Icon" class="sidebar__icon--services" />
-                <span> Logout </span>
-              </a>
-            </li>
-          </ul>
-          <div class="sidebar__profile-row">
-            <img src="/static/images/staff_dashboard/img_joseph_gonzalez.png" alt="Profile Image" class="sidebar__profile-image" />
-            <div class="sidebar__staff-profile">
-              <div class="sidebar__name-column">
-                <h6 class="sidebar__name ui heading size-headingmd">Peter Johnson</h6>
-                <p class="ui text size-textxs">Peterjohson23@gmail.com</p>
-              </div>
-              <img
-                src="/static/images/public/vertical3colons.png"
-                alt="Notifications Icon"
-                class="sidebar__icon--notifications"
-                />
-            </div>
-          </div>
-        </aside>
-        <!-- side navigation bars ends here -->
-
-        <div class="column_two">
-          <!-- search and tabs section -->
-          <div class="columnsearch">
-            <!-- search header section -->
-            <header class="header">
-              <div class="header__search-row">
-                <label class="header__search-input">
-                  <img src="/static/images/public/serarch_icon.png" alt="Rewind" class="rewind" />
-                  <input name="Search Input" placeholder="All Rooms" type="text" />
-                </label>
-                <div class="header__icon-row">
-                  <a href="#">
-                    <button class="header__menu-icon">
-                      <img src="/static/images/public/message_icon.svg" />
-                    </button>
-                  </a>
-                  <div class="header__dropdown">
-                    <img
-                      src="/static/images/public/img_arrow_down_black_900_01.svg"
-                      alt="Dropdown Icon"
-                      class="header__dropdown-icon"
-                      />
-                  </div>
-                  <a href="#">
-                    <button class="header__upload-icon">
-                      <img src="/static/images/public/tab_icon.png" />
-                    </button>
-                  </a>
-                </div>
-              </div>
-            </header>
-
-            <section id="dynamic__load-dashboard">
-              <div class="room_service">
-                <!-- room service tabs section -->
-                <div class="tab">
-                  <h1 id="rooms" class="tab__item ui heading size-headingxs filter">All Rooms</h1>
-                  <h2 id="services" class="tab__item ui heading size-headingxs filter">Services</h2>
-                </div>
-
-                <div id="rooms-section" class="column_rooms">
-                  <!-- room availability section -->
-                  <div class="info">
-                    <div class="tab-1">
-		      <h3 id="all__rooms" class="tab__item-2 ui heading size-texts filter highlight-btn">All Rooms</h3>
-                      <h3 id="rooms__available" class="tab__item-2 ui heading size-texts filter">Available</h3>
-                      <h4 id="rooms__occupied" class="tab__item-2 ui heading size-texts filter">Occupied</h4>
-                      <h5 id="rooms__reserved" class="tab__item-2 ui heading size-texts filter">Reserved</h5>
-                    </div>
-                    <h6 class="info-text ui heading size-texts">All Rooms come with a complementary breakfast!</h6>
-                  </div>
-
-                  <!-- room table section -->
-                  <div class="table-column">
-                    <table cellpadding="0" cellspacing="0" class="tabletype ui table size-xs">
-                      <thead>
-                        <tr>
-                          <th width="348px">
-                            <p class="table__header-cell ui heading size-headings">Image</p>
-                          </th>
-                          <th width="318px">
-                            <p class="table__header-cell-1 ui heading size-headings">Type</p>
-                          </th>
-                          <th width="310px">
-                            <p class="table__header-cell-2 ui heading size-headings">Rate</p>
-                          </th>
-                          <th width="124px">
-                            <p class="table__header-cell-3 ui heading size-headings">Status</p>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody class="room-table-body">
-                        <!-- Rows will be dynamically added here -->
-                      </tbody>
-                    </table>
-                  </div>
-
-                </div>
-
-                <section id="services-section" class="services-section">
-                  <h6 class="quick_services">Quick Service Check</h6>
-                  <div class="check-btn">
-                    <button id="room__check-in" class="filter ui heading size-texts">Check In</button>
-                    <button id="room__check-out" class="filter ui heading size-texts">Check Out</button>
-                  </div>
-                  <div class="guest-details">
-                    <div>
-                      <h6 class="room-num bottom-marg">Room No.</h6>
-                      <button class="room-num-val">203 <img class="drop-down" src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px"  alt="dropdown"></button>
-                    </div>
-                    <div>
-                      <h6 class="order-num bottom-marg">Order No.</h6>
-                      <button class="order-num-val">22342 <img class="drop-down" src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px"  alt="dropdown"></button>
-                    </div>
-                    <div>
-                      <h6 class="guest-name bottom-marg">Guest Name</h6>
-                      <button class="guest-fullname">James Johnson</button>
-                    </div>
-                    <div>
-                      <h6 class="transaction-payment bottom-marg">Payment Status</h6>
-                      <p class="transaction-status">Pending</p>
-                    </div>
-
-                  </div>
-
-                  <div class="service-list">
-                    <h6 class="description">Service List</h6>
-                    <img class="drop-down" src="/static/images/public/img_arrow_down_black_900_01.svg"width="15px" alt="dropdown">
-                  </div>
-                  <div class="total-charge">
-                    <h6 class="charge">Total Charge</h6>
-                    <h6 class="amount">50,000</h6>
-                  </div>
-
-                  <div class="print-proceed-btns">
-                    <button class="print-btn">Print Summary</button>
-                    <button class="proceed-btn">Proceed</button>
-                  </div>
-
-                </section>
-
-
-              </div>
-            </section>
-
-          </div>
-
-        </div>
-
+  <div id="rooms-section" class="column_rooms">
+    <!-- room availability section -->
+    <div class="info">
+      <div class="tab-1">
+        <h3 id="all__rooms" class="tab__item-2 ui heading size-texts filter highlight-btn">All Rooms</h3>
+        <h3 id="rooms__available" class="tab__item-2 ui heading size-texts filter">Available</h3>
+        <h4 id="rooms__occupied" class="tab__item-2 ui heading size-texts filter">Occupied</h4>
+        <h5 id="rooms__reserved" class="tab__item-2 ui heading size-texts filter">Reserved</h5>
       </div>
+      <h6 class="info-text ui heading size-texts">All Rooms come with a complementary breakfast!</h6>
     </div>
-  </body>
-</html>
+
+    <!-- room table section -->
+    <div class="table-column">
+      <table cellpadding="0" cellspacing="0" class="tabletype ui table size-xs">
+        <thead>
+          <tr>
+            <th width="348px">
+              <p class="table__header-cell ui heading size-headings">Image</p>
+            </th>
+            <th width="318px">
+              <p class="table__header-cell-1 ui heading size-headings">Type</p>
+            </th>
+            <th width="310px">
+              <p class="table__header-cell-2 ui heading size-headings">Rate</p>
+            </th>
+            <th width="124px">
+              <p class="table__header-cell-3 ui heading size-headings">Status</p>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="room-table-body">
+          <!-- Rows will be dynamically added here -->
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <section id="services-section" class="services-section">
+    <h6 class="quick_services">Quick Service Check</h6>
+    <div class="check-btn">
+      <button id="room__check-in" class="filter ui heading size-texts">Check In</button>
+      <button id="room__check-out" class="filter ui heading size-texts">Check Out</button>
+    </div>
+    <div class="guest-details">
+      <div>
+        <h6 class="room-num bottom-marg">Room No.</h6>
+        <button class="room-num-val">203 <img class="drop-down" src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px"  alt="dropdown"></button>
+      </div>
+
+      <div>
+        <h6 class="order-num bottom-marg">Order No.</h6>
+        <button class="order-num-val">22342 <img class="drop-down" src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px"  alt="dropdown"></button>
+      </div>
+
+      <div>
+        <h6 class="room-type bottom-marg">Room Type</h6>
+        <button class="order-num-val">22342 <img class="drop-down" src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px"  alt="dropdown"></button>
+      </div>
+
+
+      <div>
+        <h6 class="guest-name bottom-marg">Guest Name</h6>
+        <button class="guest-fullname">James Johnson</button>
+      </div>
+      <div>
+        <h6 class="transaction-payment bottom-marg">Payment Status</h6>
+        <p class="transaction-status">Pending</p>
+      </div>
+
+    </div>
+
+    <div class="service-list">
+      <h6 class="description">Service List</h6>
+      <img class="drop-down" src="/static/images/public/img_arrow_down_black_900_01.svg"width="15px" alt="dropdown">
+    </div>
+    <div class="total-charge">
+      <h6 class="charge">Total Charge</h6>
+      <h6 class="amount">50,000</h6>
+    </div>
+
+    <div class="print-proceed-btns">
+      <button class="print-btn">Print Summary</button>
+      <button class="proceed-btn">Proceed</button>
+    </div>
+  </section>
+</div>

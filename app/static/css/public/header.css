@@ -79,6 +79,27 @@ div .column_two {
   justify-content: space-between;
 }
 
+
+.header__icon-row .header__menu-icon:nth-of-type(1) > span {
+  position: absolute;
+  /* Styles for the first span */
+  background-color: var(--red_a800); /* Default orange color */
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  border-radius: var(--radius-lg);
+  top: 5px;
+  right: 5px;
+
+  /* Other styling */
+
+}
+
+
 .header__menu-icon {
   height: 2.75rem;
   padding-left: 0.75rem;
@@ -90,6 +111,7 @@ div .column_two {
   justify-content: center;
   width: 2.75rem;
   border-radius: var(--radius-xs);
+  position: relative;
 }
 
 .header__dropdown {
@@ -119,4 +141,3 @@ div .column_two {
   width: 2.75rem;
   border-radius: var(--radius-xs);
 }
-

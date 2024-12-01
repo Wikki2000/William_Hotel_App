@@ -7,6 +7,7 @@ from sqlalchemy.dialects.mysql import ENUM
 from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
 from models.booking import Booking
+from models.order import Order
 
 
 class User(BaseModel, Base):
@@ -35,6 +36,8 @@ class User(BaseModel, Base):
 
     books = relationship('Booking', backref='user',
                          cascade='all, delete-orphan')
+    orders = relationship('Order', backref='user',
+                          cascade='all, delete-orphan')
 
     # ===================== Method Definition ==================== #
     def hash_password(self):

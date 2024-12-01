@@ -112,3 +112,64 @@ export function getQueryParam(param) {
   // Retrieve and return the value of the specified parameter
   return urlParams.get(param);
 }
+
+/**
+ * Template for rooms list table
+ * @room {object} - The response object from database
+ * @statusClass {string} - Class for status of room e.g., reserved, available or occupied.
+ *
+ * @return {string} - The table and contents
+ */
+export function roomTableTemplate(room, statusClass) {
+  // Create the table row HTML
+  const row = `<tr>
+    <td>
+      <div class="featured">
+        <img src="${room.image}" alt="Featured Image" class="room-image" />
+      </div>
+    </td>
+
+    <td>
+      <div class="room-info">
+        <p class="ui text size-textmd">${room.roomType}</p>
+        <p class="room-number-1 ui heading size-textlg">${room.roomNumber}</p>
+      </div>
+    </td>
+
+    <td>
+      <p class="ui text size-textmd">${room.rate}</p>
+    </td>
+
+    <td>
+      <p class="${statusClass} ui text size-textmd">${room.status}</p>
+    </td>
+  </tr>`;
+  return row;
+}
+
+/**
+ * Display rooms and it's details
+ *
+ * @param {object} data - The JSON response of all rooms
+ */
+export function displayRoomData(data) {
+  try {
+    const $tableBody = $(".room-table-body");
+    // Iterate over the fetched data
+    data.forEach((room) => {
+      let statusClass = "";
+      if (room.status === "available") {
+        statusClass = "room-status-4";
+      } else if (room.status === "reserved") {
+        statusClass = "room-status-3";
+      } else if (room.status === "occupied") {
+        statusClass = "room-status";
+      }
+
+      // Append the row to the table body
+      $tableBody.append(roomTableTemplate(room, statusClass));
+    });
+  } catch (error) {
+    console.error("Error fetching room data:", error);
+  }
+}

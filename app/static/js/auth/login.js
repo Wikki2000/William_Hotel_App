@@ -1,4 +1,4 @@
-import { togglePasswordVisibility, ajaxRequest, alertBox, getBaseUrl } from '../global/utils.js'; 
+import { togglePasswordVisibility, ajaxRequest, getBaseUrl } from '../global/utils.js'; 
 
 $(document).ready(function () {
 

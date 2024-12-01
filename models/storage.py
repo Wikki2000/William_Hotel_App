@@ -4,11 +4,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 
 from models.base_model import Base
-from models.service import Service
 from models.customer import Customer
 from models.user import User
-from models.drink import Drink
-from models.food import Food
+from models.order import Order
 from models.room import Room
 from models.booking import Booking
 

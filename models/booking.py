@@ -2,7 +2,9 @@
 """book Module"""
 from datetime import datetime
 from models.base_model import Base, BaseModel
-from sqlalchemy import Column, String, ForeignKey, Float, ForeignKey, DateTime
+from sqlalchemy import (
+    Column, String, ForeignKey, Boolean, DateTime, Float, ForeignKey
+)
 from sqlalchemy.orm import relationship
 
 
@@ -11,7 +13,7 @@ class Booking(BaseModel, Base):
     __tablename__ = "bookings"
     duration = Column(String(30), nullable=False)
     expired_at = Column(DateTime, default=datetime.utcnow())
-    total_cost = Column(Float, nullable=False)
+    is_paid = Column(Boolean, default=False)
     customer_id = Column(
         String(30), ForeignKey("customers.id"), nullable=False
     )

@@ -1,0 +1,87 @@
+/*=========== TABLE OF CONTENTS ===========
+1. Text CSS
+2. Heading CSS
+3. Table CSS
+==========================================*/
+
+/*-------------------------------------
+1. Text CSS
+--------------------------------------*/
+.ui.text.size-textxs {
+  font-size: 0.56rem;
+  font-weight: 400;
+}
+
+.ui.text.size-textmd {
+  font-size: 0.88rem;
+  font-weight: 400;
+}
+
+.ui.text {
+  color: var(--black_900_01);
+  font-family: Poppins;
+}
+
+/*-------------------------------------
+2. Heading CSS
+--------------------------------------*/
+.ui.heading.size-texts {
+  font-size: 0.63rem;
+  font-weight: 500;
+}
+
+.ui.heading.size-textlg {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.ui.heading.size-headingxs {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.ui.heading.size-headings {
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.ui.heading.size-headingmd {
+  font-size: 1.06rem;
+  font-weight: 600;
+}
+
+.ui.heading {
+  color: var(--black_900_01);
+  font-family: Poppins;
+}
+
+/*-------------------------------------
+3. Table CSS
+--------------------------------------*/
+.ui.table.size-xs tbody td {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.highlight-btn {
+  background-color: #000 !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0) !important;
+  border: none !important;
+  color: #ffffff !important;
+}
+
+.filter {
+  padding: 5px 15px;
+  border-radius: 40px;
+  border: 2px solid var(--orange_a100);
+  color: black;
+  cursor: pointer;
+}
+
+.drop-down {
+  cursor: pointer;
+}
+.highlight-sidebar {
+  background-color: var(--amber_500_59);
+  box-shadow: inset 0 4px 8px 0 #0000003f;
+}

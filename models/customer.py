@@ -3,16 +3,21 @@
 from models.base_model import Base, BaseModel
 from sqlalchemy import Column, String, Boolean, DateTime
 from sqlalchemy.orm import relationship
+from sqlalchemy.dialects.mysql import ENUM
 from models.booking import Booking
+from models.order import Order
 
 class Customer(BaseModel, Base):
     """Define class for storing customers"""
     __tablename__ = "customers"
     name =  Column(String(20), nullable=False)
     address = Column(String(30))
-    gender = Column(String(30))
+    gender = Column(ENUM("male", "female"))
     phone = Column(String(30))
     customer_id = Column(String(30))
+    is_guest = Column(Boolean, default=False)
 
     books = relationship('Booking', backref='customer',
+                         cascade='all, delete-orphan')
+    orders = relationship('Order', backref='customer',
                          cascade='all, delete-orphan')

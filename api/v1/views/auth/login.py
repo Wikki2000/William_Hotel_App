@@ -65,13 +65,6 @@ def login():
     )
 
     # Return response with aceess token
-    response =  jsonify(
-        {
-            "message": "Login successful",
-            "status": "Success",
-            "access_token": access_token,
-            "user": {**user.to_dict()}
-        }
-    )
+    response =  jsonify({**user.to_dict()})
     set_access_cookies(response, access_token)  # Set JWT in cookie
-    return response
+    return response, 200
