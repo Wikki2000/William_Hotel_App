@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Room Services - Manage Your Accommodations</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Explore our room services and manage reservations efficiently. From deluxe to standard rooms, ensure a pleasant stay with complementary breakfast and top-notch amenities."
+      />
+
+    <link rel="stylesheet" type="text/css" href="/static/css/public/index.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/public/fonts.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/public/styles.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/public/components.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/public/side_nav.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/staff_dashboard/main.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/public/header.css" />
+    <link rel="icon" type="image/x-icon" href="/static/images/public/hotel_logo.png" />
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="module" defer src="/static/js/staff_dashboard/room_service.js"></script>
+    <script type="module" defer src="/static/js/staff_dashboard/side_bar.js"></script>
+  </head>
+  <body>
+    <!-- main content section -->
+    <div class="container">
+      <div class="row">
+        <!-- sidebar navigation section -->
+        <aside class="sidebar">
+          <div class="sidebar__logo-row">
+            <img src="/static/images/public/hotel_logo.png" alt="Hotel Logo" class="sidebar__logo" />
+          </div>
+          <ul class="sidebar__menu">
+            <li id="sidebar__main" class="highlight-sidebar sidebar__nav-icon">
+              <a>
+                <img src="/static/images/public/dashboard_icon.png" alt="Dashboard Icon" class="sidebar__icon--dashboard" />
+                <span> Dashboard</span>
+              </a>
+            </li>
+            <li id="sidebar__Room-service" class="sidebar__nav-icon">
+              <a>
+                <img src="/static/images/staff_dashboard/room_services_icon.png" alt="Services Icon" class="sidebar__icon--services" />
+                <span> Room & Services </span>
+              </a>
+            </li>
+            <li id="sidebar__reservations" class="sidebar__nav-icon">
+              <a>
+                <img src="/static/images/staff_dashboard/reservations_icon.png" alt="Reservations Icon" class="sidebar__icon--services" />
+                <span> Reservations</span>
+              </a>
+            </li>
+            <li id="sidebar__guest" class="sidebar__nav-icon">
+              <a>
+                <img src="/static/images/staff_dashboard/guests_icon.png" alt="Guests Icon" class="sidebar__icon--guests" />
+                <span> Guests </span>
+              </a>
+            </li>
+            <li id="sidebar__restaurant" class="sidebar__nav-icon">
+              <a>
+                <img src="/static/images/staff_dashboard/restaurant_icon.png" alt="Restaurant Icon" class="sidebar__icon--services" />
+                <span> Restaurant </span>
+              </a>
+            </li>
+            <li id="sidebar__order" class="sidebar__nav-icon">
+              <a>
+                <img src="/static/images/staff_dashboard/orders_icon.png" alt="Orders Icon" class="sidebar__icon--orders" />
+                <span> Orders</span>
+              </a>
+            </li>
+            <li id="sidebar__help" class="sidebar__nav-icon">
+              <a>
+                <img src="/static/images/public/help_icon.png" alt="Help Icon" class="sidebar__icon--services" />
+                <span> Help</span>
+              </a>
+            </li>
+            <li id="sidebar__logout" class="sidebar__nav-icon">
+              <a>
+                <img src="/static/images/public/logout_icon.png" alt="Logout Icon" class="sidebar__icon--services" />
+                <span> Logout </span>
+              </a>
+            </li>
+          </ul>
+          <div class="sidebar__profile-row">
+            <img src="/static/images/public/profile_photo_placeholder.png" alt="Profile Image" class="sidebar__profile-image" />
+            <div class="sidebar__staff-profile">
+              <div class="sidebar__name-column">
+                <h5 id="sidebar__name" class="sidebar__name ui heading size-headingmd"><!--Name will be dynamically be loaded--></h5>
+                <h6 id="sidebar__email" class="ui text size-textxs"><!--Dynamically load email--></h6>
+              </div>
+              <img
+                src="/static/images/public/vertical3colons.png"
+                alt="Notifications Icon"
+                class="sidebar__icon--notifications"
+                />
+            </div>
+          </div>
+        </aside>
+        <!-- side navigation bars ends here -->
+
+        <div class="column_two">
+          <!-- search and tabs section -->
+          <div class="columnsearch">
+            <!-- search header section -->
+            <header class="header">
+              <div class="header__search-row">
+                <label class="header__search-input">
+                  <img src="/static/images/public/serarch_icon.png" alt="Rewind" class="rewind" />
+                  <input name="Search Input" placeholder="All Rooms" type="text" />
+                </label>
+                <div class="header__icon-row">
+                  <a href="#">
+                    <span class="header__menu-icon">
+                      <img src="/static/images/public/message_icon.svg" />
+                      <span>2</span>
+                    </span>
+                  </a>
+                  <a href="#">
+                    <button class="header__menu-icon">
+                      <img src="/static/images/public/notification.png" />
+                      <span>3</span>
+                    </button>
+                  </a>
+                  <a href="#">
+                    <button class="header__menu-icon">
+                      <img src="/static/images/public/img_arrow_down_black_900_01.svg" />
+                    </button>
+                  </a>
+                  <a href="#">
+                    <button class="header__upload-icon">
+                      <img src="/static/images/public/tab_icon.png"
+                           alt="hide-sidebar" />
+                    </button>
+                  </a>
+                </div>
+              </div>
+            </header>
+
+            <section id="dynamic__load-dashboard">
+              <!-- Main dashboard section goes here -->
+              <div class="main__container">
+                <div class="welcome">
+                </div>
+
+                <div class="main__room-status">
+                </div>
+
+                <div class="main__room-pic">
+                </div>
+
+                <div class="flex-column">
+                  <form>
+                    <h3>Add New Booking</h3>
+                    <div class="flex-row">
+                      <div class="">
+                        <svg width="24" height="23" viewBox="0 0 24 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M21.7444 15.7089V4.06413C21.7444 3.38714 21.3765 2.96094 20.7922 2.96094H5.13491C4.55062 2.96094 3.97119 3.38714 3.97119 4.06413V9.58009" stroke="black" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M16.1372 1V4.43215" stroke="black" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M9.78955 1V4.43215" stroke="black" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M7.56784 15.8281V17.8506C7.56784 19.0015 6.81555 19.9957 5.82227 19.9957H20.1043C21.9739 19.9957 23.4367 18.1783 23.4367 16.012V15.8281H7.56784Z" stroke="black" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M5.82256 19.9957C4.82928 19.9957 3.97119 19.0015 3.97119 17.8506V15.8281" stroke="black" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M6.76904 9.82812L8.15556 11.4346L6.76904 13.0412" stroke="black" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M8.07806 11.4062C8.07806 11.4062 1.02359 11.416 1 11.4148" stroke="black" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M3.97119 7.86719H21.7444" stroke="black" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M21.7444 19.5092V21.2253V21.1027C21.7444 21.7797 21.3765 22.4511 20.7922 22.4511H5.13491C4.55062 22.4511 3.97119 21.7797 3.97119 21.1027V13.2578" stroke="black" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <p>Check In</p>
+                        <input>
+                      </div>
+
+                      <div>
+                        <svg width="28" height="24" viewBox="0 0 28 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M6.07704 18.7316L6.07827 18.7307C6.18847 18.6534 6.2618 18.5372 6.28426 18.4085C6.30668 18.2801 6.27701 18.1476 6.20055 18.0397C4.83323 16.1157 4.15809 13.7927 4.28423 11.4431C4.41037 9.09345 5.33038 6.8545 6.89572 5.08481C8.46098 3.31522 10.5807 2.11734 12.9148 1.68185C15.2489 1.24637 17.6634 1.59823 19.7718 2.68152C21.8802 3.76486 23.5611 5.51739 24.5439 7.65936C25.5268 9.80143 25.7543 12.2082 25.1895 14.4937C24.6248 16.7791 23.301 18.8099 21.4314 20.2611C19.5619 21.7123 17.2548 22.5004 14.8797 22.5L6.07704 18.7316ZM6.07704 18.7316C6.02208 18.7704 5.9596 18.7982 5.89315 18.8133C5.8267 18.8283 5.75782 18.8302 5.69059 18.8188C5.62335 18.8074 5.55933 18.783 5.50219 18.7472C5.44505 18.7114 5.39603 18.665 5.35772 18.6109L5.35732 18.6104M6.07704 18.7316L5.35732 18.6104M5.35732 18.6104C3.86003 16.5035 3.12162 13.9613 3.25949 11.3911M5.35732 18.6104L3.25949 11.3911M14.5162 23.3516C14.6117 23.446 14.7422 23.5 14.8796 23.5L14.5162 23.3516ZM14.5162 23.3516C14.421 23.2574 14.3685 23.1308 14.3685 23M14.5162 23.3516L14.3685 23M14.3685 23C14.3685 22.8692 14.421 22.7426 14.5162 22.6484M14.3685 23L14.5162 22.6484M14.5162 22.6484C14.6117 22.554 14.7423 22.5 14.8796 22.5L14.5162 22.6484ZM3.25949 11.3911C3.39736 8.82089 4.40362 6.37 6.11818 4.43128M3.25949 11.3911L6.11818 4.43128M6.11818 4.43128C7.83283 2.49247 10.1568 1.17804 12.7182 0.699825M6.11818 4.43128L12.7182 0.699825M12.7182 0.699825C15.2796 0.2216 17.929 0.607544 20.2417 1.79534M12.7182 0.699825L20.2417 1.79534M20.2417 1.79534C22.5543 2.98309 24.3957 4.90348 25.472 7.24779M20.2417 1.79534L25.472 7.24779M25.472 7.24779C26.5482 9.592 26.7975 12.2252 26.1803 14.7258M25.472 7.24779L26.1803 14.7258M26.1803 14.7258C25.563 17.2265 24.1146 19.451 22.0658 21.0423M26.1803 14.7258L22.0658 21.0423M22.0658 21.0423C20.0169 22.6337 17.4864 23.4995 14.8797 23.5L22.0658 21.0423Z" stroke="black" stroke-opacity="0.75"/>
+                          <path d="M5.77911 18.5H6.27911V18V14C6.27911 13.8692 6.3316 13.7426 6.42686 13.6484C6.52231 13.554 6.65294 13.5 6.7903 13.5C6.92766 13.5 7.05829 13.554 7.15374 13.6484C7.249 13.7426 7.30149 13.8692 7.30149 14V19C7.30149 19.1308 7.249 19.2574 7.15374 19.3516C7.05829 19.446 6.92766 19.5 6.7903 19.5H1.73434C1.59697 19.5 1.46635 19.446 1.3709 19.3516C1.27563 19.2574 1.22314 19.1308 1.22314 19C1.22314 18.8692 1.27563 18.7426 1.3709 18.6484C1.46635 18.554 1.59697 18.5 1.73434 18.5H5.77911Z" stroke="black" stroke-opacity="0.75"/>
+                          <path d="M11.849 15.5L11.849 15.5L11.8433 15.5C11.7753 15.5004 11.7079 15.4875 11.6452 15.4622C11.5825 15.4368 11.5259 15.3997 11.4783 15.3531L11.4783 15.353C11.4307 15.3063 11.3932 15.251 11.3676 15.1905C11.3422 15.1299 11.3291 15.0652 11.3291 15C11.3291 14.9348 11.3422 14.8701 11.3676 14.8095C11.3932 14.749 11.4307 14.6937 11.4783 14.647L11.4791 14.6462L14.2195 11.9462L14.3685 11.7993V11.59V7C14.3685 6.8692 14.421 6.74262 14.5163 6.64841C14.6117 6.55402 14.7424 6.5 14.8797 6.5C15.0171 6.5 15.1477 6.55402 15.2432 6.64841C15.3384 6.74262 15.3909 6.8692 15.3909 7V12H15.3909L15.3909 12.0029C15.3913 12.0679 15.3787 12.1325 15.3537 12.193C15.3289 12.2533 15.2921 12.3085 15.2453 12.3553C15.2451 12.3555 15.2449 12.3557 15.2447 12.3559L12.214 15.3531C12.2138 15.3533 12.2136 15.3535 12.2133 15.3537C12.1659 15.4 12.1095 15.437 12.0471 15.4622C11.9844 15.4875 11.9171 15.5004 11.849 15.5Z" stroke="black" stroke-opacity="0.75"/>
+                        </svg>
+                        <p>Duration</p>
+                        <input>
+                      </div>
+
+                      <div>
+                        <svg width="24" height="23" viewBox="0 0 24 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M21.7444 15.7089V4.06413C21.7444 3.38714 21.3765 2.96094 20.7922 2.96094H5.13491C4.55062 2.96094 3.97119 3.38714 3.97119 4.06413V9.58009" stroke="black" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M16.1372 1V4.43215" stroke="black" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M9.78955 1V4.43215" stroke="black" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin"/>
+                          <84 15.8281V17.8506C7.56784 19.0015 6.81555 19.9957 5.82227 19.9957H20.1043C21.9739 19.9957 23.4367 18.1783 23.4367 16.012V15.8281H7.56784Z" stroke="black" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M5.82256 19.9957C4.82928 19.9957 3.97119 19.0015 3.97119 17.8506V15.8281" stroke="black" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M6.76904 9.82812L8.15556 11.4346L6.76904 13.0412" stroke="black" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M8.07806 11.4062C8.07806 11.4062 1.02359 11.416 1 11.4148" stroke="black" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M3.97119 7.86719H21.7444" stroke="black" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M21.7444 19.5092V21.2253V21.1027C21.7444 21.7797 21.3765 22.4511 20.7922 22.4511H5.13491C4.55062 22.4511 3.97119 21.7797 3.97119 21.1027V13.2578" stroke="black" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <p>Check Out</p>
+                        <input>
+                      </div>
+                    </div>
+
+                    <h3>Room Details</h3>
+                    <div class="flex-row">
+                      <div class="">
+                        <p>Room Number</p>
+                        <input>
+                      </div>
+
+                      <div>
+                        <p>Room Rate</p>
+                        <input>
+                      </div>
+
+                      <div>
+                        <p>Room Type</p>
+                        <input>
+                      </div>
+                    </div>
+
+                    <h3>Guest Details</h3>
+                    <div class="flex-row">
+                      <div class="">
+                        <p>Name</p>
+                        <input>
+                      </div>
+
+                      <div>
+                        <p>Phone No.</p>
+                        <input>
+                      </div>
+
+                      <div>
+                        <p>ID</p>
+                        <input>
+                      </div>
+                    </div>
+
+                    <div class="flex-row">
+                      <div class="">
+                        <p>Gender</p>
+                        <input>
+                      </div>
+
+                      <div>
+                        <p>Guest No.</p>
+                        <input>
+                      </div>
+
+                      <div>
+                        <p>Address</p>
+                        <input>
+                      </div>
+                    </div>
+                    <div class="main__btn">
+                    <button>Proceed</button>
+                    <div>
+                  </form>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,41 +1,43 @@
 #!/usr/bin/python3
 """Handle API request for room module"""
 from models.room import Room
-from models.service import Service
 from flask import abort, jsonify, request
 from api.v1.views import api_views
+from api.v1.views.utils import role_required
 from api.v1.views.utils import bad_request
 from models import storage
 from sqlalchemy.exc import IntegrityError
 
 
-@api_views.route("/services/<service_id:string>/add-room", method=["POST"])
-@role_required(["admin", "manager"])
-def add_room(service_id: str):
-    """Add new room"""
-    data = request.get_json()
+@api_views.route("/rooms")
+@role_required(["staff"])
+def get_rooms(user_role, user_id):
+    """Retrieved all rooms"""
+    rooms = storage.all(Room).values()
+    sorted_rooms = sorted(rooms, key=lambda room : room.room_number)
+    if not rooms:
+        return jsonify([]), 200
+    
+    total_available_room = storage.count_by(Room, is_available=True)
+    total_reserved_room = storage.count_by(Room, is_reserved=True)
 
-    # Handle Bad Request error
-    required_fields = ["room_type", "room_number", "unit_cost"]:
-    response = bad_request(data, required_fields)
-    if response:
-        return jsonify(response), 400
+    response = {
+        "rooms": [room.to_dict() for room in sorted_rooms],
+        "rooms_count": {
+            "total_room": len(rooms), 
+            "total_available_room": total_available_room,
+            "total_reserved_room": total_reserved_room
+        }
+    }
+    return jsonify(response), 200
 
-    # Check if the service exists
-    service = storage.get_by(id=service_id)
-    if not service:
-        abort(404)
 
-    data["service_id"] = service_id #  Add service_id to data
-
-    try:
-        room = Room(**data)
-        storage.new(customer)
-        storage.save()
-        return jsonify({"message": "Room Added Successfully"}), 200
-    except IntegrityError:
-        return jsonify({"error": "Room number exist's already"}), 409
-    except Exception as e:
-        print(str(e))
-        return jsonify({"error": "Internal Error Occured"}), 500
-
+@api_views.route("/rooms/<string:room_number>")
+@role_required(["staff"])
+def get_room_by_number(room_number):
+    """Retrieved a room by it number."""
+    print(room_number)
+    room = storage.get_by(Room, room_number=int(room_number))
+    if not room:
+        return jsonify([]), 200
+    return jsonify(room.to_dict()), 200

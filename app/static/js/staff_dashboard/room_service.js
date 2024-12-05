@@ -110,5 +110,17 @@ $(document).ready(function () {
     $clickItem.addClass('highlight-btn');
 
     const clickId = $clickItem.attr('id');
+
+  });
+
+  //  drop down menu of occupied room
+  $('#dynamic__load-dashboard').on('click', '#drop-down', function() {
+
+
+    // Populate the drop down menu list with room number
+    for (let i = 0; i < 6; i++) {
+      $('#dropdown__item-list').append(`<li class="dropdown-item">10${i}</li>`);
+    }
+    $('#dropdown-menu').show();
   });
 });

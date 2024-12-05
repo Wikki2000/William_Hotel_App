@@ -1,0 +1,116 @@
+import { getBaseUrl } from '../global/utils.js';
+
+$(document).ready(function () {
+  const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
+  const url = API_BASE_URL + '/rooms';
+
+  // Define globally
+  let rooms;
+  let is_paid;
+  let room_numner;
+
+  // Function to fetch rooms data
+  async function getRoom(url) {
+    try {
+      if (!rooms) {
+        // Fetch data only if not already fetched
+        rooms = await $.get(url); 
+      }
+      const roomCounts = rooms.rooms_count;
+      // Update room stats in the UI
+      $('#main__room-available').text(roomCounts.total_available_room);
+      $('#main__room-reserved').text(roomCounts.total_reserved_room);
+    } catch (error) {
+      console.error('An error occurred while retrieving rooms data:', error);
+    }
+  }
+
+  // Fetch rooms data when the page loads
+  (async () => {
+    await getRoom(url);
+  })();
+
+  // Handle the form submission for the booking form
+  $('#dynamic__load-dashboard').on('submit', '#main__book-form', function (event) {
+    event.preventDefault(); // Prevent default form submission
+
+    const duration = $('#main__book-duration').val();
+    const checkout_date = $('#main__checkout-date').val();
+
+    const name = $('#main__guest-name').val();
+
+  });
+
+  // Load and display popup menu list of room number
+  $('#dynamic__load-dashboard').on('click', '.main__dropdown-btn', async function () {
+    const $clickItem = $(this);
+    await getRoom(url); // Ensure rooms data is available
+
+    // Check if `rooms.rooms` contains the array
+    if (Array.isArray(rooms.rooms)) {
+      // Clear existing dropdown items to avoid duplication
+      $clickItem.siblings('.dropdown-menu').find('.main__dropdown--menu-list').empty();
+
+      // Populate dropdown with room numbers
+      rooms.rooms.forEach((room) => {
+        $clickItem.siblings('.dropdown-menu').find('.main__dropdown--menu-list').append(
+          `<li class="dropdown-item main__dropdown-item">${room.room_number}</li>`
+        );
+      });
+
+      // Add select to begining if not want to select again
+      $clickItem.siblings('.dropdown-menu').find('.main__dropdown--menu-list').prepend('<li class="dropdown-item main__dropdown-item">Select</li>');
+    } else {
+      console.error('Rooms data is not an array:', rooms.rooms);
+    }
+
+    // Show the dropdown menu
+    $clickItem.siblings('.dropdown-menu').toggle();
+  });
+
+  // Auto-fill the input field when room number selected in dropdown menu
+  $('#dynamic__load-dashboard').on('click', '.main__dropdown-item', async function() {
+    await getRoom(url);
+    const $clickItem = $(this);
+
+    const roomNumberSelected = $clickItem.text().trim(); // Trim in case of extra spaces
+
+    room_number = roomNumberSelected;  // Asign value to global variable
+
+    if (isNaN(roomNumberSelected)) {
+      $clickItem.closest('.dropdown').find('.main__dropdown-btn span').text('Select');
+      $('#main__room-rate, #main__room-type').val('Auto-filled based on room no');
+
+    } else {
+      await getRoom(url);
+      const listOfRooms = rooms.rooms;
+
+      // Filter the rooms with the room number selected
+      const filterByRoomNumber = listOfRooms.filter(
+        (room) => String(room.room_number) === roomNumberSelected
+      );
+
+      // Auto-fill the input field
+      $('#main__room-rate').val('₦' + filterByRoomNumber[0].amount);
+      $('#main__room-type').val(filterByRoomNumber[0].room_type);
+      $clickItem.closest('.dropdown').find('.main__dropdown-btn span').text(roomNumberSelected);
+    }
+    $('.dropdown-menu').hide(); // Hide dropdwon menu list once selected
+  });
+
+  // Display popup modal and select for Payment Condition (e.g., Yes or No)
+  $('#dynamic__load-dashboard').on('click', '#main__payment-status', function() {
+    $('#main__dropdown-menu').show();
+  });
+  $('#dynamic__load-dashboard').on('click', '.main__dropdown-item', function() {
+    const $clickItem = $(this);
+    is_paid = $clickItem.text() === 'Yes' ? true : false;
+  });
+
+  // Hide dropdown menu when clicking outside
+  $(document).on('click', function (e) {
+    if (!$(e.target).closest('.dropdown').length) {
+      $('.dropdown-menu').hide();
+    }
+  });
+});

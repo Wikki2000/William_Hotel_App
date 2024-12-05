@@ -51,29 +51,50 @@
       <button id="room__check-out" class="filter ui heading size-texts">Check Out</button>
     </div>
     <div class="guest-details">
-      <div>
+      <div id="dropdown">
         <h6 class="room-num bottom-marg">Room No.</h6>
-        <button class="room-num-val">203 <img class="drop-down" src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px"  alt="dropdown"></button>
+	<button class="room-num-val drop-down">
+          <span>Select </span>
+          <img 
+            src="/static/images/public/img_arrow_down_black_900_01.svg"
+            width="15px"  alt="dropdown"
+          />
+        </button>
+        <div id="dropdown-menu">
+          <ul id="dropdown__item-list">
+            <!-- Dynamically load dropdown menu list -->
+         </ul>
+        </div>
       </div>
 
       <div>
         <h6 class="order-num bottom-marg">Order No.</h6>
-        <button class="order-num-val">22342 <img class="drop-down" src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px"  alt="dropdown"></button>
+        <button class="order-num-val">XXXX 
+          <!--<img 
+            src="/static/images/public/img_arrow_down_black_900_01.svg"
+            width="15px" class="drop-down" alt="dropdown"
+            />-->
+        </button>
       </div>
 
       <div>
         <h6 class="room-type bottom-marg">Room Type</h6>
-        <button class="order-num-val">22342 <img class="drop-down" src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px"  alt="dropdown"></button>
+        <button class="order-num-val">XXXXXX
+          <!--<img
+            class="drop-down" alt="dropdown" width="15px"
+            src="/static/images/public/img_arrow_down_black_900_01.svg"
+            />-->
+        </button>
       </div>
 
 
       <div>
         <h6 class="guest-name bottom-marg">Guest Name</h6>
-        <button class="guest-fullname">James Johnson</button>
+        <button class="guest-fullname">XXXX XXXXX</button>
       </div>
       <div>
         <h6 class="transaction-payment bottom-marg">Payment Status</h6>
-        <p class="transaction-status">Pending</p>
+        <p class="transaction-status">Unknown</p>
       </div>
 
     </div>
@@ -84,7 +105,7 @@
     </div>
     <div class="total-charge">
       <h6 class="charge">Total Charge</h6>
-      <h6 class="amount">50,000</h6>
+      <h6 class="amount">&#8358;<span>0.00</span></h6>
     </div>
 
     <div class="print-proceed-btns">

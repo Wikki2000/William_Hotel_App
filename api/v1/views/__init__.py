@@ -8,3 +8,5 @@ from api.v1.views.auth.login import *
 from api.v1.views.auth.logout import *
 from api.v1.views.auth.password_recovery import *
 from api.v1.views.users import *
+from api.v1.views.rooms import * 
+from api.v1.views.customers import *

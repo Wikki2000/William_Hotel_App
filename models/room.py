@@ -10,10 +10,11 @@ class Room(BaseModel, Base):
     """Define class for storing drinks"""
     __tablename__ = "rooms"
     room_type =  Column(String(20), nullable=False)
+    is_available = Column(Boolean, default=True)
     is_reserved = Column(Boolean, default=False)
     is_occupied = Column(Boolean, default=False)
     amount = Column(Float, nullable=False)
-    room_number = Column(Integer, nullable=False, unique=True)
+    room_number = Column(String(20), nullable=False, unique=True)
 
     books = relationship('Booking', backref='room',
                          cascade='all, delete-orphan')

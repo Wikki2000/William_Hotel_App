@@ -28,6 +28,12 @@ img {
   height: auto;
 }
 
+input[readonly] {
+  background-color: #f0f0f0;
+  color: #666;
+  border: 1px solid #cc;
+  cursor: not-allowed;
+}
 .table-column {
   display: flex;
   position: relative;

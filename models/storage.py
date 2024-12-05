@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 """This module models the storage of the authentication API"""
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker, scoped_session
+
 
 from models.base_model import Base
 from models.customer import Customer
@@ -78,24 +79,18 @@ class Storage:
         obj = self.__session.query(cls).filter_by(**kwargs).first()
         return obj
 
-    def get_by_field(self, model: Type, field: str, value: Any) -> object:
+    def count_by(self, cls, **kwargs):
+        """Count an instance with an arbituary fields/values.
+        Args:
+            cls (class) - The class to filter for an object.
+            wargs (dict) - Dict of fields and value to count
+
+        Return: The total count of object in class
         """
-        General function to filter a model by it field and class.
-
-        :param model - SQLAlchemy model class (e.g., Lecturer, Student etc.)
-        :param field - The colum or attribute to filter for in the model
-        :param value - The corresponding value of field to filter on
-
-        :rtype - The first matching object or None if not found
-        """
-        try:
-
-            # Get the attributes and filter by it corresponding value.
-            return self.__session.query(model).filter(
-                getattr(model, field) == value
-            ).all()
-        except AttributeError:
-            return None
+        total_count = self.__session.query(
+            func.count(Room.id)
+        ).filter_by(**kwargs).scalar()
+        return total_count
 
     def save(self):
         """ Commit change to database """

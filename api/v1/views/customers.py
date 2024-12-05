@@ -3,12 +3,13 @@
 from models.customer import Customer
 from flask import abort, jsonify, request
 from api.v1.views import api_views
+from api.v1.views.utils import role_required
 from api.v1.views.utils import bad_request
 from models import storage
 
 
-@api_views.route("/customers", method=["POST"])
-│@role_required(["staff"])
+@api_views.route("/customers", methods=["POST"])
+@role_required(["staff"])
 def add_customer():
     """Add new customer"""
     data = request.get_json()

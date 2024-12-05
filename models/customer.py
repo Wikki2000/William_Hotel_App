@@ -14,8 +14,9 @@ class Customer(BaseModel, Base):
     address = Column(String(30))
     gender = Column(ENUM("male", "female"))
     phone = Column(String(30))
-    customer_id = Column(String(30))
     is_guest = Column(Boolean, default=False)
+    id_type = Column(ENUM("voter_card", "nin", "driver_licence", "passport"))
+    id_number =  Column(String(30))
 
     books = relationship('Booking', backref='customer',
                          cascade='all, delete-orphan')

@@ -1,19 +1,4 @@
 /**
- * Retrieved data from server server.
- *
- * @param {string} url - The URL to which the request is sent.
- * @return {Promise<object>} - A server response, which contains the data in JSON format.
- */
-export async function get(url) {
-  try {
-    const data = await Promise.resolve($.get(url));
-    return data;
-  } catch (error) {
-    throw error;
-  }
-}
-
-/**
  * Sends an AJAX request.
  *
  * @param {string} url - The URL to which the request is sent.
@@ -172,4 +157,90 @@ export function displayRoomData(data) {
   } catch (error) {
     console.error("Error fetching room data:", error);
   }
+}
+
+/**
+ * Display Popup menu list
+ *
+ * @param {Array} menuList - The menu list of items
+ * @param {object} $selector - The current item clicked.
+ */
+export function displayMenuList(menuList, $selector) {
+  if (Array.isArray(menuList)) {
+    // Clear existing dropdown items to avoid duplication
+    $selector.siblings('.dropdown-menu')
+      .find('.main__dropdown--menu-list')
+      .empty();
+
+    // Populate dropdown with room numbers
+    menuList.forEach((menu) => {
+      $selector.siblings('.dropdown-menu')
+        .find('.main__dropdown--menu-list')
+        .append(`<li class="dropdown-item">${menu}</li>`);
+    });
+
+    // Add select to beginig of menu list
+    /*
+    $selector.siblings('.dropdown-menu')
+      .find('.main__dropdown--menu-list')
+      .prepend('<li class="dropdown-item main__dropdown-item">Select</li>');
+      */
+  } else {
+    console.error('Rooms data is not an array:', menuList);
+  }
+
+  // Show the dropdown menu
+  $selector.siblings('.dropdown-menu').toggle();
+}
+
+/**
+ * Validates the given form element.
+ *
+ * @param {jQuery} $formElement - Form selector object.
+ * @returns {boolean} - True if form is valid, otherwise false.
+ */
+export function validateForm($formElement) {
+  let isValid = false;
+
+  // Loop through all required input fields
+  $formElement.find('input[required]').each(() => {
+    const $currentInputField = $(this);
+    if (!$currentInputField.val()) {
+      isValid = true;
+    }
+  });
+  return isValid;
+}
+
+/**
+ * Displays a notification message.
+ * @param {string} message - The message to display in the notification.
+ * @param {boolean} [isError=false] - Flag to indicate if the notification is an error.
+ */
+export function showNotification(message, isError = false) {
+  // Create the notification container
+  const notificationClass = isError ? 'notification error' : 'notification';
+  const $notification = $(`
+        <div class="${notificationClass}">
+            <span>${message}</span>
+            <button class="close-btn">&times;</button>
+        </div>
+    `);
+
+  // Append notification to the body
+  $('body').append($notification);
+
+  // Automatically fade out and remove the notification after 5 seconds
+  setTimeout(() => {
+    $notification.fadeOut(400, function () {
+      $(this).remove();
+    });
+  }, 7000);
+
+  // Remove notification when clicking the close button
+  $notification.find('.close-btn').on('click', function () {
+    $notification.fadeOut(400, function () {
+      $(this).remove();
+    });
+  });
 }

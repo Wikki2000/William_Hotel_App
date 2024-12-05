@@ -3,17 +3,19 @@
 from datetime import datetime
 from models.base_model import Base, BaseModel
 from sqlalchemy import (
-    Column, String, ForeignKey, Boolean, DateTime, Float, ForeignKey
+    Column, String, ForeignKey, Boolean, Float, Date
 )
+from sqlalchemy.dialects.mysql import ENUM
 from sqlalchemy.orm import relationship
 
 
 class Booking(BaseModel, Base):
     """Define class for storing booking of rooms"""
     __tablename__ = "bookings"
-    duration = Column(String(30), nullable=False)
-    expired_at = Column(DateTime, default=datetime.utcnow())
-    is_paid = Column(Boolean, default=False)
+    duration = Column(String(20), default=datetime.utcnow())
+    checkout_date = Column(Date)
+    is_paid = Column(ENUM("yes", "no"), nullable=False)
+    guest_number = Column(String(30), nullable=False)
     customer_id = Column(
         String(30), ForeignKey("customers.id"), nullable=False
     )

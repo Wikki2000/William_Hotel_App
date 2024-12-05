@@ -107,7 +107,7 @@ def role_required(roles: List[str]) -> Callable[[F], F]:
             user_id = get_jwt_identity()  # Retrieve the user ID
             user_role = claims.get("role")
 
-            # # Inject as a keyword argument
+            # Inject as a keyword argument
             kwargs['user_role'] = user_role
             kwargs['user_id'] = user_id
 
