@@ -33,7 +33,7 @@
   overflow: auto;
 }
 
-.room-table-body > tr {
+.room-table-body > .unique-table-data {
   border-bottom: 1px solid var(--orange_a100);
   padding-left: 1.88rem;
 }
@@ -242,7 +242,27 @@
   justify-content: space-between;
 }
 
+.header__icon-row .header__menu-icon:nth-of-type(1) > span {
+  position: absolute;
+  /* Styles for the first span */
+  background-color: var(--red_a800); /* Default orange color */
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  border-radius: var(--radius-lg);
+  top: 5px;
+  right: 5px;
+
+  /* Other styling */
+  
+}
+
 .header__menu-icon {
+  position: relative;
   height: 2.75rem;
   padding-left: 0.75rem;
   padding-right: 0.75rem;
@@ -253,22 +273,6 @@
   justify-content: center;
   width: 2.75rem;
   border-radius: var(--radius-xs);
-}
-
-.header__dropdown {
-  height: 2.75rem;
-  background-image: url(../public/images/img_group_5.svg);
-  background-size: cover;
-  background-repeat: no-repeat;
-  width: 46%;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding: var(--space-md);
-}
-
-.header__dropdown-icon {
-  height: 1.5rem;
 }
 
 .header__upload-icon {
@@ -289,6 +293,22 @@
   margin-right: 3.25rem;
   gap: 1.5rem;
   display: flex;
+}
+
+.tab > :nth-child(1) {
+  background-color: var(--black_900_01);
+  color: var(--white_a700);
+  padding: 5px 15px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+}
+
+.tab > :nth-child(2) {
+  background-color: var(--white_a700);
+  color: var(--black_900_01);
+  padding: 5px 15px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
 }
 
 .columnavailable {
@@ -318,19 +338,22 @@
 .tab-1 > :nth-child(1) {
   background-color: var(--blue_a700);
   padding: 5px 15px;
-  border-radius: 40px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
 }
 
 .tab-1 > :nth-child(2) {
   background-color: var(--green_500);
   padding: 5px 15px;
-  border-radius: 40px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
 }
 
 .tab-1 > :nth-child(3) {
   background-color: var(--orange_a100);
   padding: 5px 15px;
-  border-radius: 40px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
 }
 
 .info-text {
