@@ -13,7 +13,7 @@
     <link rel="stylesheet" type="text/css" href="./css/font.css" />
     <link rel="stylesheet" type="text/css" href="./css/styles.css" />
     <link rel="stylesheet" type="text/css" href="./css/components.css" />
-    <link rel="stylesheet" type="text/css" href="./css/rooms.css" />
+    <link rel="stylesheet" type="text/css" href="./css/staff_profile.css" />
     <link rel="icon" type="image/x-icon" href="/public/images/img_logo_hotel_1.png" />
     <script defer src="/rooms.js"></script>
   </head>
@@ -130,48 +130,99 @@
             </header>
 
             <!-- room service tabs section -->
-            <div class="tab">
-              <h1 class="tab__item ui heading size-headingxs">All Rooms</h1>
-              <h2 class="tab__item ui heading size-headingxs">Services</h2>
+            <div class="staff-profile-heading">
+              <h1>Profile</h1>
             </div>
           </div>
-          <div class="columnavailable">
-            <!-- room availability section -->
-            <div class="info">
-              <div class="tab-1">
-                <h3 class="tab__item-2 ui heading size-texts">Available</h3>
-                <h4 class="tab__item-2 ui heading size-texts">Occupied</h4>
-                <h5 class="tab__item-2 ui heading size-texts">Reserved</h5>
-              </div>
-              <h6 class="info-text ui heading size-texts">All Rooms come with a complementary breakfast!</h6>
-            </div>
 
-            <!-- room table section -->
-            <div class="table-column">
-              <table cellpadding="0" cellspacing="0" class="tabletype ui table size-xs">
-                <thead>
-                  <tr>
-                    <th width="348px">
-                      <p class="table__header-cell ui heading size-headings">Image</p>
-                    </th>
-                    <th width="318px">
-                      <p class="table__header-cell-1 ui heading size-headings">Type</p>
-                    </th>
-                    <th width="310px">
-                      <p class="table__header-cell-2 ui heading size-headings">Rate</p>
-                    </th>
-                    <th width="124px">
-                      <p class="table__header-cell-3 ui heading size-headings">Status</p>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody class="room-table-body">
-                  <!-- Rows will be dynamically added here -->
-                </tbody>
-              </table>
+          <div class="profile-content">
+            <div class="profile-details">
+              <div class="profile-pic">
+                <p>User Image</p>
+                <div class="img-div">
+                  <img src="public/images/profile_pic.svg" alt="profile_pic">  
+                </div>
+                
+              </div>
+
+              <div id="profile-edit-section">
+                <form action="#">
+                  <div class="combo-flex">
+                    <div class="input-label-combo">
+                      <label for="edit-name">First Name</label>
+                      <input type="text" name="name" id="edit-name" placeholder="Johnson">  
+                    </div>
+
+                    <div class="input-label-combo">
+                      <label for="edit-postion">Position</label>
+                      <input type="text" name="name" id="edit-postion" placeholder="Staff">
+                    </div>
+                  </div>
+
+                  <div class="combo-flex">
+                    <div class="input-label-combo">
+                      <label for="edit-lname">Last Name</label>
+                      <input type="text" name="name" id="edit-lname" placeholder="Ibo">  
+                    </div>
+
+                    <div class="input-label-combo">
+                      <label for="edit-number">Number</label>
+                      <input type="number" name="name" id="edit-number" placeholder="+23481372182734">
+                    </div>
+                  </div>
+
+                  <div class="combo-flex">
+                    <div class="input-label-combo">
+                      <label for="edit-email">Email</label>
+                      <input type="text" name="email" id="edit-email" placeholder="johnsonisnotwise@gmail.com">  
+                    </div>
+
+                    <div class="input-label-combo">
+                      <label for="edit-gender">Gender</label>
+                      <br>
+                      <select name="gender" id="edit-gender">
+                        <option value="" disabled selected>Select</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="combo-flex">
+                    <div class="input-label-combo">
+                      <label for="edit-address">Address</label>
+                      <input type="text" name="address" id="edit-address" placeholder="2 landmark street">  
+                    </div>
+
+                    <div class="input-label-combo">
+                      <label for="edit-nok">Next of Kin</label>
+                      <input type="text" name="nok" id="edit-nok" placeholder="Johnson Mark">
+                    </div>
+                  </div>
+
+                  <div class="combo-flex">
+                    <div class="input-label-combo">
+                      <label for="edit-dob">Date of Birth</label>
+                      <input type="date" name="dob" id="edit-dob">  
+                    </div>
+
+                    <div class="input-label-combo">
+                      <label for="edit-nok">Next of Kin</label>
+                      <input type="text" name="nok" id="edit-nok" placeholder="Johnson Mark">
+                    </div>
+                  </div>
+
+                  <div class="combo-flex-submit">
+                    <button type="submit" id="save-changes">save</button>
+                    <button type="reset" id="cancel-changes">cancel</button>
+                  </div>
+                </form>
+
+                
+              </div>
             </div>
-            
           </div>
+
         </div>
       </div>
     </div>
