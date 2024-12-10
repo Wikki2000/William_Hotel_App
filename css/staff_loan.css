@@ -284,15 +284,36 @@
   font-weight: 500;
   font-size: 1.25rem;
   line-height: 1.875rem;
+  width: 100%;
+}
+
+#eligible-term span {
+  margin-left: 10.1%;
 }
 
 #eligible-amount span {
   color: #FFC009;
+  margin-left: 18%;
 }
 
 .loan-action button:first-of-type {
   border: 1px solid #F5D077;
   text-align: center;
+  padding: 2.9% 0;
+  width: 36.5%;
+  height: 17.5%;
+  border-radius: 20px;
+}
+
+.loan-action button:last-of-type {
+  box-shadow: 0px 4px 4px 0px #00000040;
+  background: #000000;
+  text-align: center;
+  padding: 2.9% 0;
+  width: 36.5%;
+  height: 17.5%;
+  border-radius: 20px;
+  color: #fff;
 }
 
 
