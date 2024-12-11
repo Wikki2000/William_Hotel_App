@@ -39,12 +39,12 @@ img {
   top: 1rem;
 }
 
-table {
+.table {
   position: absolute;
 }
 
 
-table > thead {
+.table > thead {
   position: sticky;
   top: 1rem;
 }
