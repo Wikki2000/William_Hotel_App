@@ -1,31 +1,9 @@
-import { roomTableTemplate, displayRoomData } from '../global/utils.js';
+import { fetchData, getBaseUrl, roomTableTemplate, displayRoomData } from '../global/utils.js';
 
 $(document).ready(function () {
+  const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
+  const roomUrl =  API_BASE_URL + '/rooms'
 
-  // Dummy data
-  const data = [
-    {
-      image: "/static/images/staff_dashboard/temp/img_waldemar_3i3mteczkdi_unsplash.png",
-      roomType: "Deluxe Room",
-      roomNumber: "#212",
-      rate: "50,000",
-      status: "occupied",
-    },
-    {
-      image: "/static/images/staff_dashboard/temp/img_rhema_kallianpu.png",
-      roomType: "Standard Room",
-      roomNumber: "#101",
-      rate: "30,000",
-      status: "available",
-    },
-    {
-      image: "/static/images/staff_dashboard/temp/img_waldemar_3i3mteczkdi_unsplash.png",
-      roomType: "Deluxe Room",
-      roomNumber: "#212",
-      rate: "50,000",
-      status: "reserved",
-    },
-  ];
 
   $('#dynamic__load-dashboard').on('click', '#rooms, #services', function() {
     const $clickItem = $(this);
@@ -52,53 +30,80 @@ $(document).ready(function () {
    ============================================================*/
 
   // Filter rooms according to status
-  $('#dynamic__load-dashboard').on('click', '#all__rooms, #rooms__available, #rooms__occupied, #rooms__reserved', function() {
-    const $tableBody = $(".room-table-body");
-    const $clickItem = $(this);
-    const clickId = $(this).attr('id');
+  $('#dynamic__load-dashboard').on(
+    'click',
+    '#all__rooms, #rooms__available, #rooms__occupied, #rooms__reserved', 
+    function() {
+      const $tableBody = $(".room-table-body");
+      const $clickItem = $(this);
+      const clickId = $(this).attr('id');
 
-    $tableBody.empty(); // Clear table before loading new data
+      $tableBody.empty(); // Clear table before loading new data
 
-    // Remove highlight class from sibling and add it to the clicked element
-    $clickItem.siblings().removeClass('highlight-btn');
-    $clickItem.addClass('highlight-btn');
+      // Remove highlight class from sibling and add it to the clicked element
+      $clickItem.siblings().removeClass('highlight-btn');
+      $clickItem.addClass('highlight-btn');
 
-    switch (clickId) {
-      case 'all__rooms': {
-        displayRoomData(data);
-        break;
-      }
-      case 'rooms__available': {
-        data.forEach((room) => {
-          if (room.status === 'available') {
-            const statusClass = 'room-status-4';
-            $tableBody.append(roomTableTemplate(room, statusClass));
-          }
-        });
-        break;
-      }
-      case 'rooms__occupied': {
-        data.forEach((room) => {
-          if (room.status === 'occupied') {
-            const statusClass = 'room-status';
-            $tableBody.append(roomTableTemplate(room, statusClass));
-          }
-        });
-        break;
-      }
-      case 'rooms__reserved': {
-        data.forEach((room) => {
-          if (room.status === 'reserved') {
-            const statusClass = 'room-status-3';
-            $tableBody.append(roomTableTemplate(room, statusClass));
-          }
-        });
-        break;
-      }
-    }
+      switch (clickId) {
+        case 'all__rooms': {
+          fetchData(roomUrl)
+          .then(({ rooms, rooms_count }) => {
+            displayRoomData(rooms);
+          })
+          .catch((error) => {
+            console.error('Failed to fetch room data:', error);
+          });
 
-    //
-  });
+          break;
+        }
+        case 'rooms__available': {
+          fetchData(roomUrl)
+          .then(({ rooms, rooms_count }) => {
+            rooms.forEach((room) => {
+              if (room.status === 'available') {
+                const statusClass = 'room-status-4';
+                $tableBody.append(roomTableTemplate(room, statusClass));
+              }
+            });
+          })
+          .catch((error) => {
+            console.error('Failed to fetch room data:', error);
+          });
+
+          break;
+        }
+        case 'rooms__occupied': {
+          fetchData(roomUrl)
+          .then(({ rooms, rooms_count }) => {
+            rooms.forEach((room) => {
+              if (room.status === 'occupied') {
+                const statusClass = 'room-status';
+                $tableBody.append(roomTableTemplate(room, statusClass));
+              }
+            });
+          })
+          .catch((error) => {
+            console.error('Failed to fetch room data:', error);
+          });
+          break;
+        }
+        case 'rooms__reserved': {
+          fetchData(roomUrl)
+          .then(({ rooms, rooms_count }) => {
+            rooms.forEach((room) => {
+              if (room.status === 'reserved') {
+                const statusClass = 'room-status-3';
+                $tableBody.append(roomTableTemplate(room, statusClass));
+              }
+            });
+          })
+          .catch((error) => {
+            console.error('Failed to fetch room data:', error);
+          });
+          break;
+        }
+      }
+    });
 
   /*=============================================================
                        Service Section

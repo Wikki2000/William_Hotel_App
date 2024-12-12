@@ -2,12 +2,18 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Room Services - Manage Your Accommodations</title>
+    <title>Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
       content="Explore our room services and manage reservations efficiently. From deluxe to standard rooms, ensure a pleasant stay with complementary breakfast and top-notch amenities."
       />
+
+    <!-- Link Hotel Icon -->
+    <link rel="icon" type="image/x-icon" href="/static/images/public/hotel_logo.png" />
+
+    <!-- Link Font-Is-Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
     <!-- Link Public CSS Files-->
     <link rel="stylesheet" type="text/css" href="/static/css/public/index.css" />
@@ -20,13 +26,16 @@
     <link rel="stylesheet" type="text/css" href="/static/css/staff_dashboard/room_service.css" />
     <link rel="stylesheet" type="text/css" href="/static/css/public/header.css" />
     <link rel="stylesheet" type="text/css" href="/static/css/staff_dashboard/main_dashboard.css" />
-    <link rel="icon" type="image/x-icon" href="/static/images/public/hotel_logo.png" />
+    <link rel="stylesheet" type="text/css" href="/static/css/staff_dashboard/restaurant.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/staff_dashboard/order.css" />
 
     <!-- Link Staff_dashboard JS Files-->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="module" defer src="/static/js/staff_dashboard/restaurant.js"></script>
     <script type="module" defer src="/static/js/staff_dashboard/room_service.js"></script>
-    <script type="module" defer src="/static/js/staff_dashboard/side_bar.js"></script>
+    <script type="module" defer src="/static/js/staff_dashboard/app.js"></script>
     <script type="module" defer src="/static/js/staff_dashboard/main_dashboard.js"></script>
+    <script type="module" defer src="/static/js/staff_dashboard/order.js"></script>
   </head>
   <body>
     <!-- main content section -->
@@ -65,13 +74,16 @@
             <li id="sidebar__restaurant" class="sidebar__nav-icon">
               <a>
                 <img src="/static/images/staff_dashboard/restaurant_icon.png" alt="Restaurant Icon" class="sidebar__icon--services" />
-                <span> Restaurant </span>
+                <span> Restaurant & Bar </span>
               </a>
             </li>
             <li id="sidebar__order" class="sidebar__nav-icon">
               <a>
                 <img src="/static/images/staff_dashboard/orders_icon.png" alt="Orders Icon" class="sidebar__icon--orders" />
-                <span> Orders</span>
+                <div>
+                  <span>Orders</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                  <span id="sidebar__order-count"><!-- The count of cart items will be display here --></span>
+                </div>
               </a>
             </li>
             <li id="sidebar__help" class="sidebar__nav-icon">
@@ -143,9 +155,243 @@
             </header>
 
             <section id="dynamic__load-dashboard">
-              <!-- Main dashboard section goes here -->
-            </section>
+              <!-- Others dashboard section will be loaded here -->
+              <div class="main__container">
+                <div class="card">
+                  <div>
+                    <p>Dashboard</p>
+                    <div class="main__welcom-user">
+                      <div>
+			 <h1>Hello <span id="main__username"><!-- username goes here --></span></h1>
+                        <span>Welcome back!</span>
+                      </div>
+                      <br>
+		      <span class="emoji"><img src="/static/images/public/waving_hello_smile_icon.png" /></span>
+                      <div class="date"> {{ today }}
+                        <span class="calendar-icon">📅</span>
+                      </div>
+                    </div>
+                  </div>
 
+                  <div class="controls">
+                    <div class="toggle">
+                      <label class="switch">
+                        <input type="checkbox" id="toggle-switch">
+                        <span class="slider"></span>
+                      </label>
+                      <p>State: <span id="toggle-state">0</span></p>
+                    </div>
+
+                    <div class="performance">
+                      <p>Performance <span class="percent"><em>85%</em></span></p>
+                      <button class="track-btn">Track</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="main__room-status">
+                  <div class="main__room-status1">
+                    <div>
+                      <div class="main__row-1 green">
+			<i class="fas fa-calendar"></i>
+                      </div>
+                      <p>Today’s Check in </p>
+                    </div>
+                    <div class="main__row-2">
+                      <button class="highlight-btn">View Rooms </button>
+                      <h1><em id="main__today-check--in">0</em></h1>
+                    </div>
+                  </div>
+
+                  <div class="main__room-status2">
+                    <div>
+                      <div class="main__row-1 red">
+			<i class="fas fa-calendar"></i>
+                      </div>
+                      <p>Today’s Orders </p>
+                    </div>
+                    <div class="main__row-2">
+                      <button class="highlight-btn">View Orders </button>
+                      <h1><em>0</em></h1>
+                    </div>
+                  </div>
+
+                  <div class="main__room-status3">
+                    <div>
+                      <div class="main__row-1 blue">
+		        <i class="fas fa-home"></i>
+                      </div>
+                      <p>Rooms Available </p>
+                    </div>
+                    <div class="main__row-2">
+                      <button class="highlight-btn">View Rooms </button>
+                      <h1><em id="main__room-available">0</em></h1>
+                    </div>
+                  </div>
+
+                  <div class="main__room-status4">
+                    <div>
+                      <div class="main__row-1 orange">
+		        <i class="fas fa-home"></i>
+                      </div>
+                      <p>Reserved Rooms </p>
+                    </div>
+                    <div class="main__row-2">
+                      <button class="highlight-btn">View Rooms </button>
+                      <h1><em id="main__room-reserved">0</em></h1>
+                    </div>
+                  </div>
+                </div>
+
+                <form id="main__book-form">
+                  <div class="flex-column">
+                    <h3>Add New Booking</h3>
+                    <div class="flex-row">
+                      <div  class="check__icon-container">
+                        <svg class="check__icon" width="20" height="20" viewBox="0 0 28 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M6.07704 18.7316L6.07827 18.7307C6.18847 18.6534 6.2618 18.5372 6.28426 18.4085C6.30668 18.2801 6.27701 18.1476 6.20055 18.0397C4.83323 16.1157 4.15809 13.7927 4.28423 11.4431C4.41037 9.09345 5.33038 6.8545 6.89572 5.08481C8.46098 3.31522 10.5807 2.11734 12.9148 1.68185C15.2489 1.24637 17.6634 1.59823 19.7718 2.68152C21.8802 3.76486 23.5611 5.51739 24.5439 7.65936C25.5268 9.80143 25.7543 12.2082 25.1895 14.4937C24.6248 16.7791 23.301 18.8099 21.4314 20.2611C19.5619 21.7123 17.2548 22.5004 14.8797 22.5L6.07704 18.7316ZM6.07704 18.7316C6.02208 18.7704 5.9596 18.7982 5.89315 18.8133C5.8267 18.8283 5.75782 18.8302 5.69059 18.8188C5.62335 18.8074 5.55933 18.783 5.50219 18.7472C5.44505 18.7114 5.39603 18.665 5.35772 18.6109L5.35732 18.6104M6.07704 18.7316L5.35732 18.6104M5.35732 18.6104C3.86003 16.5035 3.12162 13.9613 3.25949 11.3911M5.35732 18.6104L3.25949 11.3911M14.5162 23.3516C14.6117 23.446 14.7422 23.5 14.8796 23.5L14.5162 23.3516ZM14.5162 23.3516C14.421 23.2574 14.3685 23.1308 14.3685 23M14.5162 23.3516L14.3685 23M14.3685 23C14.3685 22.8692 14.421 22.7426 14.5162 22.6484M14.3685 23L14.5162 22.6484M14.5162 22.6484C14.6117 22.554 14.7423 22.5 14.8796 22.5L14.5162 22.6484ZM3.25949 11.3911C3.39736 8.82089 4.40362 6.37 6.11818 4.43128M3.25949 11.3911L6.11818 4.43128M6.11818 4.43128C7.83283 2.49247 10.1568 1.17804 12.7182 0.699825M6.11818 4.43128L12.7182 0.699825M12.7182 0.699825C15.2796 0.2216 17.929 0.607544 20.2417 1.79534M12.7182 0.699825L20.2417 1.79534M20.2417 1.79534C22.5543 2.98309 24.3957 4.90348 25.472 7.24779M20.2417 1.79534L25.472 7.24779M25.472 7.24779C26.5482 9.592 26.7975 12.2252 26.1803 14.7258M25.472 7.24779L26.1803 14.7258M26.1803 14.7258C25.563 17.2265 24.1146 19.451 22.0658 21.0423M26.1803 14.7258L22.0658 21.0423M22.0658 21.0423C20.0169 22.6337 17.4864 23.4995 14.8797 23.5L22.0658 21.0423Z" stroke="black" stroke-opacity="0.75"/>
+                          <path d="M5.77911 18.5H6.27911V18V14C6.27911 13.8692 6.3316 13.7426 6.42686 13.6484C6.52231 13.554 6.65294 13.5 6.7903 13.5C6.92766 13.5 7.05829 13.554 7.15374 13.6484C7.249 13.7426 7.30149 13.8692 7.30149 14V19C7.30149 19.1308 7.249 19.2574 7.15374 19.3516C7.05829 19.446 6.92766 19.5 6.7903 19.5H1.73434C1.59697 19.5 1.46635 19.446 1.3709 19.3516C1.27563 19.2574 1.22314 19.1308 1.22314 19C1.22314 18.8692 1.27563 18.7426 1.3709 18.6484C1.46635 18.554 1.59697 18.5 1.73434 18.5H5.77911Z" stroke="black" stroke-opacity="0.75"/>
+                          <path d="M11.849 15.5L11.849 15.5L11.8433 15.5C11.7753 15.5004 11.7079 15.4875 11.6452 15.4622C11.5825 15.4368 11.5259 15.3997 11.4783 15.3531L11.4783 15.353C11.4307 15.3063 11.3932 15.251 11.3676 15.1905C11.3422 15.1299 11.3291 15.0652 11.3291 15C11.3291 14.9348 11.3422 14.8701 11.3676 14.8095C11.3932 14.749 11.4307 14.6937 11.4783 14.647L11.4791 14.6462L14.2195 11.9462L14.3685 11.7993V11.59V7C14.3685 6.8692 14.421 6.74262 14.5163 6.64841C14.6117 6.55402 14.7424 6.5 14.8797 6.5C15.0171 6.5 15.1477 6.55402 15.2432 6.64841C15.3384 6.74262 15.3909 6.8692 15.3909 7V12H15.3909L15.3909 12.0029C15.3913 12.0679 15.3787 12.1325 15.3537 12.193C15.3289 12.2533 15.2921 12.3085 15.2453 12.3553C15.2451 12.3555 15.2449 12.3557 15.2447 12.3559L12.214 15.3531C12.2138 15.3533 12.2136 15.3535 12.2133 15.3537C12.1659 15.4 12.1095 15.437 12.0471 15.4622C11.9844 15.4875 11.9171 15.5004 11.849 15.5Z" stroke="black" stroke-opacity="0.75"/>
+                        </svg>
+                        <p>Duration</p>
+                        <input id="main__book-duration" placeholder="e.g., 5 Nights" required>
+                      </div>
+
+                      <div class="check__icon-container">
+                        <p>Check Out</p>
+                        <input id="main__checkout-date" type="date" required>
+                      </div>
+
+                      <div>
+                        <p>Instant Payment</p>
+                        <div class="dropdown">
+                          <div id="main__guest-payment--status" class="main__dropdown-btn drop-down">
+                            <span>Select </span>
+                            <img src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px" alt="dropdown" />
+                          </div>
+                          <div class="dropdown-menu">
+                            <ul class="main__dropdown--menu-list">
+                              <!-- Dynamically load menu list -->
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <h3>Room Details</h3>
+                    <div class="flex-row">
+                      <div>
+                        <p>Room Number</p>
+                        <div class="dropdown">
+                          <div id="main__dropdown--room-no" class="main__dropdown-btn drop-down">
+                            <span>Select </span>
+                            <img
+                              src="/static/images/public/img_arrow_down_black_900_01.svg"
+                              width="15px"  alt="dropdown"
+                                            />
+                          </div>
+                          <div class="dropdown-menu">
+                            <ul class="main__dropdown--menu-list">
+                              <!-- Dynamically load  menu list -->
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <p>Room Rate</p>
+                        <input id="main__room-rate" value="Auto-filled based on room no." readonly>
+                      </div>
+                      <div>
+                        <p>Room Type</p>
+                        <input id="main__room-type" value="Auto-filled based on room no." readonly>
+                      </div>
+                    </div>
+
+                    <h3>Guest Details</h3>
+                    <div class="flex-row">
+                      <div class="">
+                        <p>Name</p>
+                        <input id="main__guest-name" placeholder="e.g., James John">
+                      </div>
+                      <div>
+                        <p>Phone No.</p>
+                        <input id="main__guest-phone" placeholder="e.g., 08187643578">
+                      </div>
+                      <div>
+                        <p>Address</p>
+                        <input id="main__guest-address" placeholder="e.g., No. AdO Rd. Ikere-Ekiti">
+                      </div>
+                    </div>
+
+                    <div class="flex-row">
+                      <div>
+                        <p>Gender</p>
+                        <div class="dropdown">
+                          <div id="main__guest-gender" class="main__dropdown-btn drop-down">
+                            <span>Select </span>
+                            <img src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px" alt="dropdown" />
+                          </div>
+                          <div class="dropdown-menu">
+                            <ul class="main__dropdown--menu-list">
+                              <!-- Dynamically load menu list -->
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <p>Guest No.</p>
+                        <input id="main__guest-no" placeholder="e.g., 1 male, 1 female">
+                      </div>
+
+                      <div>
+                        <p>ID Type</p>
+                        <div class="dropdown">
+                          <div id="main__guest-id--type" class="main__dropdown-btn drop-down">
+                            <span>Select </span>
+                            <img src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px" alt="dropdown" />
+                          </div>
+                          <div class="dropdown-menu">
+                            <ul class="main__dropdown--menu-list">
+                              <!-- Dynamically load menu list -->
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                    <div>
+                      <p>ID Number</p>
+                      <input id="main__id--no-val" placeholder="e.g., 1234-4u765-8767tfer-hg64w">
+                    </div>
+                    <div class="main__btn">
+                      <button class="highlight-btn">Proceed</button>
+                    </div>
+
+                    <!-- Holds value of options selected in menu -->
+                    <!-- This aid in submitting this data with form -->
+                    <input id="main__is--paid-val" required type="hidden" /> <!-- Selected Payment Status Option -->
+                    <input id="main__room--no-val" required type="hidden" /> <!-- Selected Room No. Option -->
+                    <input id="main__guest--gender-val" required type="hidden" /> <!-- Selected Gender. Option -->
+                    <input id="main__id--type-val" required type="hidden" /> <!-- Selected Room No. Option -->
+                  </div>
+                </form>
+              </div>
+
+              <!-- Confirmation Modal for Booking -->
+              <div id="main__popup-modal" class="modal">
+                <div class="modal-content">
+                  <!--<button id="closeModal" class="close-btn">×</button>-->
+                  <h2>Confirm Booking!</h2>
+                  <div class="modal-buttons">
+                    <button id="main__cancel-btn" class="highlight-btn cancel-btn">Cancel</button>
+                    <button id="main__confirm-btn" class="highlight-btn confirm-btn">Confirm</button>
+                  </div>
+                </div>
+              </div>
+            </section>
           </div>
         </div>
       </div>

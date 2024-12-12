@@ -3,21 +3,26 @@
 from app.routes import app_views
 from flask import abort, render_template, request, jsonify
 from api.v1.views.utils import role_required
-import requests
-from uuid import uuid4
-
-API_BASE_URL = 'http://127.0.0.1:5002/api/v1'
+from datetime import datetime
 
 
 @app_views.route(f"/dashboard")
 @role_required(["staff"])
 def dashboarde(user_role: str, user_id: str):
     """"Render templates for user dashboard"""
+    today = datetime.today()
+    formatted_date = today.strftime("%a %b %d %Y")
     if user_role == "staff":
-        return render_template("dashboard/staff_dashboard.html")
+        return render_template(
+            "dashboard/staff_dashboard.html", today=formatted_date
+        )
     elif user_role == "manager":
-        return render_template("dashboard/manager_dashboard.html")
+        return render_template(
+            "dashboard/manager_dashboard.html", today=formatted_date
+        )
     elif user_role == "ceo":
-        return render_template("dashboard/ceo_dashboard.html")
+        return render_template(
+            "dashboard/ceo_dashboard.html", today=formatted_date
+        )
     else:
         abort(403)

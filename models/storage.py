@@ -10,6 +10,9 @@ from models.user import User
 from models.order import Order
 from models.room import Room
 from models.booking import Booking
+from models.drink import Drink
+from models.drink_category import DrinkCategory
+from models.food import Food
 
 from dotenv import load_dotenv
 from os import getenv
@@ -62,6 +65,10 @@ class Storage:
     def new(self, obj):
         """ Add user object to session.new """
         self.__session.add(obj)
+
+    def add_many(self, obj_list):
+        """Add multiples object."""
+        self.__session.add_all(obj_list)
 
     def rollback(self):
         """ Rollback a session on error. """

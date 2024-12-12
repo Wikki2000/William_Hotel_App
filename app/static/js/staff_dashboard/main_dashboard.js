@@ -1,88 +1,130 @@
-import { validateForm, showNotification, getBaseUrl, displayMenuList } from '../global/utils.js';
+import {
+  ajaxRequest, fetchData, compareDate,
+  getFormattedDate, validateForm, updateElementCount,
+  showNotification, getBaseUrl, displayMenuList
+} from '../global/utils.js';
 
 $(document).ready(function() {
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
-  const url = API_BASE_URL + '/rooms';
-
-  let rooms; // Define globally
 
   // Function to fetch rooms data
-  async function getRoom(url) {
+  async function getRoom() {
     try {
-      if (!rooms) {
-        // Fetch data only if not already fetched
-        rooms = await $.get(url); 
-      }
+      const bookingUrl = API_BASE_URL + '/bookings';
+      const url = API_BASE_URL + '/rooms';
+      // Fetch data only if not already fetched
+      const rooms = await $.get(url); 
+      const bookings = await $.get(bookingUrl);
+
+      const todayBookingCount = bookings.filter(
+        (booking) => compareDate(booking.created_at)
+      ).length;
+
       const roomCounts = rooms.rooms_count;
+
       // Update room stats in the UI
       $('#main__room-available').text(roomCounts.total_available_room);
       $('#main__room-reserved').text(roomCounts.total_reserved_room);
+
+      $('#main__today-check--in').text(todayBookingCount);
+
     } catch (error) {
       console.error('An error occurred while retrieving rooms data:', error);
     }
   }
 
+
   // Fetch rooms data when the page loads
   (async () => {
-    await getRoom(url);
+    await getRoom();
   })();
 
   // Handle the form submission for the booking form
-  $('#dynamic__load-dashboard').on(
-    'submit', '#main__book-form',
-    function (event) {
-      event.preventDefault(); // Prevent default form submission
+  $('#dynamic__load-dashboard').on('submit', '#main__book-form', function (e) {
+    e.preventDefault(); // Prevent default form submission
 
-      // Validate form data and show error messages
-      if (validateForm($(this), event)) {
-        showNotification('Please fill out all required fields.', true);
-        event.preventDefault();
-      }
+    // Validate form data and show error messages
+    if (!validateForm($('#main__book-form'))) {
+      showNotification('Please fill out all required fields.', true);
+      return; // Exit if validation fails
+    }
 
-      // Booking data
-      const duration = $('#main__book-duration').val();
-      const checkout_date = $('#main__checkout-date').val();
-      const guest_number = $('#main__guest-no').val();
-      const is_paid = $('#main__is--paid-val').val().toLowerCase();
+    // Booking data
+    const duration = $('#main__book-duration').val();
+    const expiration = $('#main__checkout-date').val();
+    const guest_number = $('#main__guest-no').val();
+    const is_paid = $('#main__is--paid-val').val().toLowerCase();
 
-      // Room data
-      const room_number = $('#main__room--no-val').val(); 
+    // Room data
+    const roomNumber = $('#main__room--no-val').val();
 
-      // Customer data
-      const name = $('#main__guest-name').val();
-      const address = $('#main__guest-address').val();
-      const phone = $('#main__guest-phone').val();
-      const gender = $('#main__guest--gender-val').val();
-      const id_type = $('#main__id--type-val').val();
-      const id_number = $('#main__id--no-val').val();
+    // Customer data
+    const name = $('#main__guest-name').val();
+    const address = $('#main__guest-address').val();
+    const phone = $('#main__guest-phone').val();
+    const gender = $('#main__guest--gender-val').val();
+    const id_type = $('#main__id--type-val').val().toLowerCase();
+    const id_number = $('#main__id--no-val').val();
 
-      const BookingData = {
-        book: { duration, checkout_date, guest_number, is_paid },
-        room: { room_number },
-        customer: { name, address, phone, id_type, id_number }
-      };
-      console.log(BookingData);
-    });
+    const BookingData = {
+      book: { duration, expiration, guest_number, is_paid },
+      customer: { name, address, phone, id_type, id_number }
+    };
+
+    $('#main__popup-modal').css('display', 'flex');
+
+    $('#dynamic__load-dashboard').on(
+      'click', '#main__confirm-btn', function() {
+        const bookUrl =  API_BASE_URL + `/rooms/${roomNumber}/book`;
+        ajaxRequest(bookUrl, 'POST', JSON.stringify(BookingData),
+          (response) => {
+            //window.location.reload()
+            $('#main__popup-modal').hide();
+            const msg = (
+              `Success! Room [${roomNumber}] has been booked for ${name}`
+            );
+            showNotification(msg);
+
+            // Update the count in ui
+            updateElementCount($('#main__room-available'));
+            updateElementCount($('#main__today-check--in'));
+          },
+          (error) => {
+          }
+        );
+      });
+
+    // Cancel Popup Modal
+    $('#dynamic__load-dashboard').on(
+      'click', '#main__cancel-btn', function() {
+        $('#main__popup-modal').hide();
+      });
+  });
 
   // Load and display popup menu list of room number
   $('#dynamic__load-dashboard').on(
     'click', '.main__dropdown-btn',
-    async function () {
+    function () {
       const $clickItem = $(this);
       const clickId = $clickItem.attr('id');
 
       switch(clickId) {
         case 'main__dropdown--room-no': {
-          await getRoom(url); // Ensure rooms data is available
-          const availableRooms = rooms.rooms.filter((room) => room.is_available)
-          .map((room) => room.room_number);
-          displayMenuList(availableRooms, $clickItem);
+          const roomUrl = API_BASE_URL + '/rooms/available/filter';
+          fetchData(roomUrl)
+          .then((rooms) => {
+            console.log(rooms);
+            const availableRooms = rooms.map((room) => room.number);
+            displayMenuList(availableRooms, $clickItem);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
 
           // Auto-fill the input field when room number selected in dropdown menu
           $('#dynamic__load-dashboard').on(
             'click', '.dropdown-item',
-            async function() {
-              await getRoom(url);
+            function() {
               const $clickItem = $(this);
 
               // Check if the clicked dropdown is within Room No. dropdown
@@ -100,17 +142,20 @@ $(document).ready(function() {
                   $('#main__room-rate, #main__room-type')
                     .val('Auto-filled based on room no');
                 } else {
-                  await getRoom(url);
-                  const listOfRooms = rooms.rooms;
-
-                  // Filter the rooms with the room number selected
-                  const filterByRoomNumber = listOfRooms.filter(
-                    (room) => room.room_number === roomNumberSelected
+                  const roomUrl = (
+                    API_BASE_URL + `/rooms/${roomNumberSelected}`
                   );
 
                   // Auto-fill the input field
-                  $('#main__room-rate').val('₦' + filterByRoomNumber[0].amount);
-                  $('#main__room-type').val(filterByRoomNumber[0].room_type);
+                  fetchData(roomUrl)
+                    .then((data) => {
+                      $('#main__room-rate')
+                        .val('₦' + data.amount.toLocaleString());
+                      $('#main__room-type').val(data.name);
+                    })
+                    .catch((error) => {
+                      console.log(error);
+                    });
 
                   // Populated with selected options from dropdown menu.
                   $clickItem.closest('.dropdown')
@@ -149,7 +194,6 @@ $(document).ready(function() {
           break;
         }
         case 'main__guest-gender' : {
-          console.log('Gender dropdown clicked');
           const genderOptions = ['Male', 'Female'];
           displayMenuList(genderOptions, $clickItem);
           $('#dynamic__load-dashboard').on(
@@ -162,7 +206,6 @@ $(document).ready(function() {
                 $clickItem.closest('.dropdown')
                   .find('.main__dropdown-btn span')
                   .text($(this).text());
-
                 $('.dropdown-menu').hide();
               }
             });

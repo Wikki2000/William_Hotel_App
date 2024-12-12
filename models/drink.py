@@ -1,17 +1,21 @@
 #!/usr/bin/python3
 """Drink Module"""
 from models.base_model import Base, BaseModel
-from sqlalchemy import Column, String, Integer, ForeignKey, Float
+from sqlalchemy import Column, String, Integer, ForeignKey, Float, LargeBinary
 from sqlalchemy.orm import relationship
-from module.order import Order
+from models.order import Order
 
 
 class Drink(BaseModel, Base):
     """Define class for storing drinks"""
     __tablename__ = "drinks"
-    name =  Column(String(20), nullable=False)
+    image = Column(LargeBinary)
+    name =  Column(String(225), nullable=False)
     qty_stock = Column(Integer, nullable=False)
     amount = Column(Float, nullable=False)
+    drink_category_id = Column(
+        String(60), ForeignKey("drink_categories.id"), nullable=False
+    )
     
     order = relationship('Order', backref='drink',
                          cascade='all, delete-orphan')

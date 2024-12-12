@@ -27,4 +27,5 @@ def add_customer():
     except Exception as e:
         print(str(e))
         return jsonify({"error": "Internal Error Occured"}), 500
-
+    finally:
+        storage.close()

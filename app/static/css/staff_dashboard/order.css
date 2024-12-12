@@ -1,0 +1,187 @@
+/*====================================
+Order Items Section
+=====================================*/
+.order__dashboard-section {
+  height: 600px;
+  white-space: nowrap;
+  overflow-y: auto;
+  padding: 10px;
+  width: 100%;
+}
+
+.order__categories-btn {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  width: 25%;
+  margin-left: 15px;
+}
+
+
+.oder__items-list {
+  background-color: var(--orange_a100_33);
+  padding: 20px;
+  border-radius: 15px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  .order__items-img {
+    height: 85px;
+    width: 150px;
+    border-radius: 10px;
+  }
+
+  .oder__first-col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .order__items--list-content {
+    width: 130%;
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-radius: 10px;
+  }
+
+  .order__action-icon {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    margin-top: 10px;
+    p {
+      height: 35px;
+      width: 35px;
+      border-radius: 35px;
+      background-color: #F08080;;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 20px;
+
+      &:hover {
+        transform: scale(1.1);
+	cursor: pointer;
+      }
+    }
+
+  }
+
+  .order__counter {
+    background-color: black;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    height: 30px;
+    width: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    button {
+      color: white;
+    }
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+  .order__counter-value {
+    text-align: center;
+    color: white;
+  }
+  .oder__second-col {
+    width: 50%;
+    h1 {
+      text-align: center;
+    }
+  }
+}
+.order__selector.filter {
+  font-size: 13px;
+}
+
+/* Form CSS */
+#order__form {
+  display: flex;
+  flex-direction: column;
+
+  .order__flex {
+    display: flex;
+    justify-content: space-between;
+    .order__content {
+      width: 100%;
+      margin: 15px;
+    }
+    .dropdown, input {
+      border: 2px solid var(--orange_a100);
+      padding: 15px;
+      height: 60%;
+      width: 100%;
+      border-radius: 5px;
+      .drop-down {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+
+  }
+  .order__button {
+    display: flex;
+    justify-content: center;
+  }
+  button {
+    border-radius: 15px;
+    width: 100%;
+    height: 45px;
+    margin-top: 20px;
+  }
+}
+
+/*==============================================
+Order History Section
+===============================================*/
+#order__history-section {
+  padding: 10px;
+  display: none;
+}
+.order__history--table-body {
+  width: auto;
+  overflow: auto;
+}
+
+#order__table {
+  width: 95%;
+}
+
+.table-column.order__history-table {
+  padding: 20px;
+}
+.order__history--table-body td {
+  border-bottom: 1px solid var(--orange_a100);
+  border-top: 1px solid var(--orange_a100);
+}
+
+.tabletype {
+  margin-top: 0.5rem;
+  align-self: stretch;
+}
+
+.table__header-cell {
+  text-align: left;
+}
+
+.order__history--filter-btns {
+  margin-left: 5%;
+  display: flex;
+  justify-content: space-between;
+  width: 25%;
+  .order__filter.filter {
+    font-size: 10px;
+  }
+}
