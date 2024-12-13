@@ -66,7 +66,9 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>`;
     document.getElementById("totals").innerHTML = totals;
 
+    document.querySelector(".total-payment").innerHTML = receiptData.total.toLocaleString()
+
     // Render QR Code
-    const qrCode = `<img src="${receiptData.qrCode}" alt="QR Code">`;
+    const qrCode = `<img src="${receiptData.qrCode}" alt="QR Code" width="400px" height="150px">`;
     document.getElementById("qr-code").innerHTML = qrCode;
 });
