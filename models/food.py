@@ -3,7 +3,7 @@
 from models.base_model import Base, BaseModel
 from sqlalchemy import Column, String, Boolean, Float, ForeignKey, LargeBinary
 from sqlalchemy.orm import relationship
-from models.order import Order
+from models.order_item import OrderItem
 
 class Food(BaseModel, Base):
     """Define class for storing drinks"""
@@ -13,5 +13,5 @@ class Food(BaseModel, Base):
     is_available = Column(Boolean, default=True)
     amount = Column(Float, nullable=False)
 
-    orders = relationship('Order', backref='food',
+    order_items = relationship('OrderItem', backref='food',
                          cascade='all, delete-orphan')
