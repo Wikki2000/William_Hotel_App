@@ -34,7 +34,7 @@
 
             <div class="order__content">
               <p><strong>Guest Name</strong></p>
-              <input>
+              <input id="order__guest--name-val" required>
             </div>
           </div>
 
@@ -79,9 +79,9 @@
           <button class="highlight-btn">Order</button>
 
           <!-- Stores option selected from menu to submit with form -->
-          <input id="order__guest--type-val" type="hidden" />
+          <input id="order__guest--type-val" type="hidden" required />
           <input id="order__ispaid-val" type="hidden" />
-          <input id="order__payment--type-val" type="hidden" />
+          <input id="order__payment--type-val" type="hidden" required  />
         </form>
       </div>
 
@@ -113,30 +113,33 @@
               <p class="table__header-cell ui heading size-headings">Amount Paid<br /><br /></p>
             </th>
             <th width="348px">
-              <p class="table__header-cell ui heading size-headings"><br /><br /></p>
+              <p class="table__header-cell ui heading size-headings">Payment Type<br /><br /></p>
             </th>
           </tr>
         </thead>
         <tbody class="order__history--table-body">
-          <tr>
-            <td>
-              <p class="ui text size-textmd">₦${room.amount}</p>
-            </td>
-            <td>
-              <p class="ui text size-textmd">₦${room.amount}</p>
-            </td>
-            <td>
-              <p class="ui text size-textmd">₦${room.amount}</p>
-            </td>
-            <td>
-              <p class="ui text size-textmd">₦${room.amount}</p>
-            </td>
-            <td>
-              <p class="ui text size-textmd">See Order Details</p>
-            </td>
-          </tr>
-        </tbody>
+	  <!-- Table data will dynamically be loaded here -->
+       </tbody>
       </table>
     </div>
   </div>
+
+  <!-- Display when not item in CART -->
+  <div class="order__emty--cart-section">
+    <div class="order__empty-cart">
+      <img src="/static/images/staff_dashboard/img_empty_cart.png" />
+      <div class="order__empty--cart-details">
+        <p>
+        <em><strong>Place Your Order ! </strong></em>
+        </p>
+        <p>
+        <strong><em>Go To</em> <span>Restaurant</span></strong>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Confirmation Modal for Booking -->
+<div id="order__confirmation-modal">
 </div>

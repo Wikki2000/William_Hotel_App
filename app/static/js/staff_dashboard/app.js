@@ -93,18 +93,23 @@ $(document).ready(function() {
       case 'sidebar__order': {
         const url = APP_BASE_URL + '/pages/order';
         $('#dynamic__load-dashboard').load(url, function() {
+
+          $('.order__empty-cart').hide();
+          $('.oder__first-col').hide();
+
           if (CART.size !== 0) {
+            $('.oder__first-col').show();
             CART.forEach((value, key) => {
               $('#oder__first-col').append(orderItemsTempleate(key, value));
             });
-		  console.log(CART);
 
             // Auto-fill with total cost
             const totalAmount = cartItemsTotalAmount(CART);
             $('#order__total--amout-cart')
               .val('₦' + totalAmount.toLocaleString());
           } else {
-            alert('Am empty');
+            $('.order__empty-cart').show();
+            $('.oder__second-col').hide();
           }
 	});
         break;

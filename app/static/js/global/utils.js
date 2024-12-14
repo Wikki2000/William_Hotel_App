@@ -38,6 +38,31 @@ export function getFormattedDate() {
 }
 
 /**
+ * Load confirmation modal.
+ *
+ * @param {string} title - The heading text of modal.
+ * @param {string} description - The description text of modal.
+ * @param {string} confirmBtnClass - The modal btn confirmation class.
+ * @param {Array} [extraData = null] - The data to be pass to modal.
+ */
+export function confirmationModal(
+  title, description, confirmBtnClass, extraData = null
+) {
+  const url = getBaseUrl()['appBaseUrl'] + '/pages/confirmation_modal';
+  $('#order__confirmation-modal').load(url, function() {
+
+    $('#order__confirm-btn').addClass(confirmBtnClass);
+    $('#order__popup-modal').css('display', 'flex');
+    $('#order__popup-modal h2').text(title);
+    $('#order__popup-modal p').text(description);
+
+    extraData.forEach(({ data, value }) => {
+      $('#extraData').attr(`data-${data}`, value);
+    });
+  });
+}
+
+/**
  * Compare server response date with current date
  * @param {string} serverDate - The date to be compare with present
  * @returns {boolean} - True if equal, otherwise false.
@@ -210,7 +235,7 @@ export function validateForm($formElement) {
  */
 export function showNotification(message, isError = false) {
   // Create the notification container
-  const notificationClass = isError ? 'notification error' : 'notification';
+  const notificationClass = isError ? 'notification error' : 'notification success';
   const $notification = $(`
         <div class="${notificationClass}">
             <span>${message}</span>
@@ -393,6 +418,8 @@ export function highLightOrderBtn(cart) {
  * @param {string} - The HTML templates of an items oredered.
  */
 export function orderItemsTempleate(itemId, itemDataObject) {
+
+  const paddingSpaceString = itemDataObject.itemName.length >= 12 ? '...' : '';
   const content = `<div class="order__items--list-content">
     <img
       src="/static/images/public/hotel_logo.png"
@@ -400,7 +427,7 @@ export function orderItemsTempleate(itemId, itemDataObject) {
     />
    <div>
      <h3 class="order__item-title" title="${itemDataObject.itemName}">
-       ${itemDataObject.itemName.slice(0, 15)}
+       ${itemDataObject.itemName.slice(0, 12)}${paddingSpaceString}
      </h3>
      <p class="order__item-price">Price: ₦${itemDataObject.itemAmount}</p>
       <p>Total:
