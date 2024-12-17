@@ -12,6 +12,5 @@ class Vat(BaseModel, Base):
     __tablename__ = "vats"
     amount = Column(Float, nullable=False)
     is_due = Column(Boolean, default=False)
-    order_id = Column(
-        String(60), ForeignKey("orders.id"), nullable=False
-    )
+    order_id = Column(String(60), ForeignKey("orders.id"))
+    booking_id = Column(String(60), ForeignKey("bookings.id"))

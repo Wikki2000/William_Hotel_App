@@ -21,5 +21,5 @@ class Room(BaseModel, Base):
     amount = Column(Float, nullable=False)
     number = Column(String(20), nullable=False, unique=True)
 
-    books = relationship('Booking', backref='room',
+    book = relationship('Booking', backref='room', uselist=False,
                          cascade='all, delete-orphan')

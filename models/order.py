@@ -2,6 +2,8 @@
 """order Module"""
 from datetime import datetime
 from models.base_model import Base, BaseModel
+from models.vat import Vat
+from models.order_item import OrderItem
 from sqlalchemy import (
     Column, String, Boolean, ForeignKey, Float, ForeignKey, Integer
 )
@@ -14,12 +16,19 @@ class Order(BaseModel, Base):
     payment_type = Column(String(50), nullable=False)
     amount = Column(Float, nullable=False)
     is_paid = Column(Boolean, default=False)
+    order_number = Column(String(15), unique=True, nullable=False)
     customer_id = Column(
         String(60), ForeignKey("customers.id"), nullable=False
     )
-    user_id = Column(
+
+    # Staff involve in making order and clearing bill
+    ordered_by_id = Column(
         String(60), ForeignKey("users.id"), nullable=False
     )
+    cleared_by_id = Column(String(60), ForeignKey("users.id"))
 
-    vat = relationship('OrderItem', backref='order', uselist=False,
+    # Relationships
+    vat = relationship('Vat', backref='order', uselist=False,
                        cascade='all, delete-orphan')
+    order_items = relationship('OrderItem', backref='order',
+                               cascade='all, delete-orphan')
