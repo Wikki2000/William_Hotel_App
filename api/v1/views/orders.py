@@ -13,6 +13,7 @@ from api.v1.views.utils import bad_request
 from models import storage
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime
+from random import randint
 
 
 @api_views.route("/order-items", methods=["POST"])
@@ -25,7 +26,7 @@ def order_items(user_role: str, user_id: str):
     in total drink stock base on the amount order.
     """
     data = request.get_json()
-    
+
     # Handle 404 error
     required_fields = ["customerData", "itemOrderData", "orderData"]
     error_response = bad_request(data, required_fields)
@@ -45,10 +46,11 @@ def order_items(user_role: str, user_id: str):
         storage.save()
 
         # Add customer and user ID to order_data
-        order_data["user_id"] = user.id
+        order_data["ordered_by_id"] = user.id
         order_data["customer_id"] = new_customer.id
 
         # Place new order
+        order_data["order_number"] = "RSP" + str(randint(100000000, 999999999))
         new_order = Order(**order_data)
         storage.new(new_order)
         storage.save()
@@ -104,8 +106,61 @@ def get_orders(user_role: str, user_id: str):
         response = [{
             "order": order.to_dict(),
             "customer": order.customer.to_dict(),
-            "user": order.user.to_dict()
+            "user": order.ordered_by.to_dict(),
+            "order_items": [
+                {
+                    "qty": order_item.qty_order,
+                    "amount": order_item.amount,
+                    "name": (
+                        order_item.drinki.name
+                        if order_item.drink_id
+                        else order_item.food.name
+                    )
+                } for order_item in order.order_items]
         } for order in sorted_orders]
+        return jsonify(response), 200
+    except Exception as e:
+        print(str(e))
+        return jsonify({"error": "An Internal Error Occured"}), 500
+    finally:
+        storage.close()
+
+
+@api_views.route("/orders/<string:order_id>/order-items")
+@role_required(["staff", "manager", "admin"])
+def get_order(user_role: str, user_id: str, order_id: str):
+    """Retrieve order by it ID"""
+    try:
+        order = storage.get_by(Order, id=order_id)
+
+        if not order:
+            abort(404)
+
+        cleared_by_dict = (
+            None if not order.cleared_by else order.cleared_by.to_dict()
+        )
+
+        response = {
+            "order": order.to_dict(),
+            "customer": order.customer.to_dict(),
+            "ordered_by": order.ordered_by.to_dict(),
+            "cleared_by": cleared_by_dict,
+            "order_items": [
+                {
+                    "qty": order_item.qty_order,
+                    "amount": order_item.amount,
+                    "name": (
+                        order_item.drink.name
+                        if order_item.drink_id
+                        else order_item.food.name
+                    ),
+                    "price": (
+                        order_item.drink.amount
+                        if order_item.drink_id
+                        else order_item.food.amount
+                    )
+                } for order_item in order.order_items]
+        }
         return jsonify(response), 200
     except Exception as e:
         print(str(e))
@@ -117,13 +172,17 @@ def get_orders(user_role: str, user_id: str):
 @api_views.route("/orders/<string:order_id>/update-payment", methods=["PUT"])
 @role_required(["staff", "manager", "admin"])
 def update_status(user_role: str, user_id: str, order_id: str):
-    """Update payment status of customer."""
+    """Clear Bill of Customer."""
     order = storage.get_by(Order, id=order_id)
     if not order:
         abort(404)
+    elif order.is_paid:
+        user_obj = order.cleared_by if order.cleared_by else order.ordered_by
+        name = f"{user_obj.first_name} {user_obj.last_name}"
+        return jsonify({"error": f"Bill Already Cleared by {name} !"}), 409
 
     order.is_paid = True
-    order.user_id = user_id
+    order.cleared_by_id = user_id
     order.updated_at = datetime.utcnow();
     storage.save()
     return jsonify({"message": "Payment Status Updated to Paid"}), 200
