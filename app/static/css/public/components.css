@@ -106,6 +106,11 @@ Notification Modal
   border-color: #f5c6cb;
 }
 
+.notification.success {
+  color: white;
+  border-color: green;
+  background-color: #90EE90;
+}
 /*-------------------------------------
 4. Other CSS
 --------------------------------------*/
@@ -133,7 +138,9 @@ Notification Modal
 }
 
 
-/* General Modal Styles */
+/*==============================================
+Confirmation Modal Styles
+==============================================*/
 .modal {
   display: none; /* Hidden by default */
   position: fixed;
@@ -155,6 +162,31 @@ Notification Modal
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
   position: relative; /* To position the close button inside */
   animation: fadeIn 0.3s ease-in-out;
+
+  padding: 30px;
+  width: 30%;
+  text-align: center;
+  height: 30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  .modal-buttons {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+  }
+  .cancel-btn {
+    border: 2px solid var(--orange_a100) !important;
+    color: black !important;
+    background-color: white !important;
+  }
+  button {
+    width: 35%;
+    height: 40px;
+    margin-top: 30px;
+    border-radius: 15px;
+  }
 }
 
 /* Fade-in Animation */
@@ -174,7 +206,9 @@ body.modal-open {
   overflow: hidden;
 }
 
-/*===== Pop-up menu list of rooms number =====*/
+/*==============================
+Menu List
+===============================*/
 .dropdown {
   position: relative;
   display: inline-block;
@@ -206,4 +240,102 @@ body.modal-open {
   &:hover {
     background-color: var(--amber_500_59);
   }
+}
+
+
+/*=====================================
+Table Menu Design
+======================================*/
+tr {
+  position: relative;
+}
+
+.manage {
+  color: #24232399;
+  background-color: #f9f9f9;
+  position: absolute;
+  top: 30%;
+  right: 30px;
+  width: 200px;
+  border: 1px solid #706e6e99;
+  border-radius: 10px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+  z-index: 9;
+  display: none;
+
+  transform: translateY(-50%);
+}
+
+.manage__nav {
+  text-align: left;
+}
+
+.manage__list {
+  list-style: none;
+}
+
+.manage__item {
+  padding: 15px 0;
+  &:hover {
+    background-color: var(--amber_500_59);
+  }
+}
+.manage__item:hover {
+  cursor: pointer;
+}
+
+.manage__item i {
+  padding: 0 15px;
+}
+
+.manage__item--border {
+  outline: 1px solid #706e6e99;
+}
+
+/*=======================================================
+        Popup Modal Design
+=========================================================*/
+
+/* Popup Modal Styles */
+.popup-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.1); /* Slight background blur effect */
+  backdrop-filter: blur(0.5px); /* Slight blur */
+  opacity: 1; /* Fully opaque by default */
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.popup-modal-content {
+  position: relative;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2); /* Box shadow */
+}
+
+/* Close Button */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: orange;
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #333;
+  font-weight: bold;
+}
+
+.close-btn:hover {
+  color: #ff0000;
 }

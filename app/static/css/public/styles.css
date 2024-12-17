@@ -9,7 +9,8 @@
 :root {
   /*------Color variables------*/
   --amber_500_59: #ffbf0859;
-  --amber_a200: #ffc844;
+  --amber_a200: #ffc845;
+  --amber_a300: #fcca37;
   --black_900: #040a0e;
   --black_900_01: #000000;
   --black_900_19: #00000019;
@@ -32,7 +33,7 @@
   --shadow-lg: 8px 8px 8px 0 #0000007a;
 
   /*------Border radius variables------*/
-  --radius-xs: 22px;
+  --radius-xs: 10px;
   --radius-sm: 24px;
   --radius-md: 28px;
   --radius-lg: 38px;

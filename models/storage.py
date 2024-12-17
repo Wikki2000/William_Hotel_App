@@ -13,6 +13,8 @@ from models.booking import Booking
 from models.drink import Drink
 from models.drink_category import DrinkCategory
 from models.food import Food
+from models.order_item import OrderItem
+from models.vat import Vat
 
 from dotenv import load_dotenv
 from os import getenv

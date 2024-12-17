@@ -34,10 +34,30 @@ class User(BaseModel, Base):
     is_active = Column(Boolean, default=False)
     last_active = Column(DateTime)
 
-    books = relationship('Booking', backref='user',
-                         cascade='all, delete-orphan')
-    orders = relationship('Order', backref='user',
-                          cascade='all, delete-orphan')
+    
+    # Handle relationship between staff that checkin & checkout guest
+    checkin_made_by = relationship(
+        'Booking', backref='checkin_by',
+        cascade='all, delete-orphan',
+        foreign_keys="Booking.checkin_by_id"
+    )
+    checkout_made_by = relationship(
+        'Booking', backref='checkout_by',
+        cascade='all, delete-orphan',
+        foreign_keys="Booking.checkout_by_id"
+    )
+
+    # Handle relationship between staff that made order & cleared bill
+    orders_made_by = relationship(
+        'Order', backref='ordered_by',
+        cascade='all, delete-orphan',
+        foreign_keys="Order.ordered_by_id"
+    )
+    bill_cleared_by = relationship(
+        'Order', backref='cleared_by',
+        cascade='all, delete-orphan',
+        foreign_keys="Order.cleared_by_id"
+    )
 
     # ===================== Method Definition ==================== #
     def hash_password(self):

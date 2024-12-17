@@ -7,21 +7,28 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.mysql import ENUM
 from sqlalchemy.orm import relationship
+from models.vat import Vat
 
 
 class Booking(BaseModel, Base):
     """Define class for storing booking of rooms"""
     __tablename__ = "bookings"
     duration = Column(String(20), default=datetime.utcnow())
-    expiration = Column(Date)
+    expiration = Column(String(50), nullable=False)
     is_paid = Column(ENUM("yes", "no"), nullable=False)
     guest_number = Column(String(30), nullable=False)
     customer_id = Column(
         String(60), ForeignKey("customers.id"), nullable=False
     )
-    user_id = Column(
-        String(60), ForeignKey("users.id"), nullable=False
-    )
     room_id = Column(
         String(60), ForeignKey("rooms.id"), nullable=False
     )
+
+    # Foreign key to staff that checkin & checkout guest from hotel
+    checkin_by_id = Column(
+        String(60), ForeignKey("users.id"), nullable=False
+    )
+    checkout_by_id = Column(String(60), ForeignKey("users.id"))
+
+    vat = relationship('Vat', backref='booking', uselist=False,
+                       cascade='all, delete-orphan')

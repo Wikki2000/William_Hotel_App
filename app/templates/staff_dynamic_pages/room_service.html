@@ -1,7 +1,7 @@
 <div class="room_service">
   <!-- room service tabs section -->
   <div class="tab">
-    <h1 id="rooms" class="tab__item ui heading size-headingxs filter highlight-btn">All Rooms</h1>
+    <h1 id="rooms" class="tab__item ui heading size-headingxs filter highlight-btn">Rooms</h1>
     <h2 id="services" class="tab__item ui heading size-headingxs filter">Services</h2>
   </div>
 
@@ -41,76 +41,62 @@
         </tbody>
       </table>
     </div>
-
   </div>
 
   <section id="services-section" class="services-section">
-    <h6 class="quick_services">Quick Service Check</h6>
+    <h2 class="bottom-marg quick_services"><em>Quick Service Check</em></h2>
     <div class="check-btn">
-      <button id="room__check-in" class="filter ui heading size-texts">Check In</button>
-      <button id="room__check-out" class="filter ui heading size-texts">Check Out</button>
-    </div>
-    <div class="guest-details">
-      <div id="dropdown">
-        <h6 class="room-num bottom-marg">Room No.</h6>
-	<button class="room-num-val drop-down">
-          <span>Select </span>
-          <img 
-            src="/static/images/public/img_arrow_down_black_900_01.svg"
-            width="15px"  alt="dropdown"
-          />
-        </button>
-        <div id="dropdown-menu">
-          <ul id="dropdown__item-list">
-            <!-- Dynamically load dropdown menu list -->
-         </ul>
+      <button class="tab__item ui heading size-headingxs filter highlight-btn">Check Out</button>
+      <button class="tab__item ui heading size-headingxs filter">Book History</button>
+    </div><br />
+    <div class="room__details">
+      <div>
+        <h5 class="bottom-marg"><em>Room No.</em></h5>
+        <div class="dropdown room__dropdown">
+          <div id="room__number-dropdown-btn" class="drop-down">
+            <span>Select </span>
+            <img src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px" alt="dropdown" />
+          </div>
+          <div class="dropdown-menu" id="room__number-dropdown">
+            <ul class="main__dropdown--menu-list">
+              <!-- Menu list loaded here dynamically -->
+            </ul>
+          </div>
         </div>
       </div>
 
       <div>
-        <h6 class="order-num bottom-marg">Order No.</h6>
-        <button class="order-num-val">XXXX 
-          <!--<img 
-            src="/static/images/public/img_arrow_down_black_900_01.svg"
-            width="15px" class="drop-down" alt="dropdown"
-            />-->
-        </button>
+        <h5 class="bottom-marg"><em>Room Type</em></h5>
+        <input id="room__type" readonly placeholder="Auto-fill" required />
       </div>
 
       <div>
-        <h6 class="room-type bottom-marg">Room Type</h6>
-        <button class="order-num-val">XXXXXX
-          <!--<img
-            class="drop-down" alt="dropdown" width="15px"
-            src="/static/images/public/img_arrow_down_black_900_01.svg"
-            />-->
-        </button>
+        <h5 class="bottom-marg"><em>Guest Name</em></h5>
+        <input id="room__occupant-name" readonly placeholder="Auto-fill" required />
       </div>
-
 
       <div>
-        <h6 class="guest-name bottom-marg">Guest Name</h6>
-        <button class="guest-fullname">XXXX XXXXX</button>
+        <h5 class="" class="bottom-marg">Payment Status</h5>
+        <input id="room__ispaid" readonly placeholder="Auto-fill" required />
       </div>
-      <div>
-        <h6 class="transaction-payment bottom-marg">Payment Status</h6>
-        <p class="transaction-status">Unknown</p>
-      </div>
-
     </div>
 
     <div class="service-list">
-      <h6 class="description">Service List</h6>
+      <h4 class="description"><em>Service List</em></h4>
       <img class="drop-down" src="/static/images/public/img_arrow_down_black_900_01.svg"width="15px" alt="dropdown">
     </div>
     <div class="total-charge">
-      <h6 class="charge">Total Charge</h6>
-      <h6 class="amount">&#8358;<span>0.00</span></h6>
+      <h4 class="charge"><em>Total Charge</em></h4>
+      <h4 class="amount"><em>₦<span id="room__book-amount">0.00</span></em></h4>
     </div>
 
     <div class="print-proceed-btns">
-      <button class="print-btn">Print Summary</button>
-      <button class="proceed-btn">Proceed</button>
+      <!--<p class="print-btn">Print Receipt</p>-->
+      <button id="room__checkout-btn" class="proceed-btn">Check Out</button>
     </div>
   </section>
+</div>
+
+<!-- Confirmation Modal Dynamically Loaded Here. -->
+<div id="order__confirmation-modal">
 </div>

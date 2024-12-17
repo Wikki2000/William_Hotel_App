@@ -31,10 +31,37 @@ export function fetchData(url) {
  * Gets the current date in the format "22 November, 2024".
  * @returns {string} The current date formatted as "day month, year".
  */
-export function getFormattedDate() {
+export function getFormattedDate(serverDate = null) {
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
-  const date = new Date();
-  return date.toDateString();
+  const date = serverDate ? new Date(serverDate) : new Date();
+  return date.toDateString('en-us', options);
+}
+
+/**
+ * Load confirmation modal.
+ *
+ * @param {string} title - The heading text of modal.
+ * @param {string} description - The description text of modal.
+ * @param {string} confirmBtnClass - The modal btn confirmation class.
+ * @param {Array} [extraData = null] - The data to be pass to modal.
+ */
+export function confirmationModal(
+  title, description, confirmBtnClass, extraData = null
+) {
+  const url = getBaseUrl()['appBaseUrl'] + '/pages/confirmation_modal';
+  $('#order__confirmation-modal').load(url, function() {
+
+    $('#order__confirm-btn').addClass(confirmBtnClass);
+    $('#order__popup-modal').css('display', 'flex');
+    $('#order__popup-modal h2').text(title);
+    $('#order__popup-modal p').text(description);
+
+    if (extraData) {
+      extraData.forEach(({ data, value }) => {
+        $('#extraData').attr(`data-${data}`, value);
+      });
+    }
+  });
 }
 
 /**
@@ -156,7 +183,7 @@ export function getQueryParam(param) {
  * @param {Array} menuList - The menu list of items
  * @param {object} $selector - The current item clicked.
  */
-export function displayMenuList(menuList, $selector) {
+export function displayMenuList(menuList, $selector, menuClass = "") {
   if (Array.isArray(menuList)) {
     // Clear existing dropdown items to avoid duplication
     $selector.siblings('.dropdown-menu')
@@ -167,7 +194,7 @@ export function displayMenuList(menuList, $selector) {
     menuList.forEach((menu) => {
       $selector.siblings('.dropdown-menu')
         .find('.main__dropdown--menu-list')
-        .append(`<li class="dropdown-item">${menu}</li>`);
+        .append(`<li class="dropdown-item ${menuClass}">${menu}</li>`);
     });
 
     // Add select to beginig of menu list
@@ -210,7 +237,7 @@ export function validateForm($formElement) {
  */
 export function showNotification(message, isError = false) {
   // Create the notification container
-  const notificationClass = isError ? 'notification error' : 'notification';
+  const notificationClass = isError ? 'notification error' : 'notification success';
   const $notification = $(`
         <div class="${notificationClass}">
             <span>${message}</span>
@@ -282,7 +309,7 @@ export function roomTableTemplate(room, statusClass) {
     </td>
 
     <td>
-      <p class="ui text size-textmd">₦${room.amount}</p>
+      <p class="ui text size-textmd">₦${room.amount.toLocaleString()}</p>
     </td>
 
     <td>
@@ -393,6 +420,8 @@ export function highLightOrderBtn(cart) {
  * @param {string} - The HTML templates of an items oredered.
  */
 export function orderItemsTempleate(itemId, itemDataObject) {
+
+  const paddingSpaceString = itemDataObject.itemName.length >= 12 ? '...' : '';
   const content = `<div class="order__items--list-content">
     <img
       src="/static/images/public/hotel_logo.png"
@@ -400,7 +429,7 @@ export function orderItemsTempleate(itemId, itemDataObject) {
     />
    <div>
      <h3 class="order__item-title" title="${itemDataObject.itemName}">
-       ${itemDataObject.itemName.slice(0, 15)}
+       ${itemDataObject.itemName.slice(0, 12)}${paddingSpaceString}
      </h3>
      <p class="order__item-price">Price: ₦${itemDataObject.itemAmount}</p>
       <p>Total:

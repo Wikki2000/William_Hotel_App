@@ -20,7 +20,26 @@ class BaseModel:
     def to_dict(self):
         """Return the dict representation of a class instance."""
         new_dict = self.__dict__.copy()
+
+        # Remove SQLAlchemy internal state
         if "_sa_instance_state" in new_dict:
             del new_dict["_sa_instance_state"]
+
+        # Serialize the class name
         new_dict["__class__"] = self.__class__.__name__
+
+        # Handle datetime fields
+        for field in ['created_at', 'updated_at']:
+            if isinstance(new_dict.get(field), datetime):
+                new_dict[field] = new_dict[field].isoformat()
+
+        # Serialize related objects
+        for key, value in new_dict.items():
+            if hasattr(value, 'to_dict'):
+                new_dict[key] = value.to_dict()
+            elif isinstance(value, list):
+                new_dict[key] = [
+                    item.to_dict() if hasattr(item, 'to_dict')
+                    else item for item in value
+                ]
         return new_dict

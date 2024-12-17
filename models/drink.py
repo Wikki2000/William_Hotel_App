@@ -3,7 +3,7 @@
 from models.base_model import Base, BaseModel
 from sqlalchemy import Column, String, Integer, ForeignKey, Float, LargeBinary
 from sqlalchemy.orm import relationship
-from models.order import Order
+from models.order_item import OrderItem
 
 
 class Drink(BaseModel, Base):
@@ -17,5 +17,5 @@ class Drink(BaseModel, Base):
         String(60), ForeignKey("drink_categories.id"), nullable=False
     )
     
-    order = relationship('Order', backref='drink',
+    order_items = relationship('OrderItem', backref='drink',
                          cascade='all, delete-orphan')

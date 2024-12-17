@@ -41,8 +41,7 @@ def get_room_by_number(user_role: str, user_id: str, room_number):
         room = storage.get_by(Room, number=room_number)
         if not room:
             return jsonify([]), 200
-        return jsonify(room.to_dict()), 200
-
+        return jsonify(room.to_dict())
     except Exception as e:
         print(str(e))
         return jsonify({"error": "Internal Error Occured"}), 500
