@@ -132,50 +132,64 @@
 
             <!-- room service tabs section -->
             <section>
-                <div class="guest-tab">
-                    <div class="tab ui heading size-headingmd">Guests</div>
-                </div>
+              <div class="guest-tab">
+                <div class="tab ui heading size-headingmd">Guests</div>
+              </div>
 
-                <!-- room table section -->
-                <div class="guest-table-column">
-                    <div class="guest-table-heading">
-                        <div class="table__header-cell">Guest List</div>
-                        <button>+ Add New Booking</button>
-                    </div>
-                    <table cellpadding="0" cellspacing="0" class="guest-tabletype ui table size-xs">
-                    <thead>
-                        <tr>
-                        <th width="348px">
-                            <p class="table__header-cell ui heading size-headings">Guest</p>
-                        </th>
-                        <th width="300px">
-                            <p class="table__header-cell-1 ui heading size-headings">Room Type</p>
-                        </th>
-                        <th width="200px">
-                            <p class="table__header-cell-2 ui heading size-headings">Checkin</p>
-                        </th>
-                        <th width="200px">
-                            <p class="table__header-cell-3 ui heading size-headings">Checkout</p>
-                        </th>
-                        <th width="200px">
-                            <p class="table__header-cell-1 ui heading size-headings">Amount Paid</p>
-                        </th>
-                        <th width="220px">
-                            <p class="table__header-cell-2 ui heading size-headings">Balance</p>
-                        </th>
-                        <th width="200px">
-                            <p class="table__header-cell ui heading size-headings"></p>
-                        </th>
-                        </tr>
-                    </thead>
-                    <tbody class="guest-table-body">
-                        <!-- Rows will be dynamically added here -->
-                    </tbody>
-                    </table>
+              <!-- room table section -->
+              <div class="guest-table-column">
+                <div class="guest-table-heading">
+                  <div class="table__header-cell">Guest List</div>
+                  <button>+ Add New Booking</button>
                 </div>
+                <table cellpadding="0" cellspacing="0" class="guest-tabletype ui table size-xs">
+                  <thead>
+                    <tr>
+                      <th width="348px">
+                        <p class="table__header-cell ui heading size-headings">Guest</p>
+                      </th>
+                      <th width="300px">
+                        <p class="table__header-cell-1 ui heading size-headings">Room Type</p>
+                      </th>
+                      <th width="200px">
+                        <p class="table__header-cell-2 ui heading size-headings">Checkin</p>
+                      </th>
+                      <th width="200px">
+                        <p class="table__header-cell-3 ui heading size-headings">Checkout</p>
+                      </th>
+                      <th width="200px">
+                        <p class="table__header-cell-1 ui heading size-headings">Amount Paid</p>
+                      </th>
+                      <th width="220px">
+                        <p class="table__header-cell-2 ui heading size-headings">Balance</p>
+                      </th>
+                      <th width="200px">
+                        <p class="table__header-cell ui heading size-headings"></p>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="guest-table-body">
+                      <!-- Rows will be dynamically added here -->
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Modal for Guest Details -->
+              <div class="modal" id="guestModal">
+                <div class="modal-content">
+                  <span class="modal-close" id="modalClose">&times;</span>
+                  <h2>Guest Details</h2>
+                  <div id="modalDetails">
+                    
+                    
+                  </div>
+                </div>
+              </div>
             </section>
         </div>
       </div>
     </div>
+
+    
   </body>
 </html>
