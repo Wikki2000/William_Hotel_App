@@ -34,6 +34,14 @@ body {
     padding-left: 20px;
 }
 
+.receipt span {
+    display: flex;
+    position: relative;
+    top: -20px;
+    height: 10px;
+    width: 800px;
+    background-color: var(--orange_a100);
+}
 
 .receipt-body {
     position: relative;
