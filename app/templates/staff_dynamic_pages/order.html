@@ -43,6 +43,7 @@
               <p><strong>Total Amount</strong></p>
               <input id="order__total--amout-cart" readonly>
             </div>
+
             <div class="order__content">
               <p><strong>Instance Payment</strong></p>
               <div class="dropdown">
@@ -118,8 +119,8 @@
           </tr>
         </thead>
         <tbody class="order__history--table-body">
-	  <!-- Table data will dynamically be loaded here -->
-       </tbody>
+          <!-- Table data will dynamically be loaded here -->
+        </tbody>
       </table>
     </div>
   </div>
@@ -133,9 +134,37 @@
         <em><strong>Place Your Order ! </strong></em>
         </p>
         <p>
-        <strong><em>Go To</em> <span>Restaurant</span></strong>
+        <strong><em>Go To</em> <span>Restaurant & Bar</span></strong>
         </p>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Popup Modal -->
+<div id="common__popupModal" class="popup-modal">
+  <div class="popup-modal-content order__popup-modal">
+    <!-- Close Button -->
+    <button class="close-btn closePopupModal">×</button>
+
+    <h1>Order Details</h1>
+    <div class="order__details">
+      <div id="order__info" class="order__info">
+        <!-- Order info will be dynamically loaded here -->
+      </div>
+      <div class="order__item-list">
+        <h3>Order Items</h3>
+        <ul id="order__itemList">
+          <!-- Items ordered will be listed here -->
+        </ul>
+      </div>
+    </div>
+    <div class="order__summary">
+      <div class="order__total-cost">
+        <p>Amount</p>
+        <p id="order__totalAmount"></p>
+      </div>
+      <button id="order__print-receipt" class="highlight-btn">Print Receipt</button>
     </div>
   </div>
 </div>

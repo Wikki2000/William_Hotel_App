@@ -31,10 +31,10 @@ export function fetchData(url) {
  * Gets the current date in the format "22 November, 2024".
  * @returns {string} The current date formatted as "day month, year".
  */
-export function getFormattedDate() {
+export function getFormattedDate(serverDate = null) {
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
-  const date = new Date();
-  return date.toDateString();
+  const date = serverDate ? new Date(serverDate) : new Date();
+  return date.toDateString('en-us', options);
 }
 
 /**
@@ -56,9 +56,11 @@ export function confirmationModal(
     $('#order__popup-modal h2').text(title);
     $('#order__popup-modal p').text(description);
 
-    extraData.forEach(({ data, value }) => {
-      $('#extraData').attr(`data-${data}`, value);
-    });
+    if (extraData) {
+      extraData.forEach(({ data, value }) => {
+        $('#extraData').attr(`data-${data}`, value);
+      });
+    }
   });
 }
 
@@ -181,7 +183,7 @@ export function getQueryParam(param) {
  * @param {Array} menuList - The menu list of items
  * @param {object} $selector - The current item clicked.
  */
-export function displayMenuList(menuList, $selector) {
+export function displayMenuList(menuList, $selector, menuClass = "") {
   if (Array.isArray(menuList)) {
     // Clear existing dropdown items to avoid duplication
     $selector.siblings('.dropdown-menu')
@@ -192,7 +194,7 @@ export function displayMenuList(menuList, $selector) {
     menuList.forEach((menu) => {
       $selector.siblings('.dropdown-menu')
         .find('.main__dropdown--menu-list')
-        .append(`<li class="dropdown-item">${menu}</li>`);
+        .append(`<li class="dropdown-item ${menuClass}">${menu}</li>`);
     });
 
     // Add select to beginig of menu list
@@ -307,7 +309,7 @@ export function roomTableTemplate(room, statusClass) {
     </td>
 
     <td>
-      <p class="ui text size-textmd">₦${room.amount}</p>
+      <p class="ui text size-textmd">₦${room.amount.toLocaleString()}</p>
     </td>
 
     <td>

@@ -1,18 +1,11 @@
 import {
   updateElementCount, cartItemsTotalAmount, getBaseUrl, confirmationModal,
-  validateForm, showNotification, ajaxRequest, fetchData
+  validateForm, showNotification, ajaxRequest, fetchData, getFormattedDate
 } from '../global/utils.js';
 
 function orderHistoryTableTemplate(order, customer) {
   const paymentStatus = order.is_paid ? 'Paid' : 'Pending';
   const textColor = order.is_paid ? 'green' : 'red';
-
-  const date = new Date(order.updated_at);
-  const options = {
-    weekday: 'short', day: '2-digit',
-    month: 'short', year: 'numeric'
-  };
-  const formattedDate = date.toLocaleDateString('en-GB', options).replace(/,/g, '');
 
   const row = `
 <tr data-id="${order.id}">
@@ -20,7 +13,7 @@ function orderHistoryTableTemplate(order, customer) {
       <p class="ui text size-textmd">${customer.name}</p>
     </td>
     <td>
-      <p class="ui text size-textmd">${formattedDate}</p>
+      <p class="ui text size-textmd">${getFormattedDate(order.updated_at)}</p>
     </td>
     <td>
       <p style="color: ${textColor}" class="ui text size-textmd order__bill-status">${paymentStatus}</p>
@@ -42,9 +35,9 @@ function orderHistoryTableTemplate(order, customer) {
           <li data-id="${order.id}" data-name="${customer.name}" class="manage__item manage__item--border order__bill">
             <i class="fa fa-money-bill-wave"></i>Clear Bill
           </li>
-          <li data-id="${order.id}" class="manage__item manage__item--border order__items">
-            <i class="fa fa-eye"></i>Order Items
-          </li>
+	  <li data-id="${order.id}" class="manage__item manage__item--border order__showConfirmModal">
+	     <i class="fa fa-shopping-cart"></i>Order Details
+	   </li>
           <li data-id="${order.id}" class="manage__item manage__item--border order__print">
             <i class="fa fa-print"></i>Print Receipt
           </li>
@@ -92,14 +85,68 @@ $(document).ready(function() {
 
       const data = [{ data: 'id', value: clickItemId }, {data: 'name', value: name }];
       confirmationModal(headingText, descriptionText, confirmBtCls, data);
+    } else if ($selectedMenu.hasClass('order__print')) {
+      const orderId = $selectedMenu.data('id');
+      const receiptUrl = APP_BASE_URL + `/pages/receipt?order_id=${orderId}`;
+      window.open(receiptUrl, '_blank');
+    } else if ($selectedMenu.hasClass('order__showConfirmModal')) {
+      const orderUrl = API_BASE_URL +  `/orders/${clickItemId}/order-items`;
+      $('#common__popupModal').css('display', 'flex');
 
+      $('#order__info').empty();
+      $('#order__itemList').empty();
 
-    } else if($selectedMenu.hasClass('order__items')) {
-      alert('order__items');
-    } else if($selectedMenu.hasClass('order__print')) {
-      alert('order__print');
+      fetchData(orderUrl)
+        .then(
+          ({ order, customer, ordered_by, cleared_by, order_items }
+         ) => {
+           const guestType = customer.is_guest ? 'Lodged' : 'Walk In';
+           const paymentStatus = (
+             order.is_paid ? { status: 'Paid', color: 'green' } : 
+             {status: 'Pending', color: 'red' }
+           );
+
+           // Check if bill has been cleared
+           console.log(cleared_by === null);
+           const cleared = (
+             cleared_by !== null ? { firstName: cleared_by.first_name, lastName: cleared_by.last_name, role: cleared_by.portfolio  } : 
+             { firstName: ordered_by.first_name, lastName: ordered_by.last_name, role: ordered_by.portfolio }
+           );
+           $('#order__info').append(
+             `<h3>Order Info.</h3>
+             <p><b>Guest Name</b> - ${customer.name}</p>
+             <p><b>Guest Type</b> - ${guestType}</p>
+             <p><b>Purchase Date</b> - ${getFormattedDate(order.updated_at)}</p>
+             <p><b>Payment Method</b> - ${order.payment_type}</p>
+             <p><b>Payment Status</b> - <span style="color: ${paymentStatus.color};">${paymentStatus.status}</span></p><br />
+             <p><em><b>Ordered By</b> - ${ordered_by.first_name} ${ordered_by.last_name} (${ordered_by.portfolio})</em></p>
+             <p><em><b>Bill Handle By</b> - ${cleared.firstName} ${cleared.lastName} (${cleared.role})</em></p>
+             `
+           );
+           order_items.forEach(({ name, qty, amount }) => {
+             $('#order__itemList').append(`<li class="order__item">
+               ${name}&nbsp;&nbsp;&nbsp;
+               <em>${qty}&nbsp;&nbsp;&nbsp;</em>
+               <em>₦${amount.toLocaleString()}</em>
+             </li>`);
+           });
+           $('#order__totalAmount').text('₦' + order.amount.toLocaleString());
+           $('#order__print-receipt').attr('data-id', `${order.id}`);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   });
+
+  // Handle printing of receipt from Order Details section
+  $('#dynamic__load-dashboard')
+    .on('click', '#order__print-receipt', function() {
+      const orderId = $(this).data('id');
+      alert(orderId);
+      const receiptUrl = APP_BASE_URL + `/pages/receipt?order_id=${orderId}`;
+      window.open(receiptUrl, '_blank');
+    });
 
   // Handle 'CLEAR BILL' option menu
   $('#dynamic__load-dashboard')
@@ -118,7 +165,7 @@ $(document).ready(function() {
 
           $clickBtn.prop('disabled', false);
           $('#order__confirmation-modal').empty();
-          showNotification(`Bill successfully cleared for ${name} !`);
+          showNotification(`Customer [${name}] Bill Cleared Successfully !`);
 
           // Update payment status
           $(`tr[data-id="${orderId}"]`)
@@ -130,8 +177,12 @@ $(document).ready(function() {
         },
         (error) => {
           $clickBtn.prop('disabled', false);
-          showNotification('An error occurred. Please try again.', true);
-          console.log(error);
+          if (error.status ===  409) {
+            showNotification(error.responseJSON.error, true);
+          } else {
+            showNotification('An error occurred. Please try again.', true);
+          }
+          $('#order__confirmation-modal').empty();
         }
       );
     });
@@ -142,11 +193,6 @@ $(document).ready(function() {
     $clickItem.hide();
     $clickItem.closest('td').find('.fa.fa-ellipsis-v').show();
     $clickItem.closest('td').siblings('.manage').hide();
-  });
-
-  // cancel confirmation modal
-  $('#dynamic__load-dashboard').on('click', '#order__cancel-btn', function(){
-    $('#order__popup-modal').hide();
   });
 
   // Handle submission of order form
@@ -214,6 +260,8 @@ $(document).ready(function() {
 
         },
         (error) => {
+	  $button.prop('disabled', false);
+	  showNotification('An Error Occured. Try Again !.');
           console.log(error);
         }
       );
@@ -246,7 +294,7 @@ $(document).ready(function() {
       const orderUrl = API_BASE_URL + '/order-items';
       fetchData(orderUrl)
         .then((data) => {
-          data.forEach(({ order, customer, user }) => {
+          data.forEach(({ order, customer }) => {
             $('.order__history--table-body').append(
               orderHistoryTableTemplate(order, customer)
             );
@@ -458,11 +506,4 @@ $(document).ready(function() {
         $('#sidebar__order-count').hide();
       }
     });
-
-  // Hide dropdown menus when clicking outside
-  $(document).on('click', function (e) {
-    if (!$(e.target).closest('.dropdown').length) {
-      $('.dropdown-menu').hide();
-    }
-  });
 });

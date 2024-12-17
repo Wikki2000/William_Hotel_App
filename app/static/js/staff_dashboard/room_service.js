@@ -1,4 +1,7 @@
-import { fetchData, getBaseUrl, roomTableTemplate, displayRoomData } from '../global/utils.js';
+import {
+  ajaxRequest, fetchData, getBaseUrl, roomTableTemplate, validateForm,
+  confirmationModal, displayMenuList, displayRoomData, showNotification
+} from '../global/utils.js';
 
 $(document).ready(function () {
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
@@ -108,24 +111,91 @@ $(document).ready(function () {
   /*=============================================================
                        Service Section
   ==============================================================*/
-  $('#dynamic__load-dashboard').on('click', '#room__check-in, #room__check-out', function() {
+  $('#dynamic__load-dashboard').on(
+    'click', '#room__number-dropdown-btn', function() {
+      fetchData(roomUrl)
+        .then(({ rooms, rooms_count }) => {
+          if (!rooms) {
+            const msg = 'No room lodge at the moment !';
+            showNotification(msg);
+          }
+          const occupiedNumberList = rooms
+            .filter((room) => room.status === "occupied" ||
+              room.status === "reserved")
+            .map((room) => room.number);
+          displayMenuList(
+            occupiedNumberList, $($(this)), 'room__menu'
+          );
+        })
+        .catch((error)  => {
+          console.log(error);
+        });
+    });
+
+  $('#dynamic__load-dashboard').on('click', '.room__menu', function() {
     const $clickItem = $(this);
+    const roomNumber =  $clickItem.text();
+    $('#room__number-dropdown').hide();
 
-    $clickItem.siblings().removeClass('highlight-btn');
-    $clickItem.addClass('highlight-btn');
+    const selectedRoomUrl =  API_BASE_URL + `/bookings/${roomNumber}/booking-data`;
+    fetchData(selectedRoomUrl)
+      .then(( { room, user, customer, booking }) => {
+        $clickItem.closest('.room__dropdown').find('span').text(roomNumber);
+        $('#room__type').val(room.name);
+        $('#room__occupant-name').val(customer.name);
+        $('#room__book-amount').text(room.amount.toLocaleString());
 
-    const clickId = $clickItem.attr('id');
+        const statusText = booking.is_paid === 'yes' ? 'Paid' : 'Pending';
 
+        $('#room__ispaid').val(statusText);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   });
 
-  //  drop down menu of occupied room
-  $('#dynamic__load-dashboard').on('click', '#drop-down', function() {
+  // Load confirmation modal for checkout
+  $('#dynamic__load-dashboard').on('click', '#room__checkout-btn', function() {
 
-
-    // Populate the drop down menu list with room number
-    for (let i = 0; i < 6; i++) {
-      $('#dropdown__item-list').append(`<li class="dropdown-item">10${i}</li>`);
+    const roomNumber = $('#room__number-dropdown-btn span').text();
+    if (isNaN(roomNumber)) {
+      showNotification('Error ! No room number selected.', true);
+      return
     }
-    $('#dropdown-menu').show();
+
+    // Load confirmation modal
+    const headingText = 'Confirm Checkout';
+    const descriptionText = 'This action cannot be undone !'
+    const confirmBtCls = 'room__checkout-btn';
+
+    confirmationModal(headingText, descriptionText, confirmBtCls);
+  });
+
+  // Checkout guest in a room
+  $('#dynamic__load-dashboard').on('click', '.room__checkout-btn', function() {
+    const roomNumber = $('#room__number-dropdown-btn span').text();
+    const checkoutUrl = API_BASE_URL + `/rooms/${roomNumber}/checkout`;
+
+    const $button = $(this);
+    $button.prop('disable', true);
+
+    ajaxRequest(checkoutUrl, 'PUT', null,
+      (response) => {
+        $('#order__confirmation-modal').empty();
+        $button.prop('disable', false);
+        showNotification(`Guest successfully checkout in room ${roomNumber}`);
+      },
+      (error) => {
+        if (error.status === 409) {
+          showNotification(error.responseJSON.error, true);
+          return;
+        }
+        console.log(error);
+        $button.prop('disable', false);
+        $('#order__confirmation-modal').empty();
+        showNotification('An error checking out guest. Try Again !', true);
+      }
+    );
+
   });
 });

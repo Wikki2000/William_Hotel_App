@@ -16,6 +16,9 @@ $(document).ready(function() {
       const rooms = await $.get(url); 
       const bookings = await $.get(bookingUrl);
 
+      if (!rooms) {
+        return;
+      }
       const todayBookingCount = bookings.filter(
         (booking) => compareDate(booking.created_at)
       ).length;
@@ -46,7 +49,7 @@ $(document).ready(function() {
     // Validate form data and show error messages
     if (!validateForm($('#main__book-form'))) {
       showNotification('Please fill out all required fields.', true);
-      return; // Exit if validation fails
+      return;
     }
 
     // Booking data
@@ -87,7 +90,7 @@ $(document).ready(function() {
 
             // Update the count in ui
             updateElementCount($('#main__room-available'));
-            updateElementCount($('#main__today-check--in'));
+            updateElementCount($('#main__today-check--in'), true);
           },
           (error) => {
           }
@@ -115,7 +118,7 @@ $(document).ready(function() {
           .then((rooms) => {
             console.log(rooms);
             const availableRooms = rooms.map((room) => room.number);
-            displayMenuList(availableRooms, $clickItem);
+            displayMenuList(availableRooms, $clickItem, 'order__menu');
           })
           .catch((error) => {
             console.log(error);
@@ -123,7 +126,7 @@ $(document).ready(function() {
 
           // Auto-fill the input field when room number selected in dropdown menu
           $('#dynamic__load-dashboard').on(
-            'click', '.dropdown-item',
+            'click', '.order__menu',
             function() {
               const $clickItem = $(this);
 
@@ -148,10 +151,10 @@ $(document).ready(function() {
 
                   // Auto-fill the input field
                   fetchData(roomUrl)
-                    .then((data) => {
+                    .then((room) => {
                       $('#main__room-rate')
-                        .val('₦' + data.amount.toLocaleString());
-                      $('#main__room-type').val(data.name);
+                        .val('₦' + room.amount.toLocaleString());
+                      $('#main__room-type').val(room.name);
                     })
                     .catch((error) => {
                       console.log(error);

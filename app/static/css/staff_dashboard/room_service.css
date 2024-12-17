@@ -180,6 +180,14 @@ Service Section
   flex-grow: 1;
   height: 100%;
   padding: 20px;
+
+  .dropdown, input {
+    border: 2px solid var(--orange_a100);
+    padding: 15px;
+    width: 200px;;
+    height: 50px;
+    border-radius: 5px;
+  }
 }
 
 .check-btn{
@@ -188,24 +196,18 @@ Service Section
   margin-block: 0.8rem;
 }
 
-.guest-details{
+.room__details {
+  margin-bottom: 50px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 50px;
+
+  #room__number-dropdown-btn {
+    display: flex;
+    justify-content: space-between;
+  }
 }
 .bottom-marg{
   margin-bottom: 0.5rem;
-}
-.guest-details button{
-  background-color: #FDF6E4;
-  border: 1px solid #F5D077;
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: #000;
-}
-.transaction-status{
-  color:#FFC845;
 }
 .service-list{
   display: flex;
@@ -233,6 +235,10 @@ Service Section
   padding: 10px 20px;
   border-radius: 7px;
   color: #000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0);
+  &:hover {
+    cursor: pointer;
+  }
 }
 .print-proceed-btns .proceed-btn{
   background-color: #000;
