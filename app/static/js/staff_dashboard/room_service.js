@@ -1,7 +1,8 @@
 import {
-  ajaxRequest, fetchData, getBaseUrl, roomTableTemplate, validateForm,
-  confirmationModal, displayMenuList, displayRoomData, showNotification
+  ajaxRequest, fetchData, getBaseUrl, validateForm,
+  confirmationModal, displayMenuList, showNotification
 } from '../global/utils.js';
+import { displayRoomData, roomTableTemplate } from '../global/tables.js';
 
 $(document).ready(function () {
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
@@ -183,14 +184,14 @@ $(document).ready(function () {
       (response) => {
         $('#order__confirmation-modal').empty();
         $button.prop('disable', false);
-        showNotification(`Guest successfully checkout in room ${roomNumber}`);
+        showNotification(`Guest successfully checkout from room ${roomNumber}`);
       },
       (error) => {
         if (error.status === 409) {
           showNotification(error.responseJSON.error, true);
+	  $('#order__confirmation-modal').empty();
           return;
         }
-        console.log(error);
         $button.prop('disable', false);
         $('#order__confirmation-modal').empty();
         showNotification('An error checking out guest. Try Again !', true);

@@ -1,8 +1,11 @@
 import {
-  compareDate, getFormattedDate, displayFoodDrink, fetchData,
-  roomTableTemplate, ajaxRequest, getBaseUrl, displayRoomData,
-  highLightOrderBtn, orderItemsTempleate, cartItemsTotalAmount
+  britishDateFormat, compareDate, getFormattedDate, fetchData, ajaxRequest,
+  getBaseUrl, highLightOrderBtn, cartItemsTotalAmount
 } from '../global/utils.js';
+import  { 
+  displayFoodDrink, displayRoomData, guestListTableTemplate,
+  roomTableTemplate, orderItemsTempleate
+} from '../global/tables.js';
 
 $(document).ready(function() {
 
@@ -32,6 +35,9 @@ $(document).ready(function() {
         $('#dynamic__load-dashboard').load(url, function() {
           const roomUrl = API_BASE_URL + '/rooms';
           const bookingUrl = API_BASE_URL + '/bookings';
+
+
+          // Implement today booking count here
 
           fetchData(roomUrl)
             .then((data) => {
@@ -69,6 +75,35 @@ $(document).ready(function() {
             })
             .catch((error) => {
               console.error('Failed to fetch room data:', error);
+            });
+        });
+        break;
+      }
+      case 'sidebar__guest': {
+        const url = APP_BASE_URL + '/pages/guest-list';
+        $('#dynamic__load-dashboard').load(url, function() {
+          const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
+          const bookingUrl = API_BASE_URL + '/bookings';
+          const $tableBody = $(".guest-table-body");
+
+          $('#rooms').addClass('highlight-btn');
+          fetchData(bookingUrl)
+            .then((response) => {
+              // Filter rooms currently lodge by a guest.
+              const bookingStillInUse = response.filter(
+	        (data) => data.booking.is_use
+	      );
+              bookingStillInUse.forEach(({ guest, booking, room }) => {
+                const checkInDate = britishDateFormat(booking.checkin);
+                const checkoutDate = britishDateFormat(booking.checkout);
+                const date = { checkInDate, checkoutDate };
+                $tableBody.append(
+		  guestListTableTemplate(guest, booking, room, date)
+		);
+              });
+            })
+            .catch((error) => {
+              console.error("Error fetching room data:", error);
             });
         });
         break;
@@ -111,7 +146,7 @@ $(document).ready(function() {
             $('.order__empty-cart').show();
             $('.oder__second-col').hide();
           }
-	});
+        });
         break;
       }
       case 'sidebar__logout': {

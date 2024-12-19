@@ -1,6 +1,6 @@
 import {
   updateElementCount, cartItemsTotalAmount, getBaseUrl, confirmationModal,
-  validateForm, showNotification, ajaxRequest, fetchData, getFormattedDate
+  validateForm, showNotification, ajaxRequest, fetchData, britishDateFormat
 } from '../global/utils.js';
 
 function orderHistoryTableTemplate(order, customer) {
@@ -13,7 +13,7 @@ function orderHistoryTableTemplate(order, customer) {
       <p class="ui text size-textmd">${customer.name}</p>
     </td>
     <td>
-      <p class="ui text size-textmd">${getFormattedDate(order.updated_at)}</p>
+      <p class="ui text size-textmd">${britishDateFormat(order.updated_at)}</p>
     </td>
     <td>
       <p style="color: ${textColor}" class="ui text size-textmd order__bill-status">${paymentStatus}</p>
@@ -32,13 +32,13 @@ function orderHistoryTableTemplate(order, customer) {
     <td class="manage">
       <nav class="manage__nav">
         <ul class="manage__list">
-          <li data-id="${order.id}" data-name="${customer.name}" class="manage__item manage__item--border order__bill">
+          <li data-id="${order.id}" data-name="${customer.name}" class="manage__item manage__item--border order__bill order__manageItem">
             <i class="fa fa-money-bill-wave"></i>Clear Bill
           </li>
-	  <li data-id="${order.id}" class="manage__item manage__item--border order__showConfirmModal">
+	  <li data-id="${order.id}" class="manage__item order__manageItem manage__item--border order__showConfirmModal">
 	     <i class="fa fa-shopping-cart"></i>Order Details
 	   </li>
-          <li data-id="${order.id}" class="manage__item manage__item--border order__print">
+          <li data-id="${order.id}" class="manage__item manage__item--border order__print order__manageItem">
             <i class="fa fa-print"></i>Print Receipt
           </li>
         </ul>
@@ -55,18 +55,7 @@ $(document).ready(function() {
   const APP_BASE_URL = getBaseUrl()['appBaseUrl'];
 
   /*=========== Handle Order history table menu operation. ===========*/
-  $('#dynamic__load-dashboard').on('click', '.fa-ellipsis-v', function() {
-    const $clickItem = $(this);
-
-    $clickItem.closest('td').siblings('.manage').show(); // Show table menu
-
-    // Toggle visibility of icon to show and cancel table menu
-    $clickItem.hide();
-    $clickItem.closest('td').find('.fa.fa-times').show();
-  });
-
-  // Handle request for selected table menu options
-  $('#dynamic__load-dashboard').on('click', '.manage__item', function() {
+  $('#dynamic__load-dashboard').on('click', '.order__manageItem', function() {
     const $selectedMenu = $(this);
     const clickItemId = $selectedMenu.data('id');
     const name = $selectedMenu.data('name');
@@ -75,7 +64,7 @@ $(document).ready(function() {
     $selectedMenu.closest('td').siblings().find('.fa.fa-times').hide();
     $selectedMenu.closest('td').siblings().find('.fa.fa-ellipsis-v').show();
 
-    $selectedMenu.closest('.manage').hide(); // Hide menu once opyion selected
+    $selectedMenu.closest('.manage').hide(); // Hide table menu once selected.
 
     if ($selectedMenu.hasClass('order__bill')) {
       // Load confirmation modal
@@ -90,6 +79,7 @@ $(document).ready(function() {
       const receiptUrl = APP_BASE_URL + `/pages/receipt?order_id=${orderId}`;
       window.open(receiptUrl, '_blank');
     } else if ($selectedMenu.hasClass('order__showConfirmModal')) {
+
       const orderUrl = API_BASE_URL +  `/orders/${clickItemId}/order-items`;
       $('#common__popupModal').css('display', 'flex');
 
@@ -107,7 +97,6 @@ $(document).ready(function() {
            );
 
            // Check if bill has been cleared
-           console.log(cleared_by === null);
            const cleared = (
              cleared_by !== null ? { firstName: cleared_by.first_name, lastName: cleared_by.last_name, role: cleared_by.portfolio  } : 
              { firstName: ordered_by.first_name, lastName: ordered_by.last_name, role: ordered_by.portfolio }
@@ -116,7 +105,7 @@ $(document).ready(function() {
              `<h3>Order Info.</h3>
              <p><b>Guest Name</b> - ${customer.name}</p>
              <p><b>Guest Type</b> - ${guestType}</p>
-             <p><b>Purchase Date</b> - ${getFormattedDate(order.updated_at)}</p>
+             <p><b>Purchase Date</b> - ${britishDateFormat(order.updated_at)}</p>
              <p><b>Payment Method</b> - ${order.payment_type}</p>
              <p><b>Payment Status</b> - <span style="color: ${paymentStatus.color};">${paymentStatus.status}</span></p><br />
              <p><em><b>Ordered By</b> - ${ordered_by.first_name} ${ordered_by.last_name} (${ordered_by.portfolio})</em></p>
@@ -143,7 +132,6 @@ $(document).ready(function() {
   $('#dynamic__load-dashboard')
     .on('click', '#order__print-receipt', function() {
       const orderId = $(this).data('id');
-      alert(orderId);
       const receiptUrl = APP_BASE_URL + `/pages/receipt?order_id=${orderId}`;
       window.open(receiptUrl, '_blank');
     });
@@ -186,14 +174,6 @@ $(document).ready(function() {
         }
       );
     });
-
-  // Cancel table menu
-  $('#dynamic__load-dashboard').on('click', '.fa.fa-times', function () {
-    const $clickItem = $(this);
-    $clickItem.hide();
-    $clickItem.closest('td').find('.fa.fa-ellipsis-v').show();
-    $clickItem.closest('td').siblings('.manage').hide();
-  });
 
   // Handle submission of order form
   $('#dynamic__load-dashboard').on('submit', '#order__form', function(e) {

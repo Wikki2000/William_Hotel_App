@@ -154,10 +154,6 @@ Order Items Section
   width: auto;
   overflow: auto;
   text-align: center;
-
-  .fa:hover {
-    cursor: pointer;
-  }
 }
 
 #order__table {

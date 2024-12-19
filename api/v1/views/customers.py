@@ -29,3 +29,17 @@ def add_customer():
         return jsonify({"error": "Internal Error Occured"}), 500
     finally:
         storage.close()
+
+
+"""
+@api_views.route("/customers")
+@role_required(["staff"])
+def get_customer():
+    customer = storage.all(Customer).values()
+    if not customer:
+        return jsonify([]), 200
+
+    response = [{
+        "customer":
+    ]
+"""
