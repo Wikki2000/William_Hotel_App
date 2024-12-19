@@ -53,7 +53,9 @@ $(document).ready(() => {
              <p><b>Room Rate</b> ₦${room.amount.toLocaleString()}</p>
               <p><b>Checkin  By</b> ${checkin_by.first_name} ${checkin_by.last_name} (${checkin_by.portfolio})</p>`
             );
-            $('#room__totalAmount').text('₦' + room.amount.toLocaleString());
+            $('#room__totalAmount')
+              .text('₦' + room.amount.toLocaleString());
+            $('#booking__print-receipt').attr('data-id', `${room.number}`);
           })
         .catch((error) => {
           console.log(error);
@@ -127,6 +129,7 @@ $(document).ready(() => {
     }
   });
 
+  // Handle update of guest data
   $('#dynamic__load-dashboard').off('click', '#guest__input_btn')
     .on('click', '#guest__input_btn', function() {
 
@@ -162,5 +165,17 @@ $(document).ready(() => {
           $button.prop('disable', false);
         }
       );
+    });
+
+  // Handle printing of booking reciept
+  $('#dynamic__load-dashboard')
+    .on('click', '.guest__listPrint, #booking__print-receipt',
+      function() {
+        const roomNumber = $(this).data('id');
+        alert(roomNumber);
+        const receiptUrl = (
+          APP_BASE_URL + `/bookings/print-receipt?room_number=${roomNumber}`
+        );
+        window.open(receiptUrl, '_blank');
     });
 });

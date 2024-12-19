@@ -76,7 +76,9 @@ $(document).ready(function() {
       confirmationModal(headingText, descriptionText, confirmBtCls, data);
     } else if ($selectedMenu.hasClass('order__print')) {
       const orderId = $selectedMenu.data('id');
-      const receiptUrl = APP_BASE_URL + `/pages/receipt?order_id=${orderId}`;
+      const receiptUrl = (
+	APP_BASE_URL + `/orders/print-receipt?order_id=${orderId}` 
+      );
       window.open(receiptUrl, '_blank');
     } else if ($selectedMenu.hasClass('order__showConfirmModal')) {
 
@@ -132,7 +134,9 @@ $(document).ready(function() {
   $('#dynamic__load-dashboard')
     .on('click', '#order__print-receipt', function() {
       const orderId = $(this).data('id');
-      const receiptUrl = APP_BASE_URL + `/pages/receipt?order_id=${orderId}`;
+      const receiptUrl = (
+        APP_BASE_URL + `/orders/print-receipt?order_id=${orderId}`
+      );
       window.open(receiptUrl, '_blank');
     });
 
