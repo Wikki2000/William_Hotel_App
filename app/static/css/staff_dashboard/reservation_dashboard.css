@@ -57,6 +57,12 @@ main button.book-btn {
     margin-left: auto;
 }
 
+.reservations-table{
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
 /* table section */
 main .reservations-table {
     width: 100%;
@@ -70,10 +76,31 @@ main .table-layout{
 .table-layout td {
     text-align: left;
     padding: 8px;
+    width: 15%;
 }
 
 .table-layout tr{
     border-bottom: 1px solid #F5D077;
+}
+.table-layout th{
+    font-size: 16px;
+    font-weight: 500;
+}
+.table-layout td {
+    font-size: 12px;
+    font-weight: 400;
+}
+.table-layout td.pending{
+    color: #D41B1B;
+}
+.table-layout td.paid {
+    color: #34BF49;
+}
+.table-layout td.partial {
+    color: #4285F4;
+}
+.details{
+    color: #FFC845;
 }
 /*
 main .reservations-table {
