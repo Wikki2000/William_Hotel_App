@@ -71,6 +71,10 @@ main .reservations-table {
 main .table-layout{
     width: 100%;
     border-collapse: collapse;
+    cursor: pointer;
+}
+.table-layout tr {
+    border-bottom: 1px solid #F5D077;
 }
 .table-layout th,
 .table-layout td {
@@ -79,15 +83,12 @@ main .table-layout{
     width: 15%;
 }
 
-.table-layout tr{
-    border-bottom: 1px solid #F5D077;
-}
 .table-layout th{
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 500;
 }
 .table-layout td {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 400;
 }
 .table-layout td.pending{
