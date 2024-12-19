@@ -1,0 +1,106 @@
+/* Main section*/
+body{
+    background-color: #f2f2f2;
+    display: flex;
+    flex-direction: column;
+}
+
+.reservation-header{
+    padding: 0 0 10px 40px;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+main {
+    padding: 20px;
+    background-color: #FDF6E4;
+    border-radius: 30px;
+}
+.add-reservation-header {
+    font-size: 1.7rem;
+    font-weight: 200;
+    margin-bottom: 20px;
+}
+
+main h1,
+h2 {
+    color: #333;
+}
+
+.first-row, .second-row{
+    display: flex;
+    margin-bottom: 15px;
+    gap: 15px;
+}
+
+main .add-reservation form input,
+main .add-reservation form select {
+    display: block;
+    padding: 10px;
+    border: 1px solid #F5D077;
+    border-radius: 8px;
+    width: 12rem;
+    height: 45px;
+    margin-bottom: 10px;
+}
+
+main button.book-btn {
+    padding: 20px 80px;
+    border: none;
+    border-radius: 20px;
+    font-size: 1rem;
+    background-color: #1f2935;
+    color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    cursor: pointer;
+    display: block;
+    margin-left: auto;
+}
+
+/* table section */
+main .reservations-table {
+    width: 100%;
+}
+
+main .table-layout{
+    width: 100%;
+    border-collapse: collapse;
+}
+.table-layout th,
+.table-layout td {
+    text-align: left;
+    padding: 8px;
+}
+
+.table-layout tr{
+    border-bottom: 1px solid #F5D077;
+}
+/*
+main .reservations-table {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+main .reservations-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+main .reservations-table th,
+main .reservations-table td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+
+main .reservations-table th {
+    background-color: #f2f2f2;
+}
+
+main .reservations-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+ */
