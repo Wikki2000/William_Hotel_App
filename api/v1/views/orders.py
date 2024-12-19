@@ -112,7 +112,7 @@ def get_orders(user_role: str, user_id: str):
                     "qty": order_item.qty_order,
                     "amount": order_item.amount,
                     "name": (
-                        order_item.drinki.name
+                        order_item.drink.name
                         if order_item.drink_id
                         else order_item.food.name
                     )
@@ -139,6 +139,7 @@ def get_order(user_role: str, user_id: str, order_id: str):
         cleared_by_dict = (
             None if not order.cleared_by else order.cleared_by.to_dict()
         )
+        print(cleared_by_dict)
 
         response = {
             "order": order.to_dict(),
@@ -207,13 +208,13 @@ def filter_orders(user_role: str, user_id: str, payment_status):
             response = [{
                 "order": order.to_dict(),
                 "customer": order.customer.to_dict(),
-                "user": order.user.to_dict()
+                "ordered_by": order.ordered_by.to_dict()
             } for order in sorted_orders if order.is_paid]
         elif payment_status == "pending":
             response = [{
                 "order": order.to_dict(),
                 "customer": order.customer.to_dict(),
-                "user": order.user.to_dict()
+                "ordered_by": order.ordered_by.to_dict()
             } for order in sorted_orders if not order.is_paid]
         else:
             abort(404)

@@ -14,8 +14,10 @@ class Booking(BaseModel, Base):
     """Define class for storing booking of rooms"""
     __tablename__ = "bookings"
     duration = Column(String(20), default=datetime.utcnow())
-    expiration = Column(String(50), nullable=False)
+    checkin = Column(Date, nullable=False)
+    checkout = Column(Date)
     is_paid = Column(ENUM("yes", "no"), nullable=False)
+    is_use = Column(Boolean, default=True)
     guest_number = Column(String(30), nullable=False)
     customer_id = Column(
         String(60), ForeignKey("customers.id"), nullable=False

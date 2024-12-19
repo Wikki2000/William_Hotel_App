@@ -10,6 +10,7 @@ from api.v1.views import api_views
 from api.v1.views.utils import bad_request, role_required
 from models import storage
 from sqlalchemy.exc import IntegrityError
+from datetime import datetime
 
 
 @api_views.route("/bookings")
@@ -24,7 +25,17 @@ def bookings(user_id: str, user_role: str):
         sorted_books = sorted(
             books, key=lambda book : book.updated_at, reverse=True
         )
-        return jsonify([booking.to_dict() for booking in sorted_books]), 200
+
+        response = [{
+            "booking": booking.to_dict(),
+            "guest": booking.customer.to_dict(),
+            "checkin_by": booking.checkin_by.to_dict(),
+            "room": booking.room.to_dict(),
+            "checkout_by": (
+                None if not booking.checkout_by
+                else booking.checkout_by.to_dict()
+            )} for booking in sorted_books]
+        return jsonify(response), 200
     except Exception as e:
         print(str(e))
         return jsonify({"error": "Internal Error Occured"}), 500
@@ -45,14 +56,14 @@ def booking_data(user_id: str, user_role: str, room_number):
 
         if not booking:
             return jsonify({
-                "room": room.to_dict(), "booking": None,
-                "user": None, "customer": None
+                "room": room.book.to_dict(), "booking": None,
+                "checkin_by": None, "checkout_by": None
             }), 200
 
         # Check if room has been checkout by staff
         checkout_by_dict = (
             None if not booking.checkout_by
-            else book.checkout_by.to_dict()
+            else booking.checkout_by.to_dict()
         )
 
         return jsonify({
@@ -83,9 +94,46 @@ def check_out(user_id: str, user_role: str, room_number: str):
 
     room.status = "available"
     room.book.is_paid = "yes"
-    room.book.checkout_by_id = user_id
+    room.book.checkout_by_id = user_id  # Record staff that checkout guest
+    room.book.customer.is_guest = False  # No more guest once checkout
+    room.book.is_use = False
     storage.save()
     return jsonify({"message": "Checkout Successful"}), 201
+
+
+@api_views.route("/bookings/<booking_id>/edit", methods=["PUT"])
+@role_required(["staff"])
+def update_booking_data(user_id: str, user_role: str, booking_id: str):
+    """Update guest data use in booking"""
+    data = request.get_json()
+    required_fields = ["customer", "booking"]
+    error_response = bad_request(data, required_fields)
+    if error_response:
+        return jsonify(error_response), 400
+
+    booking = storage.get_by(Booking, id=booking_id)
+    if not booking:
+        abort(404)
+
+    booking_data = data.get("booking")
+    customer_data = data.get("customer")
+
+    customer = booking.customer
+
+    # Update booking data
+    for key, val in booking_data.items():
+        setattr(booking, key, val)
+    booking.checkin_by_id = user_id  # Update with staff that made changes
+    booking.updated_at = datetime.utcnow()
+
+    # Update customer data
+    for key, val in customer_data.items():
+        setattr(customer, key, val)
+    customer.updated_at = datetime.utcnow()
+
+    storage.save()
+    storage.close()
+    return jsonify({"message": "Booking Data Updated Successfully"}), 201
 
 
 @api_views.route("/rooms/<string:room_number>/book", methods=["POST"])
@@ -109,18 +157,27 @@ def book_room(user_id: str, user_role: str, room_number: str):
     if not customer:
         customer = Customer(**customer_data)
         storage.new(customer)
+        customer.is_guest = True
+        storage.save()
+    else:
+        customer.is_guest = True
         storage.save()
 
-    # Change room
     room = storage.get_by(Room, number=room_number)
     if not room:
         abort(404)
+
+    # Ensure that can't book room already in use
+    if room.status == "occupied" or room.status == "reserved":
+        return jsonify({"error": "Room Already in Use"}), 409
+
     room.status = "occupied"
     storage.save()
 
     book_attr = {
+            "checkin": datetime.utcnow(),
             "duration": booking_data.get("duration"),
-            "expiration": str(booking_data.get("expiration")),
+            "checkout": str(booking_data.get("expiration")),
             "is_paid": booking_data.get("is_paid"),
             "customer_id": customer.id,
             "guest_number": booking_data.get("guest_number"),

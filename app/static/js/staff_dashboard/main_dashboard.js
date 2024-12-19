@@ -20,7 +20,7 @@ $(document).ready(function() {
         return;
       }
       const todayBookingCount = bookings.filter(
-        (booking) => compareDate(booking.created_at)
+        ({ booking }) => compareDate(booking.created_at)
       ).length;
 
       const roomCounts = rooms.rooms_count;
@@ -71,17 +71,20 @@ $(document).ready(function() {
 
     const BookingData = {
       book: { duration, expiration, guest_number, is_paid },
-      customer: { name, address, phone, id_type, id_number }
+      customer: { gender, name, address, phone, id_type, id_number }
     };
 
     $('#main__popup-modal').css('display', 'flex');
 
-    $('#dynamic__load-dashboard').on(
-      'click', '#main__confirm-btn', function() {
+    $('#dynamic__load-dashboard').off('click', '#main__confirm-btn')
+      .on('click', '#main__confirm-btn', function() {
         const bookUrl =  API_BASE_URL + `/rooms/${roomNumber}/book`;
+
+        const $button = $(this);
+        $button.prop('disable', true);  // Disable btn to avoid multiple requests.
         ajaxRequest(bookUrl, 'POST', JSON.stringify(BookingData),
           (response) => {
-            //window.location.reload()
+            $button.prop('disable', false);
             $('#main__popup-modal').hide();
             const msg = (
               `Success! Room [${roomNumber}] has been booked for ${name}`
@@ -93,13 +96,20 @@ $(document).ready(function() {
             updateElementCount($('#main__today-check--in'), true);
           },
           (error) => {
+            $button.prop('disable', false);
+            if (error.status === 409) {
+            showNotification('Error! ' +  error.responseJSON.error, true);
+            } else {
+              showNotification('An Error occured. Try Again !');
+            }
+            $('#main__popup-modal').hide();
           }
         );
       });
 
     // Cancel Popup Modal
-    $('#dynamic__load-dashboard').on(
-      'click', '#main__cancel-btn', function() {
+    $('#dynamic__load-dashboard').off('click', '#main__cancel-btn')
+      .on('click', '#main__cancel-btn', function() {
         $('#main__popup-modal').hide();
       });
   });
@@ -116,7 +126,6 @@ $(document).ready(function() {
           const roomUrl = API_BASE_URL + '/rooms/available/filter';
           fetchData(roomUrl)
           .then((rooms) => {
-            console.log(rooms);
             const availableRooms = rooms.map((room) => room.number);
             displayMenuList(availableRooms, $clickItem, 'order__menu');
           })

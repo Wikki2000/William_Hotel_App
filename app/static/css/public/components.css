@@ -248,6 +248,9 @@ Table Menu Design
 ======================================*/
 tr {
   position: relative;
+  .fa:hover { 
+    cursor: pointer;
+  }
 }
 
 .manage {

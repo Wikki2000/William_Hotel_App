@@ -1,7 +1,5 @@
-import  {
-  displayFoodDrink, fetchData, 
-  getBaseUrl, highLightOrderBtn 
-} from '../global/utils.js';
+import  { fetchData, getBaseUrl, highLightOrderBtn } from '../global/utils.js';
+import  { displayFoodDrink } from '../global/tables.js';
 
 $(document).ready(function() {
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
