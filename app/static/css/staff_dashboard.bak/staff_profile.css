@@ -202,160 +202,116 @@
 }
 
 
-.staff-loan-heading {
-  margin-left: 5%;
-  margin-top: 1.4%;
-}
-
-.staff-loan-heading  button:first-of-type {
-  width: 15.2%;
-  height: 18.6%;
-  background: #000000;
-  box-shadow: 0px 4px 4px 0px #00000040;
-  border-radius: 10px;
-  color: #fff;
-  padding: 7px 0;
-}
-
-.staff-loan-heading button:last-of-type {
-  width: 15.2%;
-  height: 18.6%;
-  border: 1px solid #FFC009;
-  border-radius: 10px;
-  margin-left: 3%;
-  padding: 7px 0;
-}
-
-
-.loan-content {
+.profile-content {
   width: 97%;
+  /* width: 1104px; */
+  /* height: 851px; */
+  /* height: 83%; */
   height: 100vh;
   background: #FDF6E4;
+  /* margin-top: -61%; */
   margin: 0 auto;
-  margin-top: 2.34%;
-  padding: 3% 0 6.6% 3.6%;
+  /* padding: 8% 5.6%; */
+  padding-left: 2.5%;
+  padding-top: 3%;
   gap: var(--space-xs);
-  border-radius: 10px;
-
-}
-
-.loan-content input {
-  border: 1px solid #FFC009;
-  text-align: center;
-  height: 50px;
-  border-radius: 10px;
-}
-
-label {
-  font-size: 1.25rem;
-  line-height: 1.875rem;
-  font-weight: 500;
-}
-
-.loan-details {
   display: flex;
-  width: 100%;
-  justify-content: right;
-  align-items: flex-start;
+  flex-direction: column;
+  border-radius: 10px;
+  /* border: 4px solid red; */
+
 }
 
-#loan-details-section {
-  width: 46.6%;
+.profile-details {
+  display: flex;
+  justify-content: space-between;
+  width: 82%;
+  align-items: flex-start;
+  /* border: 2px solid orange; */
+}
+
+.profile-pic {
+  text-align: center;
+  /* display: flex; */
+  /* flex-direction: row;
+  justify-content: center; */
+}
+
+#profile-edit-section {
+  width: 61%;
+  /* width: 564px; */
+  /* border: 3px solid green; */
   height: 100%;
 }
 
-#loan-details-heading,
-.bank-title {
-  font-weight: 500;
-  font-size: 1.5rem;
-  line-height: 2.25rem;
-  font-style: normal;
-  margin-bottom: 1.5%;
-}
-
-.loan-details-form {
-  width: 79.4%;
-  height: 20.623%;
-}
-
-#loan-amount,
-#loan-term {
-  width: 29.62%;
-  margin-bottom: 3.3%;
-}
-
-#loan-amount {
-  margin-left: 0.836%;
-  margin-right: 5.376%;
-}
-
-#loan-term {
-  margin-left: 1.43369%;
-}
-
-#repayment-mode {
-  width: 24.05%;
-  margin-left: 1.448%;
-}
-
-.bank-details {
-  width: 91.08%;
-}
-
-.bank-title {
-  text-align: center;
-}
-
-.bank-details input {
-  width: 27.71%;
-}
-
-#account-number {
-  margin: 2.08% 0 29.044% 0;
-}
-
-.loan-action {
-  text-align: right;
-  margin-right: 5.218%;
-}
-
-.loan-action button:first-of-type {
+#profile-edit-section input,
+#profile-edit-section select {
   border: 1px solid #F5D077;
-  text-align: center;
-  padding: 1.5% 0;
-  width: 17.8368%;
-  height: 6.316%;
-  border-radius: 20px;
-  /* margin-top: 4.19%; */
-  cursor: pointer;
+  border-radius: 10px;
+  padding-left: 3.8%;
+  padding-right: 3.8%;
+  width: 100%;
+  height: 33px;
 }
 
-.loan-action button:last-of-type {
-  box-shadow: 0px 4px 4px 0px #00000040;
+#profile-edit-section select {
+  background-image: url(/public/images/dropdown_icon.svg);
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+#edit-dob {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* #dropdown_icon {
+  display: block;
+  width: 50px;
+  position: absolute;
+  right: 0;
+  top: 0;
+} */
+
+.combo-flex {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6%;
+}
+
+.input-label-combo {
+  width: 46%;
+}
+
+#save-changes {
+  width: 24.8%;
+  height: 31px;
   background: #000000;
-  text-align: center;
-  padding: 1.5% 0;
-  width: 17.8368%;
-  height: 6.316%;
-  border-radius: 20px;
+  border-radius: 10px;
   color: #fff;
-  margin-left: 3.713768%;
-  cursor: pointer;
+  margin-right: 11.2%;
+  margin-left: 9.75%;
 }
 
-
-
-#staff-loan-description {
-  /* margin-top: 2.85%; */
-  padding: 8.6px 0;
-  width: 20.2%;
-  height: 7.9%;
+#cancel-changes {
+  width: 15.9%;
+  height: 31px;
+  border: 1px solid #F5D077;
+  border-radius: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
   text-align: center;
-  background: #FFC8455C;
-  border-radius: 20px 0 0 20px;
 }
 
+#combo-flex-submit {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
 
+/* .profile-pic > * {
+  display: inline-block;
+} */
 
 .header {
   display: flex;
@@ -474,6 +430,9 @@ label {
   box-shadow: var(--shadow-lg);
 }
 
+.staff-profile-heading {
+  margin-left: 5%;
+}
 
 
 /* .columnavailable {
@@ -612,11 +571,4 @@ label {
   margin-left: 21.75rem;
   align-self: flex-start;
   position: relative;
-}
-
-
-@media screen and (max-height: 995px) {
-  #account-number {
-    margin: 2.08% 0 10% 0;
-  }
 }

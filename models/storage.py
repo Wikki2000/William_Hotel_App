@@ -3,7 +3,6 @@
 from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker, scoped_session
 
-
 from models.base_model import Base
 from models.customer import Customer
 from models.user import User
@@ -15,6 +14,7 @@ from models.drink_category import DrinkCategory
 from models.food import Food
 from models.order_item import OrderItem
 from models.vat import Vat
+from models.loan_request import LoanRequest
 
 from dotenv import load_dotenv
 from os import getenv

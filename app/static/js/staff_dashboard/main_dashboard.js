@@ -246,11 +246,4 @@ $(document).ready(function() {
         }
       }
     });
-
-  // Hide dropdown menus when clicking outside
-  $(document).on('click', function (e) {
-    if (!$(e.target).closest('.dropdown').length) {
-      $('.dropdown-menu').hide();
-    }
-  });
 });
