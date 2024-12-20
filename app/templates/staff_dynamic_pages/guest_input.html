@@ -1,0 +1,106 @@
+<div class="guest__input-container">
+  <div class="guest-tab">
+    <div class="tab ui heading size-headingmd guest__title">Guests</div>
+  </div>
+
+  <!-- room table section -->
+  <div class="guest-input-column">
+    <section id="guest-inputForm" class="guest-input-container">
+      <div class="guest-page-edit-header">
+        <img src="/static/images/public/edit_icon.png" alt="edit" style="height: 20px; padding-right: 1rem;" />
+        <p>Edit</p>
+      </div>
+      <div class="guest-page-input-row">
+        <div class="guest-page-edit-input">
+          <label for="checkin">Check In</label><br>
+          <input id="guest__checkinDate" type="date">
+        </div>
+        <div class="guest-page-edit-input">
+          <label for="duration">Duration</label><br>
+          <input id="guest__duration" type="text">
+        </div>
+        <div class="guest-page-edit-input">
+          <label for="checkout">Check Out</label><br>
+          <input id="guest__checkout" type="date">
+        </div>
+      </div>
+      <span style="position: relative; font-size: x-large; font-weight: bolder; top: 4rem;">Room Details</span>
+      <div class="guest-page-input-row" style="top: 5rem;">
+        <div class="guest-page-edit-input">
+          <label for="room number">Room Number</label><br>
+          <input id="guest__roomNumber" required readonly />
+        </div>
+        <div class="guest-page-edit-input">
+          <label for="room rate">Room Rate</label><br>
+          <input id="guest__roomAmount" readonly />
+        </div>
+      </div>
+      <span style="position: relative; font-size: x-large; font-weight: bolder; top: 7rem;">Guest Details</span>
+      <div class="guest-page-input-row" style="top: 8rem;">
+        <div class="guest-page-edit-input">
+          <label for="name">Name</label><br>
+          <input id="guest__name" required type="text">
+        </div>
+        <div class="guest-page-edit-input">
+          <label for="number">Phone Number</label><br>
+          <input id="guest__phoneNumber" required>
+        </div>
+        <div class="guest-page-edit-input">
+          <label for="address">Address</label><br>
+          <input id="guest__address" type="text" required>
+        </div>
+      </div>
+      <div class="guest-page-input-row" style="top: 9rem; padding-bottom: 4rem;">
+        <div class="guest-page-edit-input">
+          <label for="gender">Gender</label><br>
+
+          <div class="dropdown">
+            <div id="guest-gender" class="guest__dropdown-btn drop-down">
+              <span>Select </span>
+              <img src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px" alt="dropdown" />
+            </div>
+            <div id="guest__gender-dropdown" class="dropdown-menu">
+              <ul class="guest__dropdown--menu-list">
+                <li class="guest__age-dropdown dropdown-item">Male</li>
+                <li class="guest__age-dropdown dropdown-item">Female</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+        <div class="guest-page-edit-input">
+          <label for="guest number">Guest No.</label><br>
+          <input id="guest__numberOccupant" type="text" required>
+        </div>
+        <div class="guest-page-edit-input">
+          <label for="identify">ID Type</label><br>
+          <div class="dropdown">
+            <div id="guest-idType" class="guest__dropdown-btn drop-down">
+              <span>Select </span>
+              <img src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px" alt="dropdown" />
+            </div>
+            <div id="guest__idType-dropdown" class="dropdown-menu">
+              <ul class="order__dropdown--menu-list">
+                <li class="guest__idtype-dropdown dropdown-item">NIN</li>
+                <li class="guest__idtype-dropdown dropdown-item">Voter_Card</li>
+                <li class="guest__idtype-dropdown dropdown-item">Driver_License</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="guest-page-edit-input">
+          <label for="identification">ID Number</label><br>
+          <input id="guest__idNumber" class="last-input" type="text" required />
+        </div>
+      </div>
+      <div class="guest__input_btn">
+        <button id="guest__input_btn" type="button">Proceed</button>
+      </div>
+
+      <!-- Stores input to be submitted along with form -->
+      <input id="guest__genderValue" type="hidden" required /> <!-- Guest gender from menu -->
+      <input id="guest__idTypeValue" type="hidden" required /> <!-- Guest IDType from menu -->
+      <input id="guest__booking-id" type="hidden" required /> <!-- Stores booking ID -->
+    </section>
+  </div>
+</div>
