@@ -15,6 +15,7 @@ from models.food import Food
 from models.order_item import OrderItem
 from models.vat import Vat
 from models.loan_request import LoanRequest
+from models.leave_request import LeaveRequest
 
 from dotenv import load_dotenv
 from os import getenv

@@ -2,29 +2,30 @@
 """This module models the storage of user details."""
 from datetime import datetime
 from models.base_model import Base, BaseModel
-from sqlalchemy import Column, String, Boolean, LargeBinary, DateTime
+from sqlalchemy import Column, Text, String, Boolean, LargeBinary, DateTime
 from sqlalchemy.dialects.mysql import ENUM 
 from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
 from models.booking import Booking
 from models.order import Order
 from models.loan_request import LoanRequest
+from models.leave_request import LeaveRequest
+from sqlalchemy.dialects.mysql import LONGBLOB
 
 
 class User(BaseModel, Base):
     """Define class for storing users"""
     __tablename__ = "users"
-    title = Column(String(20), nullable=False)
+    title = Column(String(20))
     first_name = Column(String(20), nullable=False)
     middle_name = Column(String(20))
     last_name =  Column(String(20), nullable=False)
     username = Column(String(20), nullable=False)
-    profile_photo = Column(LargeBinary)
+    profile_photo = Column(LONGBLOB)
     email = Column(String(30), nullable=False, unique=True)
     address = Column(String(30))
     gender = Column(String(30))
-    dob = Column(String(30))
-    #dob = Column(DateTime)
+    dob = Column(DateTime)
     number = Column(String(30))
     nok = Column(String(30))
     nok_number = Column(String(30))
@@ -65,6 +66,12 @@ class User(BaseModel, Base):
     loans = relationship(
         "LoanRequest", backref="staff",
         cascade='all, delete-orphan',
+    )
+
+    # Handle relationship between staff and request for leaves
+    leaves = relationship(
+        "LeaveRequest", backref="staff",
+        cascade='all, delete-orphan'
     )
 
     # ===================== Method Definition ==================== #
