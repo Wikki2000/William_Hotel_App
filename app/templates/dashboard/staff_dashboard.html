@@ -22,8 +22,7 @@
     <link rel="stylesheet" type="text/css" href="/static/css/public/components.css" />
     <link rel="stylesheet" type="text/css" href="/static/css/public/side_nav.css" />
     <link rel="stylesheet" type="text/css" href="/static/css/public/header.css" />
-    <link rel="stylesheet" type="text/css" href="/static/css/staff_dashboard/guest-list.css" />
-    <link rel="stylesheet" type="text/css" href="/static/css/staff_dashboard/guest-input.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/public/table.css" />
 
     <!-- Link Staff_dashboard CSS Files-->
     <link rel="stylesheet" type="text/css" href="/static/css/staff_dashboard/room_service.css" />
@@ -31,6 +30,11 @@
     <link rel="stylesheet" type="text/css" href="/static/css/staff_dashboard/restaurant.css" />
     <link rel="stylesheet" type="text/css" href="/static/css/staff_dashboard/order.css" />
     <link rel="stylesheet" type="text/css" href="/static/css/staff_dashboard/empty_cart.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/staff_dashboard/guest-list.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/staff_dashboard/guest-input.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/staff_dashboard/staff_requests/profile.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/staff_dashboard/staff_requests/loan_request.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/staff_dashboard/staff_requests/leave_request.css" />
 
     <!-- Link Staff_dashboard JS Files-->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
@@ -42,7 +46,10 @@
     <script type="module" defer src="/static/js/staff_dashboard/app.js"></script>
     <script type="module" defer src="/static/js/staff_dashboard/main_dashboard.js"></script>
     <script type="module" defer src="/static/js/staff_dashboard/order.js"></script>
-    <script type="module" defer src="/static/js/staff_dashboard/guest-list.js"></script>
+    <script type="module" defer src="/static/js/staff_dashboard/guest.js"></script>
+    <script type="module" defer src="/static/js/staff_dashboard/staff_requests/profile.js"></script>
+    <script type="module" defer src="/static/js/staff_dashboard/staff_requests/loan_request.js"></script>
+    <script type="module" defer src="/static/js/staff_dashboard/staff_requests/leave_request.js"></script>
   </head>
   <body>
     <!-- main content section -->
@@ -106,21 +113,42 @@
               </a>
             </li>
           </ul>
-          <div class="sidebar__profile-row">
+          <div class="sidebar__profile-row ighlight-sidebar">
             <img src="/static/images/public/profile_photo_placeholder.png" alt="Profile Image" class="sidebar__profile-image" />
             <div class="sidebar__staff-profile">
               <div class="sidebar__name-column">
                 <h5 id="sidebar__name" class="sidebar__name ui heading size-headingmd"><!--Name will be dynamically be loaded--></h5>
                 <h6 id="sidebar__email" class="ui text size-textxs"><!--Dynamically load email--></h6>
               </div>
-              <img
-                src="/static/images/public/vertical3colons.png"
-                alt="Notifications Icon"
-                class="sidebar__icon--notifications"
-                />
-            </div>
+              <i class="fa fa-ellipsis-v fa-2x drop-down" id="sidebar__staff--profile-btn" ></i>
+           </div>
           </div>
         </aside>
+
+        <div>
+          <ul style="z-index: 100;" class="notifications-dropdown hidden sidebar_dropdown__menu">
+            <li id="sidebar__profile">
+              <a>
+                <img src="/static/images/public/sidebar_profile_icon.png" alt="Dashboard Icon" class="sidebar__icon--dashboard" />
+                <span> Profile</span>
+              </a>
+            </li>
+            <li id="side__bar-loanRequest">
+              <a>
+                <img src="/static/images/public/sidebar_request-loan_icon.png" alt="Dashboard Icon" class="sidebar__icon--dashboard" />
+                <span> Request Loan</span>
+              </a>
+            </li>
+            <li id="side__bar-leaveRequest">
+              <a>
+                <img src="/static/images/public/sidebar_request-leave_icon.png" alt="Dashboard Icon" class="sidebar__icon--dashboard" />
+                <span> Request Leave</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+
         <!-- side navigation bars ends here -->
 
         <div class="column_two">

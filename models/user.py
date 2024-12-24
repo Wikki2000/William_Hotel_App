@@ -8,6 +8,7 @@ from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
 from models.booking import Booking
 from models.order import Order
+from models.loan_request import LoanRequest
 
 
 class User(BaseModel, Base):
@@ -23,6 +24,7 @@ class User(BaseModel, Base):
     address = Column(String(30))
     gender = Column(String(30))
     dob = Column(String(30))
+    #dob = Column(DateTime)
     number = Column(String(30))
     nok = Column(String(30))
     nok_number = Column(String(30))
@@ -57,6 +59,12 @@ class User(BaseModel, Base):
         'Order', backref='cleared_by',
         cascade='all, delete-orphan',
         foreign_keys="Order.cleared_by_id"
+    )
+
+    # Handle relationship between staff and request for loan
+    loans = relationship(
+        "LoanRequest", backref="staff",
+        cascade='all, delete-orphan',
     )
 
     # ===================== Method Definition ==================== #

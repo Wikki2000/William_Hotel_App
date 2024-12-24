@@ -59,10 +59,7 @@
 /*-------------------------------------
 3. Table CSS
 --------------------------------------*/
-.ui.table.size-xs tbody td {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-}
+
 
 /*==================================
 Notification Modal
@@ -137,6 +134,12 @@ Notification Modal
   box-shadow: inset 0 4px 8px 0 #0000003f;
 }
 
+.see__details {
+  color: orange !important;
+  &:hover {
+    cursor: pointer;
+  }
+}
 
 /*==============================================
 Confirmation Modal Styles

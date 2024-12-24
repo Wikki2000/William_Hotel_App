@@ -3,8 +3,7 @@
 from models.room import Room
 from flask import abort, jsonify, request
 from api.v1.views import api_views
-from api.v1.views.utils import role_required
-from api.v1.views.utils import bad_request
+from api.v1.views.utils import role_required, bad_request
 from models import storage
 from sqlalchemy.exc import IntegrityError
 

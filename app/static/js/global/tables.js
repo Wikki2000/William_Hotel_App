@@ -156,12 +156,53 @@ export function orderItemsTempleate(itemId, itemDataObject) {
 }
 
 /**
+ * Table template for list of Leaves apply by staff.
+ *
+ * @param {object} data - Object holding leaves data.
+ * @param {object} date - The start and end date of leaves in british format. 
+ * @param {string} - The HTML templates of leaves list.
+ */
+export function leaveListTableTemplate(data, date) {
+  let textColor;
+  let text;
+  if (data.manager_approval_status === 'rejected' && data.ceo_approval_status === 'rejected') {
+    textColor = 'red';
+    text = 'Rejected';
+  } else if(data.manager_approval_status === 'approved' && data.ceo_approval_status === 'approved') {
+    textColor = 'green';
+    text = 'Approved';
+  } else {
+    textColor = 'blue';
+    text = 'Pending';
+  }
+  const leaveType = data.leave_type
+  const row = `<tr>
+    <td class="">
+        <p title="${data.leave_type}" class="ui text size-textmd">${leaveType}</p>
+    </td>
+    <td class="">
+      <p class="ui text size-textmd">${date.startDate}</p>
+    </td>
+    <td class="">
+      <p class="ui text size-textmd">${date.endDate}</p>
+    </td>
+    <td class="">
+      <p class="ui text size-textmd" style="color: ${textColor}">${text}</p>
+    </td>
+    <td class="">
+      <p data-id="${data.id}" class="ui text size-textmd leaveDetails see__details">See Details</p>
+    </td>
+ </tr>`;
+  return row;
+}
+
+/**
  * Table template for display Guest List.
  *
  * @param {object} guest - Guest object.
  * @param {object} booking - Object holding booking data.
  * @param {object} room - Object holding room data that was book.
- * @param {object} date - The checkin and checkout date in british format. 
+ * @param {object} date - The checkin and checkout date in british format.
  */
 export function guestListTableTemplate(guest, booking, room, date) {
   const row = `<tr>
@@ -205,5 +246,39 @@ export function guestListTableTemplate(guest, booking, room, date) {
       </nav>
     </td>
   </tr>`;
+  return row;
+}
+
+export function loanListTableTemplate(data) {
+
+  let textColor;
+  let text;
+  if (data.is_approved_by_manager === 'rejected' && data.is_approved_by_ceo === 'rejected') {
+    textColor = 'red';
+    text = 'Rejected';
+  } else if(data.is_approved_by_manager === 'approved' && data.is_approved_by_ceo === 'approved') {
+    textColor = 'green';
+    text = 'Approved';
+  } else {
+    textColor = 'blue';
+    text = 'Pending';
+  }
+  const row = `<tr>
+    <td class="">
+        <p class="ui text size-textmd left-margin">₦${data.amount.toLocaleString()}</p>
+    </td>
+    <td class="">
+      <p class="ui text size-textmd">${data.due_month} Month(s)</p>
+    </td>
+    <td class="">
+      <p class="ui text size-textmd left-margin">${data.repayment_mode}</p>
+    </td>
+    <td class="">
+      <p class="ui text size-textmd left-margin" style="color: ${textColor}">${text}</p>
+    </td>
+    <td class="">
+      <p data-id="${data.id}" class="ui text size-textmd loanDetails see__details">See Details</p>
+    </td>
+ </tr>`;
   return row;
 }

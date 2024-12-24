@@ -145,11 +145,11 @@
 
         <div>
           <p>Room Rate</p>
-          <input id="main__room-rate" value="Auto-filled based on room no." readonly>
+          <input id="main__room-rate" value="Auto-filled based on room no." readonly required />
         </div>
         <div>
           <p>Room Type</p>
-          <input id="main__room-type" value="Auto-filled based on room no." readonly>
+          <input id="main__room-type" value="Auto-filled based on room no." readonly required />
         </div>
       </div>
 
@@ -157,11 +157,11 @@
       <div class="flex-row">
         <div class="">
           <p>Name</p>
-          <input id="main__guest-name" placeholder="e.g., James John">
+          <input id="main__guest-name" placeholder="e.g., James John" required />
         </div>
         <div>
           <p>Phone No.</p>
-          <input id="main__guest-phone" placeholder="e.g., 08187643578">
+	  <input type="text" maxlength="11" pattern="\d{11}" id="main__guest-phone" title="Enter exactly 11 digit" placeholder="e.g., 08187643578" required />
         </div>
         <div>
           <p>Address</p>
@@ -208,7 +208,7 @@
       </div>
       <div>
         <p>ID Number</p>
-        <input id="main__id--no-val" placeholder="e.g., 1234-4u765-8767tfer-hg64w">
+        <input id="main__id--no-val" placeholder="e.g., 1234-4u765-8767tfer-hg64w" required />
       </div>
       <div class="main__btn">
         <button class="highlight-btn">Proceed</button>

@@ -193,7 +193,6 @@ $(document).ready(function() {
     const confirmBtCls = 'order__confirm';
 
     confirmationModal(headingText, descriptionText, confirmBtCls);
-
   });
 
   $('#dynamic__load-dashboard').off('click', '.order__confirm')
