@@ -1,3 +1,4 @@
+
 /* General Body Styling */
 body {
     box-sizing: border-box;
@@ -26,6 +27,7 @@ body {
 .receipt-header {
     display: flex;
     align-items: center;
+    
     background-color: var(--black_900);
     color: var(--white_a700);
     padding: 20px;
@@ -40,6 +42,7 @@ body {
 
 .receipt-header .letter-header {
     text-align: center;
+    margin-left: 15%;
 }
 
 .receipt-header .letter-header h1 {
@@ -83,43 +86,6 @@ body {
     margin: 20px 0; /* Space above and below table */
 }
 
-.receipt-items .table-header {
-    display: contents; /* Maintain grid layout */
-    font-weight: bold;
-    border-bottom: 2px solid var(--orange_a100);
-    padding-bottom: 10px;
-}
-
-.receipt-items .table-row {
-    display: contents; /* Match grid layout */
-    padding: 10px 0; /* Space between rows */
-    border-bottom: 1px solid var(--orange_a100); /* Optional: row separator */
-}
-
-/* Summary Section */
-.receipt-summary {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Two columns: Label, Value */
-    gap: 10px; /* Space between rows */
-    width: 100%;
-    margin-top: 20px;
-}
-
-.receipt-summary .summary-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 1rem;
-    padding: 5px 0;
-}
-
-.receipt-summary .total {
-    font-weight: bold;
-    font-size: 1.2rem; /* Make total stand out */
-    border-top: 2px solid var(--orange_a100); /* Separate total from other rows */
-    margin-top: 10px; /* Add space above total */
-    padding-top: 10px;
-}
-
 /* Footer Section */
 .other-contents {
     text-align: center;
@@ -141,11 +107,39 @@ body {
     line-height: 1.5;
 }
 
+
+.order__print-receipt:hover {
+  cursor: pointer;
+}
+#customer-order-table table {
+    width: 230%;
+    border-collapse: collapse;
+    margin-top: 30px;
+    margin-bottom: 20px;
+
+}
+
+#qr-code img {
+    position: relative;
+    display: block;
+    top: -50px;
+}
+
+
+
+.order-total div {
+    display: flex;
+    justify-content: space-between;
+    column-gap: 30px;
+    flex: 1; /* Allow items to grow/shrink evenly */
+    text-align: left; /* Default alignment */
+    width: 191%;
+}
+
+
 /* Utility Classes */
 :root {
     --orange_a100: #FFA726;
     --white_a700: #FFFFFF;
     --black_900: #000000;
 }
-
-
