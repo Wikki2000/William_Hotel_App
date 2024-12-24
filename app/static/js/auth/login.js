@@ -25,8 +25,11 @@ $(document).ready(function () {
         // Set user ID and name in session for quick recovery.
         localStorage.setItem('userId', response.id);
         localStorage.setItem('userName', response.username);
-        localStorage.setItem('role', response.role)
-	localStorage.setItem('email', response.email)
+        localStorage.setItem('role', response.role);
+	localStorage.setItem('email', response.email);
+	localStorage.setItem(
+	  'image', `data:image/;base64,${response.profile_photo}`
+	);
 	localStorage.setItem(
 	    'name', response.first_name + " " + response.last_name
 	)

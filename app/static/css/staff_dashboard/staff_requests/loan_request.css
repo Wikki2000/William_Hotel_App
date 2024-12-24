@@ -1,3 +1,7 @@
+.staff__loan-container {
+  overflow-y: scroll;
+  height: 74vh;
+}
 .staff_section-btn {
   display: flex;
   justify-content: space-around;
@@ -19,7 +23,6 @@
   padding: 3% 0 6.6% 3.6%;
   gap: var(--space-xs);
   border-radius: 10px;
-
 }
 
 .loan-content input {
@@ -123,3 +126,32 @@ label {
   background: #FFC8455C;
   border-radius: 20px 0 0 20px;
 }
+#loan__list #loan__table-body.common-table-body td,
+{
+  text-align: center !important;
+}
+#loan__list #loan__table-body.common-table-body .left-margin {
+  padding-left: 30px;
+}
+#loan__list {
+  margin: 10px;
+  display: none;
+}
+
+/*====================================
+ 	Loan Popup Modal
+=====================================*/
+.loan__popup-modal {
+  width: 60%;
+  margin-left: 20%;
+  height: auto;
+  padding: 30px;
+  h1 {
+    text-align: center;
+  }
+}
+#loan__status-comment {
+  display: flex;
+  justify-content: space-between;
+  width: 50%;
+ }

@@ -2,6 +2,62 @@
               Helper Function common amongst all Modules
 =======================================================================*/
 /**
+ * Converts form data into a dictionary (JavaScript object).
+ *
+ * @param {HTMLElement} formElement - The form element from which the data is extracted.
+ * @return {Object} formDataDict - A dictionary where keys are the form field names and values are the field values.
+ */
+export function getFormDataAsDict($formElement) {
+  var formDataArray = $formElement.serializeArray(); // Serialize the form data into an array of objects
+  var formDataDict = {};
+
+  // Convert the array into a dictionary (object)
+  $.each(formDataArray, function(index, field) {
+    formDataDict[field.name] = field.value;
+  });
+
+  return formDataDict;
+}
+/**
+ * Preview selected image and return its Base64 string.
+ * 
+ * @param {string} inputSelector - Selector for the file input element (as a string for delegation).
+ * @param {string} imageSelector - Selector for the image preview element (as a string for delegation).
+ * @return {Promise<string>} - The Base64 string of the selected image.
+ */
+export function previewImageAndReurnBase64(inputSelector, imageSelector) {
+  return new Promise((resolve, reject) => {
+    $(document).on('change', inputSelector, function (e) {
+      // Access the first selected file
+      //const file = e.target.files[0];
+      const files = e.target.files
+      if (files) {
+        const reader = new FileReader();
+
+        // On successful read
+        reader.onload = function (e) {
+		console.log("Image preview updated"); 
+          $(imageSelector).attr('src', e.target.result); // Update the image preview
+          resolve(e.target.result);
+        };
+
+        // On error
+        reader.onerror = function () {
+		console.log("Image preview updated error");
+          reject('Error reading file content.');
+        };
+
+        reader.readAsDataURL(files[0]); // Read file as Base64
+      } else {
+        reject('No file selected');
+      }
+    });
+  });
+}
+
+
+
+/**
  * Fetches data from the specified URL.
  *
  *

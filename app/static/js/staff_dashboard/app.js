@@ -13,18 +13,33 @@ $(document).ready(function() {
   const APP_BASE_URL = getBaseUrl()['appBaseUrl'];
 
 
-  // Display name, username and email in UI
+  // Display basic info in sidebar
   $('#sidebar__name').text(localStorage.getItem('name'));
   $('#sidebar__email').text(localStorage.getItem('email'));
   $('#main__username').text(localStorage.getItem('userName'));
+  $('.sidebar__profile-image').attr(
+    'src', localStorage.getItem('image')
+  );
 
-
+  // Handle side nav bar menu click
+    $('#sidebar__staff--profile-btn').click(function() {
+      const $clickItem =$(this);
+      $('.sidebar__nav-icon').removeClass('highlight-sidebar');
+      $('.sidebar__profile-row').addClass('highlight-sidebar');
+      $clickItem.css('color', 'white');
+      $('.notifications-dropdown').removeClass('hidden');
+    });
   $('.sidebar__nav-icon').click(function() {
     const $clickItem = $(this);
     const clickId = $clickItem.attr('id');
 
     $clickItem.siblings().removeClass('highlight-sidebar');
     $clickItem.addClass('highlight-sidebar');
+
+    // Handle behavior when ellipsis icon is click.
+    $('.sidebar__profile-row').removeClass('highlight-sidebar');
+    $('#sidebar__staff--profile-btn').css('color', 'black');
+    $('.notifications-dropdown').addClass('hidden');
 
     $('#dynamic__load-dashboard').empty(); // Empty to load a new section.
 

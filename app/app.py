@@ -41,6 +41,11 @@ def forbidden(error):
     """Forbidden error handler"""
     return jsonify({"error": "Forbidden Access"}), 403
 
+@app.errorhandler(500)
+def internal_error(error):
+    """Internal error handler."""
+    return jsonify({"error": "Internal Error"}), 500
+
 
 @jwt.expired_token_loader
 def expired_token_callback(jwt_header, jwt_payload):
