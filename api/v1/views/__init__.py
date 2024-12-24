@@ -16,3 +16,4 @@ from api.v1.views.foods import *
 from api.v1.views.drinks import *
 from api.v1.views.orders import *
 from api.v1.views.loan_request import *
+from api.v1.views.leave_request import *

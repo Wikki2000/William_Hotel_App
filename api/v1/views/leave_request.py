@@ -1,20 +1,19 @@
 #!/usr/bin/python3
-"""Handle API request for loan request"""
-from models.loan_request import LoanRequest
+"""Handle API request for leave request"""
+from models.leave_request import LeaveRequest
 from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import role_required, bad_request
 from models import storage
 
 
-@api_views.route("/request-loan", methods=["POST"])
+@api_views.route("/request-leave", methods=["POST"])
 @role_required(["staff", "manager", "admin"])
-def loan_request(user_role: str, user_id: str):
-    """Request for loan"""
+def leave_request(user_role: str, user_id: str):
+    """Request for leave"""
     data = request.get_json()
 
-    required_fields = ["amount", "due_month", "repayment_mode", 
-                       "bank_name", "account_name", "account_number"]
+    required_fields = ["leave_type", "start_date", "end_date", "description"]
     error_response = bad_request(data, required_fields)
     if error_response:
         return jsonify(error_response), 400
@@ -22,7 +21,7 @@ def loan_request(user_role: str, user_id: str):
     data["staff_id"] = user_id  # Add staff ID to data
 
     try:
-        req = LoanRequest(**data)
+        req = LeaveRequest(**data)
         storage.new(req)
         storage.save()
         return jsonify({"message": "Loan Request Sent"}), 200
@@ -31,18 +30,18 @@ def loan_request(user_role: str, user_id: str):
         return jsonify({"error": "An Internal Error Occured"}), 500
 
 
-@api_views.route("/loans")
+@api_views.route("/leaves")
 @role_required(["staff", "manager", "admin"])
-def get_loans(user_role: str, user_id: str):
-    """Retrieve loans request from db."""
+def get_leaves(user_role: str, user_id: str):
+    """Retrieve leave request from db."""
     try:
-        loans = storage.all(LoanRequest).values()
-        if not loans:
+        leaves = storage.all(LeaveRequest).values()
+        if not leaves:
             return jsonify([]), 200
-        sorted_loans = sorted(
-            loans, key=lambda loan: loan.updated_at, reverse=True
+        sorted_leaves = sorted(
+            leaves, key=lambda leave: leave.updated_at, reverse=True
         )
-        return jsonify([loan.to_dict() for loan in sorted_loans]), 200
+        return jsonify([leave.to_dict() for leave in sorted_leaves]), 200
     except Exception as e:
         print(str(e))
         return jsonify({"error": "An Internal Error Occored"}), 500
@@ -50,15 +49,15 @@ def get_loans(user_role: str, user_id: str):
         storage.close()
 
 
-@api_views.route("/loans/<string:loan_id>")
+@api_views.route("/leaves/<string:leave_id>")
 @role_required(["staff", "manager", "admin"])
-def get_loan_by_id(user_role: str, user_id: str, loan_id: str):
-    """Retrieve loan data using it ID."""
+def get_leave_by_id(user_role: str, user_id: str, leave_id: str):
+    """Retrieve leave data using it ID."""
     try:
-        loan = storage.get_by(LoanRequest, id=loan_id)
-        if not loan:
+        leave = storage.get_by(LeaveRequest, id=leave_id)
+        if not leave:
             abort(404)
-        return jsonify(loan.to_dict())
+        return jsonify(leave.to_dict())
     except Exception as e:
         print(str(e))
         abort(500)
