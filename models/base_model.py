@@ -4,6 +4,7 @@ from datetime import datetime
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.orm import declarative_base
 from uuid import uuid4
+import base64
 
 Base = declarative_base()
 
@@ -37,6 +38,8 @@ class BaseModel:
         for key, value in new_dict.items():
             if hasattr(value, 'to_dict'):
                 new_dict[key] = value.to_dict()
+            elif isinstance(value, (bytes, bytearray)):
+                new_dict[key] = base64.b64encode(value).decode('utf-8')
             elif isinstance(value, list):
                 new_dict[key] = [
                     item.to_dict() if hasattr(item, 'to_dict')

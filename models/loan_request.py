@@ -2,7 +2,7 @@
 """loan_request Module"""
 from models.base_model import Base, BaseModel
 from sqlalchemy import Column, String, Boolean, Float, ForeignKey, Integer
-
+from sqlalchemy.dialects.mysql import ENUM
 
 
 class LoanRequest(BaseModel, Base):
@@ -16,8 +16,12 @@ class LoanRequest(BaseModel, Base):
     account_name =  Column(String(40), nullable=False)
     is_paid = Column(Boolean, default=False)  # Is loan paid to staff
     is_refund = Column(Boolean, default=False)  # Is loan repay by staff.
-    is_approved_by_manager = Column(Boolean, default=False)
-    is_approved_by_ceo = Column(Boolean, default=False)
+    manager_approval_status = Column(
+        ENUM("approved", "pending", "rejected"), default="pending"
+    )
+    ceo_approval_status = Column(
+        ENUM("approved", "pending", "rejected"), default="pending"
+    )
     staff_id = Column(
         String(60), ForeignKey("users.id"), nullable=False
     )
