@@ -63,7 +63,7 @@ $(document).ready(() => {
 
       // Edit Guest details
     } else if ($clickItem.hasClass('guest__listEdit')) {
-      const guestEditUrl = APP_BASE_URL + '/pages/guest-input';
+      const guestEditUrl = APP_BASE_URL + '/pages/guest_input';
       $('#dynamic__load-dashboard').load(guestEditUrl, function() {
         const bookingUrl = (
           API_BASE_URL +  `/bookings/${clickItemId}/booking-data`

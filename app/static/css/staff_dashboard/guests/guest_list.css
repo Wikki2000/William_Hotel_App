@@ -5,7 +5,7 @@ Guest List Section
   padding: 20px;
 }
 
-.leave-table-column {
+.guest-table-column {
   display: flex;
   position: relative;
   width: 100%;
@@ -16,14 +16,14 @@ Guest List Section
   top: 1rem;
 }
 
-.leave-table-column > table {
+.guest-table-column > table {
   width: 100%; /* Make the table occupy full width */
   border-collapse: collapse; /* Ensure borders don't overlap */
   padding-left: 8px;
   padding-right: 8px;
 }
 
-.leave-table-heading {
+.guest-table-heading {
   width: 100%;
   display: flex;
   position: absolute;
@@ -33,12 +33,12 @@ Guest List Section
   padding-top: 1rem;
 }
 
-.leave-table-heading :nth-child(1) {
+.guest-table-heading :nth-child(1) {
   font-size: larger;
   font-weight: bolder;
 }
 
-.leave-table-heading :nth-child(2) {
+.guest-table-heading :nth-child(2) {
   padding: 5px 15px 5px 15px;
   border: 2px solid var(--amber_a200);
   border-radius: var(--radius-xs);
@@ -47,17 +47,17 @@ Guest List Section
   cursor: pointer;
 }
 
-.leave-table-heading :nth-child(2):hover {
+.guest-table-heading :nth-child(2):hover {
   color: var(--white_a700);
   background-color: var(--amber_a200);
 }
 
-.leave-tabletype {
+.guest-tabletype {
   margin-top: 5.5rem;
   align-self: stretch;
 }
 
-.leave-table-body tr {
+.guest-table-body tr {
   justify-content: space-between;
   align-items: center; /* Center align content vertically */
   border-bottom: 2px solid var(--orange_a100_33); /* Add bottom border to each row */

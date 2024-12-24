@@ -95,7 +95,7 @@ $(document).ready(function() {
         break;
       }
       case 'sidebar__guest': {
-        const url = APP_BASE_URL + '/pages/guest-list';
+        const url = APP_BASE_URL + '/pages/guest_list';
         $('#dynamic__load-dashboard').load(url, function() {
           const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
           const bookingUrl = API_BASE_URL + '/bookings';
