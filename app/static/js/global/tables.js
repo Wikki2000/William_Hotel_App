@@ -240,8 +240,11 @@ export function guestListTableTemplate(guest, booking, room, date) {
             <i class="fa fa-eye"></i>Booking Details
           </li>
           <li data-id="${room.number}" class="manage__item manage__item--border guest__listEdit  guest__listMenu">
-            <i class="fa fa-edit"></i>Edit
+            <i class="fa fa-edit"></i>Edit Data
           </li>
+	  <li data-id="${room.number}" class="manage__item manage__item--border guest__listPrint  guest__listMenu">
+	    <i class="fa fa-print"></i>Print Receipt
+	  </li>
         </ul>
       </nav>
     </td>
