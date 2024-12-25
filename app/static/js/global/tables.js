@@ -218,7 +218,7 @@ export function guestListTableTemplate(guest, booking, room, date) {
       </div>
     </td>
     <td class="">
-      <p class="ui text size-textmd">${booking.duration}</p>
+      <p class="ui text size-textmd">${booking.duration} Night(s)</p>
     </td>
     <td class="">
       <p class="ui text size-textmd">${date.checkInDate}</p>

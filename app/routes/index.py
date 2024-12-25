@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """Handle API views."""
-from flask import jsonify, redirect, url_for, render_template
+from flask import abort, jsonify, render_template
 from flask_jwt_extended import jwt_required
 from app.routes import app_views
 from api.v1.views.utils import role_required
@@ -21,6 +21,8 @@ def page(user_role: str, user_id: str, page: str):
         DYNAMIC_PAGE_DIRECTORY = "staff_dynamic_pages/"
     elif user_role == "manager":
         DYNAMIC_PAGE_DIRECTORY = "manager_dynamic_pages/"
-    else:
+    elif user_role == "admin":
         DYNAMIC_PAGE_DIRECTORY = "ceo_dynamic_pages/"
+    else:
+        abort(404)
     return render_template(f"{DYNAMIC_PAGE_DIRECTORY}{page}.html")

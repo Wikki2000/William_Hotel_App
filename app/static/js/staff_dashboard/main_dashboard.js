@@ -57,6 +57,8 @@ $(document).ready(function() {
     const expiration = $('#main__checkout-date').val();
     const guest_number = $('#main__guest-no').val();
     const is_paid = $('#main__is--paid-val').val().toLowerCase();
+    const checkin = $('#main__check-in').val();
+     const checkout = $('#main__checkout-date').val();
 
     // Room data
     const roomNumber = $('#main__room--no-val').val();
@@ -70,7 +72,7 @@ $(document).ready(function() {
     const id_number = $('#main__id--no-val').val();
 
     const BookingData = {
-      book: { duration, expiration, guest_number, is_paid },
+      book: { duration, expiration, guest_number, is_paid, checkin, checkout },
       customer: { gender, name, address, phone, id_type, id_number }
     };
 
@@ -100,7 +102,7 @@ $(document).ready(function() {
             if (error.status === 409) {
             showNotification('Error! ' +  error.responseJSON.error, true);
             } else {
-              showNotification('An Error occured. Try Again !');
+              showNotification('An Error occured. Try Again !', true);
             }
             $('#main__popup-modal').hide();
           }

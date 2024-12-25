@@ -121,7 +121,7 @@
                 <h6 id="sidebar__email" class="ui text size-textxs"><!--Dynamically load email--></h6>
               </div>
               <i class="fa fa-ellipsis-v fa-2x drop-down" id="sidebar__staff--profile-btn" ></i>
-           </div>
+            </div>
           </div>
         </aside>
 
@@ -197,11 +197,11 @@
                     <p>Dashboard</p>
                     <div class="main__welcom-user">
                       <div>
-			 <h1>Hello <span id="main__username"><!-- username goes here --></span></h1>
+                        <h1>Hello <span id="main__username"><!-- username goes here --></span></h1>
                         <span>Welcome back!</span>
                       </div>
                       <br>
-		      <span class="emoji"><img src="/static/images/public/waving_hello_smile_icon.png" /></span>
+                      <span class="emoji"><img src="/static/images/public/waving_hello_smile_icon.png" /></span>
                       <div class="date"> {{ today }}
                         <span class="calendar-icon">📅</span>
                       </div>
@@ -228,7 +228,7 @@
                   <div class="main__room-status1">
                     <div>
                       <div class="main__row-1 green">
-			<i class="fas fa-calendar"></i>
+                        <i class="fas fa-calendar"></i>
                       </div>
                       <p>Today’s Check in </p>
                     </div>
@@ -241,7 +241,7 @@
                   <div class="main__room-status2">
                     <div>
                       <div class="main__row-1 red">
-			<i class="fas fa-calendar"></i>
+                        <i class="fas fa-calendar"></i>
                       </div>
                       <p>Today’s Orders </p>
                     </div>
@@ -254,7 +254,7 @@
                   <div class="main__room-status3">
                     <div>
                       <div class="main__row-1 blue">
-		        <i class="fas fa-home"></i>
+                        <i class="fas fa-home"></i>
                       </div>
                       <p>Rooms Available </p>
                     </div>
@@ -267,7 +267,7 @@
                   <div class="main__room-status4">
                     <div>
                       <div class="main__row-1 orange">
-		        <i class="fas fa-home"></i>
+                        <i class="fas fa-home"></i>
                       </div>
                       <p>Reserved Rooms </p>
                     </div>
@@ -289,7 +289,7 @@
                           <path d="M11.849 15.5L11.849 15.5L11.8433 15.5C11.7753 15.5004 11.7079 15.4875 11.6452 15.4622C11.5825 15.4368 11.5259 15.3997 11.4783 15.3531L11.4783 15.353C11.4307 15.3063 11.3932 15.251 11.3676 15.1905C11.3422 15.1299 11.3291 15.0652 11.3291 15C11.3291 14.9348 11.3422 14.8701 11.3676 14.8095C11.3932 14.749 11.4307 14.6937 11.4783 14.647L11.4791 14.6462L14.2195 11.9462L14.3685 11.7993V11.59V7C14.3685 6.8692 14.421 6.74262 14.5163 6.64841C14.6117 6.55402 14.7424 6.5 14.8797 6.5C15.0171 6.5 15.1477 6.55402 15.2432 6.64841C15.3384 6.74262 15.3909 6.8692 15.3909 7V12H15.3909L15.3909 12.0029C15.3913 12.0679 15.3787 12.1325 15.3537 12.193C15.3289 12.2533 15.2921 12.3085 15.2453 12.3553C15.2451 12.3555 15.2449 12.3557 15.2447 12.3559L12.214 15.3531C12.2138 15.3533 12.2136 15.3535 12.2133 15.3537C12.1659 15.4 12.1095 15.437 12.0471 15.4622C11.9844 15.4875 11.9171 15.5004 11.849 15.5Z" stroke="black" stroke-opacity="0.75"/>
                         </svg>
                         <p>Duration</p>
-                        <input id="main__book-duration" placeholder="e.g., 5 Nights" required>
+                        <input id="main__book-duration" placeholder="e.g., 5 Nights" type="number" required>
                       </div>
 
                       <div class="check__icon-container">
@@ -397,9 +397,17 @@
                       </div>
 
                     </div>
-                    <div>
-                      <p>ID Number</p>
-                      <input id="main__id--no-val" placeholder="e.g., 1234-4u765-8767tfer-hg64w">
+                    <div id="main__last-row">
+                      <div>
+                        <p>ID Number</p>
+                        <input id="main__id--no-val" placeholder="e.g., 1234-4u765-8767tfer-hg64w">
+                      </div>
+
+
+                      <div class="check__icon-container">
+                        <p>Check In</p>
+                        <input id="main__check-in" type="date" required>
+                      </div>
                     </div>
                     <div class="main__btn">
                       <button class="highlight-btn">Proceed</button>
