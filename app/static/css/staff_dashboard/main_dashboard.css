@@ -256,31 +256,12 @@ input:checked + .slider:before {
     }
   }
 }
-/*
-.modal-content {
-  padding: 30px;
-  width: 30%;
-  text-align: center;
-  height: 30%;
+#main__last-row {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  .modal-buttons {
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
+  input {
+    width: 300px;
   }
-  .cancel-btn {
-    border: 2px solid var(--orange_a100) !important;
-    color: black !important;
-    background-color: white !important;
-  }
-  button {
-    width: 35%;
-    height: 40px;
-    margin-top: 30px;
-    border-radius: 15px;
+  .check__icon-container {
+    margin-left: 50px;
   }
 }
-*/
