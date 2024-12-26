@@ -1,17 +1,24 @@
-*{
+html{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* .container{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+} */
+
+
 .main__container{
-    padding: 10px;   
+    padding: 10px;  
 }
 
-.main__container p{
+.main__container h1:first-of-type{
     margin-left: 45px;
     font-size: 1rem;
-    font-weight: 400;
+    font-weight: 600;
     color: #000000;
 }
 
@@ -30,10 +37,12 @@
     border-radius: 20px;
     margin-right: 80px;
     margin-left: auto;
-    margin-bottom: 3px;
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
 }
 
+.main__container .add-btn:active {
+    background-color: hsl(0, 0%, 35%);
+}
 
 .links ul{
     display: flex;
@@ -54,4 +63,29 @@
     padding: 3px 6px;
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
 
+}
+
+.add_room{
+    background-color: #FDF6E4;
+    border-radius: 30px;
+    padding: 20px;
+    margin-top: 8px;
+}
+
+.add_room h2{
+    margin-bottom: 15px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #000;
+}
+
+.room_img{
+    position: relative;
+}
+
+.add_room svg{
+    position: absolute;
+    right: 58%;
+    top: 87%;
+    transform: rotateY(-50%);
 }
