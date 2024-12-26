@@ -1,0 +1,57 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.main__container{
+    padding: 10px;   
+}
+
+.main__container p{
+    margin-left: 45px;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #000000;
+}
+
+.main__container .add-btn{
+    display: block;
+    background-color: #000000;
+    color: #fff;
+    padding: 0px 50px;
+    min-width: 100px;
+    height: 40px;
+    white-space: nowrap;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-family: inherit;
+    border-radius: 20px;
+    margin-right: 80px;
+    margin-left: auto;
+    margin-bottom: 3px;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+
+
+.links ul{
+    display: flex;
+    width: 40%;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 30px;
+    list-style: none;
+}
+
+.links ul li a{
+    color: #000000;
+    font-size: 0.7rem;
+    font-weight: 400;
+    white-space: nowrap;
+    border-radius: 20px;
+    border: 1px solid #FFC009;
+    padding: 3px 6px;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+
+}
