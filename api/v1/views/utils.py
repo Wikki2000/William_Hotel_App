@@ -13,6 +13,7 @@ from typing import(
     Any, Dict, Union, Optional, List, Tuple, Callable, TypeVar
 )
 from redis import Redis
+from models.private_message import PrivateMessage
 
 
 r = Redis(host="localhost", port=6379, db=0)  # Create Redis instance
@@ -168,3 +169,33 @@ def bad_request(
         if not data.get(field):
             return {"error": f"{field} is required"}
     return None
+
+
+# ===================================================================== #
+#                     Messages Module Helper Function                   #
+# ===================================================================== #
+def user_friend_messages(
+    user_id: str, friend_id, is_reverse: bool = False
+) -> Optional[PrivateMessage]:
+    """
+    Retrieve messages b/w logged-in user and friend(s),
+    and sort the message base on time in ascendind order.
+
+    :user_id - The logged-in user ID
+    :friend_id - The friend ID
+
+    :rtype - The sorted message if found, else None.
+    """
+    sender_attr_val = ["sender_id", user_id]
+    receiver_attr_val = ["receiver_id", friend_id]
+    messages = storage.get_by_double_field(
+        PrivateMessage, sender_attr_val, receiver_attr_val
+    )
+
+    if not messages:
+        return None
+
+    sorted_messages = sorted(
+        messages, key=lambda msg: msg.created_at, reverse=is_reverse
+    )
+    return sorted_messages

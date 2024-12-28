@@ -146,6 +146,11 @@ def book_room(user_id: str, user_role: str, room_number: str):
     if not data:
         return jsonify({"error": "Bad Request"}), 400
 
+    user = storage.get_by(User, id=user_id)
+    room = storage.get_by(Room, number=room_number)
+    if not user or not room:
+        abort(404)
+
     customer_data = data.get("customer")
 
     booking_data = data.get("book")
@@ -163,30 +168,24 @@ def book_room(user_id: str, user_role: str, room_number: str):
         customer.is_guest = True
         storage.save()
 
-    room = storage.get_by(Room, number=room_number)
-    if not room:
-        abort(404)
 
     # Ensure that can't book room already in use
     if room.status == "occupied" or room.status == "reserved":
         return jsonify({"error": "Room Already in Use"}), 409
 
-    room.status = "occupied"
-    storage.save()
-
     book_attr = {
-            "checkin": datetime.utcnow(),
+            "checkin": booking_data.get("checkin"),
+            "checkout": booking_data.get("checkout"),
             "duration": booking_data.get("duration"),
             "checkout": str(booking_data.get("expiration")),
             "is_paid": booking_data.get("is_paid"),
-            "customer_id": customer.id,
+            "customer_id": customer.id, "checkin_by_id": user.id,
             "guest_number": booking_data.get("guest_number"),
-            "room_id": room.id, "checkin_by_id": user_id
+            "room_id": room.id
     }
     try:
         book = Booking(**book_attr)
         storage.new(book)
-
         room.status = "occupied"   # Cheange room status once book
         storage.save()
 
@@ -194,6 +193,7 @@ def book_room(user_id: str, user_role: str, room_number: str):
         vat_amount = (7.5 / 100) * room.amount
         vat = Vat(amount=vat_amount, booking_id=book.id)
         storage.new(vat)
+
         storage.save()
 
         return jsonify({"message": "Booking Successfully"}), 200

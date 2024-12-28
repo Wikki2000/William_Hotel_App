@@ -6,19 +6,17 @@ from api.v1.views import api_views
 from api.v1.views.utils import bad_request, role_required
 from models import storage
 import base64
-#from sqlalchemy.exc import Integrity
 
 
-@api_views.route("/users")
+@api_views.route("/members/<string:member_id>")
 @role_required(["staff", "ceo", "manager"])
-def get_user(user_role: str, user_id: str):
+def get_user(user_role: str, user_id: str, member_id: str):
     """Retrieved a staff data using his ID
     """
-    user = storage.get_by(User, id=user_id)
-    if not user:
+    member = storage.get_by(User, id=member_id)
+    if not member:
         abort(404)
-    response = user.to_dict()
-    return jsonify({**user.to_dict()})
+    return jsonify(member.to_dict())
 
 
 @api_views.route("/users", methods=["PUT"])
