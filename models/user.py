@@ -10,6 +10,8 @@ from models.booking import Booking
 from models.order import Order
 from models.loan_request import LoanRequest
 from models.leave_request import LeaveRequest
+from models.private_message import PrivateMessage
+from models.group_message import GroupMessage
 from sqlalchemy.dialects.mysql import LONGBLOB
 
 
@@ -37,7 +39,6 @@ class User(BaseModel, Base):
     is_active = Column(Boolean, default=False)
     last_active = Column(DateTime)
 
-    
     # Handle relationship between staff that checkin & checkout guest
     checkin_made_by = relationship(
         'Booking', backref='checkin_by',
@@ -62,6 +63,18 @@ class User(BaseModel, Base):
         foreign_keys="Order.cleared_by_id"
     )
 
+    # Define relationship with Message class
+    sent_messages = relationship(
+        "PrivateMessage", backref="sender",
+        cascade="all, delete-orphan",
+        foreign_keys="PrivateMessage.sender_id"
+    )
+    recieved_messages = relationship(
+        "PrivateMessage", backref="receiver",
+        cascade="all, delete-orphan",
+        foreign_keys="PrivateMessage.receiver_id"
+    )
+
     # Handle relationship between staff and request for loan
     loans = relationship(
         "LoanRequest", backref="staff",
@@ -72,6 +85,11 @@ class User(BaseModel, Base):
     leaves = relationship(
         "LeaveRequest", backref="staff",
         cascade='all, delete-orphan'
+    )
+
+    group_messages = relationship(
+            "GroupMessage", backref="user",
+            cascade="all, delete-orphan"
     )
 
     # ===================== Method Definition ==================== #

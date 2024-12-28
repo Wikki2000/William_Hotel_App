@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """This module models the storage of the authentication API"""
-from sqlalchemy import create_engine, func
+from sqlalchemy import create_engine, func, or_, update
 from sqlalchemy.orm import sessionmaker, scoped_session
 
 from models.base_model import Base
@@ -16,6 +16,9 @@ from models.order_item import OrderItem
 from models.vat import Vat
 from models.loan_request import LoanRequest
 from models.leave_request import LeaveRequest
+from models.group_message import GroupMessage
+from models.private_message import PrivateMessage
+from models.group import Group
 
 from dotenv import load_dotenv
 from os import getenv
@@ -98,7 +101,7 @@ class Storage:
         Return: The total count of object in class
         """
         total_count = self.__session.query(
-            func.count(Room.id)
+            func.count(cls.id)
         ).filter_by(**kwargs).scalar()
         return total_count
 
@@ -113,3 +116,28 @@ class Storage:
     def close(self):
         """ Close database session. """
         self.__session.close()
+
+    def get_by_double_field(
+        self, model: Type, attr_val1: List, attr_val2: List
+    ) -> List:
+        """
+        Filter a model using two field.
+
+        :attr_val1 - List of attribute and value of 1st field.
+        :attr_val2 - List of attribute and value of 2nd field.
+
+        :rtype - List of the search result.
+        """
+        sender_id = getattr(model, attr_val1[0])
+        receiver_id = getattr(model, attr_val2[0])
+        result = (
+            self.__session.query(model)
+            .filter(
+                or_(
+                    (sender_id == attr_val1[1]) & (receiver_id == attr_val2[1]),
+                    (receiver_id == attr_val1[1]) & (sender_id == attr_val2[1])
+                )
+            )
+            .all()
+        )
+        return result
