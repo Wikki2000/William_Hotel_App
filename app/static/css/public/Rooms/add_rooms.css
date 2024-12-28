@@ -83,9 +83,50 @@ html{
     position: relative;
 }
 
-.add_room svg{
+
+.add_room .edit-icon{
+    width: 20px;
+    height: auto;
     position: absolute;
     right: 58%;
     top: 87%;
     transform: rotateY(-50%);
+}
+
+.drop_down {
+    display: none;
+    /* Initially hidden */
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    z-index: 1000;
+}
+
+.room_img:hover+.drop_down,
+.drop_down:hover {
+    display: block;
+    /* Show dropdown when room image is hovered */
+}
+
+/* .add_room .edit-icon:hover + .drop_down{
+    display: block;
+    visibility: visible;
+}
+
+.drop_down{
+    margin-left: auto;
+    width: 65%;
+    background-color: yellow;
+    display: none;
+} */
+
+.take_photo{
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+
+#name{
+    background-color: #000;
 }
