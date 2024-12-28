@@ -16,9 +16,15 @@ $(document).ready(function() {
     $('#dynamic__load-dashboard').load(profileUrl, function() {
 
       // Populate the input field
-      const staffDataUrl = API_BASE_URL + '/users';
-      fetchData(staffDataUrl)
+      const userId = localStorage.getItem('userId');
+      const staffUrl = API_BASE_URL + `/members/${userId}`;
+      fetchData(staffUrl)
         .then((response) => {
+          const photoSrc = (
+            response.profile_photo ?
+            `data:image/;base64, ${response.profile_photo}` :
+            '/static/images/public/profile_photo_placeholder.png'
+          );
           $('#edit-fname').val(response.first_name);
           $('#edit-mname').val(response.middle_name);
           $('#edit-lname').val(response.last_name);
@@ -31,9 +37,7 @@ $(document).ready(function() {
           $('input[name="profile_photo"]').val(
             `data:image/;base64, ${response.profile_photo}`
           );
-          $('#profile__photo').attr(
-            'src', `data:image/;base64, ${response.profile_photo}`
-          );
+          $('#profile__photo').attr('src', photoSrc);
         })
         .catch((error) => {
           console.log(error);
@@ -42,8 +46,8 @@ $(document).ready(function() {
       // Trigger file input when image is clicked.
       $('#dynamic__load-dashboard').off('click', '#profile__photo')
         .on('click', '#profile__photo', function() {
-        $('#profile__image-fileInput').click();
-      });
+          $('#profile__image-fileInput').click();
+        });
 
       // Function triggered when profile images is click.
       const $fileInputSelector = $('#profile__image-fileInput');

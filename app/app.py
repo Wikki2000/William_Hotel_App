@@ -7,6 +7,8 @@ from api.v1.views import api_views
 from app.routes import app_views
 from app.config import Config
 from models.storage import Storage
+from api.v1.views.chat_socket import socketio
+
 
 # Initialize storage
 storage = Storage()
@@ -14,6 +16,8 @@ storage = Storage()
 # Initialize Flask app
 app = Flask(__name__)
 app.config.from_object(Config)
+
+socketio.init_app(app)  # Initialize socketio with the app
 
 # Initialize extensions
 jwt = JWTManager(app)
@@ -54,4 +58,4 @@ def expired_token_callback(jwt_header, jwt_payload):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5002)
+    socketio.run(app, debug=True, host="0.0.0.0", port=5002)

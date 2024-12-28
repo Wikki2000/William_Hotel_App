@@ -22,14 +22,16 @@ $(document).ready(function () {
     const url = API_BASE_URL + '/account/login';
     ajaxRequest(url, "POST", data,
       (response) => {
+	 const photoSrc = (
+           response.profile_photo ? `data:image/;base64, ${response.profile_photo}` :
+           '/static/images/public/profile_photo_placeholder.png'
+         );
         // Set user ID and name in session for quick recovery.
         localStorage.setItem('userId', response.id);
         localStorage.setItem('userName', response.username);
         localStorage.setItem('role', response.role);
 	localStorage.setItem('email', response.email);
-	localStorage.setItem(
-	  'image', `data:image/;base64,${response.profile_photo}`
-	);
+	localStorage.setItem('image', photoSrc);
 	localStorage.setItem(
 	    'name', response.first_name + " " + response.last_name
 	)

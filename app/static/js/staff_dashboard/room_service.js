@@ -2,7 +2,7 @@ import {
   ajaxRequest, fetchData, getBaseUrl, validateForm,
   confirmationModal, displayMenuList, showNotification
 } from '../global/utils.js';
-import { displayRoomData, roomTableTemplate } from '../global/tables.js';
+import { displayRoomData, roomTableTemplate } from '../global/staff_templates.js';
 
 $(document).ready(function () {
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];

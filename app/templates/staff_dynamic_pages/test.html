@@ -17,11 +17,15 @@
     <link rel="stylesheet" type="text/css" href="/static/css/public/styles.css" />
     <link rel="stylesheet" type="text/css" href="/static/css/public/components.css" />
     <link rel="stylesheet" type="text/css" href="/static/css/public/table.css" />
-    <link rel="stylesheet" type="text/css" href="/static/css/staff_dashboard/staff_requests/loan_request.css" />
+
     <link rel="icon" type="image/x-icon" href="/public/images/img_logo_hotel_1.png" />
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script type="module" defer src="/static/js/staff_dashboard/staff_requests/loan_request.js"></script>
+
+     <script type="module" defer src="/static/js/chats_friends/get_groups_friends.js"></script>
+
+    <link rel="stylesheet" href="/static/css/members_chats/friend_group.css" />
+
 
   </head>
   <body>
@@ -136,81 +140,15 @@
               </div>
             </header>
 
-            <!-- room service tabs section -->
             <section id="dynamic__load-dashboard">
-
-
-              <div id="staff__loan-container" class="staff__loan-container">
-                <div class="staff_section-btn">
-                  <button id="loan-request" class="filter loan__request--switchSection highlight-btn"><em>Request Loan</em></button>
-                  <button id="loan__request-history" class="filter loan__request--switchSection"><em>Loan History</em></button>
-                </div>
-
-
-  <div id="loan__list" class="common-table-column">
-    <div class="common-table-heading">
-      <h1>Loan History</h1>
-    </div>
-    <table cellpadding="0" cellspacing="0" class="common-tabletype ui table size-xs">
-      <thead>
-        <tr>
-          <th width="380px">
-            <p class="table__header-cell ui heading size-headings">Loan Amount</p>
-          </th>
-          <th width="380px">
-            <p class="table__header-cell-1 ui heading size-headings">Loan Term</p>
-          </th>
-          <th width="380px">
-            <p class="table__header-cell-1 ui heading size-headings">Repayment Mode</p>
-          </th>
-          <th width="380px">
-            <p class="table__header-cell-1 ui heading size-headings">Approval Status</p>
-          </th>
-          <th width="380px">
-          </th>
-        </tr>
-      </thead>
-      <tbody id="loan__table-body" class="common-table-body">
-        <!-- Rows will be dynamically added here -->
-      </tbody>
-    </table>
-  </div>
-
+              <div class="groups__friends-list--container">
+                <div class="groups__friends-list">
+                  <h2>Groups & Members</h2>
+                  <ul id="friends__groups-list">
+                    <!-- Groups & Members will be loaded here -->
+                  </ul>
                 </div>
               </div>
-
-<!-- Popup Modal -->
-<div id="loan__popupModal" class="popup-modal">
-  <div class="popup-modal-content loan__popup-modal">
-    <!-- Close Button -->
-    <button class="close-btn closePopupModal">×</button>
-
-    <h1>Loan Details</h1>
-
-    <!-- Will be dynamically loaded -->
-    <div id="loan__details-description"></div>
-    <div id="loan__acount-description"><br />
-    </div><br />
-
-    <div id="loan__status-comment">
-      <div>
-        <h4>Supervisors</h4>
-        <p class="">Manager</p>
-        <p class="">CEO</p>
-      </div>
-      <div>
-        <h4>Approval Status</h4>
-        <p id="leave__manager-status"><!-- Dynamically Loaded Status --></p>
-        <p id="leave__ceo-status"><!-- Dynamically Loaded Status --></p>
-      </div>
-    </div>
-  </div>
-</div>
-
-              <!-- Confirmation Modal for Booking -->
-              <div id="order__confirmation-modal">
-              </div>
-
             </section>
           </div>
         </div>

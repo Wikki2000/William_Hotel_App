@@ -2,7 +2,7 @@ import {
   ajaxRequest, britishDateFormat, fetchData, getBaseUrl, canadianDateFormat,
   confirmationModal, showNotification, validateForm,
 } from '../global/utils.js';
-import {  guestListTableTemplate }  from '../global/tables.js';
+import {  guestListTableTemplate }  from '../global/staff_templates.js';
 
 $(document).ready(() => {
 

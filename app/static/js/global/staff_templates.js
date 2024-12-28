@@ -252,6 +252,12 @@ export function guestListTableTemplate(guest, booking, room, date) {
   return row;
 }
 
+/**
+ * Table template for list of Loan apply by staff.
+ *
+ * @param {object} data - Object holding leaves data.
+ * @param {string} - The HTML templates of loans list.
+ */
 export function loanListTableTemplate(data) {
 
   let textColor;
@@ -284,4 +290,44 @@ export function loanListTableTemplate(data) {
     </td>
  </tr>`;
   return row;
+}
+
+export function userGroup(
+  name, id, photo, chatType, isActive = true, unreadMsg = 0
+) {
+  const statusClass = isActive ? 'active' : '';
+  return `<li class="chat__list" data-type="${chatType}" data-id="${id}">
+    <div class="profile">
+      <img src="${photo}" alt="Profile Photo">
+      <span class="status ${statusClass}"></span>
+    </div>
+
+    <div class="info">
+      <span class="name">${name}</span>
+    </div>
+  </li>`
+}
+
+export function messageTemplate(message, photoSrc, receiverName = '') {
+
+  let isSend;
+  let nameTemplate;
+  if (receiverName.length > 0) {
+    isSend = 'sent';
+    nameTemplate = `<em class="chat__username"><b>${receiverName}</b></em><br><br>`;
+  } else {
+    isSend = '';
+    nameTemplate = '';
+  }
+
+  return  `<div class="message ${isSend}">
+    <div class="profile">
+      <img src="${photoSrc}" alt="Photo">
+    </div>
+
+    <div class="text">
+      ${nameTemplate}
+      ${message}
+    </div>
+  </div>`
 }

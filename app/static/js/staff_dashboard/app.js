@@ -5,33 +5,39 @@ import {
 import  { 
   displayFoodDrink, displayRoomData, guestListTableTemplate,
   roomTableTemplate, orderItemsTempleate
-} from '../global/tables.js';
+} from '../global/staff_templates.js';
 
 $(document).ready(function() {
 
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
   const APP_BASE_URL = getBaseUrl()['appBaseUrl'];
 
-
   // Display basic info in sidebar
   $('#sidebar__name').text(localStorage.getItem('name'));
   $('#sidebar__email').text(localStorage.getItem('email'));
   $('#main__username').text(localStorage.getItem('userName'));
-  $('.sidebar__profile-image').attr(
-    'src', localStorage.getItem('image')
-  );
+  $('.sidebar__profile-image').attr('src', localStorage.getItem('image'));
 
   // Handle side nav bar menu click
-    $('#sidebar__staff--profile-btn').click(function() {
-      const $clickItem =$(this);
-      $('.sidebar__nav-icon').removeClass('highlight-sidebar');
-      $('.sidebar__profile-row').addClass('highlight-sidebar');
-      $clickItem.css('color', 'white');
-      $('.notifications-dropdown').removeClass('hidden');
-    });
+  $('#sidebar__staff--profile-btn').click(function() {
+
+    const $clickItem =$(this);
+    $('.sidebar__nav-icon').removeClass('highlight-sidebar');
+    $('.sidebar__profile-row').addClass('highlight-sidebar');
+    $clickItem.css('color', 'white');
+    $('.notifications-dropdown').removeClass('hidden');
+  });
   $('.sidebar__nav-icon').click(function() {
     const $clickItem = $(this);
     const clickId = $clickItem.attr('id');
+
+    // The default search bar placeholder
+    $('input[name="Search Input"]').attr('placeholder', 'Search');
+    $('input[name="Search Input"]').val('');
+
+    // Remove stored items for dashboard section(s)
+    localStorage.removeItem('restaurant');
+
 
     $clickItem.siblings().removeClass('highlight-sidebar');
     $clickItem.addClass('highlight-sidebar');
@@ -106,15 +112,15 @@ $(document).ready(function() {
             .then((response) => {
               // Filter rooms currently lodge by a guest.
               const bookingStillInUse = response.filter(
-	        (data) => data.booking.is_use
-	      );
+                (data) => data.booking.is_use
+              );
               bookingStillInUse.forEach(({ guest, booking, room }) => {
                 const checkInDate = britishDateFormat(booking.checkin);
                 const checkoutDate = britishDateFormat(booking.checkout);
                 const date = { checkInDate, checkoutDate };
                 $tableBody.append(
-		  guestListTableTemplate(guest, booking, room, date)
-		);
+                  guestListTableTemplate(guest, booking, room, date)
+                );
               });
             })
             .catch((error) => {
@@ -128,11 +134,36 @@ $(document).ready(function() {
         $('#dynamic__load-dashboard').load(url, function() {
           const foodDrinkUrl = API_BASE_URL + '/foods/drinks';
 
+          $('input[name="Search Input"]')
+            .attr('placeholder', 'Search for Foods & Drinks');
+
+          // Search an Item in restaurants
+          $('input[name="Search Input"]').on('input', function() {
+            const restaurants = JSON.parse(localStorage.getItem('restaurant'));
+            const searchKey = $('input[name="Search Input"]')
+              .val().trim().toLowerCase();
+            $('#restaurant__food--drinks').empty();
+            if (searchKey) {
+              const searchItems = restaurants.filter(
+                item => item.name.toLowerCase().includes(searchKey)
+              );
+              displayFoodDrink(searchItems);
+            } else {
+              displayFoodDrink(restaurants);
+            }
+            highLightOrderBtn(CART); // Highlight btn on chart.
+          });
+
           // Display food and drink once dashboard section is loaded
           fetchData(foodDrinkUrl)
             .then(({ foods, drinks }) => {
               displayFoodDrink(foods, drinks);
               highLightOrderBtn(CART); // Highlight btn of items in cart
+
+              // Store restaurant item once dashboard section loaded.
+              localStorage.setItem(
+                'restaurant', JSON.stringify([...foods, ...drinks])
+              );
             })
             .catch((error) => {
               console.log(error);

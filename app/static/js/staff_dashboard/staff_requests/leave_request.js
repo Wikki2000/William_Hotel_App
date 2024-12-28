@@ -2,7 +2,7 @@ import {
   getBaseUrl, confirmationModal, validateForm, getFormDataAsDict,
   showNotification, ajaxRequest, fetchData, britishDateFormat
 } from '../../global/utils.js';
-import { leaveListTableTemplate  } from '../../global/tables.js';
+import { leaveListTableTemplate  } from '../../global/staff_templates.js';
 
 function statusColor(leaveStatus) {
   if (leaveStatus === 'pending') {
