@@ -312,19 +312,21 @@
                 <!--Add room body-->
                 <div class="add_room">
                   <h2>Add Room</h2>
-                  <p>Image</p>
+                  <p class="image-text">Image</p>
                   <div class="room_img">
                     <img
                       src="/static/images/public/add_room_img.png"
                       alt=""
                       class="room"
                     />
+                    <div class="edit">
                     <img
                       src="/static/images/public/edit_icon.png"
                       alt=""
                       class="edit-icon"
+                      
                     />
-                  </div>
+                  
                   <!-- Dropdown section-->
                   <div class="drop_down">
                     <div class="take_photo">
@@ -337,18 +339,64 @@
                       <img
                         src="/static/images/public/choose_photo__icon.svg"
                         alt=""
+                        
                       />
                     </div>
 
-                    <div>
+                    <div class="delete_photo">
                       <p>Delete Photo</p>
-                      <img src="" alt="" />
+                      <img src="/static/images/public/delete_icon.svg" alt="" />
                     </div>
                   </div>
-                  <div>
-                    <label class="room_name" for="name">Room Name</label>
-                    <input type="text" id="name" readonly />
                   </div>
+                </div>
+
+                  <div class="room_info">
+                    <div class="room_info-flex">
+                      <label class="room_name" for="name">Room Name</label>
+                      <input
+                        type="text"
+                        id="name"
+                        placeholder="Standard"
+                        readonly
+                      />
+                    </div>
+
+                    <div class="room_info-flex">
+                      <label class="room_name" for="number">Room NO.</label>
+                      <input
+                        type="text"
+                        id="number"
+                        placeholder="211"
+                        readonly
+                      />
+                    </div>
+
+                    <div class="room_info-flex">
+                      <label class="room_name" for="rate">Room Rate</label>
+                      <input
+                        type="text"
+                        id="rate"
+                        placeholder="18,750"
+                        readonly
+                      />
+                    </div>
+                  </div>
+
+                  <div class="room_status">
+                    <p>Room Status</p>
+                    <div class="room_status_signal">
+                      <img src="/static/images/public/available_icon.svg" alt/>
+                      <p>Available</p>
+                    </div>
+                  </div>
+
+                  <div class="room-description">
+                    <h3>Room Description<h3>
+                      <p>This room features a queen-sized bed with four pillows, a reading table and chair, and a 32-inch flat-screen TV for your entertainment. You'll have two towels, a small fridge, a standard wardrobe with a safe, and enjoy a complimentary breakfast to start your day right</p>
+                  </div>
+                  <button class="save-btn">Save</button>
+
                 </div>
               </div>
             </section>
