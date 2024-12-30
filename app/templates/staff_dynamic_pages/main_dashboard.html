@@ -207,18 +207,21 @@
 
       </div>
 
-      <div id="main__last-row">
+      <div class="flex-row">
         <div>
           <p>ID Number</p>
           <input id="main__id--no-val" placeholder="e.g., 1234-4u765-8767tfer-hg64w">
         </div>
-
-
-        <div class="check__icon-container">
+	<div>
           <p>Check In</p>
           <input id="main__check-in" type="date" required>
         </div>
-      </div>
+
+        <div style="visibility: hidden">
+          <!-- Hidden input field to maintain 3 fields per row -->
+          <input>
+        </div>
+     </div>
 
       <div class="main__btn">
         <button class="highlight-btn">Proceed</button>

@@ -13,8 +13,8 @@ Order Items Section
   margin-bottom: 20px;
   display: flex;
   justify-content: space-between;
-  width: 25%;
-  margin-left: 15px;
+  width: 300px;
+  margin-left: 5%;
 }
 
 
@@ -144,7 +144,7 @@ Order Items Section
 }
 
 /*==============================================
-        Order History Section
+Order History Section
 ===============================================*/
 #order__history-section {
   padding: 10px;
@@ -192,7 +192,7 @@ Order Items Section
 }
 
 /*==============================================
-         Order details popup modal
+Order details popup modal
 ===============================================*/
 .order__popup-modal {
   width: 70%;
@@ -247,5 +247,14 @@ Order Items Section
       border-radius: 10px;
       width: 30%;
     }
+  }
+}
+
+@media screen and (max-width: 1246px) {
+  .oder__first-col {
+    width: 35%;
+  }
+  .oder__second-col {
+    width: 70%;
   }
 }

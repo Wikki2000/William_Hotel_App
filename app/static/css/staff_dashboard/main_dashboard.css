@@ -147,7 +147,6 @@ input:checked + .slider:before {
     border: 2px solid var(--orange_a100);
     padding: 15px;
     border-radius: 5px;
-    /*width: 300px;*/
     height: 60%;
   }
   .main__btn {
@@ -256,12 +255,11 @@ input:checked + .slider:before {
     }
   }
 }
-#main__last-row {
-  display: flex;
-  input {
-    width: 300px;
-  }
-  .check__icon-container {
-    margin-left: 50px;
+
+@media screen and (max-width: 1310px) {
+  .flex-row {
+    input, .dropdown {
+      width: 270px;
+    }
   }
 }

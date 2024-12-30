@@ -76,7 +76,7 @@
             <li id="sidebar__reservations" class="sidebar__nav-icon">
               <a>
                 <img src="/static/images/staff_dashboard/reservations_icon.png" alt="Reservations Icon" class="sidebar__icon--services" />
-                <span> Reservations</span>
+                <span> Maintenances</span>
               </a>
             </li>
             <li id="sidebar__guest" class="sidebar__nav-icon">
@@ -170,9 +170,8 @@
 		  <a href="{{ url_for('app_views.chat') }}">
                     <span class="header__menu-icon">
                       <img src="/static/images/public/message_icon.svg" />
-                      <span id="unread__message-count">
-                        <!-- Total message dynamically loaded here  -->
-                      </span>
+                      <!--<span id="unread__message-count">
+		      </span>-->
                     </span>
                   </a>
                   <a href="#">
@@ -404,17 +403,23 @@
                       </div>
 
                     </div>
-                    <div id="main__last-row">
+                    <div class="flex-row">
                       <div>
                         <p>ID Number</p>
-                        <input id="main__id--no-val" placeholder="e.g., 1234-4u765-8767tfer-hg64w">
+                        <input id="main__id--no-val" placeholder="e.g., 1234-4u765-8767tfer-hg64w" required />
                       </div>
 
-
-                      <div class="check__icon-container">
+                      <div>
                         <p>Check In</p>
                         <input id="main__check-in" type="date" required>
                       </div>
+
+                      <!-- Use to patch -->
+		      <div style="visibility: hidden">
+                        <!-- Hidden input field to maintain 3 fields per row -->
+                        <input />
+		      </div>
+
                     </div>
                     <div class="main__btn">
                       <button class="highlight-btn">Proceed</button>

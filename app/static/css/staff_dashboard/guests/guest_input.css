@@ -8,7 +8,7 @@
 .guest-input-column {
   display: flex;
   position: relative;
-  width: 100%;
+  width: auto;
   height: 70vh;
   overflow: auto;
   background-color: var(--orange_a100_33);

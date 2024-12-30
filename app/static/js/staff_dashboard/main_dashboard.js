@@ -15,10 +15,6 @@ $(document).ready(function() {
       // Fetch data only if not already fetched
       const rooms = await $.get(url); 
       const bookings = await $.get(bookingUrl);
-      const unreadMsgCount = (
-        await $.get(API_BASE_URL + '/count-unread-messages')
-      );
-
       if (!rooms) {
         return;
       }
