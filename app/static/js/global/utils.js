@@ -29,14 +29,12 @@ export function previewImageAndReurnBase64(inputSelector, imageSelector) {
   return new Promise((resolve, reject) => {
     $(document).on('change', inputSelector, function (e) {
       // Access the first selected file
-      //const file = e.target.files[0];
       const files = e.target.files
       if (files) {
         const reader = new FileReader();
 
         // On successful read
         reader.onload = function (e) {
-		console.log("Image preview updated"); 
           $(imageSelector).attr('src', e.target.result); // Update the image preview
           resolve(e.target.result);
         };
@@ -103,6 +101,7 @@ export function canadianDateFormat(servereDate) {
   const date = new Date(servereDate);
   return date.toLocaleDateString('en-CA');
 }
+
 /**
  * Gets the current date in the format "22 November, 2024".
  * @returns {string} The current date formatted as "day month, year".

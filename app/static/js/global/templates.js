@@ -5,14 +5,18 @@
  * Template for rooms list table
  * @room {object} - The response object from database
  * @statusClass {string} - Class for status of room e.g., reserved, available or occupied.
+ * @param {isStaff} [isStaff = false] - Check the role of login user.
  *
  * @return {string} - The table and contents
  */
-export function roomTableTemplate(room, statusClass) {
+export function roomTableTemplate(room, statusClass, isStaff = false) {
   // Create the table row HTML
   const defaultRoomImage = '/static/images/public/default_room_img.png';
-  const image = room.image ? room.image : defaultRoomImage;
-  const row = `<tr>
+  const image = (
+    room.image ? 'data:image/;base64, ' + room.image : defaultRoomImage
+  );
+  const hideClass = isStaff ? 'hide' : '';
+  const row = `<tr data-id="${room.id}">
     <td>
       <div class="featured">
         <img src="${image}" alt="Featured Image" class="room-image" />
@@ -33,6 +37,16 @@ export function roomTableTemplate(room, statusClass) {
     <td>
       <p class="${statusClass} ui text size-textmd">${room.status}</p>
     </td>
+    <td class="${hideClass}">
+      <p class="ui text size-textmd editRoomIcon" data-id="${room.id}">
+        <i class="fa fa-edit"></i>
+      </p>
+    </td>
+    <td class="${hideClass}">
+      <p class="ui text size-textmd deleteRoomIcon" data-id="${room.id}">
+        <i class="fa fa-trash"></i>
+      </p>
+    </td>
   </tr>`;
   return row;
 }
@@ -41,8 +55,9 @@ export function roomTableTemplate(room, statusClass) {
  * Display rooms and it's details
  *
  * @param {object} data - The JSON response of all rooms
+ * @param {isStaff} isStaff - Check if login user role is a staff.
  */
-export function displayRoomData(data) {
+export function displayRoomData(data, isStaff) {
   try {
     const $tableBody = $(".room-table-body");
     // Iterate over the fetched data
@@ -57,7 +72,7 @@ export function displayRoomData(data) {
       }
 
       // Append the row to the table body
-      $tableBody.append(roomTableTemplate(room, statusClass));
+      $tableBody.append(roomTableTemplate(room, statusClass, isStaff));
     });
   } catch (error) {
     console.error("Error fetching room data:", error);
@@ -242,9 +257,9 @@ export function guestListTableTemplate(guest, booking, room, date) {
           <li data-id="${room.number}" class="manage__item manage__item--border guest__listEdit  guest__listMenu">
             <i class="fa fa-edit"></i>Edit Data
           </li>
-	  <li data-id="${room.number}" class="manage__item manage__item--border guest__listPrint  guest__listMenu">
-	    <i class="fa fa-print"></i>Print Receipt
-	  </li>
+          <li data-id="${room.number}" class="manage__item manage__item--border guest__listPrint  guest__listMenu">
+            <i class="fa fa-print"></i>Print Receipt
+          </li>
         </ul>
       </nav>
     </td>
