@@ -1,6 +1,6 @@
 import {
   fetchData, ajaxRequest, getBaseUrl } from '../global/utils.js';
-import  { userGroup, messageTemplate } from '../global/staff_templates.js';
+import  { userGroup, messageTemplate } from '../global/templates.js';
 
 
 $(document).ready(function() {
