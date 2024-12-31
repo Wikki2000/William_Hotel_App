@@ -14,6 +14,7 @@ from typing import(
 )
 from redis import Redis
 from models.private_message import PrivateMessage
+import base64
 
 
 r = Redis(host="localhost", port=6379, db=0)  # Create Redis instance
@@ -169,6 +170,16 @@ def bad_request(
         if not data.get(field):
             return {"error": f"{field} is required"}
     return None
+
+
+def convert_to_binary(base64_string: str) -> bytes:
+    """Convert Base64String of photo to Binary."""
+    if not base64_string:
+        return None
+    if base64_string.startswith('data:image'):
+        base64_string = base64_string.split(',')[1]  # Remove the prefix
+        img_binary_data = base64.b64decode(base64_string)  # Decode to binary.
+    return img_binary_data
 
 
 # ===================================================================== #
