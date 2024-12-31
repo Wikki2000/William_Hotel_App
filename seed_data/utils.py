@@ -36,3 +36,9 @@ def read_json_file(file_path: str) -> Dict:
     with open(file_path, 'r') as file:
         data = json.load(file)
     return data
+
+def write_json(file_path: str, data: Dict[any, any]) -> Dict:
+    """Write data to json file"""
+    with open(file_path, "wb") as f:
+        json.dump(data, f, indent=4)
+        print(f"Data successfully written to {file_path}")
