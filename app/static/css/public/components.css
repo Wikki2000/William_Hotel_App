@@ -141,6 +141,9 @@ Notification Modal
   }
 }
 
+.hide {
+  display: none;
+}
 /*==============================================
 Confirmation Modal Styles
 ==============================================*/

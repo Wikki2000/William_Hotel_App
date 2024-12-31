@@ -23,7 +23,7 @@ def count_unread_msg(user_id: str, friend_id: str) -> int:
 
 
 @api_views.route("/users/groups")
-@role_required(["manager", "staff", "ceo"])
+@role_required(["manager", "staff", "admin"])
 def get_groups_users(user_id: str, user_role: str) -> Dict:
     """Retrieve users and groups in databases."""
     try:

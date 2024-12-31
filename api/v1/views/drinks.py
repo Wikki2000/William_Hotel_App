@@ -9,7 +9,7 @@ from typing import Dict
 
 
 @api_views.route("/drinks")
-@role_required(["manager", "staff", "ceo"])
+@role_required(["manager", "staff", "admin"])
 def get_drinks(user_id: str, user_role: str) -> Dict:
     """Retrieve drinks data stored in databases."""
     try:

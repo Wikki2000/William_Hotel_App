@@ -1,7 +1,7 @@
 // NOTE: The `socket` variable is declared globally in the `setup_chat.js` file
 
 import { fetchData, ajaxRequest, getBaseUrl,updateElementCount } from '../global/utils.js';
-import  { userGroup, messageTemplate } from '../global/staff_templates.js';
+import  { userGroup, messageTemplate } from '../global/templates.js';
 
 function displayChat(username, profile_photo, userId, msg) {
   const photoSrc = (

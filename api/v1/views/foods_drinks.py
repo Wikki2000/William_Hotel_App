@@ -10,7 +10,7 @@ from typing import Dict
 
 
 @api_views.route("/foods/drinks")
-@role_required(["manager", "staff", "ceo"])
+@role_required(["manager", "staff", "admin"])
 def get_drinks_foods(user_id: str, user_role: str) -> Dict:
     """Retrieve drinks and foods in databases."""
     try:

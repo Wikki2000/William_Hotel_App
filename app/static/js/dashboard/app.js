@@ -5,18 +5,31 @@ import {
 import  { 
   displayFoodDrink, displayRoomData, guestListTableTemplate,
   roomTableTemplate, orderItemsTempleate
-} from '../global/staff_templates.js';
+} from '../global/templates.js';
 
 $(document).ready(function() {
 
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
   const APP_BASE_URL = getBaseUrl()['appBaseUrl'];
+  const USER_ROLE = localStorage.getItem('role');
+  const userId = localStorage.getItem('userId');
 
   // Display basic info in sidebar
-  $('#sidebar__name').text(localStorage.getItem('name'));
-  $('#sidebar__email').text(localStorage.getItem('email'));
-  $('#main__username').text(localStorage.getItem('userName'));
-  $('.sidebar__profile-image').attr('src', localStorage.getItem('image'));
+  const userUrl = API_BASE_URL + `/members/${userId}`;
+  fetchData(userUrl)
+    .then(({ first_name, last_name, email, username, profile_photo }) => {
+      const photoSrc = (
+        profile_photo ? `data:image/;base64, ${profile_photo}` :
+        '/static/images/public/profile_photo_placeholder.png'
+      );
+      $('#sidebar__name').text(`${first_name} ${last_name}`);
+      $('#sidebar__email').text(email);
+      $('.sidebar__profile-image').attr('src', photoSrc);
+      $('#main__username').text(username);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 
   // Handle side nav bar menu click
   $('#sidebar__staff--profile-btn').click(function() {
@@ -52,37 +65,36 @@ $(document).ready(function() {
 
     switch(clickId) {
       case 'sidebar__main': {
-        const url = APP_BASE_URL + '/pages/main_dashboard';
-        $('#dynamic__load-dashboard').load(url, function() {
-          const roomUrl = API_BASE_URL + '/rooms';
-          const bookingUrl = API_BASE_URL + '/bookings';
 
+        if (USER_ROLE === 'staff') {
+          const staffUrl = APP_BASE_URL + '/pages/staff_dashboard';
+          $('#dynamic__load-dashboard').load(staffUrl, function() {
+            const roomUrl = API_BASE_URL + '/rooms';
+            const bookingUrl = API_BASE_URL + '/bookings';
+            fetchData(roomUrl)
+              .then((data) => {
+                const roomCounts = data.rooms_count;
+                $('#main__room-available').text(roomCounts.total_available_room);
+                $('#main__room-reserved').text(roomCounts.total_reserved_room);
+              })
+              .catch((error) => {
+                console.error('Failed to fetch room data:', error);
+              });
+            $('#main__username').text(localStorage.getItem('userName'));
+            $('#main__date').text(getFormattedDate());
 
-          // Implement today booking count here
-
-          fetchData(roomUrl)
-            .then((data) => {
-              const roomCounts = data.rooms_count;
-              $('#main__room-available').text(roomCounts.total_available_room);
-              $('#main__room-reserved').text(roomCounts.total_reserved_room);
-            })
-            .catch((error) => {
-              console.error('Failed to fetch room data:', error);
-            });
-          $('#main__username').text(localStorage.getItem('userName'));
-          $('#main__date').text(getFormattedDate());
-
-          fetchData(bookingUrl)
-            .then((data) => {
-              const todayBookingCount = data.filter(
-                (data) => compareDate(data.created_at)
-              ).length;
-              $('#main__today-check--in').text(todayBookingCount);
-            })
-            .catch((error) => {
-              console.error('Failed to fetch room data:', error);
-            });
-        });
+            fetchData(bookingUrl)
+              .then((data) => {
+                const todayBookingCount = data.filter(
+                  (data) => compareDate(data.created_at)
+                ).length;
+                $('#main__today-check--in').text(todayBookingCount);
+              })
+              .catch((error) => {
+                console.error('Failed to fetch room data:', error);
+              });
+          });
+        }
         break;
       }
       case 'sidebar__Room-service': {
@@ -92,7 +104,13 @@ $(document).ready(function() {
           const roomUrl =  API_BASE_URL + '/rooms'
           fetchData(roomUrl)
             .then((response) => {
-              displayRoomData(response.rooms);
+              // Display btn to add and edit room if login user is not a staff
+              if (USER_ROLE === 'staff') {
+                displayRoomData(response.rooms, true);
+              } else {
+                displayRoomData(response.rooms);
+		$('#add-room').show();  // Show add room btn to manager aand CEO
+              }
             })
             .catch((error) => {
               console.error('Failed to fetch room data:', error);

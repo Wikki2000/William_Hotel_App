@@ -2,7 +2,8 @@ import {
   updateElementCount, getBaseUrl, confirmationModal, fetchData,
   getFormDataAsDict, previewImageAndReurnBase64, validateForm,
   showNotification, ajaxRequest,
-} from '../../global/utils.js';
+} from '../global/utils.js';
+
 $(document).ready(function() {
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
   const APP_BASE_URL = getBaseUrl()['appBaseUrl'];
@@ -71,6 +72,7 @@ $(document).ready(function() {
       showNotification('Please fill all requires field');
       return;
     }
+
     $('#save-changes').prop('disable', true);
     const data = getFormDataAsDict($formSelector);
     const editUrl = API_BASE_URL + '/users';
@@ -79,15 +81,12 @@ $(document).ready(function() {
         $('#save-changes').prop('disable', false);
         showNotification('Profile updated successfully !');
 
-        localStorage.setItem('userName', $('#edit-username').val());
-        localStorage.setItem('email', $('#edit-email').val());
-        localStorage.setItem('image', $('input[name="profile_photo"]').val());
-        localStorage.setItem(
-          'name', $('#edit-fname').val() + " " + $('#edit-lname').val()
-        );
         $('.sidebar__profile-image').attr(
           'src', $('input[name="profile_photo"]').val()
         );
+        $('#sidebar__name').text(`${data.first_name} ${data.last_name}`);
+        $('#sidebar__email').text(data.email);
+        $('#main__username').text(data.username);
       },
       (error) => {
         $('#save-changes').prop('disable', false);

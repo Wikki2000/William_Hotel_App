@@ -3,13 +3,12 @@
 from models.user import User
 from flask import abort, jsonify, request
 from api.v1.views import api_views
-from api.v1.views.utils import bad_request, role_required
+from api.v1.views.utils import bad_request, role_required, convert_to_binary
 from models import storage
-import base64
 
 
 @api_views.route("/members/<string:member_id>")
-@role_required(["staff", "ceo", "manager"])
+@role_required(["staff", "admin", "manager"])
 def get_user(user_role: str, user_id: str, member_id: str):
     """Retrieved a staff data using his ID
     """
@@ -20,8 +19,8 @@ def get_user(user_role: str, user_id: str, member_id: str):
 
 
 @api_views.route("/users", methods=["PUT"])
-@role_required(["staff", "ceo", "manager"])
-def update(user_role: str, user_id: str):
+@role_required(["staff", "admin", "manager"])
+def update_profile(user_role: str, user_id: str):
     """Update Staff profile
     """
     data = request.get_json()
@@ -32,10 +31,7 @@ def update(user_role: str, user_id: str):
 
         # Convert Base64String of profile photo to Binary
         base64_string = data.get("profile_photo")
-        if base64_string.startswith('data:image'):
-            base64_string = base64_string.split(',')[1]  # Remove the prefix
-            img_data = base64.b64decode(base64_string)  # Decode back to binary.
-            data["profile_photo"] = img_data  # Add the binary data to data.
+        data["profile_photo"] = convert_to_binary(base64_string)
 
         for key, val in data.items():
             if val:

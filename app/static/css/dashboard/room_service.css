@@ -6,6 +6,24 @@ Room Section
   cursor: pointer;
   border-radius: 15px;
 }
+.room__section-btn {
+  display: flex;
+  justify-content: space-between;
+  button {
+    display: none;
+    color: black;
+    padding: 0px 50px;
+    min-width: 80px;
+    height: 35px;
+    border: none;
+    font-size: 16px;
+    font-family: inherit;
+    border-radius: 20px;
+    margin-right: 80px;
+    margin-left: auto;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  }
+}
 
 .tab__item-2 {
   padding-left: 0.88rem;
@@ -13,9 +31,9 @@ Room Section
 }
 
 .room-image {
-  height: 5rem;
-  width: 72%;
-  object-fit: contain;
+  height: 100px;
+  width: 200px;
+  margin-top: 10px;
 }
 
 thead, .room-table-body {
@@ -26,6 +44,9 @@ thead, .room-table-body {
 .room-table-body > tr {
   border-bottom: 1px solid var(--orange_a100);
   padding-left: 1.88rem;
+  td:nth-child(5) {
+    text-align: center;
+  }
 }
 
 .statuses {

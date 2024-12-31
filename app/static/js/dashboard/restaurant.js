@@ -1,5 +1,5 @@
 import  { fetchData, getBaseUrl, highLightOrderBtn } from '../global/utils.js';
-import  { displayFoodDrink } from '../global/staff_templates.js';
+import  { displayFoodDrink } from '../global/templates.js';
 
 $(document).ready(function() {
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];

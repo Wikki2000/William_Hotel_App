@@ -1,8 +1,8 @@
 import {
   getBaseUrl, confirmationModal, validateForm, 
   showNotification, ajaxRequest, fetchData, britishDateFormat
-} from '../../global/utils.js';
-import { loanListTableTemplate  } from '../../global/staff_templates.js';
+} from '../global/utils.js';
+import { loanListTableTemplate  } from '../global/templates.js';
 
 function statusColor(leaveStatus) {
   if (leaveStatus === 'pending') {

@@ -7,7 +7,7 @@ from datetime import datetime
 
 
 @app_views.route(f"/dashboard")
-@role_required(["staff"])
+@role_required(["staff", "manager", "admin"])
 def dashboarde(user_role: str, user_id: str):
     """"Render templates for user dashboard"""
     today = datetime.today()
@@ -20,9 +20,9 @@ def dashboarde(user_role: str, user_id: str):
         return render_template(
             "dashboard/manager_dashboard.html", today=formatted_date
         )
-    elif user_role == "ceo":
+    elif user_role == "admin":
         return render_template(
-            "dashboard/ceo_dashboard.html", today=formatted_date
+            "dashboard/manager_dashboard.html", today=formatted_date
         )
     else:
         abort(403)

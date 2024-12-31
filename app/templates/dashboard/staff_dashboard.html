@@ -25,31 +25,32 @@
     <link rel="stylesheet" type="text/css" href="/static/css/public/table.css" />
 
     <!-- Link Staff_dashboard CSS Files-->
-    <link rel="stylesheet" type="text/css" href="/static/css/staff_dashboard/room_service.css" />
-    <link rel="stylesheet" type="text/css" href="/static/css/staff_dashboard/main_dashboard.css" />
-    <link rel="stylesheet" type="text/css" href="/static/css/staff_dashboard/restaurant.css" />
-    <link rel="stylesheet" type="text/css" href="/static/css/staff_dashboard/order.css" />
-    <link rel="stylesheet" type="text/css" href="/static/css/staff_dashboard/empty_cart.css" />
-    <link rel="stylesheet" type="text/css" href="/static/css/staff_dashboard/guests/guest_list.css" />
-    <link rel="stylesheet" type="text/css" href="/static/css/staff_dashboard/guests/guest_input.css" />
-    <link rel="stylesheet" type="text/css" href="/static/css/staff_dashboard/staff_requests/profile.css" />
-    <link rel="stylesheet" type="text/css" href="/static/css/staff_dashboard/staff_requests/loan_request.css" />
-    <link rel="stylesheet" type="text/css" href="/static/css/staff_dashboard/staff_requests/leave_request.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/dashboard/room_service.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/dashboard/staff_dashboard.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/dashboard/restaurant.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/dashboard/order.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/dashboard/empty_cart.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/dashboard/guests/guest_list.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/dashboard/guests/guest_input.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/dashboard/profile.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/dashboard/loan_request.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/dashboard/leave_request.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/dashboard/add_edit_room.css" />
 
     <!-- Link Staff_dashboard JS Files-->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 
-    <script type="module" defer src="/static/js/staff_dashboard/common.js"></script>
+    <script type="module" defer src="/static/js/dashboard/common.js"></script>
 
-    <script type="module" defer src="/static/js/staff_dashboard/restaurant.js"></script>
-    <script type="module" defer src="/static/js/staff_dashboard/room_service.js"></script>
-    <script type="module" defer src="/static/js/staff_dashboard/app.js"></script>
-    <script type="module" defer src="/static/js/staff_dashboard/main_dashboard.js">uuu</script>
-    <script type="module" defer src="/static/js/staff_dashboard/order.js"></script>
-    <script type="module" defer src="/static/js/staff_dashboard/guest.js"></script>
-    <script type="module" defer src="/static/js/staff_dashboard/staff_requests/profile.js"></script>
-    <script type="module" defer src="/static/js/staff_dashboard/staff_requests/loan_request.js"></script>
-    <script type="module" defer src="/static/js/staff_dashboard/staff_requests/leave_request.js"></script>
+    <script type="module" defer src="/static/js/dashboard/restaurant.js"></script>
+    <script type="module" defer src="/static/js/dashboard/room_service.js"></script>
+    <script type="module" defer src="/static/js/dashboard/app.js"></script>
+    <script type="module" defer src="/static/js/dashboard/staff_dashboard.js"></script>
+    <script type="module" defer src="/static/js/dashboard/order.js"></script>
+    <script type="module" defer src="/static/js/dashboard/guest.js"></script>
+    <script type="module" defer src="/static/js/dashboard/profile.js"></script>
+    <script type="module" defer src="/static/js/dashboard/loan_request.js"></script>
+    <script type="module" defer src="/static/js/dashboard/leave_request.js"></script>
   </head>
   <body>
     <!-- main content section -->
@@ -60,7 +61,7 @@
           <div class="sidebar__logo-row">
             <img src="/static/images/public/hotel_logo.png" alt="Hotel Logo" class="sidebar__logo" />
           </div>
-          <ul class="sidebar__menu">
+          <ul class="sidebar__menu staff__sidebar-menu">
             <li id="sidebar__main" class="highlight-sidebar sidebar__nav-icon">
               <a>
                 <img src="/static/images/public/dashboard_icon.png" alt="Dashboard Icon" class="sidebar__icon--dashboard" />
@@ -70,7 +71,7 @@
             <li id="sidebar__Room-service" class="sidebar__nav-icon">
               <a>
                 <img src="/static/images/staff_dashboard/room_services_icon.png" alt="Services Icon" class="sidebar__icon--services" />
-                <span> Room & Services </span>
+                <span> Rooms & Services </span>
               </a>
             </li>
             <li id="sidebar__reservations" class="sidebar__nav-icon">
@@ -100,20 +101,14 @@
                 </div>
               </a>
             </li>
-            <li id="sidebar__help" class="sidebar__nav-icon">
-              <a>
-                <img src="/static/images/public/help_icon.png" alt="Help Icon" class="sidebar__icon--services" />
-                <span> Help</span>
-              </a>
-            </li>
-            <li id="sidebar__logout" class="sidebar__nav-icon">
+           <li id="sidebar__logout" class="sidebar__nav-icon">
               <a>
                 <img src="/static/images/public/logout_icon.png" alt="Logout Icon" class="sidebar__icon--services" />
                 <span> Logout </span>
               </a>
             </li>
-          </ul>
-          <div class="sidebar__profile-row ighlight-sidebar">
+	  </ul><br><br>
+          <div class="sidebar__profile-row">
             <img src="/static/images/public/profile_photo_placeholder.png" alt="Profile Image" class="sidebar__profile-image" />
             <div class="sidebar__staff-profile">
               <div class="sidebar__name-column">

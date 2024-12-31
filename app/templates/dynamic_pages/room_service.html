@@ -1,0 +1,180 @@
+<div class="room_service">
+  <!-- room service tabs section -->
+  <div class="room__section-btn">
+    <div class="tab">
+      <h1 id="rooms" class="tab__item ui heading size-headingxs filter highlight-btn">Rooms</h1>
+      <h2 id="services" class="tab__item ui heading size-headingxs filter">Services</h2>
+    </div>
+    <button id="add-room" class="tab__item ui heading size-headingxs filter">+ Add Room</button>
+  </div>
+
+  <div id="rooms-section" class="column_rooms">
+    <!-- room availability section -->
+    <div class="info">
+      <div class="tab-1">
+        <h3 id="all__rooms" class="tab__item-2 ui heading size-texts filter highlight-btn">All Rooms</h3>
+        <h3 id="rooms__available" class="tab__item-2 ui heading size-texts filter">Available</h3>
+        <h4 id="rooms__occupied" class="tab__item-2 ui heading size-texts filter">Occupied</h4>
+        <h5 id="rooms__reserved" class="tab__item-2 ui heading size-texts filter">Reserved</h5>
+      </div>
+      <h6 class="info-text ui heading size-texts">All Rooms come with a complementary breakfast!</h6>
+    </div>
+
+    <!-- room table section -->
+    <div class="table-column">
+      <table cellpadding="0" cellspacing="0" class="tabletype ui table size-xs">
+        <thead>
+          <tr>
+            <th width="348px">
+              <p class="table__header-cell ui heading size-headings">Image</p>
+            </th>
+            <th width="318px">
+              <p class="table__header-cell-1 ui heading size-headings">Type</p>
+            </th>
+            <th width="310px">
+              <p class="table__header-cell-2 ui heading size-headings">Rate</p>
+            </th>
+            <th width="204px">
+              <p class="table__header-cell-3 ui heading size-headings">Status</p>
+            </th>
+            <th width="200px">
+              <!-- Heading for Edit Icon -->
+            </th>
+	    <th width="200px">
+              <!-- Heading for Delete Icon -->
+	    </th>
+          </tr>
+        </thead>
+        <tbody id="room-table-body" class="room-table-body">
+          <!-- Rows will be dynamically added here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <div id="add__new-room--section" class="room__container">
+    <div class="add_room">
+      <h2 id="room__action-edit--add"><!-- Edit or Add title goes here --></h2>
+      <div class="room_img">
+        <img
+          src="/static/images/public/profile_photo_placeholder.png"
+          alt="Hotel Room Photo"
+          class="room__image room__edit-icon"
+          id="add__new-room"
+          />
+        <div class="edit">
+          <img
+            src="/static/images/public/edit_icon.png"
+            alt="Edit Icon"
+            class="room__edit-icon"
+            id="room__image-selector"
+            />
+          <!-- Triggered when profile image is clicked -->
+          <input type="file" style="display: none;" id="room__image-fileInput" accept="image/*"  />
+
+        </div>
+      </div>
+      <form id="new__room-form">
+        <!-- Stores Base64 data -->
+        <input name="image"  type="hidden" />
+
+        <div class="room_info">
+          <div class="room__first-col">
+            <div>
+              <label class="room_name" for="name"><b>Room Name</b></label><br>
+              <input
+                type="text"
+                name="name"
+                placeholder="e.g., Standard" required
+                />
+            </div>
+            <div>
+              <label class="room_name" for="number"><b>Room NO.</b></label><br>
+              <input
+                type="number"
+                name="number"
+                placeholder="e.g., 211" required
+                />
+            </div>
+          </div>
+
+          <div>
+            <label class="room_name" for="rate"><b>Room Rate</b></label><br>
+            <input
+              type="number"
+              name="amount"
+              placeholder="e.g., 18,750" required
+              />
+          </div>
+        </div>
+
+        <div class="add__room-btns">
+          <button class="filter" type="reset">Cancel</button>
+          <button id="room__add-new" class="highlight-btn save-btn" type="submit">Save</button>
+        </div>
+
+        <!-- Store room id in hidden input form field -->
+        <input id="room__id" type="hidden">
+      </form>
+    </div>
+  </div>
+
+  <!-- Service Section -->
+  <section id="services-section" class="services-section">
+    <h2 class="bottom-marg quick_services"><em>Quick Service Check</em></h2>
+    <!--<div class="check-btn">
+      <button class="tab__item ui heading size-headingxs filter highlight-btn">Check Out</button>
+      <button class="tab__item ui heading size-headingxs filter">Book History</button>
+      </div><br />-->
+      <div class="room__details">
+        <div>
+          <h5 class="bottom-marg"><em>Room No.</em></h5>
+          <div class="dropdown room__dropdown">
+            <div id="room__number-dropdown-btn" class="drop-down">
+              <span>Select </span>
+              <img src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px" alt="dropdown" />
+            </div>
+            <div class="dropdown-menu" id="room__number-dropdown">
+              <ul class="main__dropdown--menu-list">
+                <!-- Menu list loaded here dynamically -->
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h5 class="bottom-marg"><em>Room Type</em></h5>
+          <input id="room__type" readonly placeholder="Auto-fill" required />
+        </div>
+
+        <div>
+          <h5 class="bottom-marg"><em>Guest Name</em></h5>
+          <input id="room__occupant-name" readonly placeholder="Auto-fill" required />
+        </div>
+
+        <div>
+          <h5 class="bottom-marg">Payment Status</h5>
+          <input id="room__ispaid" readonly placeholder="Auto-fill" required />
+        </div>
+      </div>
+
+      <div class="service-list">
+        <h4 class="description"><em>Service List</em></h4>
+        <img class="drop-down" src="/static/images/public/img_arrow_down_black_900_01.svg"width="15px" alt="dropdown">
+      </div>
+      <div class="total-charge">
+        <h4 class="charge"><em>Total Charge</em></h4>
+        <h4 class="amount"><em>₦<span id="room__book-amount">0.00</span></em></h4>
+      </div>
+
+      <div class="print-proceed-btns">
+        <!--<p class="print-btn">Print Receipt</p>-->
+        <button id="room__checkout-btn" class="proceed-btn">Check Out</button>
+      </div>
+  </section>
+</div>
+
+<!-- Confirmation Modal Dynamically Loaded Here. -->
+<div id="order__confirmation-modal">
+</div>
