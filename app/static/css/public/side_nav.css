@@ -33,8 +33,8 @@
   object-fit: cover;
 }
 
-.sidebar__menu.staff__sidebar-menu {
-  margin-top: 20px;
+.sidebar__menu.admin__sidebar-menu a {
+  margin-top: 3px;
 }
 .sidebar__menu {
   margin-top: 6px;
