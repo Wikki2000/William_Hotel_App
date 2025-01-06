@@ -126,10 +126,10 @@ label {
   background: #FFC8455C;
   border-radius: 20px 0 0 20px;
 }
-#loan__list #loan__table-body.common-table-body td,
-{
-  text-align: center !important;
+#loan__list #loan__table-body.common-table-body .manage {
+  left: 62%;
 }
+
 #loan__list #loan__table-body.common-table-body .left-margin {
   padding-left: 30px;
 }
@@ -154,4 +154,4 @@ label {
   display: flex;
   justify-content: space-between;
   width: 50%;
- }
+}

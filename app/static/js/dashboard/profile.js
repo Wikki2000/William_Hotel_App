@@ -1,7 +1,7 @@
 import {
   updateElementCount, getBaseUrl, confirmationModal, fetchData,
   getFormDataAsDict, previewImageAndReurnBase64, validateForm,
-  showNotification, ajaxRequest,
+  showNotification, ajaxRequest, canadianDateFormat
 } from '../global/utils.js';
 
 $(document).ready(function() {
@@ -35,9 +35,15 @@ $(document).ready(function() {
           $('#edit-title').val(response.title);
           $('#edit-address').val(response.address);
           $('#edit-phone').val(response.number);
+          $('#edit-state').val(response.state);
+          $('#edit-religion').val(response.religion);
           $('input[name="profile_photo"]').val(
             `data:image/;base64, ${response.profile_photo}`
           );
+	  $('#edit-dob').val(canadianDateFormat(response.dob));
+	  $('#edit-nok-name').val(response.nok);
+	  $('#edit__nok-phone').val(response.nok_number);
+	  $('#edit__role').val(response.portfolio);
           $('#profile__photo').attr('src', photoSrc);
         })
         .catch((error) => {
@@ -75,7 +81,8 @@ $(document).ready(function() {
 
     $('#save-changes').prop('disable', true);
     const data = getFormDataAsDict($formSelector);
-    const editUrl = API_BASE_URL + '/users';
+    const userId = localStorage.getItem('userId');
+    const editUrl = API_BASE_URL + `/members/${userId}/update`;
     ajaxRequest(editUrl, 'PUT', JSON.stringify(data),
       (response) => {
         $('#save-changes').prop('disable', false);

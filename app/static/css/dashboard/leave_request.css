@@ -1,6 +1,3 @@
-/*============================================
-Request Loan Dashboard Section
-==============================================*/
 .leave__container {
   padding: 10px;
   #leave__list {
@@ -110,6 +107,17 @@ Request Loan Dashboard Section
   box-shadow: var(--shadow-xs);
 }
 
+#leave__list {
+  padding-left: 20px;
+  #leave__table-body tr {
+    .staff__management-leave--menu {
+      right: 25%;
+    }
+    td:nth-child(3), td:nth-child(2) {
+      padding-left: 1%;
+    }
+  }
+}
 /*====================================
  	Leave Popup Modal
 =====================================*/

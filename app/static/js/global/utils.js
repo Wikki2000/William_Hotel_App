@@ -2,6 +2,17 @@
               Helper Function common amongst all Modules
 =======================================================================*/
 /**
+ * Sanitize user input data
+ *
+ * @param {object} data - The data to be sanitize
+ * @param {object} - The sanitized data
+ */
+export function sanitizeInput(data) {
+  return Object.fromEntries(
+    Object.entries(data).map(([key, value]) => [key, value !== "" ? value : null])
+  );
+}
+/**
  * Converts form data into a dictionary (JavaScript object).
  *
  * @param {HTMLElement} formElement - The form element from which the data is extracted.
@@ -18,6 +29,7 @@ export function getFormDataAsDict($formElement) {
 
   return formDataDict;
 }
+
 /**
  * Preview selected image and return its Base64 string.
  * 
@@ -41,7 +53,7 @@ export function previewImageAndReurnBase64(inputSelector, imageSelector) {
 
         // On error
         reader.onerror = function () {
-		console.log("Image preview updated error");
+          console.log("Image preview updated error");
           reject('Error reading file content.');
         };
 
@@ -52,8 +64,6 @@ export function previewImageAndReurnBase64(inputSelector, imageSelector) {
     });
   });
 }
-
-
 
 /**
  * Fetches data from the specified URL.
@@ -88,6 +98,9 @@ export function fetchData(url) {
  * @returns {string} - The formated date 
  */
 export function britishDateFormat(servereDate) {
+  if (!servereDate) {
+    return '';
+  }
   const date = new Date(servereDate);
   return date.toLocaleDateString('en-GB');
 }
@@ -98,6 +111,9 @@ export function britishDateFormat(servereDate) {
  * @returns {string} - The formated date
  */
 export function canadianDateFormat(servereDate) {
+  if (!servereDate) {
+    return '';
+  }
   const date = new Date(servereDate);
   return date.toLocaleDateString('en-CA');
 }
@@ -137,6 +153,18 @@ export function confirmationModal(
       });
     }
   });
+}
+
+/**
+ * Close confirmation modal
+ */
+export function closeConfirmationModal() {
+  $('#order__confirmation-modal').empty();
+}
+
+
+export function hideTableMenu() {
+  $('.manage').hide();
 }
 
 /**
@@ -390,4 +418,15 @@ export function cartItemsTotalAmount(cart) {
   return cartItemsAmountList.reduce(
     (sum, value) => sum + parseFloat(value), 0
   );
+}
+
+/*
+ * Hide all sections of staff management dashboard.
+ */
+export function hideAllStaffManagmentDashboard() {
+  $('#staff__list').hide();
+  $('#staff__loan-list').hide();
+  $('#staff__leave-list').hide();
+  $('#staff__profile').hide();
+  $('#loan-content').hide();
 }

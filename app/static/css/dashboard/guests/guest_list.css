@@ -23,37 +23,13 @@ Guest List Section
   padding-right: 8px;
 }
 
-.guest-table-heading {
-  width: 100%;
-  display: flex;
-  position: absolute;
-  justify-content: space-between;
-  padding-left: 3rem;
-  padding-right: 3rem;
-  padding-top: 1rem;
-}
 
 .guest-table-heading :nth-child(1) {
   font-size: larger;
   font-weight: bolder;
 }
-
-.guest-table-heading :nth-child(2) {
-  padding: 5px 15px 5px 15px;
-  border: 2px solid var(--amber_a200);
-  border-radius: var(--radius-xs);
-  font-size: small;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.guest-table-heading :nth-child(2):hover {
-  color: var(--white_a700);
-  background-color: var(--amber_a200);
-}
-
 .guest-tabletype {
-  margin-top: 5.5rem;
+  margin-top: 3.5rem;
   align-self: stretch;
 }
 
@@ -61,6 +37,11 @@ Guest List Section
   justify-content: space-between;
   align-items: center; /* Center align content vertically */
   border-bottom: 2px solid var(--orange_a100_33); /* Add bottom border to each row */
+  td:nth-child(2),
+  td:nth-child(3),
+  td:nth-child(6) {
+    padding-left: 15px;
+  }
   .manage {
     right: 100px;
   }
@@ -68,22 +49,10 @@ Guest List Section
 
 .guest-table-body td {
   flex: 1; /* Make cells flexible */
-  padding: 0rem 0.5rem; /* Add padding for better readability */
 }
-
-.guest-details a {
-  color: var(--amber_a300);
-  text-decoration: none; /* Remove underline from links */
-}
-
-/* Optional: Add hover effect for better UI */
-.guest-table-body tr:hover {
-  background-color: var(--amber_a100); /* Highlight row on hover */
-}
-
 
 /*==============================================
-Order details popup modal
+Guest details popup modal
 ===============================================*/
 .guest__popup-modal {
   width: 50%;

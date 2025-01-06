@@ -7,12 +7,13 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.mysql import ENUM
 from models.booking import Booking
+from sqlalchemy.dialects.mysql import LONGBLOB
 
 
 class Room(BaseModel, Base):
     """Define class for storing drinks"""
     __tablename__ = "rooms"
-    image = Column(LargeBinary)
+    image = Column(LONGBLOB)
     name =  Column(String(20), nullable=False)
     status = Column(
         ENUM("available", "reserved", "occupied"),

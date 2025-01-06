@@ -1,6 +1,7 @@
 import {
   getBaseUrl, confirmationModal, validateForm, getFormDataAsDict,
-  showNotification, ajaxRequest, fetchData, britishDateFormat
+  showNotification, ajaxRequest, fetchData, britishDateFormat,
+  closeConfirmationModal, hideTableMenu
 } from '../global/utils.js';
 import { leaveListTableTemplate  } from '../global/templates.js';
 
@@ -13,18 +14,35 @@ function statusColor(leaveStatus) {
     return 'red';
   }
 }
+
+function togleTableMenuIcon() {
+  $('#staff__leave-table--body tr .fa-ellipsis-v').show();
+  $('#staff__leave-table--body tr .fa-times').hide();
+  $('#staff__leave-table--body tr .manage').hide();
+}
+
 $(document).ready(function() {
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
   const APP_BASE_URL = getBaseUrl()['appBaseUrl'];
+  const USER_ID = localStorage.getItem('userId');
 
+  // Display leaves details
   $('#dynamic__load-dashboard')
     .on('click', '.leaveDetails', function() {
       const leaveId = $(this).data('id');
 
+      // Toggle table menu icon for leave_request.html & staff_managment.html
+      $('#leave__table-body tr .fa-ellipsis-v').show();
+      $('#staff__leave-table--body tr .fa-ellipsis-v').show(); 
+
+      $('#leave__table-body tr .fa-times').hide();
+      $('#staff__leave-table--body tr .fa-times').hide();
+
+      $('.staff__management-leave--menu').hide(); // Hide table menu
+
       const getLeaveUrl = API_BASE_URL + `/leaves/${leaveId}`;
       fetchData(getLeaveUrl)
         .then((data) => {
-
           const managerTextColor = statusColor(data.manager_approval_status);
           const ceoTextColor = statusColor(data.ceo_approval_status);
 
@@ -32,8 +50,8 @@ $(document).ready(function() {
           $('#leave__reason').empty();
 
           $('#leave__date-type').append(
-            `<p class="bottom_margin">${data.leave_type}</p>
-            <p class="bottom_margin">From - ${britishDateFormat(data.start_date)}</p>
+            `<p>${data.leave_type}</p>
+            <p>From - ${britishDateFormat(data.start_date)}</p>
             <p class="bottom_margin">To - ${britishDateFormat(data.end_date)}</p>
         `
           );
@@ -58,7 +76,7 @@ $(document).ready(function() {
       $('#leave__popupModal').css('display', 'flex');
     });
 
-  // Switch dashboard section
+  // Switch dashboard section b/w leaves request and leaves history
   $('#dynamic__load-dashboard')
     .on('click', '#apply__leave-btn, #track__leave-btn', function() {
       const $clickItem = $(this);
@@ -73,7 +91,7 @@ $(document).ready(function() {
 
       if (clickItemId === 'track__leave-btn') {
         $('#leave__table-body').empty(); // First empty the table
-        const getLeaveUrl = API_BASE_URL + '/leaves';
+        const getLeaveUrl = API_BASE_URL + `/members/${USER_ID}/leaves`;
         fetchData(getLeaveUrl)
           .then((data) => {
             data.forEach((data) => {
@@ -113,6 +131,7 @@ $(document).ready(function() {
         });
     });
 
+  // Handle submission of form for leaves request.
   $('#dynamic__load-dashboard')
     .on('submit', '#leave__request-form', function(e) {
       e.preventDefault();
@@ -147,6 +166,85 @@ $(document).ready(function() {
               $('#order__confirmation-modal').empty();
               $clickItem.prop('disable', false);
               showNotification('Error: Try Again!', true);
+            }
+          );
+        });
+    });
+
+
+  // Approve leave request.
+  $('#dynamic__load-dashboard')
+    .off('click', '#staff__leave-table--body .approveLeave')
+    .on('click', '#staff__leave-table--body .approveLeave', function() {
+      const $clickItem = $(this);
+      const leaveId = $clickItem.data('id');
+
+      togleTableMenuIcon();
+
+      // Load confirmation modal
+      const headingText = 'Confirm Leave Approvael';
+      const descriptionText = 'This action cannot be undone !'
+      const confirmBtCls = 'approve__leave-confirm--btn';
+
+      confirmationModal(headingText, descriptionText, confirmBtCls);
+
+      // Handle approval of leave request.
+      $('#dynamic__load-dashboard')
+        .off('click', '.approve__leave-confirm--btn')
+        .on('click', '.approve__leave-confirm--btn', function() {
+          const approveLeaveUrl = (
+            API_BASE_URL + `/leaves/${leaveId}/approve`
+          );
+          closeConfirmationModal();
+
+          ajaxRequest(approveLeaveUrl, 'PUT', null,
+            (response) =>  {
+              showNotification('Leave Request Approved Successfully !');
+            },
+            (error) => {
+              showNotification('Oops! An error occured, Try Again !', true);
+            }
+          );
+        });
+    });
+
+  // Handle rejection of leave request.
+  $('#dynamic__load-dashboard')
+    .off('click', '#staff__leave-table--body .rejectLeave')
+    .on('click', '#staff__leave-table--body .rejectLeave', function() {
+      const leaveId = $(this).data('id');
+
+      togleTableMenuIcon();
+
+      // Load confirmation modal
+      $('#leave__rejection-reason').css('display', 'flex');
+
+
+      const $textarea = $('.rejection__reason-textarea');
+
+      $textarea.focus();  // Focus the cursor on the input field.
+
+      // Handle rejection of leave request.
+      $('#dynamic__load-dashboard')
+        .off('submit', '#leave__rejection-form')
+        .on('submit', '#leave__rejection-form', function(e) {
+          e.preventDefault();
+
+          const data = JSON.stringify({
+            description: $('#leave__rejection-reason--val').val()
+          });
+          const approveLeaveUrl = (
+            API_BASE_URL + `/leaves/${leaveId}/reject`
+          );
+
+          $('#leave__rejection-reason').hide();
+          ajaxRequest(approveLeaveUrl, 'PUT', data,
+            (response) =>  {
+              $('#leave__rejection-form').trigger('reset');
+              showNotification('Leave Request Rejected Successfully !');
+            },
+            (error) => {
+              showNotification('Oops! An error occured, Try Again !', true);
             }
           );
         });

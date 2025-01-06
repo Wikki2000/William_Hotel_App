@@ -4,7 +4,7 @@ import {
 } from '../global/utils.js';
 import  { 
   displayFoodDrink, displayRoomData, guestListTableTemplate,
-  roomTableTemplate, orderItemsTempleate
+  roomTableTemplate, orderItemsTempleate, staffListTemplate
 } from '../global/templates.js';
 
 $(document).ready(function() {
@@ -22,8 +22,14 @@ $(document).ready(function() {
         profile_photo ? `data:image/;base64, ${profile_photo}` :
         '/static/images/public/profile_photo_placeholder.png'
       );
+      const displayEmail = (
+        email.length > 23 ? email.slice(0, 23) + '...' : email
+      );
+
+      $('#sidebar__email').attr('title', email);
+
       $('#sidebar__name').text(`${first_name} ${last_name}`);
-      $('#sidebar__email').text(email);
+      $('#sidebar__email').text(displayEmail);
       $('.sidebar__profile-image').attr('src', photoSrc);
       $('#main__username').text(username);
     })
@@ -224,6 +230,12 @@ $(document).ready(function() {
             console.log(error);
           }
         );
+        break;
+      }
+      case 'sidebar__staff-management': {
+        for (let i = 0; i < 20; i++) {
+          $('#staff__list-table').append(staffListTemplate());
+        }
         break;
       }
     }

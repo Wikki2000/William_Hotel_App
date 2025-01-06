@@ -2,3 +2,4 @@
 .*.swp
 __py*
 test*
+*.bak

@@ -1,62 +1,32 @@
 import {
-  getBaseUrl, confirmationModal, validateForm, 
+  getBaseUrl, confirmationModal, validateForm, closeConfirmationModal,
   showNotification, ajaxRequest, fetchData, britishDateFormat
 } from '../global/utils.js';
-import { loanListTableTemplate  } from '../global/templates.js';
+import { loanListTableTemplate, loanDetailTemplate } from '../global/templates.js';
 
-function statusColor(leaveStatus) {
-  if (leaveStatus === 'pending') {
-    return 'blue';
-  } else if (leaveStatus === 'approved') {
-    return 'green';
-  } else if (leaveStatus === 'rejected') {
-    return 'red';
-  }
+
+function togleTableMenuIcon() {
+  $('#staff__loan-table--body tr .fa-ellipsis-v').show();
+  $('#staff__loan-table--body tr .fa-times').hide();
+  $('#staff__loan-table--body tr .manage').hide();
 }
 
 $(document).ready(function() {
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
   const APP_BASE_URL = getBaseUrl()['appBaseUrl'];
+  const USER_ROLE = localStorage.getItem('role');
 
+  // Show details of loans
   $('#dynamic__load-dashboard')
     .on('click', '.loanDetails', function() {
       const loanId = $(this).data('id');
-
       const getLoanUrl = API_BASE_URL + `/loans/${loanId}`;
+
+      togleTableMenuIcon();
+
       fetchData(getLoanUrl)
         .then((data) => {
-          const paymentStatus = (
-            data.is_paid ? { text: 'Paid', color: 'green' } : 
-            { text: 'Not Paid', color: 'red' }
-          );
-          const managerTextColor = statusColor(data.manager_approval_status);
-          const ceoTextColor = statusColor(data.ceo_approval_status);
-
-          $('#leave__date-type').empty();
-          $('#leave__reason').empty();
-
-          $('#loan__details-description').append(
-            `<p class="">Loan Amount - ₦${data.amount.toLocaleString()}</p>
-            <p class="">Loan Amount - ${data.due_month} Month(s) </p>
-            <p class="">Repayment Mode - ${data.repayment_mode.toLocaleString()}</p><br />
-            <p>Payment Status - <span style="color: ${paymentStatus.color}">${paymentStatus.text}<span></p>
-        `
-          );
-          $('#loan__acount-description').append(
-            `<p>Account Name - ${data.account_name}</p>
-             <p>Account Number - ${data.account_number}</p>
-             <p>Bank Name - ${data.bank_name}</p>
-            `
-          );
-
-          // Handle display for ceo status on leave
-          $('#leave__manager-status').text(data.manager_approval_status);
-          $('#leave__manager-status').css('color', managerTextColor);
-
-          // Handle display for manager status on leave
-          $('#leave__ceo-status').text(data.ceo_approval_status);
-          $('#leave__ceo-status').css('color', ceoTextColor);
-
+          loanDetailTemplate(data);
         })
         .catch((error) => {
           console.log(error);
@@ -87,15 +57,17 @@ $(document).ready(function() {
         $('#loan-content').show();
       }
       else if(clickId === 'loan__request-history') {
-	$('#loan__table-body').empty();
+        const userId = localStorage.getItem('userId');
+
+        $('#loan__table-body').empty();
         $clickButton.addClass('highlight-btn');
         $('#loan__list').show();
-        const getLoanUrl = API_BASE_URL + '/loans';
+        const getLoanUrl = API_BASE_URL + `/members/${userId}/loans`;
         fetchData(getLoanUrl)
           .then((data) => {
-            console.log(data);
             data.forEach((data) => {
-              $('#loan__table-body').append(loanListTableTemplate(data));
+              $('#loan__table-body')
+                .append(loanListTableTemplate(data, USER_ROLE));
             });
           })
           .catch((error) => {
@@ -125,8 +97,9 @@ $(document).ready(function() {
 
       const data = {
         amount, due_month, repayment_mode,
-        bank_name, account_name, account_number 
+        bank_name, account_name, account_number
       };
+
       // Load confirmation modal
       const headingText = 'Confirm Loan Request';
       const descriptionText = 'This action cannot be undone !'
@@ -149,6 +122,85 @@ $(document).ready(function() {
               $('#order__confirmation-modal').empty();
               showNotification('Loan Request Fail. Try Again !', true);
               console.log(error.responseJSON.error);
+            }
+          );
+        });
+    });
+
+  // Approve loan request.
+  $('#dynamic__load-dashboard')
+    .off('click', '#staff__loan-table--body .approveLoan')
+    .on('click', '#staff__loan-table--body .approveLoan', function() {
+      const $clickItem = $(this);
+      const loanId = $clickItem.data('id');
+
+      togleTableMenuIcon();
+
+      // Load confirmation modal
+      const headingText = 'Confirm Loan Approval';
+      const descriptionText = 'This action cannot be undone !'
+      const confirmBtCls = 'approve__loan-confirm--btn';
+
+      confirmationModal(headingText, descriptionText, confirmBtCls);
+      togleTableMenuIcon();
+
+      // Handle approval of leave request.
+      $('#dynamic__load-dashboard')
+        .off('click', '.approve__loan-confirm--btn')
+        .on('click', '.approve__loan-confirm--btn', function() {
+          const approveLoanUrl = (
+            API_BASE_URL + `/loans/${loanId}/approve`
+          );
+          closeConfirmationModal();
+
+          ajaxRequest(approveLoanUrl, 'PUT', null,
+            (response) =>  {
+              showNotification('Loan Request Approved Successfully !');
+            },
+            (error) => {
+              showNotification('Oops! An error occured, Try Again !', true);
+            }
+          );
+        });
+    });
+
+  // Handle rejection of leave request.
+  $('#dynamic__load-dashboard')
+    .off('click', '#staff__loan-table--body .rejectLoan')
+    .on('click', '#staff__loan-table--body .rejectLoan', function() {
+      const loanId = $(this).data('id');
+
+      togleTableMenuIcon();
+
+      // Load confirmation modal
+      $('#loan__rejection-reason').css('display', 'flex');
+
+
+      const $textarea = $('.rejection__reason-textarea');
+
+      $textarea.focus();  // Focus the cursor on the input field.
+
+      // Handle rejection of leave request.
+      $('#dynamic__load-dashboard')
+        .off('submit', '#loan__rejection-form')
+        .on('submit', '#loan__rejection-form', function(e) {
+          e.preventDefault();
+
+          const data = JSON.stringify({
+            description: $('#loan__rejection-reason--val').val()
+          });
+          const approveLeaveUrl = (
+            API_BASE_URL + `/loans/${loanId}/reject`
+          );
+
+          $('#loan__rejection-reason').hide();
+          ajaxRequest(approveLeaveUrl, 'PUT', data,
+            (response) =>  {
+              $('#loan__rejection-form').trigger('reset');
+              showNotification('Loan Request Rejected Successfully !');
+            },
+            (error) => {
+              showNotification('Oops! An error occured, Try Again !', true);
             }
           );
         });
