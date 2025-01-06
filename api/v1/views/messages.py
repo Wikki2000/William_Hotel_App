@@ -14,7 +14,7 @@ from typing import Dict
 
 
 @api_views.route("/messages/<string:friend_id>/mark-read", methods=["PUT"])
-@role_required(["manager", "staff", "ceo"])
+@role_required(["manager", "staff", "admin"])
 def mark_as_read(user_id: str, user_role: str, friend_id):
     messages = user_friend_messages(user_id, friend_id)
     if not messages:
@@ -30,7 +30,7 @@ def mark_as_read(user_id: str, user_role: str, friend_id):
 
 
 @api_views.route("/messages/<string:group_id>/group")
-@role_required(["manager", "staff", "ceo"])
+@role_required(["manager", "staff", "admin"])
 def group_messages(user_id: str, user_role: str, group_id: str) -> Dict:
     """Retrieve group messages."""
     group = storage.get_by(Group, id=group_id)
@@ -54,7 +54,7 @@ def group_messages(user_id: str, user_role: str, group_id: str) -> Dict:
 
 
 @api_views.route("/messages/<string:friend_id>/private")
-@role_required(["manager", "staff", "ceo"])
+@role_required(["manager", "staff", "admin"])
 def private_messages(user_id: str, user_role: str, friend_id: str) -> Dict:
     """
     Retrieve private messages between the logged-in user and the receiver.

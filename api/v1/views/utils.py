@@ -25,7 +25,10 @@ F = TypeVar("F", bound=Callable[..., any])  # Generic type for callable
 # =================================================== #
 #               Email Sending Helper Function         #
 # =================================================== #
-def send_mail(mail: str, kwargs: Dict[str, str]) -> bool:
+def send_mail(
+    mail: str, kwargs: Dict[str, str],
+    mail_subject="[William's Court Hotel]"
+) -> bool:
     """Send token to email.
 
     Args:
@@ -37,14 +40,17 @@ def send_mail(mail: str, kwargs: Dict[str, str]) -> bool:
     """
     config = sib_api_v3_sdk.Configuration()
     config.api_key["api-key"] = environ["MAIL_API_KEY"]
-    SENDER_MAIL = environ["SENDER_EMAIL"]
+
     # Create an instance of the API class
     api_instance = sib_api_v3_sdk.TransactionalEmailsApi(
         sib_api_v3_sdk.ApiClient(config)
     )
 
-    sender = {"name": "WIS_Grader", "email": environ["SENDER_EMAIL"]}
-    email_subject = "[Wis_Grader] Complete your registration"
+    sender = {
+        "name": "William's Court Hotel",
+        "email": environ["SENDER_EMAIL"]
+    }
+    email_subject = mail_subject
     recipient = [kwargs]
 
     send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
