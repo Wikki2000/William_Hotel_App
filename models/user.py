@@ -14,7 +14,7 @@ from models.loan_request import LoanRequest
 from models.leave_request import LeaveRequest
 from models.private_message import PrivateMessage
 from models.group_message import GroupMessage
-from sqlalchemy.dialects.mysql import LONGBLOB
+from models.maintenance import Maintenance
 
 
 class User(BaseModel, Base):
@@ -25,7 +25,7 @@ class User(BaseModel, Base):
     middle_name = Column(String(225))
     last_name =  Column(String(225), nullable=False)
     username = Column(String(20), default="willies")
-    profile_photo = Column(LONGBLOB)
+    profile_photo = Column(LargeBinary)
     email = Column(String(225), nullable=False, unique=True)
     address = Column(String(225))
     gender = Column(String(30))
@@ -43,6 +43,8 @@ class User(BaseModel, Base):
     performance = Column(Integer)
     is_active = Column(Boolean, default=False)
     last_active = Column(DateTime)
+
+    maintenences = relationship("Maintenance", backref="user")
 
     # Handle relationship between staff that checkin & checkout guest
     checkin_made_by = relationship(

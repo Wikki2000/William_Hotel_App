@@ -2,9 +2,7 @@
 """vat Module"""
 from datetime import datetime
 from models.base_model import Base, BaseModel
-from sqlalchemy import (
-    Column, String, Boolean, ForeignKey, Float, ForeignKey
-)
+from sqlalchemy import Column, String, Boolean, Float, ForeignKey
 
 
 class Vat(BaseModel, Base):

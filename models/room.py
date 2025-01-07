@@ -5,9 +5,8 @@ from sqlalchemy import (
     Column, String, Boolean, Float, ForeignKey, Integer, LargeBinary
 )
 from sqlalchemy.orm import relationship
-from sqlalchemy.dialects.mysql import ENUM
+from sqlalchemy.dialects.mysql import ENUM, LONGBLOB
 from models.booking import Booking
-from sqlalchemy.dialects.mysql import LONGBLOB
 
 
 class Room(BaseModel, Base):
