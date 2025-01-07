@@ -2,7 +2,7 @@ import {
   britishDateFormat, compareDate, getFormattedDate, fetchData, ajaxRequest,
   getBaseUrl, highLightOrderBtn, cartItemsTotalAmount
 } from '../global/utils.js';
-import  { 
+import  {
   displayFoodDrink, displayRoomData, guestListTableTemplate,
   roomTableTemplate, orderItemsTempleate, staffListTemplate
 } from '../global/templates.js';
@@ -17,7 +17,7 @@ $(document).ready(function() {
   // Display basic info in sidebar
   const userUrl = API_BASE_URL + `/members/${userId}`;
   fetchData(userUrl)
-    .then(({ first_name, last_name, email, username, profile_photo }) => {
+    .then(({ first_name, last_name, email, username, profile_photo, performance }) => {
       const photoSrc = (
         profile_photo ? `data:image/;base64, ${profile_photo}` :
         '/static/images/public/profile_photo_placeholder.png'
@@ -32,6 +32,14 @@ $(document).ready(function() {
       $('#sidebar__email').text(displayEmail);
       $('.sidebar__profile-image').attr('src', photoSrc);
       $('#main__username').text(username);
+
+      const staffPerformanceColor = (
+        performance < 50 ? 'red' : 'green'
+      );
+      $('#staff_performance-indexing')
+        .text(String(performance) + '%');
+      $('#staff_performance-indexing')
+        .css('color', staffPerformanceColor);
     })
     .catch((error) => {
       console.log(error);
@@ -76,7 +84,20 @@ $(document).ready(function() {
           const staffUrl = APP_BASE_URL + '/pages/staff_dashboard';
           $('#dynamic__load-dashboard').load(staffUrl, function() {
             const roomUrl = API_BASE_URL + '/rooms';
-            const bookingUrl = API_BASE_URL + '/bookings';
+
+            const performanceStatus = localStorage.getItem('performance');
+            const staffPerformanceColor = (
+              performanceStatus < 50 ? 'red' : 'green'
+            );
+
+            const username = localStorage.getItem('userName');
+            $('#main__username').text(username);
+
+            $('#staff_performance-indexing')
+              .text(String(performanceStatus) + '%');
+            $('#staff_performance-indexing')
+              .css('color', staffPerformanceColor);
+
             fetchData(roomUrl)
               .then((data) => {
                 const roomCounts = data.rooms_count;
@@ -115,7 +136,7 @@ $(document).ready(function() {
                 displayRoomData(response.rooms, true);
               } else {
                 displayRoomData(response.rooms);
-		$('#add-room').show();  // Show add room btn to manager aand CEO
+                $('#add-room').show();  // Show add room btn to manager aand CEO
               }
             })
             .catch((error) => {
@@ -233,9 +254,26 @@ $(document).ready(function() {
         break;
       }
       case 'sidebar__staff-management': {
-        for (let i = 0; i < 20; i++) {
-          $('#staff__list-table').append(staffListTemplate());
-        }
+        const url = APP_BASE_URL + '/pages/staff_management';
+        $('#dynamic__load-dashboard').load(url, function() {
+          const userUrl = API_BASE_URL + '/users';
+
+          fetchData(userUrl)
+            .then((response) => {
+              response.forEach((data) => {
+                $('#staff__list-table--body').append(staffListTemplate(data));
+              });
+
+              // Remove button to add staff for manager.
+              if (USER_ROLE === 'manager') {
+                $('#add__staff-btn').remove();
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        });
+
         break;
       }
     }

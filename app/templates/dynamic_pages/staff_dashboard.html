@@ -26,7 +26,11 @@
       </div>
 
       <div class="performance">
-        <p>Performance <span class="percent"><em>85%</em></span></p>
+        <p>Performance
+	  <span class="percent">
+	    <em id="staff_performance-indexing"><!-- Staff performance dynamically loaded here --></em>
+	  </span>
+	</p>
         <button class="track-btn">Track</button>
       </div>
     </div>
@@ -49,13 +53,13 @@
     <div class="main__room-status2">
       <div>
         <div class="main__row-1 red">
-          <i class="fas fa-calendar"></i>
+          <i class="fas fa-users"></i>
         </div>
-        <p>Today’s Orders </p>
+        <p>Vendor's List </p>
       </div>
       <div class="main__row-2">
-        <button class="highlight-btn">View Rooms </button>
-        <h1><em>0</em></h1>
+        <button id="vendor__list-btn" class="highlight-btn">View Vendors </button>
+        <h1 id="count__vendors"><em></em></h1>
       </div>
     </div>
 

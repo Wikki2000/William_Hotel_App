@@ -16,7 +16,8 @@
         "religion": "Muslim ",
         "state": "Ogun state ",
         "portfolio": "Manager",
-	"role": "manager"
+	"role": "manager",
+	"performance": 50
     },
     {
         "title": "Mr.",
@@ -35,7 +36,8 @@
         "nok_number": "0906\u00a0560\u00a02176",
         "religion": "Christian ",
         "state": "Ogun State",
-        "portfolio": "Housekeeper"
+        "portfolio": "Housekeeper",
+	"performance": 50
     },
     {
         "title": "Mr.",
@@ -54,7 +56,8 @@
         "religion": "Christian ",
         "state": "Ogun State",
         "portfolio": "Housekeeper",
-	"role": "staff"
+	"role": "staff",
+	"performance": 50
     },
     {
         "title": "Miss",
@@ -73,7 +76,8 @@
         "religion": "Christianity ",
         "state": "Oyo",
         "portfolio": "Receptionist",
-	"role": "staff"
+	"role": "staff",
+	"performance": 50
     },
     {
         "title": "Miss",
@@ -92,7 +96,8 @@
         "religion": "Christian ",
         "state": "Ondo State ",
         "portfolio": "Assistant Receptionist",
-	"role": "staff"
+	"role": "staff",
+	"performance": 50
     },
     {
         "title": "Miss",
@@ -111,7 +116,8 @@
         "religion": "Muslim ",
         "state": "Ogun state",
         "portfolio": "Cleaner work",
-	"role": "staff"
+	"role": "staff",
+	"performance": 50
     },
     {
         "title": "Miss",
@@ -130,7 +136,8 @@
         "religion": "Christian",
         "state": "Ogun state",
         "portfolio": "Chef",
-	"role": "staff"
+	"role": "staff",
+	"performance": 50
     },
     {
         "title": "Miss",
@@ -149,6 +156,7 @@
         "nok_number": "09153020511",
         "religion": "Muslim ",
         "state": "Ogun State",
-        "portfolio": "Bartender"
+        "portfolio": "Bartender",
+	"performance": 50
     }
 ]

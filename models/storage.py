@@ -19,6 +19,7 @@ from models.leave_request import LeaveRequest
 from models.group_message import GroupMessage
 from models.private_message import PrivateMessage
 from models.group import Group
+from models.vendor import Vendor
 
 from dotenv import load_dotenv
 from os import getenv

@@ -36,6 +36,7 @@
     <link rel="stylesheet" type="text/css" href="/static/css/dashboard/loan_request.css" />
     <link rel="stylesheet" type="text/css" href="/static/css/dashboard/leave_request.css" />
     <link rel="stylesheet" type="text/css" href="/static/css/dashboard/add_edit_room.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/dashboard/vendor.css" />
 
     <!-- Link Staff_dashboard JS Files-->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
@@ -51,6 +52,7 @@
     <script type="module" defer src="/static/js/dashboard/profile.js"></script>
     <script type="module" defer src="/static/js/dashboard/loan_request.js"></script>
     <script type="module" defer src="/static/js/dashboard/leave_request.js"></script>
+    <script type="module" defer src="/static/js/dashboard/vendor.js"></script>
   </head>
   <body>
     <!-- main content section -->
@@ -217,7 +219,7 @@
                     </div>
 
                     <div class="performance">
-                      <p>Performance <span class="percent"><em>85%</em></span></p>
+		      <p>Performance <span class="percent"><em id="staff_performance-indexing"><!-- Staff performance dynamically loaded here --></em></span></p>
                       <button class="track-btn">Track</button>
                     </div>
                   </div>
@@ -227,12 +229,12 @@
                   <div class="main__room-status1">
                     <div>
                       <div class="main__row-1 green">
-                        <i class="fas fa-calendar"></i>
+                        <i class="fas fa-calculator"></i>
                       </div>
-                      <p>Today’s Check in </p>
+                      <p>Monthly VAT </p>
                     </div>
                     <div class="main__row-2">
-                      <button class="highlight-btn">View Rooms </button>
+                      <button class="highlight-btn">View Details </button>
                       <h1><em id="main__today-check--in">0</em></h1>
                     </div>
                   </div>
@@ -240,13 +242,13 @@
                   <div class="main__room-status2">
                     <div>
                       <div class="main__row-1 red">
-                        <i class="fas fa-calendar"></i>
+                        <i class="fas fa-users"></i>
                       </div>
-                      <p>Today’s Orders </p>
+                      <p>Vendor's List </p>
                     </div>
                     <div class="main__row-2">
-                      <button class="highlight-btn">View Orders </button>
-                      <h1><em>0</em></h1>
+                      <button id="vendor__list-btn" class="highlight-btn">View Vendors </button>
+                      <h1 id="count__vendors"><em></em></h1>
                     </div>
                   </div>
 

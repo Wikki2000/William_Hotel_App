@@ -413,10 +413,11 @@ export function messageTemplate(message, photoSrc, receiverName = '') {
  *
  * @return {string} - The records of  staff.
  */
-export function staffListTemplate(data, date) {
+export function staffListTemplate(data) {
   const USER_ROLE = localStorage.getItem('role');
   const hideFromManager = USER_ROLE === 'admin' ? '' : 'hide';
   const salary = data.salary ? `₦${data.salary.toLocaleString()}` : '';
+  const performanceColor = data.performance < 50 ? 'red': 'green';
   const row = `<tr data-id="${data.id}">
     <td class="">
       <p class="ui text size-textmd left-margin first_name">${data.first_name}</p>
@@ -424,7 +425,7 @@ export function staffListTemplate(data, date) {
     </td>
 
     <td class="">
-      <p class="ui text size-textmd left-margin start_date">${date}</p>
+      <p class="ui text size-textmd left-margin performance" style="color: ${performanceColor}";>${data.performance}%</p>
     </td>
 
     <td class="">

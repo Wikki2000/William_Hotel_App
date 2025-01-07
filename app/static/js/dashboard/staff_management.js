@@ -28,16 +28,10 @@ $(document).ready(function() {
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
   const userUrl = API_BASE_URL + '/users';
 
-  // Remove button to add staff for manager.
-  if (USER_ROLE === 'manager') {
-    $('#add__staff-btn').remove();
-  }
-
   fetchData(userUrl)
     .then((response) => {
       response.forEach((data) => {
-        const date = britishDateFormat(data.start_date);
-        $('#staff__list-table--body').append(staffListTemplate(data, date));
+        $('#staff__list-table--body').append(staffListTemplate(data));
       });
     })
     .catch((error) => {
@@ -102,7 +96,7 @@ $(document).ready(function() {
             $(`#staff__list-table--body tr[data-id="${userId}"] .salary`).text(`₦${response.salary}`);
             $(`#staff__list-table--body tr[data-id="${userId}"] .number`).text(response.number);
             $(`#staff__list-table--body tr[data-id="${userId}"] .portfolio`).text(response.portfolio);
-            $(`#staff__list-table--body tr[data-id="${userId}"] .start_date`).text(britishDateFormat(response.start_date));
+            $(`#staff__list-table--body tr[data-id="${userId}"] .performance`).text(String(response.performance) + '%');
           }
           showNotification(msg);
 
@@ -212,6 +206,7 @@ $(document).ready(function() {
             $('input[name="dob"]').val(canadianDateFormat(data.dob));
             $('input[name="gender"]').val(data.gender);
             $('input[name="number"]').val(data.number);
+	    $('input[name="performance"]').val(data.performance);
 
             $('input[name="role"]').val(data.role);
             $('.profile__dropdown-btn p').text(data.role);
@@ -233,7 +228,6 @@ $(document).ready(function() {
 	      $('input[name="dob"]').attr('readonly', true);
 	      $('input[name="gender"]').attr('readonly', true);
 	      $('input[name="number"]').attr('readonly', true);
-	      $('input[name="email"]').attr('readonly', true);
 	     
 	      $('#profile__role-dropdown').remove();
 	    }

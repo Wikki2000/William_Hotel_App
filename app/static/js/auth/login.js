@@ -23,8 +23,10 @@ $(document).ready(function () {
     ajaxRequest(url, "POST", data,
       (response) => {
         // Set user ID and name in session for quick recovery.
+	localStorage.setItem('userName', response.username);
         localStorage.setItem('userId', response.id);
         localStorage.setItem('role', response.role);
+	localStorage.setItem('performance', response.performance);
 
 	$('input').addClass('correct-password');
         setTimeout(() => {

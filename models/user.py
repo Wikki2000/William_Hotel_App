@@ -3,7 +3,7 @@
 from datetime import datetime
 from models.base_model import Base, BaseModel
 from sqlalchemy import (
-    Column, Text, String, Boolean, LargeBinary, DateTime, Float
+    Column, Text, String, Boolean, LargeBinary, DateTime, Float, Integer
 )
 from sqlalchemy.dialects.mysql import ENUM 
 from sqlalchemy.orm import relationship
@@ -40,6 +40,7 @@ class User(BaseModel, Base):
     password = Column(String(1500), nullable=False)
     role = Column(ENUM("admin", "manager", "staff"),  nullable=False)
     portfolio = Column(String(1500), nullable=False)
+    performance = Column(Integer)
     is_active = Column(Boolean, default=False)
     last_active = Column(DateTime)
 

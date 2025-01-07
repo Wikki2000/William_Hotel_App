@@ -10,25 +10,17 @@ $(document).ready(function() {
   // Function to fetch rooms data
   async function getRoom() {
     try {
-      const bookingUrl = API_BASE_URL + '/bookings';
       const url = API_BASE_URL + '/rooms';
       // Fetch data only if not already fetched
       const rooms = await $.get(url); 
-      const bookings = await $.get(bookingUrl);
       if (!rooms) {
         return;
       }
-      const todayBookingCount = bookings.filter(
-        ({ booking }) => compareDate(booking.created_at)
-      ).length;
-
       const roomCounts = rooms.rooms_count;
 
       // Update room stats in the UI
       $('#main__room-available').text(roomCounts.total_available_room);
       $('#main__room-reserved').text(roomCounts.total_reserved_room);
-
-      $('#main__today-check--in').text(todayBookingCount);
 
     } catch (error) {
       console.error('An error occurred while retrieving rooms data:', error);
