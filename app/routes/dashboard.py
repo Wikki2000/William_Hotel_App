@@ -16,13 +16,9 @@ def dashboarde(user_role: str, user_id: str):
         return render_template(
             "dashboard/staff_dashboard.html", today=formatted_date
         )
-    elif user_role == "manager":
+    elif user_role == "manager" or user_role == "admin":
         return render_template(
-            "dashboard/manager_dashboard.html", today=formatted_date
-        )
-    elif user_role == "admin":
-        return render_template(
-            "dashboard/manager_dashboard.html", today=formatted_date
+            "dashboard/management_dashboard.html", today=formatted_date
         )
     else:
         abort(403)

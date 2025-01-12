@@ -162,6 +162,10 @@ Order History Section
 
 .table-column.order__history-table {
   padding: 20px;
+
+  .manage {
+    top: 50px;
+  }
 }
 .order__history--table-body {
 

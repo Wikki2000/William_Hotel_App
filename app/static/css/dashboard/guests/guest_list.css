@@ -21,6 +21,7 @@ Guest List Section
   border-collapse: collapse; /* Ensure borders don't overlap */
   padding-left: 8px;
   padding-right: 8px;
+  margin-top: 20px;
 }
 
 
@@ -43,7 +44,8 @@ Guest List Section
     padding-left: 15px;
   }
   .manage {
-    right: 100px;
+    right: 130px;
+    top: 80px;
   }
 }
 

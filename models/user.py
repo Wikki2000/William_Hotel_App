@@ -24,7 +24,7 @@ class User(BaseModel, Base):
     first_name = Column(String(225), nullable=False)
     middle_name = Column(String(225))
     last_name =  Column(String(225), nullable=False)
-    username = Column(String(20), default="willies")
+    username = Column(String(20))
     profile_photo = Column(LargeBinary)
     email = Column(String(225), nullable=False, unique=True)
     address = Column(String(225))

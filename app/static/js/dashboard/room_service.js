@@ -9,6 +9,8 @@ $(document).ready(function () {
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
   const APP_BASE_URL = getBaseUrl()['appBaseUrl'];
 
+  const USER_ROLE = localStorage.getItem('role');
+
   const roomUrl =  API_BASE_URL + '/rooms'
 
   // Switch dashboard sections of rooms and services
@@ -94,7 +96,7 @@ $(document).ready(function () {
   // Filter rooms according to status
   $('#dynamic__load-dashboard').on(
     'click',
-    '#all__rooms, #rooms__available, #rooms, #rooms__occupied, #rooms__reserved', 
+    '#all__rooms, #rooms__available, #rooms, #rooms__occupied, #rooms__reserved, #main__room-available--view', 
     function() {
       const $tableBody = $(".room-table-body");
       const $clickItem = $(this);
@@ -106,12 +108,13 @@ $(document).ready(function () {
       $clickItem.siblings().removeClass('highlight-btn');
       $clickItem.addClass('highlight-btn');
 
+      const isStaff = USER_ROLE === 'staff' ? true: false;
       switch (clickId) {
         case 'all__rooms': 
         case 'rooms': {
           fetchData(roomUrl)
           .then(({ rooms, rooms_count }) => {
-            displayRoomData(rooms);
+              displayRoomData(rooms, isStaff);
           })
           .catch((error) => {
             console.error('Failed to fetch room data:', error);
@@ -125,7 +128,8 @@ $(document).ready(function () {
             rooms.forEach((room) => {
               if (room.status === 'available') {
                 const statusClass = 'room-status-4';
-                $tableBody.append(roomTableTemplate(room, statusClass));
+                $tableBody
+                  .append(roomTableTemplate(room, statusClass, isStaff));
               }
             });
           })
@@ -141,7 +145,8 @@ $(document).ready(function () {
             rooms.forEach((room) => {
               if (room.status === 'occupied') {
                 const statusClass = 'room-status';
-                $tableBody.append(roomTableTemplate(room, statusClass));
+                $tableBody
+                  .append(roomTableTemplate(room, statusClass, isStaff));
               }
             });
           })
@@ -156,7 +161,8 @@ $(document).ready(function () {
             rooms.forEach((room) => {
               if (room.status === 'reserved') {
                 const statusClass = 'room-status-3';
-                $tableBody.append(roomTableTemplate(room, statusClass));
+                $tableBody
+                  .append(roomTableTemplate(room, statusClass, isStaff));
               }
             });
           })

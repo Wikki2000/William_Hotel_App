@@ -28,7 +28,6 @@
   }
 }
 
-
 #staff__leave-list #staff__leave-table--body tr {
   td:nth-child(1) {
     padding-left: 30px;
@@ -41,6 +40,7 @@
 
 #staff__profile.staff__profile-section {
   height: 75vh;
+  overflow-y: scroll;
   #staff__management-form {
     width: 120%;
     .input-label-combo {
@@ -82,9 +82,11 @@
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
   }
 }
+
 .staff__management-container table {
   margin-top: 30px;
 }
+
 #staff__list-table--body td:first-child,
 #staff__list-table--body td:nth-child(2),
 #staff__list-table--body td:nth-child(5),

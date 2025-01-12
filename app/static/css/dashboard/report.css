@@ -4,10 +4,12 @@ html {
     box-sizing: border-box;
 }
 
-.main__container {
+.report__container {
     padding: 5px 5px 0 5px;
 }
-
+.form-container select:hover {
+  cursor: pointer;
+}
 
 .links ul {
     display: flex;
@@ -60,9 +62,11 @@ html {
     position: relative;
 }
 
-img .report_img{
+img.report_img{
     width: 382px;
+    border: 2px solid orange;
     height: 373px;
+    border-radius: 15px;
 }
 
 .report-body .edit {
@@ -123,7 +127,7 @@ img .report_img{
     justify-content: space-between;
 }
 
-label {
+.report__container label {
     display: block;
     font-size: 1rem;
     font-weight: 400;
@@ -159,7 +163,7 @@ textarea[readonly] {
 
 .report-btn {
     display: block;
-    margin-left: 30%;
+    margin-left: auto;
     background-color: #000000;
     color: #fff;
     padding: 0px 100px;

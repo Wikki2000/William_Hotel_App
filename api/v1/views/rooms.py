@@ -19,6 +19,7 @@ def add_room(user_role: str, user_id: str):
     if error_response:
         return jsonify(error_response), 400
 
+
     data["amount"] = float(data.get("amount"))
     data["image"] = convert_to_binary(data.get("image"))
 
@@ -28,7 +29,7 @@ def add_room(user_role: str, user_id: str):
         storage.save()
         return jsonify({"message": "Room Added Successfully"}), 200
     except IntegrityError:
-        error_message = f"Room Exist's Already"
+        error_message = f"Room {data.get('number')} Exist's Already"
         return jsonify({"error": error_message}), 409
     except Exception as e:
         print(str(e))
@@ -105,6 +106,17 @@ def get_rooms(user_role: str, user_id: str):
     }
     storage.close()
     return jsonify(response), 200
+
+
+@api_views.route("/room-number")
+@role_required(["staff", "manager", "admin"])
+def get_room_numbers(user_role: str, user_id: str):
+    """Get numbers associated with rooms."""
+    rooms = storage.all(Room).values()
+    if not rooms:
+        return jsonify([]), 200
+
+    return jsonify(sorted([room.number for room in rooms])), 200
 
 
 @api_views.route("/rooms/<string:room_number>")

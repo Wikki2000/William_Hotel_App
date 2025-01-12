@@ -7,6 +7,7 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.mysql import ENUM, LONGBLOB
 from models.booking import Booking
+from models.maintenance import Maintenance
 
 
 class Room(BaseModel, Base):
@@ -21,5 +22,7 @@ class Room(BaseModel, Base):
     amount = Column(Float, nullable=False)
     number = Column(String(20), nullable=False, unique=True)
 
+    maintenances = relationship('Maintenance', backref='room',
+                                cascade='all, delete-orphan')
     book = relationship('Booking', backref='room', uselist=False,
                          cascade='all, delete-orphan')

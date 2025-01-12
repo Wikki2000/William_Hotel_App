@@ -7,7 +7,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.mysql import ENUM
 from sqlalchemy.orm import relationship
-from models.vat import Vat
+#from models.vat import Vat
 
 
 class Booking(BaseModel, Base):
@@ -32,5 +32,7 @@ class Booking(BaseModel, Base):
     )
     checkout_by_id = Column(String(60), ForeignKey("users.id"))
 
+    """
     vat = relationship('Vat', backref='booking', uselist=False,
                        cascade='all, delete-orphan')
+    """

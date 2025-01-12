@@ -20,3 +20,6 @@ from api.v1.views.leave_request import *
 from api.v1.views.users_groups import *
 from api.v1.views.messages import *
 from api.v1.views.vendors import *
+from api.v1.views.maintenaces import *
+from api.v1.views.vats import *
+from api.v1.views.cats import *

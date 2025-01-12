@@ -11,20 +11,24 @@ try:
             "username": "david",
             "password": "12345", "email": "david@gmail.com",
             "role": "admin", "portfolio": "CEO"}
+    """
     group = storage.get_by(Group, name="WCHS Group")
     if not group:
         print("Error! You must create the WCHS Group")
         exit()
+    """
 
     user = User(**attr)
     user.hash_password()
     storage.new(user)
     storage.save()
 
+    """
     msg = "Welcome to the team! Excited to achieved great things together."
     welcome_msg = GroupMessage(group_id=group.id, text=msg, user_id=user.id)
     storage.new(welcome_msg)
     storage.save()
+    """
     print("Admin user created successfully!")
 except Exception as e:
     print(str(e))

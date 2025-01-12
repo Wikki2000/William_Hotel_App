@@ -27,27 +27,18 @@
 
       <div class="performance">
         <p>Performance
-	  <span class="percent">
-	    <em id="staff_performance-indexing"><!-- Staff performance dynamically loaded here --></em>
-	  </span>
-	</p>
+        <span class="percent">
+          <em id="staff_performance-indexing"><!-- Staff performance dynamically loaded here --></em>
+        </span>
+        </p>
         <button class="track-btn">Track</button>
       </div>
     </div>
   </div>
 
-  <div class="main__room-status">
-    <div class="main__room-status1">
-      <div>
-        <div class="main__row-1 green">
-          <i class="fas fa-calendar"></i>
-        </div>
-        <p>Today’s Check in </p>
-      </div>
-      <div class="main__row-2">
-        <button class="highlight-btn">View Rooms </button>
-        <h1><em id="main__today-check--in">0</em></h1>
-      </div>
+  <div class="main__room-status">	  
+    <div id="main__common-cart--staffManagement" class="main__room-status1">
+      <!-- Cart content will be loaded base on Logged-In User -->
     </div>
 
     <div class="main__room-status2">
@@ -71,22 +62,13 @@
         <p>Rooms Available </p>
       </div>
       <div class="main__row-2">
-        <button class="highlight-btn">View Rooms </button>
+        <button id="main__room-available--view" class="highlight-btn">View Rooms </button>
         <h1><em id="main__room-available">0</em></h1>
       </div>
     </div>
 
-    <div class="main__room-status4">
-      <div>
-        <div class="main__row-1 orange">
-          <i class="fas fa-home"></i>
-        </div>
-        <p>Reserved Rooms </p>
-      </div>
-      <div class="main__row-2">
-        <button class="highlight-btn">View Rooms </button>
-        <h1><em id="main__room-reserved">0</em></h1>
-      </div>
+    <div id="main__cart-loaded" class="main__room-status4">
+      <!-- Cart content will be loaded base on Logged-In User -->
     </div>
   </div>
 
@@ -216,7 +198,7 @@
           <p>ID Number</p>
           <input id="main__id--no-val" placeholder="e.g., 1234-4u765-8767tfer-hg64w">
         </div>
-	<div>
+        <div>
           <p>Check In</p>
           <input id="main__check-in" type="date" required>
         </div>
@@ -225,7 +207,7 @@
           <!-- Hidden input field to maintain 3 fields per row -->
           <input>
         </div>
-     </div>
+      </div>
 
       <div class="main__btn">
         <button class="highlight-btn">Proceed</button>
@@ -250,5 +232,37 @@
       <button id="main__cancel-btn" class="highlight-btn cancel-btn">Cancel</button>
       <button id="main__confirm-btn" class="highlight-btn confirm-btn">Confirm</button>
     </div>
+  </div>
+</div>
+
+
+<!-- This popup modal is utilized by management alone -->
+<!-- Popup modal for VAT -->
+<div id="main__vat-year--inputPopup" class="popup-modal">
+  <div class="popup-modal-content vat__cat-popup--modal">
+    <!-- Close Button -->
+    <button class="close-btn closePopupModal">×</button>
+    <h3 class="main__monthly-vatCat--title">Enter a year to view monthly VAT details</h3>
+    <form id="main__enter-vat--yearForm">
+      <input id="main__vat-year--input" class="main__vatCat-year--input" type="number" min="2000" placeholder="Please enter a valid year (e.g., 2025)" required />
+      <div class="main__vatCat-container">
+        <button class="table__header-cell-1 ui heading size-headings highlight-btn">View Monthly VAT</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Popup modal for CAT -->
+<div id="main__cat-year--inputPopup" class="popup-modal">
+  <div class="popup-modal-content cat__cat-popup--modal">
+    <!-- Close Button -->
+    <button class="close-btn closePopupModal">×</button>
+    <h3 class="main__monthly-vatCat--title">Enter a year to view monthly CAT details</h3>
+    <form id="main__enter-cat--yearForm">
+      <input id="main__cat-year--input" class="main__vatCat-year--input" type="number" min="2000" placeholder="Please enter a valid year (e.g., 2025)" required />
+      <div class="main__vatCat-container">
+        <button class="table__header-cell-1 ui heading size-headings highlight-btn">View Monthly CAT</button>
+      </div>
+    </form>
   </div>
 </div>

@@ -221,7 +221,7 @@
             <div class="input-label-combo">
               <label for="edit-performance">Performance
               </label>
-              <input name="performance" />
+              <input type="number" min="0" max="100" name="performance" />
             </div>
             <div class="input-label-combo">
               <label for="edit-phone">Phone Number</label>
@@ -257,6 +257,20 @@
             <div class="input-label-combo">
               <label for="edit-nok">Date Of Birth</label>
               <input name="dob" type="date" id="edit-dob" />
+            </div>
+          </div>
+	  <div class="combo-flex">
+            <div class="input-label-combo">
+              <label for="edit-title">Title</label>
+              <input name="title">
+            </div>
+            <div class="input-label-combo">
+              <label for="edit-username">Username <span>*</span></label>
+              <input name="username" required />
+            </div>
+            <div class="input-label-combo">
+              <label>Email <span>*</span></label>
+              <input name="email" required />
             </div>
           </div>
 
