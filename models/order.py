@@ -2,7 +2,7 @@
 """order Module"""
 from datetime import datetime
 from models.base_model import Base, BaseModel
-from models.vat import Vat
+#from models.vat import Vat
 from models.order_item import OrderItem
 from sqlalchemy import (
     Column, String, Boolean, ForeignKey, Float, ForeignKey, Integer
@@ -28,7 +28,9 @@ class Order(BaseModel, Base):
     cleared_by_id = Column(String(60), ForeignKey("users.id"))
 
     # Relationships
+    """
     vat = relationship('Vat', backref='order', uselist=False,
                        cascade='all, delete-orphan')
+    """
     order_items = relationship('OrderItem', backref='order',
                                cascade='all, delete-orphan')

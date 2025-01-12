@@ -256,6 +256,33 @@ input:checked + .slider:before {
   }
 }
 
+/* VAT popup modal */
+.vat__cat-popup--modal {
+  padding: 20px;
+}
+.main__monthly-vatCat--title {
+  margin-top: 20px;
+}
+.main__vatCat-year--input {
+  border: 2px solid orange;
+  width: 100%;
+  height: 45px;
+  border-radius: 10px;
+  padding: 10px;
+}
+.main__vatCat-container {
+  display: flex;
+  justify-content: center;
+  button:last-child {
+    padding: 10px;
+    border-radius: 10px;
+    height: 35px;
+    margin-top: 10px;
+    width: 50%;
+    text-align: center;
+  }
+}
+
 @media screen and (max-width: 1310px) {
   .flex-row {
     input, .dropdown {

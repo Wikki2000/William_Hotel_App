@@ -14,6 +14,7 @@ from models.drink_category import DrinkCategory
 from models.food import Food
 from models.order_item import OrderItem
 from models.vat import Vat
+from models.cat import Cat
 from models.loan_request import LoanRequest
 from models.leave_request import LeaveRequest
 from models.group_message import GroupMessage

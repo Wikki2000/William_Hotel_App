@@ -5,7 +5,7 @@ from models.customer import Customer
 from models.order import Order
 from models.drink import Drink
 from models.order_item import OrderItem
-from models.vat import Vat
+#from models.vat import Vat
 from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import role_required
@@ -17,7 +17,7 @@ from random import randint
 
 
 @api_views.route("/order-items", methods=["POST"])
-@role_required(["staff"])
+@role_required(["staff", "manager", "admin"])
 def order_items(user_role: str, user_id: str):
     """Store order details in database
 
@@ -56,10 +56,12 @@ def order_items(user_role: str, user_id: str):
         storage.save()
 
         # Take VAT from order amount
+        """
         vat_amount = (7.5 /100) * new_order.amount
         vat_task = Vat(amount=vat_amount, order_id=new_order.id)
         storage.new(vat_task)
         storage.save()
+        """
 
         for item in item_data:
             item_field = ""
@@ -139,7 +141,6 @@ def get_order(user_role: str, user_id: str, order_id: str):
         cleared_by_dict = (
             None if not order.cleared_by else order.cleared_by.to_dict()
         )
-        print(cleared_by_dict)
 
         response = {
             "order": order.to_dict(),

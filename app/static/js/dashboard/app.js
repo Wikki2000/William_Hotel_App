@@ -6,6 +6,7 @@ import  {
   displayFoodDrink, displayRoomData, guestListTableTemplate,
   roomTableTemplate, orderItemsTempleate, staffListTemplate
 } from '../global/templates.js';
+import { displayMaintenance, staffManagementCommonCart } from '../global/templates1.js';
 
 $(document).ready(function() {
 
@@ -80,36 +81,82 @@ $(document).ready(function() {
     switch(clickId) {
       case 'sidebar__main': {
 
-        if (USER_ROLE === 'staff') {
-          const staffUrl = APP_BASE_URL + '/pages/staff_dashboard';
-          $('#dynamic__load-dashboard').load(staffUrl, function() {
-            const roomUrl = API_BASE_URL + '/rooms';
+        const staffUrl = APP_BASE_URL + '/pages/main_dashboard';
+        $('#dynamic__load-dashboard').load(staffUrl, function() {
+          const roomUrl = API_BASE_URL + '/rooms';
+          const bookingUrl = API_BASE_URL + '/bookings';
 
-            const performanceStatus = localStorage.getItem('performance');
-            const staffPerformanceColor = (
-              performanceStatus < 50 ? 'red' : 'green'
-            );
+          const performanceStatus = localStorage.getItem('performance');
+          const staffPerformanceColor = (
+            performanceStatus < 50 ? 'red' : 'green'
+          );
 
-            const username = localStorage.getItem('userName');
-            $('#main__username').text(username);
+          const username = localStorage.getItem('userName');
+          $('#main__username').text(username);
 
-            $('#staff_performance-indexing')
-              .text(String(performanceStatus) + '%');
-            $('#staff_performance-indexing')
-              .css('color', staffPerformanceColor);
+          $('#staff_performance-indexing')
+            .text(String(performanceStatus) + '%');
+          $('#staff_performance-indexing')
+            .css('color', staffPerformanceColor);
 
-            fetchData(roomUrl)
-              .then((data) => {
-                const roomCounts = data.rooms_count;
-                $('#main__room-available').text(roomCounts.total_available_room);
-                $('#main__room-reserved').text(roomCounts.total_reserved_room);
-              })
-              .catch((error) => {
-                console.error('Failed to fetch room data:', error);
-              });
-            $('#main__username').text(localStorage.getItem('userName'));
-            $('#main__date').text(getFormattedDate());
+          fetchData(roomUrl)
+            .then((data) => {
+              const roomCounts = data.rooms_count;
+              $('#main__room-available').text(roomCounts.total_available_room);
+              $('#main__room-reserved').text(roomCounts.total_reserved_room);
+            })
+            .catch((error) => {
+              console.error('Failed to fetch room data:', error);
+            });
+          $('#main__username').text(localStorage.getItem('userName'));
+          $('#main__date').text(getFormattedDate());
 
+          // Handle display of common cart in main dashboard
+          const greenClass = 'green';
+          const orangeClass = 'orange';
+          if (USER_ROLE === 'staff') {
+            // First CART Staff
+            const btn = {
+              content: "View Details",
+              id: "main__checkin-view--btn"
+            };
+            const cartTitle = 'Today CheckIn';
+            const icon = 'fa-calendar';
+            $('#main__common-cart--staffManagement')
+              .append(staffManagementCommonCart(cartTitle, btn, USER_ROLE, icon, greenClass));
+
+            // Second CART Staff
+            const btn2 = {
+              content: 'View Orders',
+              id: 'main__today-order'
+            }
+            const icon2 = 'fa-shopping-cart';
+             const cartTitle2 = 'Today Order\'s'
+            $('#main__cart-loaded')
+              .append(staffManagementCommonCart(cartTitle2, btn2, USER_ROLE,icon2, orangeClass));
+          } else {
+            // First CART for management
+            const btn = {
+              content: "View Details",
+              id: "main__vat-view--btn"
+            };
+            const icon = 'fa-calculator';
+            const cartTitle = 'Monthly VAT';
+            $('#main__cart-loaded')
+              .append(staffManagementCommonCart(cartTitle, btn, USER_ROLE, icon, greenClass));
+
+            // Second CART for management
+            const btn2 = {
+              content: 'View Details',
+              id: 'main__cat-view--btn'
+            };
+            const icon2 = 'fa-calculator';
+            const cartTitle2 = 'Monthly CAT';
+            $('#main__cart-loaded')
+              .append(staffManagementCommonCart(cartTitle2, btn2, USER_ROLE, icon2, orangeClass));
+          }
+
+          /*
             fetchData(bookingUrl)
               .then((data) => {
                 const todayBookingCount = data.filter(
@@ -119,9 +166,8 @@ $(document).ready(function() {
               })
               .catch((error) => {
                 console.error('Failed to fetch room data:', error);
-              });
-          });
-        }
+              });*/
+        });
         break;
       }
       case 'sidebar__Room-service': {
@@ -274,6 +320,25 @@ $(document).ready(function() {
             });
         });
 
+        break;
+      }
+      case 'sidebar__maintenance': {
+        const url = APP_BASE_URL + '/pages/maintenence';
+        $('#dynamic__load-dashboard').load(url, function() {
+
+          const maintenanceUrl = API_BASE_URL + '/maintenances';
+          fetchData(maintenanceUrl)
+            .then((response) => {
+              response.forEach((data) => {
+                displayMaintenance(data);
+              });
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+
+
+        });
         break;
       }
     }

@@ -4,7 +4,7 @@ from models.booking import Booking
 from models.customer import Customer
 from models.room import Room
 from models.user import User
-from models.vat import Vat
+#from models.vat import Vat
 from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import bad_request, role_required
@@ -81,7 +81,7 @@ def booking_data(user_id: str, user_role: str, room_number):
 
 
 @api_views.route("/rooms/<string:room_number>/checkout", methods=["PUT"])
-@role_required(["staff"])
+@role_required(["staff", "manager", "admin"])
 def check_out(user_id: str, user_role: str, room_number: str):
     """Check out customer from a room."""
     room = storage.get_by(Room, number=room_number)
@@ -102,7 +102,7 @@ def check_out(user_id: str, user_role: str, room_number: str):
 
 
 @api_views.route("/bookings/<booking_id>/edit", methods=["PUT"])
-@role_required(["staff"])
+@role_required(["staff", "manager", "admin"])
 def update_booking_data(user_id: str, user_role: str, booking_id: str):
     """Update guest data use in booking"""
     data = request.get_json()
@@ -137,7 +137,7 @@ def update_booking_data(user_id: str, user_role: str, booking_id: str):
 
 
 @api_views.route("/rooms/<string:room_number>/book", methods=["POST"])
-@role_required(["staff"])
+@role_required(["staff", "manager", "admin"])
 def book_room(user_id: str, user_role: str, room_number: str):
     """Book a room"""
     data = request.get_json()
@@ -190,17 +190,19 @@ def book_room(user_id: str, user_role: str, room_number: str):
         storage.save()
 
         # Take out vat from amount
+        """
         vat_amount = (7.5 / 100) * room.amount
         vat = Vat(amount=vat_amount, booking_id=book.id)
         storage.new(vat)
 
         storage.save()
+        """
 
         return jsonify({"message": "Booking Successfully"}), 200
     except Exception as e:
         print(str(e))
         return jsonify({
             "error": "Internal Error Occured Booking Room"
-            }), 500
+        }), 500
     finally:
         storage.close()

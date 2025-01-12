@@ -91,12 +91,15 @@ $(document).ready(function() {
             $('#staff__list-table--body')
               .prepend(staffListTemplate(response, date));
           } else {
+
+            const performanceColor = response.performance < 50 ? 'red' : 'green';
             $(`#staff__list-table--body tr[data-id="${userId}"] .first_name`).text(response.first_name);
             $(`#staff__list-table--body tr[data-id="${userId}"] .last_name`).text(response.last_name);
             $(`#staff__list-table--body tr[data-id="${userId}"] .salary`).text(`₦${response.salary}`);
             $(`#staff__list-table--body tr[data-id="${userId}"] .number`).text(response.number);
             $(`#staff__list-table--body tr[data-id="${userId}"] .portfolio`).text(response.portfolio);
             $(`#staff__list-table--body tr[data-id="${userId}"] .performance`).text(String(response.performance) + '%');
+            $(`#staff__list-table--body tr[data-id="${userId}"] .performance`).css('color', performanceColor );
           }
           showNotification(msg);
 
@@ -165,7 +168,7 @@ $(document).ready(function() {
         }
       });
 
-  // Load pages for Loans, Delete, and Leaves
+  // Load pages for Loans, Delete, staff profile and Leaves
   $('#dynamic__load-dashboard').off('click', '.staff__management-table--menu')
     .on('click', '.staff__management-table--menu', function() {
       $('.staff__management-request').hide();
@@ -207,6 +210,8 @@ $(document).ready(function() {
             $('input[name="gender"]').val(data.gender);
             $('input[name="number"]').val(data.number);
 	    $('input[name="performance"]').val(data.performance);
+	    $('input[name="username"]').val(data.username);
+	    $('input[name="title"]').val(data.title);
 
             $('input[name="role"]').val(data.role);
             $('.profile__dropdown-btn p').text(data.role);
@@ -228,6 +233,9 @@ $(document).ready(function() {
 	      $('input[name="dob"]').attr('readonly', true);
 	      $('input[name="gender"]').attr('readonly', true);
 	      $('input[name="number"]').attr('readonly', true);
+	      $('input[name="email"]').attr('readonly', true);
+	      $('input[name="username"]').attr('readonly', true);
+	      $('input[name="title"]').attr('readonly', true);
 	     
 	      $('#profile__role-dropdown').remove();
 	    }

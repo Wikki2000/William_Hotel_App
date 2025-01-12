@@ -193,7 +193,7 @@ export function leaveListTableTemplate(data, date) {
   const userRole = localStorage.getItem('role');
   const hideFromStaff = userRole === 'staff' ? 'hide': '';
   const row = `<tr>
-    <td class="${hideFromStaff}">
+    <td class="${hideFromStaff} name">
       <p class="ui text size-textmd">${data.first_name}</p>
       <p class="ui text size-textmd">${data.last_name}</p>
     </td>
@@ -272,13 +272,13 @@ export function guestListTableTemplate(guest, booking, room, date) {
     <td class="manage">
       <nav class="manage__nav">
         <ul class="manage__list">
-          <li data-id="${room.number}" class="manage__item manage__item--border guest__list-bookDetail guest__listMenu">
+          <li data-id="${room.number}" class="manage__item guest__list-bookDetail guest__listMenu">
             <i class="fa fa-eye"></i>Booking Details
           </li>
-          <li data-id="${room.number}" class="manage__item manage__item--border guest__listEdit  guest__listMenu">
+          <li data-id="${room.number}" class="manage__item guest__listEdit  guest__listMenu">
             <i class="fa fa-edit"></i>Edit Data
           </li>
-          <li data-id="${room.number}" class="manage__item manage__item--border guest__listPrint  guest__listMenu">
+          <li data-id="${room.number}" class="manage__item guest__listPrint  guest__listMenu">
             <i class="fa fa-print"></i>Print Receipt
           </li>
         </ul>
@@ -314,7 +314,7 @@ export function loanListTableTemplate(data, userRole) {
 
 
   const row = `<tr>
-      <td class="${hideFromStaff}">
+      <td class="${hideFromStaff} name">
         <p class="ui text size-textmd left-margin">${data.first_name}</p>
         <p class="ui text size-textmd left-margin">${data.last_name}</p>
       </td>

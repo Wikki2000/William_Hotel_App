@@ -1,7 +1,7 @@
 import {
   getBaseUrl, confirmationModal, validateForm, getFormDataAsDict,
   showNotification, ajaxRequest, fetchData, britishDateFormat,
-  closeConfirmationModal, hideTableMenu
+  closeConfirmationModal, hideTableMenu, togleTableMenuIcon
 } from '../global/utils.js';
 import { leaveListTableTemplate  } from '../global/templates.js';
 
@@ -13,12 +13,6 @@ function statusColor(leaveStatus) {
   } else if (leaveStatus === 'rejected') {
     return 'red';
   }
-}
-
-function togleTableMenuIcon() {
-  $('#staff__leave-table--body tr .fa-ellipsis-v').show();
-  $('#staff__leave-table--body tr .fa-times').hide();
-  $('#staff__leave-table--body tr .manage').hide();
 }
 
 $(document).ready(function() {
@@ -100,6 +94,11 @@ $(document).ready(function() {
               const date = { startDate, endDate  }
               $('#leave__table-body').append(leaveListTableTemplate(data, date));
             });
+            // Hide the following section if leave history is not view,
+            // from 'Staff Management' section.
+            $('#leave__table-body .name').hide();
+            $('#leave__table-body .approveLeave').hide();
+            $('#leave__table-body .rejectLeave').hide();
           })
           .catch((error) => {
             console.log(error);

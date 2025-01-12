@@ -32,13 +32,13 @@ function orderHistoryTableTemplate(order, customer) {
     <td class="manage">
       <nav class="manage__nav">
         <ul class="manage__list">
-          <li data-id="${order.id}" data-name="${customer.name}" class="manage__item manage__item--border order__bill order__manageItem">
+          <li data-id="${order.id}" data-name="${customer.name}" class="manage__item  order__bill order__manageItem">
             <i class="fa fa-money-bill-wave"></i>Clear Bill
           </li>
-	  <li data-id="${order.id}" class="manage__item order__manageItem manage__item--border order__showConfirmModal">
+	  <li data-id="${order.id}" class="manage__item order__manageItem order__showConfirmModal">
 	     <i class="fa fa-shopping-cart"></i>Order Details
 	   </li>
-          <li data-id="${order.id}" class="manage__item manage__item--border order__print order__manageItem">
+          <li data-id="${order.id}" class="manage__item order__print order__manageItem">
             <i class="fa fa-print"></i>Print Receipt
           </li>
         </ul>

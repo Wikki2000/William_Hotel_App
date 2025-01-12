@@ -1,15 +1,8 @@
 import {
   getBaseUrl, confirmationModal, validateForm, closeConfirmationModal,
-  showNotification, ajaxRequest, fetchData, britishDateFormat
+  showNotification, ajaxRequest, fetchData, britishDateFormat, togleTableMenuIcon
 } from '../global/utils.js';
 import { loanListTableTemplate, loanDetailTemplate } from '../global/templates.js';
-
-
-function togleTableMenuIcon() {
-  $('#staff__loan-table--body tr .fa-ellipsis-v').show();
-  $('#staff__loan-table--body tr .fa-times').hide();
-  $('#staff__loan-table--body tr .manage').hide();
-}
 
 $(document).ready(function() {
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
@@ -69,6 +62,12 @@ $(document).ready(function() {
               $('#loan__table-body')
                 .append(loanListTableTemplate(data, USER_ROLE));
             });
+
+            // Hide the following section if loan history is not view,
+            // from 'Staff Management' section.
+            $('#loan__table-body .name').hide();
+            $('#loan__table-body .approveLoan').hide();
+            $('#loan__table-body .rejectLoan').hide();
           })
           .catch((error) => {
             console.log(error);

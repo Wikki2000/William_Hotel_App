@@ -74,6 +74,7 @@ $(document).ready(() => {
             $('#guest__duration').val(booking.duration);
             $('#guest__checkout').val(canadianDateFormat(booking.checkout));
             $('#guest__roomNumber').val(room.number);
+	    $('#guest__roomType').val(room.name);
             $('#guest__roomAmount').val('₦' + room.amount.toLocaleString());
             $('#guest__name').val(customer.name);
             $('#guest__phoneNumber').val(customer.phone);

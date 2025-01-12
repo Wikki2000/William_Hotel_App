@@ -4,9 +4,9 @@ from datetime import datetime
 from models.base_model import Base, BaseModel
 from sqlalchemy import Column, Date, String, Boolean, Float
 
-class Vat(BaseModel, Base):
-    """Store monthly vats of sales."""
-    __tablename__ = "vats"
+class Cat(BaseModel, Base):
+    """Store monthly cats of sales."""
+    __tablename__ = "cats"
     month = Column(Date, nullable=False, unique=True)
     amount = Column(Float, nullable=False)
     is_paid = Column(Boolean, default=False)

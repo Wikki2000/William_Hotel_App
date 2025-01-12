@@ -430,3 +430,13 @@ export function hideAllStaffManagmentDashboard() {
   $('#staff__profile').hide();
   $('#loan-content').hide();
 }
+
+
+/*
+ * Toggle table menu icon visibility
+ */
+export function togleTableMenuIcon() {
+  $('.fa-ellipsis-v').show();
+  $('.fa-times').hide();
+  $('.manage').hide();
+}
