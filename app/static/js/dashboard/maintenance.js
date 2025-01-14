@@ -127,6 +127,7 @@ $(document).ready(function() {
       $('.maintenance__dropdown-btn span').text(selectedStatus);
     });
 
+  // Change maintenance status
   $('#dynamic__load-dashboard')
     .off('click', '#maintanence__status-btn')
     .on('click', '#maintanence__status-btn', function() {
@@ -147,7 +148,7 @@ $(document).ready(function() {
       ajaxRequest(url, 'PUT', null,
         (response) => {
 
-          showNotification(`Maintenance Status Chenged successfully !`);
+          showNotification(`Maintenance Status Changed successfully !`);
         },
         (error) => {
           if (error.status === 403) {
