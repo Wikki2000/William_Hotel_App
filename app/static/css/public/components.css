@@ -134,11 +134,9 @@ Notification Modal
   box-shadow: inset 0 4px 8px 0 #0000003f;
 }
 
-.see__details {
-  color: orange !important;
-  &:hover {
-    cursor: pointer;
-  }
+.highlight__inventory-cart {
+  box-shadow: 0 4px 15px #F5D077;
+  background-color: #FDF6E4 !important;
 }
 
 .hide {

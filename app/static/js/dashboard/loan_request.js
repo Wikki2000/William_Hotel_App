@@ -2,6 +2,7 @@ import {
   getBaseUrl, confirmationModal, validateForm, closeConfirmationModal,
   showNotification, ajaxRequest, fetchData, britishDateFormat, togleTableMenuIcon
 } from '../global/utils.js';
+
 import { loanListTableTemplate, loanDetailTemplate } from '../global/templates.js';
 
 $(document).ready(function() {

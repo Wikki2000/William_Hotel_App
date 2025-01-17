@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """This module models the storage of the authentication API"""
-from sqlalchemy import create_engine, func, or_, update
+from sqlalchemy import create_engine, func, or_, update, cast, Date, and_
 from sqlalchemy.orm import sessionmaker, scoped_session
 
 from models.base_model import Base
@@ -22,6 +22,9 @@ from models.private_message import PrivateMessage
 from models.group import Group
 from models.vendor import Vendor
 from models.maintenance import Maintenance
+from models.expenditure import Expenditure
+from models.daily_expenditure_sum import DailyExpenditureSum
+from models.transaction import DailyTransaction
 
 from dotenv import load_dotenv
 from os import getenv
@@ -104,9 +107,42 @@ class Storage:
         Return: The total count of object in class
         """
         total_count = self.__session.query(
-            func.count(cls.id)
-        ).filter_by(**kwargs).scalar()
+                func.count(cls.id)
+                ).filter_by(**kwargs).scalar()
         return total_count
+
+    def get_by_date(self, cls, start_date, end_date, date_field):
+        """
+        Retrieve records from the database filtered by a specified date field.
+
+        Args:
+            cls: The model class to query.
+            start_date: The start date for filtering.
+            end_date: The end date for filtering.
+            date_field: The name of the date field to filter by.
+
+        Returns:
+            List of filtered records.
+        """
+        try:
+            # Get the column dynamically from the model class
+            date_column = getattr(cls, date_field)
+            obj = self.__session.query(cls).filter(
+                and_(
+                    cast(date_column, Date) >= start_date,
+                    cast(date_column, Date) <= end_date
+                    )
+                ).all()
+            return obj
+
+        except AttributeError:
+            cls = cls.__name__
+            print(f"Error: '{date_field}' is not a valid field for {cls}.")
+            return []
+
+        except Exception as e:
+            print(f"Database query failed: {e}")
+            return []
 
     def save(self):
         """ Commit change to database """
@@ -121,8 +157,8 @@ class Storage:
         self.__session.close()
 
     def get_by_double_field(
-        self, model: Type, attr_val1: List, attr_val2: List
-    ) -> List:
+            self, model: Type, attr_val1: List, attr_val2: List
+            ) -> List:
         """
         Filter a model using two field.
 
@@ -134,13 +170,13 @@ class Storage:
         sender_id = getattr(model, attr_val1[0])
         receiver_id = getattr(model, attr_val2[0])
         result = (
-            self.__session.query(model)
-            .filter(
-                or_(
-                    (sender_id == attr_val1[1]) & (receiver_id == attr_val2[1]),
-                    (receiver_id == attr_val1[1]) & (sender_id == attr_val2[1])
+                self.__session.query(model)
+                .filter(
+                    or_(
+                        (sender_id == attr_val1[1]) & (receiver_id == attr_val2[1]),
+                        (receiver_id == attr_val1[1]) & (sender_id == attr_val2[1])
+                        )
+                    )
+                .all()
                 )
-            )
-            .all()
-        )
         return result

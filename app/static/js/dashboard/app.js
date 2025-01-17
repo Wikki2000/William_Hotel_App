@@ -142,7 +142,7 @@ $(document).ready(function() {
             };
             const icon = 'fa-calculator';
             const cartTitle = 'Monthly VAT';
-            $('#main__cart-loaded')
+            $('#main__common-cart--staffManagement')
               .append(staffManagementCommonCart(cartTitle, btn, USER_ROLE, icon, greenClass));
 
             // Second CART for management

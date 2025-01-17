@@ -5,14 +5,14 @@ from models.customer import Customer
 from models.order import Order
 from models.drink import Drink
 from models.order_item import OrderItem
-#from models.vat import Vat
+from models.transaction import DailyTransaction
 from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import role_required
 from api.v1.views.utils import bad_request
 from models import storage
 from sqlalchemy.exc import IntegrityError
-from datetime import datetime
+from datetime import datetime, date
 from random import randint
 
 
@@ -37,6 +37,20 @@ def order_items(user_role: str, user_id: str):
     item_data = data.get("itemOrderData")
     order_data = data.get("orderData")
 
+    # Add new daily transaction if exists else increase sum by existing one
+    today_date = date.today()
+    transaction = storage.get_by(
+        DailyTransaction, entry_date=today_date
+    )
+
+    if not transaction:
+        transaction = DailyTransaction(
+            entry_date=today_date, amount=order_data.get("amount")
+    )
+        storage.new(transaction)
+    else:
+        transaction.amount += float(order_data.get("amount"))
+
     try:
         user = storage.get_by(User, id=user_id)
 
@@ -50,18 +64,12 @@ def order_items(user_role: str, user_id: str):
         order_data["customer_id"] = new_customer.id
 
         # Place new order
-        order_data["order_number"] = "RSP" + str(randint(100000000, 999999999))
+        order_data["order_number"] = (
+            "RSP" + str(randint(100000000, 999999999))
+        )
         new_order = Order(**order_data)
         storage.new(new_order)
         storage.save()
-
-        # Take VAT from order amount
-        """
-        vat_amount = (7.5 /100) * new_order.amount
-        vat_task = Vat(amount=vat_amount, order_id=new_order.id)
-        storage.new(vat_task)
-        storage.save()
-        """
 
         for item in item_data:
             item_field = ""

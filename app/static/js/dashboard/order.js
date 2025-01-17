@@ -234,17 +234,18 @@ $(document).ready(function() {
         itemOrderData: cartItemsList,
       };
 
+      $('#order__confirmation-modal').empty();
+
       const orderUrl = API_BASE_URL + '/order-items';
       ajaxRequest(orderUrl, 'POST', JSON.stringify(data),
         (response) => {
-          $('#order__confirmation-modal').empty();
           showNotification(`Order for ${name} successfully made !`);
           $button.prop('disabled', false);
 
         },
         (error) => {
 	  $button.prop('disabled', false);
-	  showNotification('An Error Occured. Try Again !.');
+	  showNotification('An Error Occured. Try Again !.', true);
           console.log(error);
         }
       );

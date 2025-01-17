@@ -170,21 +170,11 @@ Order History Section
 .order__history--table-body {
 
   td {
+    padding-bottom: 10px;
+    padding-top: 10px;
     border-bottom: 1px solid var(--orange_a100);
-    margin-left: 0px;
-    border-top: 1px solid var(--orange_a100);
   }
 }
-
-.tabletype {
-  margin-top: 0.5rem;
-  align-self: stretch;
-}
-
-.table__header-cell {
-  text-align: left;
-}
-
 .order__history--filter-btns {
   margin-left: 5%;
   display: flex;

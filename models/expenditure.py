@@ -2,7 +2,6 @@
 """Expenditure Module"""
 from models.base_model import Base, BaseModel
 from sqlalchemy import Column, String, Text, Float
-from sqlalchemy.orm import relationship
 
 
 class Expenditure(BaseModel, Base):
