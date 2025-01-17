@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Handle API request for vendor module"""
+"""Handle API request for vat module"""
 from models.vat import Vat
 from flask import abort, jsonify, request
 from api.v1.views import api_views

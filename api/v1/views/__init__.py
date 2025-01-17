@@ -23,3 +23,4 @@ from api.v1.views.vendors import *
 from api.v1.views.maintenaces import *
 from api.v1.views.vats import *
 from api.v1.views.cats import *
+from api.v1.views.expenditures import *
