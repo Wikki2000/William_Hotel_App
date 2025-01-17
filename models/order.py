@@ -28,9 +28,5 @@ class Order(BaseModel, Base):
     cleared_by_id = Column(String(60), ForeignKey("users.id"))
 
     # Relationships
-    """
-    vat = relationship('Vat', backref='order', uselist=False,
-                       cascade='all, delete-orphan')
-    """
     order_items = relationship('OrderItem', backref='order',
                                cascade='all, delete-orphan')
