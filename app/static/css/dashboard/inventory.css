@@ -1,153 +1,228 @@
-.main__container {
-    margin-top: 20px;
-    margin-right: 1.5rem;
-    margin: 1rem;
-    height: 600px;
-    padding: 10px;
-    border-radius: 10px;
-    background-color: #FDF6E4;
+.inventory__stock-container {
+  height: 80vh;
 }
 
-.main__container .inventory-btn,
-.main__container .stack-btn{
+
+.inventory__section-btn {
+  display: flex;
+  justify-content: space-around;
+  width: 30%;
+  .inventory-btn,
+  .stock-btn {
     border-radius: 10px;
-    width: 50%;
-    height: 25px;
+    width: 40%;
+    height: 35px;
     font-size: 11px;
     text-align: center;
     margin-top: 10px;
+  }
 }
 
+.inventory__container {
+  margin-top: 20px;
+  margin-right: 1.5rem;
+  margin: 1rem;
+  padding: 10px;
+  height: 100%;
+  border-radius: 10px;
+  background-color: #FDF6E4;
+  overflow-y: scroll;
 
-/* four boxes*/
-.main__room-status {
+  .expenditures__headings {
+    display: flex;
+    justify-content: space-between;
+  }
+  /* four boxes*/
+  .inventory__cart-container {
     display: flex;
     justify-content: space-between;
     width: 100%;
     margin-top: 20px;
 
-    .main__room-status1,
-    .main__room-status2,
-    .main__room-status3,
-    .main__room-status4 {
-        width: 23%;
-        height: 100px;
-        border-radius: 15px;
-        padding: 15px;
-    }
-
-
-    .main__room-status1,
-    .main__room-status2,
-    .main__room-status3,
-    .main__room-status4 {
-        margin-bottom: 3px;
-        background-color: #fff;
-        margin-inline: 5px;
+    .inventory-cart {
+      width: 23%;
+      height: 100px;
+      border-radius: 15px;
+      padding: 15px;
+      margin-bottom: 3px;
+      background-color: #fff;
+      margin-inline: 5px;
+      &:hover {
+        cursor: pointer;
+      }
     }
 
     .flex-display{
-        display: flex;
-        justify-content: space-between;
+      display: flex;
+      justify-content: space-between;
 
-        p{
-            font-size: 1rem;
-            font-weight: bold;
-        }
+      p{
+        font-size: 1rem;
+        font-weight: bold;
+      }
     }
 
     p{
-        font-size: 1rem;
-        font-weight: 400px;
+      font-size: 1rem;
+      font-weight: 400px;
     }
     a{
-        font-size: small;
-        font-weight: 400;
+      font-size: small;
+      font-weight: 400;
     }
 
-        .red {
-            color: #D41B1B;
-        }
-    
-        .green {
-            color: #34BF49;
-        }
-    
-        .yellow {
-            color: #FFC009;
-        }
-    
-        .blue {
-            color: #3262F9;
-        }
-}
-/*ends*/
+    .red {
+      color: #D41B1B;
+    }
 
-.main__container .expenditure{
+    .green {
+      color: #34BF49;
+    }
+
+    .yellow {
+      color: #FFC009;
+    }
+
+    .blue {
+      color: #3262F9;
+    }
+  }
+  /*ends*/
+
+  .expenditure{
     margin-top: 10px;
     padding-left: 10px;
-}
+  }
 
-.main__container .daily-expenditure{
+  .daily-expenditure{
     font-size: 1.2rem;
     font-weight: 900px;
-}
+  }
 
-.input-row1{
+  .input-row1{
     display: flex;
     gap: 12px;
 
     p{
-        font-size: 0.9rem;
-        font-weight: 600;
+      font-size: 0.9rem;
+      font-weight: 600;
     }
 
     input{
-        border: 1px solid #FFC009;
-        border-radius: 5px;
-        height: 40px;
+      border: 1px solid #FFC009;
+      border-radius: 5px;
+      height: 40px;
+      padding: 10px;
     }
+    .inventory__expenditure-description {
+      width: 35rem;
+    }
+  }
 }
 
-    .description{
-        margin-top: 5px;
-        p {
-            font-size: 0.9rem;
-            font-weight: 600;
-            }
-        
-        input {
-            border: 1px solid #FFC009;
-            border-radius: 5px;
-            height: 40px;
-            width: 50%;
-            }
+.save-btn {
+  background-color: black;
+  margin-left: auto;
+  margin-bottom: 15px;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 1.7rem;
+  font-weight: 400;
+}
 
-    }
+/* Expenditures table styles */
+#expenditures__list {
+  background: none;
+}
+#expenditures__list > table {
+  thead th {
+    padding-bottom: 10px;
+  }
+  margin-top: 0px; 
+}
+#expenditure__list-table--body tr {
+  .manage {
+    right: 25%;
+  }
+  td:first-child {
+    padding-left: 3%;
+  }
+  td {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+}
 
-    .save-btn{
-        background-color: black;
-        margin-left: auto;
-        margin-bottom: 15px;
-        color: #fff;
-        padding: 10px 20px;
-        font-size: 1.7rem;
-        font-weight: 400;
-    }
+/* Expenditure pop up modal */
+.expenditure__popup-modal {
+  width: 60%;
+  margin-left: 20%;
+  height: auto;
+  padding: 30px;
+  h1 {
+    text-align: center;
+  }
+  .expenditure__description {
+    max-width: 70%;
+  }
+}
 
-    .custom-table{
-        width: 100%;
-        border-collapse: collapse;
-        table-layout: fixed;
-    }
-    .custom-table th,
-    .custom-table td {
-        border-bottom: 1px solid #FFC009;
-        padding: 10px;
-        text-align: left;
-        }
+.inventory__filter-by--date {
+  display: flex;
+  justify-content: end;
+  margin-right: 5px;
 
-    .custom-table tr td:last-child{
-        display: flex;
-        justify-content: space-between;
+  i {
+    margin-top: 10px;
+    margin-left: 5px;
+    &:hover {
+      cursor: pointer;
     }
+  }
+
+  .inventory__filter-date--input,
+  .inventory__filter-total--amount {
+    display: flex;
+    background-color: #F5D07747;
+    border-radius: 10px;
+    padding: 5px;
+  }
+  .inventory__filter-total--amount {
+    margin-left: 20px;
+    display: flex;
+    .total__amount-entry {
+      margin-left: 5px;
+    }
+  }
+
+  .deep__background {
+    background-color: #F5D07747;
+  }
+
+  .inventory__filter-start--date,
+  .inventory__filter-end--date {
+    width: 40%;
+    border-radius: 5px;
+    padding-right: 5px;
+    padding-left: 5px;
+  }
+}
+
+
+/* Transactions table */
+#transactions__list {
+  background: none;
+
+  .inventory__filter {
+    margin-top: 20px;
+    margin-left: auto;
+  }
+}
+/*
+@media screen and (max-width: 1403px) {
+  input.inventory__expenditure-description {
+    width: 50% !important;
+    background: red;
+  }
+}
+*/

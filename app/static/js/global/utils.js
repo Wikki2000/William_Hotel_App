@@ -371,16 +371,27 @@ export function showNotification(message, isError = false) {
  *
  * @param {jQuery} $targetElement -The target element to update count.
  * @param {boolean} [isIncrease=false] - Flag to indicate if count is increase or reduce.
+ * @param {integer} [valueToUpdate=1] - The value to add to existing one.
+ * @param {float | integer} [currentElementVal=null] - The current value of element to be updated.
  */
-export function updateElementCount($targetElement, isIncrease = false) {
-  const elementCount = $($targetElement).text();
+export function updateElementCount($targetElement, isIncrease = false, valueToUpdate = 1, currentElementVal = null) {
 
-  const reduceCount = parseInt(elementCount) === 0 ? 0: parseInt(elementCount) - 1;
-  const increaseCount = parseInt(elementCount) + 1;
+  if (currentElementVal) {
+    const reduceCount = currentElementVal - valueToUpdate;
+    const increaseCount = currentElementVal + valueToUpdate;
+    const currentCount = isIncrease ? increaseCount : reduceCount;
+    $($targetElement).text(currentCount);
+    return currentCount;
+  } else {
+    const elementCount = $($targetElement).text();
 
-  const currentCount = isIncrease ? increaseCount : reduceCount;
-  $($targetElement).text(currentCount);
-  return currentCount;
+    const reduceCount = parseInt(elementCount) === 0 ? 0: parseInt(elementCount) - valueToUpdate;
+    const increaseCount = parseInt(elementCount) + valueToUpdate;
+
+    const currentCount = isIncrease ? increaseCount : reduceCount;
+    $($targetElement).text(currentCount);
+    return currentCount;
+  }
 }
 
 /*================================================================
@@ -420,7 +431,7 @@ export function cartItemsTotalAmount(cart) {
   );
 }
 
-/*
+/**
  * Hide all sections of staff management dashboard.
  */
 export function hideAllStaffManagmentDashboard() {
@@ -431,8 +442,15 @@ export function hideAllStaffManagmentDashboard() {
   $('#loan-content').hide();
 }
 
+/**
+ * Hide all sections of all section of inventory dashboard.
+ */
+export function hideAllInventoryDashboard() {
+  $('.expenditure__section').hide();
+  $('#transactions__list').hide();
+}
 
-/*
+/**
  * Toggle table menu icon visibility
  */
 export function togleTableMenuIcon() {

@@ -158,3 +158,47 @@ export function staffManagementCommonCart(title, btn, userRole, icon, cartColor)
     </div>
   `
 }
+
+export function expenditureTableTemplate(id, title, date, amount) {
+  return `<tr>
+    <td>${date}</td>
+    <td>${title}</td>
+    <td>₦${amount.toLocaleString()}</td>
+
+      <td class="">
+              <p><i class="fa fa-ellipsis-v"></i></p>
+	              <p><i style="display: none;" class="fa fa-times"></i></p>
+		            </td>
+
+      <td class="manage">
+              <nav class="manage__nav">
+	                <ul class="manage__list">
+			            <li data-id="${id}" class="manage__item expenditure__details">
+		              <i class="fa fa-eye"></i>Details
+	            </li>
+
+		          </ul>
+		        </nav>
+		      </td>
+
+
+ </tr>`;
+}
+
+export function inventoryFilterTemplate() {
+                      return `<form id="inventory__filter-form">
+                        <div class="inventory__filter-by--date">
+                          <div class="inventory__filter-date--input">
+                            <p class="inventory__date-title">Date &nbsp;</p>
+                            <input id="inventory__filter-start--date" class="inventory__filter-start--date deep__background" type="date" />
+                            <span>&nbsp; - &nbsp;</span>
+                            <input id="inventory__filter-end--date" class="inventory__filter-end--date deep__background" type="date" />
+                          </div>
+			  <i id="inventory__searchbar" class="fa fa-search"></i>
+                          <div class="inventory__filter-total--amount">
+                            <p>Amount</p>
+                            <p class="deep__background total__amount-entry">&nbsp;₦<span id="expenditure__total__amount-entry">0</span></p>
+                          </div>
+                        </div>
+                      </form>`
+}
