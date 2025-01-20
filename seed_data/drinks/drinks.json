@@ -1,7 +1,4 @@
 [
-  {
-    "category": "SOFT DRINKS",
-    "items": [
       {"name": "Plastic Coke", "amount": 800, "qty_stock": 50},
       {"name": "Plastic Fanta", "amount": 800, "qty_stock": 50},
       {"name": "Plastic Pepsi", "amount": 700, "qty_stock": 50},
@@ -10,28 +7,13 @@
       {"name": "Maltina", "amount": 1000, "qty_stock": 50},
       {"name": "Active / Chi Exotic", "amount": 2500, "qty_stock": 50},
       {"name": "Hollandia", "amount": 3000, "qty_stock": 50},
-      {"name": "Fresh Yoghurt", "amount": 1000, "qty_stock": 50}
-    ]
-  },
-  {
-    "category": "WATER",
-    "items": [
-      {"name": "Eva Water Small", "amount": 500, "qty_stock": 50}
-    ]
-  },
-  {
-    "category": "ENERGY DRINKS",
-    "items": [
+      {"name": "Fresh Yoghurt", "amount": 1000, "qty_stock": 50},
+      {"name": "Eva Water Small", "amount": 500, "qty_stock": 50},
       {"name": "Power Horse Big", "amount": 3000, "qty_stock": 50},
       {"name": "Black Bullet", "amount": 2500, "qty_stock": 50},
       {"name": "Red Bull Big", "amount": 3000, "qty_stock": 50},
       {"name": "Monster", "amount": 2000, "qty_stock": 50},
-      {"name": "Fearless/Predator", "amount": 1000, "qty_stock": 50}
-    ]
-  },
-  {
-    "category": "BEER DRINKS",
-    "items": [
+      {"name": "Fearless/Predator", "amount": 1000, "qty_stock": 50},
       {"name": "Trophy", "amount": 1300, "qty_stock": 50},
       {"name": "Goldberg", "amount": 1300, "qty_stock": 50},
       {"name": "Budweiser", "amount": 1800, "qty_stock": 50},
@@ -39,26 +21,11 @@
       {"name": "Guiness Stout Big", "amount": 2500, "qty_stock": 50},
       {"name": "Guiness Stout Medium", "amount": 2000, "qty_stock": 50},
       {"name": "Gulder", "amount": 1600, "qty_stock": 50},
-      {"name": "Legend Large", "amount": 1500, "qty_stock": 50}
-    ]
-  },
-  {
-    "category": "WINE DRINKS",
-    "items": [
+      {"name": "Legend Large", "amount": 1500, "qty_stock": 50},
       {"name": "Baileys", "amount": 25000, "qty_stock": 50},
       {"name": "Flirt Vodka", "amount": 12000, "qty_stock": 50},
-      {"name": "Campari", "amount": 18000, "qty_stock": 50}
-    ]
-  },
-  {
-    "category": "COGNAC DRINKS",
-    "items": [
-      {"name": "Hennessy VS", "amount": 77000, "qty_stock": 50}
-    ]
-  },
-  {
-    "category": "WHISKEY DRINKS",
-    "items": [
+      {"name": "Campari", "amount": 18000, "qty_stock": 50},
+      {"name": "Hennessy VS", "amount": 77000, "qty_stock": 50},
       {"name": "Jameson Original", "amount": 32000, "qty_stock": 50},
       {"name": "Jameson Black Barrell", "amount": 48000, "qty_stock": 50},
       {"name": "Jack Daniel", "amount": 25000, "qty_stock": 50},
@@ -69,12 +36,7 @@
       {"name": "CAPE MORE", "amount": 9000, "qty_stock": 50},
       {"name": "JACK WILLIAMS", "amount": 10000, "qty_stock": 50},
       {"name": "SMIRNOFF VODKA", "amount": 10000, "qty_stock": 50},
-      {"name": "NIGHT TRAIN", "amount": 10000, "qty_stock": 50}
-    ]
-  },
-  {
-    "category": "RED/SPARKLING/NON ALCOHOLIC WINES",
-    "items": [
+      {"name": "NIGHT TRAIN", "amount": 10000, "qty_stock": 50},
       {"name": "Andre Rose", "amount": 18000, "qty_stock": 50},
       {"name": "Domino Del Rey", "amount": 12000, "qty_stock": 50},
       {"name": "Carlo Rossi", "amount": 15000, "qty_stock": 50},
@@ -82,16 +44,9 @@
       {"name": "Drostdy Hof", "amount": 10000, "qty_stock": 50},
       {"name": "Eva Wine", "amount": 8000, "qty_stock": 50},
       {"name": "Pure Heaven", "amount": 8000, "qty_stock": 50},
-      {"name": "Toma Wine", "amount": 7000, "qty_stock": 50}
-    ]
-  },
-  {
-    "category": "LOCAL DRINKS",
-    "items": [
+      {"name": "Toma Wine", "amount": 7000, "qty_stock": 50},
       {"name": "Origin Bitter Big", "amount": 7000, "qty_stock": 50},
       {"name": "Origin Bitter Small(Pet)", "amount": 2000, "qty_stock": 50},
       {"name": "Action Bitter Big", "amount": 7000, "qty_stock": 50},
       {"name": "Action Bitter small", "amount": 3000, "qty_stock": 50}
-    ]
-  }
 ]

@@ -149,7 +149,14 @@ Order History Section
 #order__history-section {
   padding: 10px;
   display: none;
+  table {
+    margin-top: 50px;
+  }
+  .inventory__filter {
+    margin-left: auto;
+  }
 }
+
 .order__history--table-body {
   width: auto;
   overflow: auto;

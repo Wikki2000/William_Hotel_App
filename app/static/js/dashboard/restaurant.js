@@ -34,6 +34,7 @@ $(document).ready(function() {
     }
   });
 
+  // Display all iems in restaurant
   $('#dynamic__load-dashboard').on(
     'click', '#restaurant__food, #restaurant__drink, #restaurant__all',
     function() {

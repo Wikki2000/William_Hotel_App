@@ -5,7 +5,7 @@ from models.customer import Customer
 from models.order import Order
 from models.drink import Drink
 from models.order_item import OrderItem
-from models.transaction import DailyTransaction
+from models.sale import DailySale
 from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import role_required
@@ -40,11 +40,11 @@ def order_items(user_role: str, user_id: str):
     # Add new daily transaction if exists else increase sum by existing one
     today_date = date.today()
     transaction = storage.get_by(
-        DailyTransaction, entry_date=today_date
+        DailySale, entry_date=today_date
     )
 
     if not transaction:
-        transaction = DailyTransaction(
+        transaction = DailySale(
             entry_date=today_date, amount=order_data.get("amount")
     )
         storage.new(transaction)
@@ -81,10 +81,14 @@ def order_items(user_role: str, user_id: str):
                 # Reduce qty of drink stock base on qty ordered.
                 drink = storage.get_by(Drink, id=item.get("itemId"))
                 drink.qty_stock -= item.get("itemQty")
+                if drink.qty_stock  < 1:
+                    return jsonify({
+                        "error": f"{drink.name} low in stock"
+                    }), 422
 
             # Stored all ordered items
             item_attr = {
-                "amount": float(item.get("itemAmount").replace(',', '')),
+                "amount": item.get("itemAmount"),
                 "qty_order": item.get("itemQty"),
                 f"{item_field}": item.get("itemId"),
                 "order_id": new_order.id
@@ -230,6 +234,54 @@ def filter_orders(user_role: str, user_id: str, payment_status):
         return jsonify(response), 200
     except Exception as e:
         print(str(e))
-        return jsonify({"error": "An Internal Error Occured"}), 5
+        abort(500)
     finally:
         storage.close()
+
+
+@api_views.route("/orders/<string:start_date>/<string:end_date>/get")
+@role_required(["manager", "admin"])
+def get_order_by_date(
+    user_role: str, user_id: str, start_date: str, end_date: str
+):
+    """Retrieve sales at any interval of time."""
+    start_date_obj = datetime.strptime(start_date, "%Y-%m-%d")
+    end_date_obj = datetime.strptime(end_date, "%Y-%m-%d")
+
+    # Retrieve expenditure at an interval of time
+    sales = storage.get_by_date(
+        Order, start_date_obj, end_date_obj, "updated_at"
+    )
+
+    # Handle case were there is no expenditure
+    if not sales:
+        return jsonify([]), 200
+
+    sorted_sales = sorted(
+        sales,
+        key=lambda sale : sale.updated_at,
+        reverse=True
+    )
+
+    accumulated_sum = sum(sale.amount for sale in sorted_sales)
+
+    response = {
+            "orders": [{
+                "order": order.to_dict(),
+                "customer": order.customer.to_dict(),
+                "user": order.ordered_by.to_dict(),
+                "order_items": [
+                    {
+                        "qty": order_item.qty_order,
+                        "amount": order_item.amount,
+                        "name": (
+                            order_item.drink.name
+                            if order_item.drink_id
+                            else order_item.food.name
+                        )
+                    } for order_item in order.order_items]
+                } for order in sorted_sales
+            ],
+            "accumulated_sum": accumulated_sum
+    }
+    return jsonify(response), 200

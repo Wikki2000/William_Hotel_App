@@ -140,11 +140,11 @@
     <script
       type="module"
       defer
-      src="/static/js/dashboard/staff_dashboard.js"
+      src="/static/js/dashboard/stock.js"
       ></script>
     <script type="module" defer src="/static/js/dashboard/order.js"></script>
     <script type="module" defer src="/static/js/dashboard/guest.js"></script>
-    <script type="module" defer src="/static/js/dashboard/expenditure.js"></script>
+    <script type="module" defer src="/static/js/dashboard/inventory.js"></script>
     <script
       type="module"
       defer
@@ -369,115 +369,117 @@
               <!-- Others dashboard section will be loaded here -->
 
               <div class="inventory__stock-container">
-                <div class="inventory__section-btn">
+                <!--<div class="inventory__section-btn">
                   <button class="inventory-btn filter highlight-btn">
-                    Inventory</button>
+                  Inventory</button>
                   <button class="stock-btn filter">
-                    Stock</button>
-                </div>
+                  Stock Item</button>
+                  </div>-->
 
-                <div class="inventory__container">
-                  <div class="inventory__cart-container">
-                    <div id="inventory__expenditure-cart" class="inventory-cart highlight__inventory-cart">
-                      <div class="flex-display">
-                        <p>₦<span id="daily__expenditures">0</span></p>
-                        <img src="/static/images/dashboard/inventory/expenses_cart.png" />
-                      </div>
-
-                      <p>Total expenditures</p>
-                      <a href="#" class="red">daily expenditures</a>
-                    </div>
-
-                    <div id="inventory__profit-cart" class="inventory-cart">
-                      <div class="flex-display">
-                        <p>₦<span id="daily__profit">75,000</span></p>
-                        <img src="/static/images/dashboard/inventory/profit_cart.png" />
-                      </div>
-
-                      <p>Total Profit</p>
-                      <a href="#" class="green">daily profit</a>
-                    </div>
-
-                    <div id="inventory__room-cart" class="inventory-cart">
-                      <div class="flex-display">
-                        <p>30</p>
-                        <img src="/static/images/dashboard/inventory/checkin_cart.png" />
-                      </div>
-
-                      <p>Total Check In/Out</p>
-                      <a href="#" class="yellow">Daily check-in guest</a>
-                    </div>
-
-                    <div id="inventory__transaction-cart" class="inventory-cart">
-                      <div class="flex-display">
-                        <p>100,000</p>
-                        <img src="/static/images/dashboard/inventory/transaction_cart.png" />
-                      </div>
-
-                      <p>Total Transactions</p>
-                      <a href="#" class="blue">daily total income</a>
-                    </div>
-                  </div>
-
-                  <!-- Form to create daily expendirures -->
-                  <div  style="display: none;" class="expenditure expenditure__section">
-                    <form id="inventory__expenditure-form">
-                      <div class="expenditures__headings">
-                        <h3 class="daily-expenditure">Daily Expenditure</h3>
-                        <img src="/static/images/public/img_arrow_down_black_900_01.svg">
-                      </div>
-                      <div class="input-row1">
-                        <div class="title">
-                          <p>Title</p>
-                          <input placeholder="e.g., Repairs" id="inventory__expenditure-title" required />
+                  <div class="inventory__container">
+                    <div class="inventory__cart-container">
+                      <div id="inventory__expenditure-cart" class="inventory-cart highlight__inventory-cart">
+                        <div class="flex-display">
+                          <p>₦<span id="daily__expenditures">0</span></p>
+                          <img src="/static/images/dashboard/inventory/expenses_cart.png" />
                         </div>
-                        <div class="amount">
-                          <p>Amount</p>
-                          <input type="number" id="inventory__expenditure-amount" placeholder="e.g., 50000" required />
-                        </div>
-                        <div>
-                          <p>Description</p>
-                          <input id="inventory__expenditure-description" class="inventory__expenditure-description"placeholder="e.g., The sum of 50000 was use for generator repairs" required />
-                        </div>
-                      </div>
-                      <button class="save-btn">Save</button>
-                    </form>
-                    <div class="inventory__filter">
-                      <!-- Date filter section dynamicaly loaded here -->
-                    </div>
-                  </div>
 
-                  <!-- Table showing list of expenditures -->
-                  <div style="display: none;" id="expenditures__list" class="common-table-column expenditure__section">
-                    <table cellpadding="0" cellspacing="0" class="common-tabletype ui table size-xs">
-                      <thead>
-                        <tr>
-                          <th width="380px">
-                            <p class="table__header-cell ui heading size-headings">
-                            Date
-                            </p>
-                          </th>
-                          <th width="380px">
-                            <p class="table__header-cell-1 ui heading size-headings">
-                            Title
-                            </p>
-                          </th>
-                          <th width="380px">
-                            <p class="table__header-cell-1 ui heading size-headings">
-                            Amount
-                            </p>
-                          </th>
-                          <th width="380px">
-                            <p class="table__header-cell-1 ui heading size-headings">
-                            <!-- Placeholder for table Edit icon -->
-                            </p>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody id="expenditure__list-table--body" class="common-table-body">
-                        <!-- Rows will be dynamically added here -->
-                      </tbody>
-                    </table>
+                        <p>Total expenditures</p>
+                        <a href="#" class="red">daily expenditures</a>
+                      </div>
+
+                      <div id="inventory__profit-cart" class="inventory-cart">
+                        <div class="flex-display">
+                          <p>₦<span id="daily__sales">0</span></p>
+                          <img src="/static/images/dashboard/inventory/profit_cart.png" />
+                        </div>
+
+                        <p>Total Sales</p>
+                        <a href="#" class="green">daily Sales</a>
+                      </div>
+
+                      <div id="inventory__food-cart" class="inventory-cart">
+                        <div class="flex-display">
+                          <p id="stock__count-food">0</p>
+                          <img src="/static/images/dashboard/inventory/checkin_cart.png" />
+                        </div>
+
+                        <p>Foods in Stock</p>
+                        <a href="#" class="yellow">foods in stock</a>
+                      </div>
+
+                      <div id="inventory__drink-cart" class="inventory-cart">
+                        <div class="flex-display">
+                          <p id="stock__count-drink">0</p>
+                          <img src="/static/images/dashboard/inventory/transaction_cart_icon.png" />
+                        </div>
+                        <p>Drinks in Stock</p>
+                        <a href="#" class="blue">drinks in stock</a>
+                      </div>
+                    </div>
+
+                    <!-- Form to create daily expendirures -->
+                    <div  style="display: none;" class="expenditure expenditure__section">
+                      <form id="inventory__expenditure-form">
+                        <div id="expenditures__headings" class="expenditures__headings expenditure__entry-shrink">
+                          <h3 class="daily-expenditure">Daily Expenditure</h3>
+                          <img id="hide__expenditure-entry" src="/static/images/public/img_arrow_down_black_900_01.svg" class="hide__expenditure-entry">
+                        </div>
+                        <div id="expenditure__entry" style="display: none;">
+                          <div class="input-row1">
+                            <div class="title">
+                              <p>Title</p>
+                              <input placeholder="e.g., Repairs" id="inventory__expenditure-title" required />
+                            </div>
+                            <div class="amount">
+                              <p>Amount</p>
+                              <input type="number" min="1" id="inventory__expenditure-amount" placeholder="e.g., 50000" required />
+                            </div>
+                            <div>
+                              <p>Description</p>
+                              <input id="inventory__expenditure-description" class="inventory__expenditure-description"placeholder="e.g., The sum of 50000 was use for generator repairs" required />
+                            </div>
+                          </div>
+                          <button class="save-btn">Save</button>
+                        </div>
+                      </form>
+                      <div class="inventory__filter">
+                        <!-- Date filter section dynamicaly loaded here -->
+                      </div>
+                    </div>
+
+                    <!-- Table showing list of expenditures -->
+                    <div id="expenditures__list" class="common-table-column expenditure__section">
+                      <table cellpadding="0" cellspacing="0" class="common-tabletype ui table size-xs">
+                        <thead>
+                          <tr>
+                            <th width="380px">
+                              <p class="table__header-cell ui heading size-headings">
+                              Date
+                              </p>
+                            </th>
+                            <th width="380px">
+                              <p class="table__header-cell-1 ui heading size-headings">
+                              Title
+                              </p>
+                            </th>
+                            <th width="380px">
+                              <p class="table__header-cell-1 ui heading size-headings">
+                              Amount
+                              </p>
+                            </th>
+                            <th width="380px">
+                              <p class="table__header-cell-1 ui heading size-headings">
+                              <!-- Placeholder for table Edit icon -->
+                              </p>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody id="expenditure__list-table--body" class="common-table-body">
+                          <!-- Rows will be dynamically added here -->
+                        </tbody>
+                      </table>
+                    </div>
 
                     <!-- Popup modal to show expenditure details -->
                     <div id="expenditure__details" class="popup-modal">
@@ -493,61 +495,164 @@
 
                       </div>
                     </div>
-                  </div>
 
-                  <!-- Transactions table -->
-                  <div  id="transactions__list" class="common-table-column">
-                    <h3 class="transactions__title">Transactions</h3><br>
+                    <!-- Food stock table -->
+                    <div style="display: none;" id="food__stock-table--container" class="common-table-column">
+                        <h3 class="stock__item-heading">Foods in Stock
+                          <button class="highlight-btn tab__item ui heading size-headingxs">Add Item</button>
+                        </h3>
 
-                    <div class="inventory__filter">
-                      <!-- Date filter section dynamicaly loaded here -->
+                      <table cellpadding="0" cellspacing="0" class="common-tabletype ui table size-xs">
+                        <thead>
+                          <tr>
+                            <th width="380px">
+                              <p class="table__header-cell ui heading size-headings">
+                              S/N
+                              </p>
+                            </th>
+                            <th width="380px">
+                              <p class="table__header-cell ui heading size-headings">
+                              Date Stock
+                              </p>
+                            </th>
+                            <th width="380px">
+                              <p class="table__header-cell-1 ui heading size-headings">
+                              Food Name
+                              </p>
+                            </th>
+                            <th width="380px">
+                              <p class="table__header-cell-1 ui heading size-headings">
+                              Price Tag
+                              </p>
+                            </th>
+                            <th width="380px">
+                              <p class="table__header-cell-1 ui heading size-headings">
+                              <!-- Placeholder for table Edit icon -->
+                              </p>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody id="food__table-body" class="common-table-body">
+                          <!-- Rows will be dynamically added here -->
+                        </tbody>
+                      </table>
+
+                      <!-- Popup Modal to update stock -->
+                      <div id="food__update-modal" class="popup-modal">
+                        <div class="popup-modal-content stock__popup-modal-content">
+                          <!-- Close Button -->
+                          <button class="close-btn closePopupModal">×</button>
+                          <form id="food__update-form">
+                            <h2>Update Stock Item</h2><br>
+                            <b>Name:</b> &nbsp;&nbsp;&nbsp;<input name="name" required><br><br>
+                            <b>Qty:</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input name="qty_stock"  type="number" min="1"></br><br>
+                            <b>Amount:</b> <input type="number" min="1" name="amount"></br><br>
+                            <div class="stock__add-edit--btnContainer">
+                              <button class="highlight-btn stock__add-edit--btn">Save</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
                     </div>
 
-                    <table cellpadding="0" cellspacing="0" class="common-tabletype ui table size-xs">
-                      <thead>
-                        <tr>
-                          <th width="380px">
-                            <p class="table__header-cell ui heading size-headings">
-                            Date
-                            </p>
-                          </th>
-                          <th width="380px">
-                            <p class="table__header-cell-1 ui heading size-headings">
-                            Guest Name
-                            </p>
-                          </th>
-                          <th width="380px">
-                            <p class="table__header-cell-1 ui heading size-headings">
-                            Purchase Item
-                            </p>
-                          </th>
-                          <th width="380px">
-                            <p class="table__header-cell-1 ui heading size-headings">
-                            Amount
-                            </p>
-                          </th>
-                          <th width="380px">
-                            <p class="table__header-cell-1 ui heading size-headings">
-                            Status
-                            </p>
-                          </th>
-                          <th width="380px">
-                            <p class="table__header-cell-1 ui heading size-headings">
-                            <!-- Placeholder for table Edit icon -->
-                            </p>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody class="common-table-body">
-                        <!-- Rows will be dynamically added here -->
-                      </tbody>
-                    </table>
-                  </div>
+                    <!-- Drinks stock table -->
+                    <div style="display: none;" id="drink__stock-list" class="common-table-column">
+                      <h3 class="stock__item-heading">Drinks in Stock<button id="stock__new-drink" class="highlight-btn tab__item ui heading size-headingxs">Add Item</button></h3>
 
-                  <!-- Confirmation Modal for Booking -->
-                  <div id="order__confirmation-modal">
+                      <table cellpadding="0" cellspacing="0" class="common-tabletype ui table size-xs">
+                        <thead>
+                          <tr>
+                            <th width="380px">
+                              <p class="table__header-cell ui heading size-headings">
+                              S/N
+                              </p>
+                            </th>
+                            <th width="380px">
+                              <p class="table__header-cell ui heading size-headings">
+                              Date Stock
+                              </p>
+                            </th>
+                            <th width="380px">
+                              <p class="table__header-cell-1 ui heading size-headings">
+                              Drink Name
+                              </p>
+                            </th>
+                            <th width="380px">
+                              <p class="table__header-cell-1 ui heading size-headings">
+                              Qty Stock
+                              </p>
+                            </th>
+                            <th width="380px">
+                              <p class="table__header-cell-1 ui heading size-headings">
+                              Price Tag
+                              </p>
+                            </th>
+                            <th width="380px">
+                              <p class="table__header-cell-1 ui heading size-headings">
+                              <!-- Placeholder for table Edit icon -->
+                              </p>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody id="drink__stock-table--body" class="common-table-body">
+                          <!-- Rows will be dynamically added here -->
+                        </tbody>
+                      </table>
+                      <!-- Popup Modal to update stock -->
+                      <div id="stock__update-modal" class="popup-modal">
+                        <div class="popup-modal-content stock__popup-modal-content">
+                          <!-- Close Button -->
+                          <button class="close-btn closePopupModal">×</button>
+                          <form id="stock__update-form">
+                            <h2>Update Stock Item</h2><br>
+                            <b>Name:</b> &nbsp;&nbsp;&nbsp;<input name="name" required><br><br>
+                            <b>Qty:</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input name="qty_stock"  type="number" min="1"></br><br>
+                            <b>Amount:</b> <input type="number" min="1" name="amount"></br><br>
+                            <div class="stock__add-edit--btnContainer">
+                              <button class="highlight-btn stock__add-edit--btn">Save</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Sales and Profit table -->
+                    <div style="display: none;" id="sales__profit-list" class="common-table-column">
+                      <h3>Daily Sales</h3><br>
+                      <div class="inventory__filter">
+                        <!-- Date filter section dynamicaly loaded here -->
+                      </div>
+
+                      <table cellpadding="0" cellspacing="0" class="common-tabletype ui table size-xs">
+                        <thead>
+                          <tr>
+                            <th width="380px">
+                              <p class="table__header-cell ui heading size-headings">
+                              S/N
+                              </p>
+                            </th>
+                            <th width="380px">
+                              <p class="table__header-cell ui heading size-headings">
+                              Sales Date
+                              </p>
+                            </th>
+                            <th width="380px">
+                              <p class="table__header-cell-1 ui heading size-headings">
+                              Amount
+                              </p>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody id="sales__profit-table--body" class="common-table-body">
+                          <!-- Rows will be dynamically added here -->
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <!-- Confirmation Modal for Booking -->
+                    <div id="order__confirmation-modal">
+                    </div>
                   </div>
-                </div>
               </div>
             </section>
           </div>

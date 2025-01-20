@@ -4,13 +4,13 @@ from models.booking import Booking
 from models.customer import Customer
 from models.room import Room
 from models.user import User
-#from models.vat import Vat
+from models.sale import DailySale
 from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import bad_request, role_required
 from models import storage
 from sqlalchemy.exc import IntegrityError
-from datetime import datetime
+from datetime import datetime, date
 
 
 @api_views.route("/bookings")
@@ -41,6 +41,47 @@ def bookings(user_id: str, user_role: str):
         return jsonify({"error": "Internal Error Occured"}), 500
     finally:
         storage.close()
+
+
+@api_views.route("/bookings/<string:start_date>/<string:end_date>/get")
+@role_required(["manager", "admin"])
+def get_bookings_by_date(
+    user_role: str, user_id: str, start_date: str, end_date: str
+):
+    """Retrieve bookings at any interval of time."""
+    start_date_obj = datetime.strptime(start_date, "%Y-%m-%d")
+    end_date_obj = datetime.strptime(end_date, "%Y-%m-%d")
+
+    # Retrieve expenditure at an interval of time
+    bookings = storage.get_by_date(
+        Booking, start_date_obj, end_date_obj, "updated_at"
+    )
+
+    # Handle case were there is no expenditure
+    if not bookings:
+        return jsonify([]), 200
+
+    sorted_bookings = sorted(
+        bookings,
+        key=lambda booking : booking.updated_at,
+        reverse=True
+    )
+
+    accumulated_sum = sum(booking.room.amount for booking in sorted_bookings)
+    response = {
+        "bookings": [{
+            "booking": booking.to_dict(),
+            "guest": booking.customer.to_dict(),
+            "checkin_by": booking.checkin_by.to_dict(),
+            "room": booking.room.to_dict(),
+            "checkout_by": (
+                None if not booking.checkout_by
+                else booking.checkout_by.to_dict()
+            )} for booking in sorted_bookings
+        ],
+        "accumulated_sum": accumulated_sum
+    }
+    return jsonify(response), 200
 
 
 @api_views.route("/bookings/<string:room_number>/booking-data")
@@ -155,6 +196,21 @@ def book_room(user_id: str, user_role: str, room_number: str):
 
     booking_data = data.get("book")
 
+
+    # Add new daily transaction if exists else increase sum by existing one
+    today_date = date.today()
+    print(today_date)
+    transaction = storage.get_by(
+        DailySale, entry_date=today_date
+    )
+
+    if not transaction:
+        transaction = DailySale(entry_date=today_date, amount=room.amount)
+        storage.new(transaction)
+    else:
+        transaction.amount += room.amount
+
+
     # Register customer if not exist's
     customer = storage.get_by(
         Customer, id_number=customer_data.get("id_number")
@@ -188,15 +244,6 @@ def book_room(user_id: str, user_role: str, room_number: str):
         storage.new(book)
         room.status = "occupied"   # Cheange room status once book
         storage.save()
-
-        # Take out vat from amount
-        """
-        vat_amount = (7.5 / 100) * room.amount
-        vat = Vat(amount=vat_amount, booking_id=book.id)
-        storage.new(vat)
-
-        storage.save()
-        """
 
         return jsonify({"message": "Booking Successfully"}), 200
     except Exception as e:

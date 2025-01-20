@@ -3,6 +3,13 @@ Guest List Section
 ==================================*/
 #guest__list {
   padding: 20px;
+
+  .inventory__filter {
+    margin-left: auto;
+    margin-top: 20px;
+    margin-right: 10px;
+  }
+
 }
 
 .guest-table-column {
@@ -21,7 +28,7 @@ Guest List Section
   border-collapse: collapse; /* Ensure borders don't overlap */
   padding-left: 8px;
   padding-right: 8px;
-  margin-top: 20px;
+  margin-top: 60px;
 }
 
 
