@@ -25,32 +25,32 @@ def get_foods(user_id: str, user_role: str) -> Dict:
         storage.close()
 
 
-@api_views.route("/foods/<drink_id>/update", methods=["PUT"])
+@api_views.route("/foods/<food_id>/update", methods=["PUT"])
 @role_required(["manager", "admin"])
-def update_food(user_id: str, user_role: str, drink_id: str) -> Dict:
-    """Update drink."""
+def update_food(user_id: str, user_role: str, food_id: str) -> Dict:
+    """Update food in stock."""
     data = request.get_json()
 
     error_404 = bad_request(data)
     if error_404:
         return jsonify(error_404), 400
 
-    drink = storage.get_by(Drink, id=drink_id)
-    if not drink:
+    food = storage.get_by(Food, id=food_id)
+    if not food:
         abort(404)
 
     for key, val in data.items():
         if key != 'id':
-            setattr(drink, key, val)
+            setattr(food, key, val)
     storage.save()
-    drink = storage.get_by(Drink, id=drink_id)
-    return jsonify(drink.to_dict()), 201
+    food = storage.get_by(Food, id=food_id)
+    return jsonify(food.to_dict()), 201
 
 
 @api_views.route("/foods/<food_id>/get")
 @role_required(["manager", "admin"])
-def get_food(user_id: str, user_role: str, drink_id: str) -> Dict:
-    """Retrieve drink using it ID"""
+def get_food(user_id: str, user_role: str, food_id: str) -> Dict:
+    """Retrieve food using it ID"""
     food = storage.get_by(Food, id=food_id)
     if not food:
         abort(404)
@@ -68,10 +68,10 @@ def add_food(user_id: str, user_role: str) -> Dict:
     error_404 = bad_request(data, required_fields)
     if error_404:
         return jsonify(error_404), 404
-    drink = Food(**data)
+    food = Food(**data)
     storage.new(food)
     storage.save()
-    drink = storage.get_by(Food, id=food.id)
+    food = storage.get_by(Food, id=food.id)
     return jsonify(food.to_dict())
 
 

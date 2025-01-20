@@ -6,7 +6,9 @@ import  {
   displayFoodDrink, displayRoomData, guestListTableTemplate,
   roomTableTemplate, orderItemsTempleate, staffListTemplate
 } from '../global/templates.js';
-import { displayMaintenance, staffManagementCommonCart } from '../global/templates1.js';
+import {
+  expenditureTableTemplate, displayMaintenance, staffManagementCommonCart
+} from '../global/templates1.js';
 
 $(document).ready(function() {
 
@@ -131,7 +133,7 @@ $(document).ready(function() {
               id: 'main__today-order'
             }
             const icon2 = 'fa-shopping-cart';
-             const cartTitle2 = 'Today Order\'s'
+            const cartTitle2 = 'Today Order\'s'
             $('#main__cart-loaded')
               .append(staffManagementCommonCart(cartTitle2, btn2, USER_ROLE,icon2, orangeClass));
           } else {
@@ -350,7 +352,38 @@ $(document).ready(function() {
         break;
       }
       case 'sidebar__inventory': {
-        window.location.href = APP_BASE_URL + '/pages/inventory';
+
+        const url = APP_BASE_URL + '/pages/inventory';
+        $('#dynamic__load-dashboard').load(url, function() {
+
+          const expendituresUrl = API_BASE_URL + '/expenditures';
+
+          $('#expenditure__list-table--body').empty();
+
+          fetchData(expendituresUrl)
+            .then((data) => {
+              data.forEach(({ id, title, amount, created_at }) => {
+                const date = britishDateFormat(created_at);
+                $('#expenditure__list-table--body')
+                  .append(expenditureTableTemplate(id, title, date, amount));
+              });
+            })
+            .catch((error) => {
+            });
+          $('.expenditure__section').show();
+
+          const inventoryUrl = API_BASE_URL + '/inventories';
+          fetchData(inventoryUrl)
+            .then((data) => {
+              $('#daily__expenditures').text(data.today_expenditures.toLocaleString());
+              $('#daily__sales').text(data.today_sales.toLocaleString());
+              $('#stock__count-drink').text(data.total_drinks);
+              $('#stock__count-food').text(data.total_foods);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        });
         break;
       }
     }

@@ -15,7 +15,7 @@ function formatedTime() {
     hours = hours % 12 || 12; // Convert to 12-hour format and handle midnight (0 -> 12)
     const formattedMinutes = minutes < 10 ? '0' + minutes : minutes; // Add leading zero if needed
 
-    const formattedTime = hours + ':' + formattedMinutes + ' ' + ampm;
+  const formattedTime = hours + ':' + formattedMinutes + ' ' + ampm;
   return formattedTime;
 }
 
@@ -46,23 +46,21 @@ $(document).ready(function() {
       $("#receipt-info").html(receiptInfo);
 
       // Render customer order table
-      let orderRows = order_items.map(order => `
+      let orderRows = `
         <tr>
-            <td>${room.name}</td>
-            <td>e.g., 5</td>
-            <td>Unit Price</td>
-            <td>Total Amount</td>
+            <td>${room.name} (${room.number})</td>
+            <td>${booking.duration} Night(s)</td>
+            <td>${room.amount.toLocaleString()}</td>
         </tr>
-    `).join("");
+    `;
 
       const customerOrderTable = `
         <table>
             <thead>
                 <tr>
-                    <th>Item <br /><br /></th>
-                    <th>Qty</th>
-                    <th>Price(₦)</th>
-                    <th>Total(₦)</th>
+                    <th>Room <br /></th>
+                    <th>Duration</th>
+                    <th>Amount(₦)</th>
                 </tr>
             </thead>
             <tbody>
@@ -74,13 +72,13 @@ $(document).ready(function() {
       // Render totals
       const totals = `
         <div class="order-total">
-            <div><p><strong>Subtotal</strong></p><p>50, 000</p></div>
-            <div><p><strong>VAT</strong></p><p>$50.0</p></div>
-            <div><p><strong>Total</strong></p><p>656545</p></div>
+            <div><p><strong>Subtotal</strong></p><p>${subTotal}</p></div>
+            <div><p><strong>VAT</strong></p><p>${vat}</p></div>
+            <div><p><strong>Total</strong></p><p>${room.amount.toLocaleString()}</p></div>
         </div>`;
       $("#totals").html(totals);
 
-      //$(".total-payment").html(order.amount.toLocaleString());
+      $(".total-payment").html(room.amount.toLocaleString());
     })
     .catch((error) => {
       showNotification('An error occurred. Please try again.', true);

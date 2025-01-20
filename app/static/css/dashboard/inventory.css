@@ -228,39 +228,39 @@
 #drink__stock-list {
   background: none;
   height: 80%;
+}
 
-  .stock__popup-modal-content {
-    width: 35%;
-    margin-left: 20%;
-    height: auto;
-    padding: 30px;
+.stock__popup-modal-content {
+  width: 35%;
+  margin-left: 20%;
+  height: auto;
+  padding: 30px;
 
-    h2 {
-      text-align: center;
-    }
-
-    .stock__add-edit--btnContainer {
-      width: 100%;
-      display: flex;
-      justify-content: end;
-      .stock__add-edit--btn {
-        margin-left: auto;
-        width: 80px;
-        height: 40px;
-        border-radius: 10px;
-      }
-    }
-    input {
-      border-radius: 5px;
-      padding: 10px;
-      border: 1px solid orange;
-      width:80%;
-      height: 40px;
-
-    }
+  h2 {
+    text-align: center;
   }
 
+  .stock__add-edit--btnContainer {
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    .stock__add-edit--btn {
+      margin-left: auto;
+      width: 80px;
+      height: 40px;
+      border-radius: 10px;
+    }
+  }
+  input {
+    border-radius: 5px;
+    padding: 10px;
+    border: 1px solid orange;
+    width:80%;
+    height: 40px;
+
+  }
 }
+
 
 #drink__stock-list > table {
   margin-top: 40px;

@@ -35,7 +35,6 @@ $(document).ready(function() {
   const inventoryUrl = API_BASE_URL + '/inventories';
   fetchData(inventoryUrl)
     .then((data) => {
-      console.log(data);
       $('#daily__expenditures').text(data.today_expenditures.toLocaleString());
       $('#daily__sales').text(data.today_sales.toLocaleString());
       $('#stock__count-drink').text(data.total_drinks);
@@ -293,6 +292,82 @@ $(document).ready(function() {
       $('#expenditures__headings').toggleClass('expenditure__entry-shrink');
     });
 
+
+  // Add or Update Food Stock
+  $('#dynamic__load-dashboard')
+    .off('click', '#food__table-body .food__update-stock, #stock__new-food')
+    .on('click', '#food__table-body .food__update-stock, #stock__new-food',
+      function() {
+
+        const $clickItem = $(this);
+        const foodId = $clickItem.data('id');
+
+        togleTableMenuIcon();
+        $('#food__update-modal').css('display', 'flex');
+
+        if ($clickItem.hasClass('food__update-stock')) {
+
+          $('#food__update-modal').css('display', 'flex');
+
+          const url = API_BASE_URL + `/foods/${foodId}/get`;
+
+          fetchData(url)
+            .then((data) => {
+              $('input[name="name"]').val(data.name);
+              $('input[name="qty_stock"]').val(data.qty_stock);
+              $('input[name="amount"]').val(data.amount);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        } else {
+          $('#food__update-modal').css('display', 'flex');
+          $('#food__update-form').addClass('stock__food-add');
+        }
+        $('#dynamic__load-dashboard').off('submit', '#food__update-form')
+          .on('submit', '#food__update-form', function(e) {
+            e.preventDefault();
+            $('#food__update-modal').hide();
+
+            const $formElement = $(this);
+            const data = sanitizeInput(getFormDataAsDict($formElement));
+
+            const request = (
+              $formElement.hasClass('stock__food-add') ?
+              {
+                url: API_BASE_URL + '/foods', method: 'POST',
+                msg: 'Stock Added Successfully !'
+              } :
+              {
+                url: API_BASE_URL + `/foods/${foodId}/update`,
+                method: 'PUT', msg: 'Stock Updated Successfully !'
+              }
+            );
+
+            ajaxRequest(request.url, request.method, JSON.stringify(data),
+              (response) => {
+                $formElement.trigger('reset');
+                if ($formElement.hasClass('stock__food-add')) {
+                  const date = britishDateFormat(response.updated_at);
+                  $('#food__table-body')
+                    .prepend(foodTableTemplate(-1, response, date));
+                } else {
+                  $(`#food__table-body tr[data-id="${foodId}"] .name`).text(response.name);
+                  $(`#food__table-body tr[data-id="${foodId}"] .amount`).text('₦' + response.amount.toLocaleString());
+
+                }
+                $('#food__update-form').removeClass('stock__drink-add');
+                showNotification(request.msg);
+              },
+              (error) =>{
+                $('#stock__update-form').removeClass('stock__drink-add');
+                console.log(error);
+              }
+            );
+          });
+      });
+
+
   // Update Drink Stock
   $('#dynamic__load-dashboard')
     .off('click', '#drink__stock-table--body .inventory__update-stock, #drink__stock-list #stock__new-drink')
@@ -391,6 +466,7 @@ $(document).ready(function() {
           ajaxRequest(deleteUrl, 'DELETE', null,
             (response) => {
               $(`#drink__stock-table--body tr[data-id="${drinkId}"]`).remove();
+	      updateElementCount($('#stock__count-drink'));
               showNotification('Drink deleted successfully');
             },
             (error) => {
@@ -422,6 +498,7 @@ $(document).ready(function() {
           ajaxRequest(deleteUrl, 'DELETE', null,
             (response) => {
               $(`#food__table-body tr[data-id="${foodId}"]`).remove();
+	      updateElementCount($('#stock__count-food'));
               showNotification('Food deleted successfully');
             },
             (error) => {
