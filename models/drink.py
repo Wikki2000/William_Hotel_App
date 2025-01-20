@@ -13,9 +13,6 @@ class Drink(BaseModel, Base):
     name =  Column(String(225), nullable=False)
     qty_stock = Column(Integer, nullable=False)
     amount = Column(Float, nullable=False)
-    drink_category_id = Column(
-        String(60), ForeignKey("drink_categories.id"), nullable=False
-    )
     
     order_items = relationship('OrderItem', backref='drink',
-                         cascade='all, delete-orphan')
+                               cascade='all, delete-orphan')

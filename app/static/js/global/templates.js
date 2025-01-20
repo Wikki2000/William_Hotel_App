@@ -95,7 +95,7 @@ export function foodDrinkTemplate(id, name, type, amount) {
     <h3 class="food-title">${name}</h3>
     <p>Price: ₦${amount.toLocaleString()}</p>
     <button data-id="${id}" data-name="${name}"
-      data-amount="${amount.toLocaleString()}" 
+      data-amount="${amount}" 
       data-type="${type}" class="order-btn"
     >Order
     </button>

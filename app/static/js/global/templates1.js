@@ -144,7 +144,6 @@ export function displayMaintenance(data) {
  */
 export function staffManagementCommonCart(title, btn, userRole, icon, cartColor) {
   const hideClass = userRole === 'staff' ? '' : 'hidden';
-  console.log(userRole === 'staff');
   return `
     <div>
       <div class="main__row-1 ${cartColor}">
@@ -185,20 +184,122 @@ export function expenditureTableTemplate(id, title, date, amount) {
  </tr>`;
 }
 
+/**
+ * The html template of date filter.
+ *
+ * @return {string} - The filter template.
+ */
 export function inventoryFilterTemplate() {
-                      return `<form id="inventory__filter-form">
-                        <div class="inventory__filter-by--date">
-                          <div class="inventory__filter-date--input">
-                            <p class="inventory__date-title">Date &nbsp;</p>
-                            <input id="inventory__filter-start--date" class="inventory__filter-start--date deep__background" type="date" />
-                            <span>&nbsp; - &nbsp;</span>
-                            <input id="inventory__filter-end--date" class="inventory__filter-end--date deep__background" type="date" />
-                          </div>
-			  <i id="inventory__searchbar" class="fa fa-search"></i>
-                          <div class="inventory__filter-total--amount">
-                            <p>Amount</p>
-                            <p class="deep__background total__amount-entry">&nbsp;₦<span id="expenditure__total__amount-entry">0</span></p>
-                          </div>
-                        </div>
-                      </form>`
+  return `<form id="inventory__filter-form">
+    <div class="inventory__filter-by--date">
+      <div class="inventory__filter-date--input">
+        <p class="inventory__date-title">Date &nbsp;</p>
+	<input id="inventory__filter-start--date" class="inventory__filter-start--date deep__background" type="date" />
+	<span>&nbsp; - &nbsp;</span>
+	<input id="inventory__filter-end--date" class="inventory__filter-end--date deep__background" type="date" />
+       </div>
+       <i id="inventory__searchbar" class="fa fa-search"></i>
+       <div class="inventory__filter-total--amount">
+         <p>Amount</p>
+	   <p class="deep__background total__amount-entry">&nbsp;₦<span id="expenditure__total__amount-entry">0</span></p>
+	 </div>
+      </div>
+   </form>`
+}
+
+/**
+ * Template for displaying drink.
+ *
+ * @param {integer} index - The index of each element.
+ * @param {object} data - The server response of drink data.
+ * @param {object} date - The date in british format.
+ *
+ * @return {string} - The row of table.
+ */
+export function drinkTableTemplate(index, data, date) {
+  const qtyColor = data.qty_stock < 10 ? 'red': '';
+  const row = `<tr data-id="${data.id}">
+      <td class="">
+        <p class="ui text size-textmd">${index + 1}</p>
+      </td>
+      <td class="">
+        <p class="ui text size-textmd">${date}</p>
+      </td>
+      <td class="">
+        <p class="ui text size-textmd name">${data.name}</p>
+      </td>
+      <td class="">
+        <p class="ui text size-textmd qty_stock" style="color: ${qtyColor}">${data.qty_stock}</p>
+      </td>
+      <td class="">
+        <p class="ui text size-textmd amount">₦${data.amount.toLocaleString()}</p>
+      </td>
+      <td class="">
+        <p><i class="fa fa-ellipsis-v"></i></p>
+        <p><i style="display: none;" class="fa fa-times"></i></p>
+      </td>
+
+      <td class="manage">
+        <nav class="manage__nav">
+          <ul class="manage__list">
+            <li data-id="${data.id}" class="manage__item inventory__update-stock">
+	      <i class="fa fa-wine-bottle"></i>Update Stock
+            </li>
+	    <li data-id="${data.id}" class="manage__item inventory__delete-stock">
+	      <i class="fa fa-trash"></i>Remove Item
+	    </li>
+          </ul>
+        </nav>
+      </td>
+    </tr>`;
+  return row;
+}
+
+export function salesTableTemplate(index, amount, date) {
+  return `<tr>
+    <td class="">
+      <p class="ui text size-textmd">${index + 1}</p>
+    </td>
+    <td class="">
+      <p class="ui text size-textmd">${date}</p>
+    </td>
+    <td class="">
+      <p class="ui text size-textmd">₦${amount.toLocaleString()}</p>
+    </td>
+  </tr>`
+}
+
+export function foodTableTemplate(index, data, date) {
+  const row = `<tr data-id="${data.id}">
+      <td class="">
+        <p class="ui text size-textmd">${index + 1}</p>
+      </td>
+      <td class="">
+        <p class="ui text size-textmd">${date}</p>
+      </td>
+      <td class="">
+        <p class="ui text size-textmd name">${data.name}</p>
+      </td>
+     <td class="">
+        <p class="ui text size-textmd amount">₦${data.amount.toLocaleString()}</p>
+      </td>
+      <td class="">
+        <p><i class="fa fa-ellipsis-v"></i></p>
+        <p><i style="display: none;" class="fa fa-times"></i></p>
+      </td>
+
+      <td class="manage">
+        <nav class="manage__nav">
+          <ul class="manage__list">
+            <li data-id="${data.id}" class="manage__item food__update-stock">
+              <i class="fa fa-utensils"></i>Update Stock
+            </li>
+	    <li data-id="${data.id}" class="manage__item food__delete-stock">
+	      <i class="fa fa-trash"></i>Remove Item
+	    </li>
+          </ul>
+        </nav>
+      </td>
+    </tr>`;
+  return row;
 }

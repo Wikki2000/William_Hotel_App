@@ -163,7 +163,7 @@ def delete_token(token: str) -> bool:
 #       Common API Helper Function             #
 # ============================================ #
 def bad_request(
-    data: Dict, required_fields: List[Any]
+    data: Dict, required_fields: List[Any] = []
 ) -> Optional[Dict[str, str]]:
     """Handle response for Bad Request (400) error.
 

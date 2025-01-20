@@ -24,7 +24,7 @@ def get_drinks_foods(user_id: str, user_role: str) -> Dict:
         drinks_response = [drink.to_dict() for drink in sorted_drinks]
 
         return jsonify({
-            "foods": foods_response, 
+            "foods": foods_response,
             "drinks": drinks_response
         }), 200
     except Exception as e:

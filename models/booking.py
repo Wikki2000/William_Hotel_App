@@ -31,8 +31,3 @@ class Booking(BaseModel, Base):
         String(60), ForeignKey("users.id"), nullable=False
     )
     checkout_by_id = Column(String(60), ForeignKey("users.id"))
-
-    """
-    vat = relationship('Vat', backref='booking', uselist=False,
-                       cascade='all, delete-orphan')
-    """

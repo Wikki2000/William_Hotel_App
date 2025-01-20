@@ -2,7 +2,6 @@
   height: 80vh;
 }
 
-
 .inventory__section-btn {
   display: flex;
   justify-content: space-around;
@@ -26,7 +25,6 @@
   height: 100%;
   border-radius: 10px;
   background-color: #FDF6E4;
-  overflow-y: scroll;
 
   .expenditures__headings {
     display: flex;
@@ -108,7 +106,7 @@
       font-weight: 600;
     }
 
-    input{
+    input, .dropdown {
       border: 1px solid #FFC009;
       border-radius: 5px;
       height: 40px;
@@ -118,6 +116,15 @@
       width: 35rem;
     }
   }
+}
+
+.expenditure__entry-shrink {
+  background: #F5D07747;
+  border-radius: 20px;
+  padding: 5px;
+  padding-left: 20px;
+  margin-bottom: 15px;
+  margin-top: 15px;
 }
 
 .save-btn {
@@ -133,12 +140,16 @@
 /* Expenditures table styles */
 #expenditures__list {
   background: none;
+  height: 60%;
 }
 #expenditures__list > table {
   thead th {
     padding-bottom: 10px;
   }
   margin-top: 0px; 
+}
+#expenditure__list-table--body {
+  overflow-y: auto;
 }
 #expenditure__list-table--body tr {
   .manage {
@@ -151,6 +162,10 @@
     padding-top: 10px;
     padding-bottom: 10px;
   }
+}
+
+#inventory__expenditure-form .hide__expenditure-entry:hover {
+  cursor: pointer;
 }
 
 /* Expenditure pop up modal */
@@ -210,19 +225,120 @@
 
 
 /* Transactions table */
-#transactions__list {
+#drink__stock-list {
+  background: none;
+  height: 80%;
+
+  .stock__popup-modal-content {
+    width: 35%;
+    margin-left: 20%;
+    height: auto;
+    padding: 30px;
+
+    h2 {
+      text-align: center;
+    }
+
+    .stock__add-edit--btnContainer {
+      width: 100%;
+      display: flex;
+      justify-content: end;
+      .stock__add-edit--btn {
+        margin-left: auto;
+        width: 80px;
+        height: 40px;
+        border-radius: 10px;
+      }
+    }
+    input {
+      border-radius: 5px;
+      padding: 10px;
+      border: 1px solid orange;
+      width:80%;
+      height: 40px;
+
+    }
+  }
+
+}
+
+#drink__stock-list > table {
+  margin-top: 40px;
+  td {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+  td:nth-child(2),
+  td:nth-child(4),
+  td:nth-child(5) {
+    padding-left: 30px;
+  }
+  td:first-child {
+    padding-left: 45px;
+  }
+  .manage {
+    right: 15%;
+  }
+}
+
+#food__stock-table--container {
+  background: none;
+  height: 80%;
+}
+
+.stock__item-heading {
+  width: 100%;
+  button {
+    margin-left: 76%;
+    padding: 10px;
+    border: 2px solid orange;
+    border-radius: 10px;
+  }
+}
+#food__stock-table--container > table {
+  margin-top: 40px;
+  td {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+  td:first-child {
+    padding-left: 45px;
+  }
+  td:nth-child(2),
+  td:nth-child(4) {
+    padding-left: 30px;
+  }
+  .manage {
+    right: 20%;
+  }
+}
+
+/* Style for daily sales */
+#sales__profit-list {
   background: none;
 
   .inventory__filter {
-    margin-top: 20px;
     margin-left: auto;
+    margin-top: 25px;
+  }
+}
+#sales__profit-list > table {
+  td {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+  td:first-child {
+    padding-left: 45px;
+  }
+  td:nth-child(2) {
+    padding-left: 35px;
   }
 }
 /*
 @media screen and (max-width: 1403px) {
-  input.inventory__expenditure-description {
-    width: 50% !important;
-    background: red;
-  }
+input.inventory__expenditure-description {
+width: 50% !important;
+background: red;
 }
-*/
+}
+ */

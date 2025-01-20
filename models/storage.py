@@ -10,7 +10,6 @@ from models.order import Order
 from models.room import Room
 from models.booking import Booking
 from models.drink import Drink
-from models.drink_category import DrinkCategory
 from models.food import Food
 from models.order_item import OrderItem
 from models.vat import Vat
@@ -24,7 +23,7 @@ from models.vendor import Vendor
 from models.maintenance import Maintenance
 from models.expenditure import Expenditure
 from models.daily_expenditure_sum import DailyExpenditureSum
-from models.transaction import DailyTransaction
+from models.sale import DailySale
 
 from dotenv import load_dotenv
 from os import getenv

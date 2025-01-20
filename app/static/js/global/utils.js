@@ -424,11 +424,9 @@ export function cartItemsTotalAmount(cart) {
   }
 
   const cartItemsAmountList = Array.from(
-    cart.values(), item => item.itemAmount.replaceAll(',', '')
+    cart.values(), item => item.itemAmount
   );
-  return cartItemsAmountList.reduce(
-    (sum, value) => sum + parseFloat(value), 0
-  );
+  return cartItemsAmountList.reduce((sum, value) => sum + value, 0);
 }
 
 /**
@@ -447,7 +445,9 @@ export function hideAllStaffManagmentDashboard() {
  */
 export function hideAllInventoryDashboard() {
   $('.expenditure__section').hide();
-  $('#transactions__list').hide();
+  $('#drink__stock-list').hide();
+  $('#sales__profit-list').hide();
+  $('#food__stock-table--container').hide();
 }
 
 /**

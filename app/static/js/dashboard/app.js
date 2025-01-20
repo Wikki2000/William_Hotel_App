@@ -202,10 +202,20 @@ $(document).ready(function() {
           fetchData(bookingUrl)
             .then((response) => {
               // Filter rooms currently lodge by a guest.
+              /*
               const bookingStillInUse = response.filter(
                 (data) => data.booking.is_use
               );
               bookingStillInUse.forEach(({ guest, booking, room }) => {
+                const checkInDate = britishDateFormat(booking.checkin);
+                const checkoutDate = britishDateFormat(booking.checkout);
+                const date = { checkInDate, checkoutDate };
+                $tableBody.append(
+                  guestListTableTemplate(guest, booking, room, date)
+                );
+              });
+              */
+              response.forEach(({ guest, booking, room }) => {
                 const checkInDate = britishDateFormat(booking.checkin);
                 const checkoutDate = britishDateFormat(booking.checkout);
                 const date = { checkInDate, checkoutDate };
@@ -336,9 +346,11 @@ $(document).ready(function() {
             .catch((error) => {
               console.log(error);
             });
-
-
         });
+        break;
+      }
+      case 'sidebar__inventory': {
+        window.location.href = APP_BASE_URL + '/pages/inventory';
         break;
       }
     }

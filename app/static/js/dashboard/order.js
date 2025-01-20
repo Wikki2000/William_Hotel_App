@@ -35,9 +35,9 @@ function orderHistoryTableTemplate(order, customer) {
           <li data-id="${order.id}" data-name="${customer.name}" class="manage__item  order__bill order__manageItem">
             <i class="fa fa-money-bill-wave"></i>Clear Bill
           </li>
-	  <li data-id="${order.id}" class="manage__item order__manageItem order__showConfirmModal">
-	     <i class="fa fa-shopping-cart"></i>Order Details
-	   </li>
+          <li data-id="${order.id}" class="manage__item order__manageItem order__showConfirmModal">
+             <i class="fa fa-shopping-cart"></i>Order Details
+           </li>
           <li data-id="${order.id}" class="manage__item order__print order__manageItem">
             <i class="fa fa-print"></i>Print Receipt
           </li>
@@ -77,7 +77,7 @@ $(document).ready(function() {
     } else if ($selectedMenu.hasClass('order__print')) {
       const orderId = $selectedMenu.data('id');
       const receiptUrl = (
-	APP_BASE_URL + `/orders/print-receipt?order_id=${orderId}` 
+        APP_BASE_URL + `/orders/print-receipt?order_id=${orderId}` 
       );
       window.open(receiptUrl, '_blank');
     } else if ($selectedMenu.hasClass('order__showConfirmModal')) {
@@ -91,20 +91,20 @@ $(document).ready(function() {
       fetchData(orderUrl)
         .then(
           ({ order, customer, ordered_by, cleared_by, order_items }
-         ) => {
-           const guestType = customer.is_guest ? 'Lodged' : 'Walk In';
-           const paymentStatus = (
-             order.is_paid ? { status: 'Paid', color: 'green' } : 
-             {status: 'Pending', color: 'red' }
-           );
+          ) => {
+            const guestType = customer.is_guest ? 'Lodged' : 'Walk In';
+            const paymentStatus = (
+              order.is_paid ? { status: 'Paid', color: 'green' } : 
+              {status: 'Pending', color: 'red' }
+            );
 
-           // Check if bill has been cleared
-           const cleared = (
-             cleared_by !== null ? { firstName: cleared_by.first_name, lastName: cleared_by.last_name, role: cleared_by.portfolio  } : 
-             { firstName: ordered_by.first_name, lastName: ordered_by.last_name, role: ordered_by.portfolio }
-           );
-           $('#order__info').append(
-             `<h3>Order Info.</h3>
+            // Check if bill has been cleared
+            const cleared = (
+              cleared_by !== null ? { firstName: cleared_by.first_name, lastName: cleared_by.last_name, role: cleared_by.portfolio  } : 
+              { firstName: ordered_by.first_name, lastName: ordered_by.last_name, role: ordered_by.portfolio }
+            );
+            $('#order__info').append(
+              `<h3>Order Info.</h3>
              <p><b>Guest Name</b> - ${customer.name}</p>
              <p><b>Guest Type</b> - ${guestType}</p>
              <p><b>Purchase Date</b> - ${britishDateFormat(order.updated_at)}</p>
@@ -113,17 +113,17 @@ $(document).ready(function() {
              <p><em><b>Ordered By</b> - ${ordered_by.first_name} ${ordered_by.last_name} (${ordered_by.portfolio})</em></p>
              <p><em><b>Bill Handle By</b> - ${cleared.firstName} ${cleared.lastName} (${cleared.role})</em></p>
              `
-           );
-           order_items.forEach(({ name, qty, amount }) => {
-             $('#order__itemList').append(`<li class="order__item">
+            );
+            order_items.forEach(({ name, qty, amount }) => {
+              $('#order__itemList').append(`<li class="order__item">
                ${name}&nbsp;&nbsp;&nbsp;
                <em>${qty}&nbsp;&nbsp;&nbsp;</em>
                <em>₦${amount.toLocaleString()}</em>
              </li>`);
-           });
-           $('#order__totalAmount').text('₦' + order.amount.toLocaleString());
-           $('#order__print-receipt').attr('data-id', `${order.id}`);
-        })
+            });
+            $('#order__totalAmount').text('₦' + order.amount.toLocaleString());
+            $('#order__print-receipt').attr('data-id', `${order.id}`);
+          })
         .catch((error) => {
           console.log(error);
         });
@@ -244,8 +244,12 @@ $(document).ready(function() {
 
         },
         (error) => {
-	  $button.prop('disabled', false);
-	  showNotification('An Error Occured. Try Again !.', true);
+          if (error.status === 422) {
+            showNotification('Error: ' + error.responseJSON.error, true);
+          } else {
+            showNotification('An Error Occured. Try Again !.', true);
+          }
+          $button.prop('disabled', false);
           console.log(error);
         }
       );
@@ -373,9 +377,7 @@ $(document).ready(function() {
     const $clickItem = $(this);
     const $countValueSelector = $clickItem.siblings('.order__counter-value');
     const itemId = $clickItem.data('id');
-    const unitPrice = parseFloat(
-      $clickItem.data('price').replaceAll(',', '')
-    );
+    const unitPrice = parseFloat($clickItem.data('price'));
 
     const itemData = CART.get(itemId);  // Retrieve item from cart
 
@@ -392,22 +394,17 @@ $(document).ready(function() {
 
       // Calculate the total price and quantity of items in the CART
       if (isIncrease) {
-        const totalAmount = parseFloat(
-          itemData['itemAmount'].replaceAll(',', '')
-        ) + unitPrice;
-        itemData['itemAmount'] = totalAmount.toLocaleString();
+        const totalAmount = itemData['itemAmount'] + unitPrice;
+        itemData['itemAmount'] = totalAmount;
 
         itemData['itemQty'] = itemData['itemQty'] + 1;
       } else {
-        const totalAmount = parseFloat(
-          itemData['itemAmount'].replaceAll(',', '')
-        ) - unitPrice;
+        const totalAmount = itemData['itemAmount'] - unitPrice;
 
         itemData['itemQty'] = itemData['itemQty'] - 1;
-        itemData['itemAmount'] = totalAmount.toLocaleString();
+        itemData['itemAmount'] = totalAmount;
       }
     }
-
 
     CART.set(itemId, itemData); // update with object of total amount & qty.
 
@@ -489,5 +486,43 @@ $(document).ready(function() {
       if (count === 0) {
         $('#sidebar__order-count').hide();
       }
+    });
+
+
+  // Get order at any interval of time.
+  $('#dynamic__load-dashboard')
+    .off('click', '.order__history-table #inventory__searchbar')
+    .on('click', '.order__history-table #inventory__searchbar', function() {
+      const startDate = $('.order__history-table #inventory__filter-start--date').val();
+      const endDate = $('.order__history-table #inventory__filter-end--date').val();
+
+      if (!startDate || !endDate) {
+        showNotification('Start date and end date required', true);
+        return;
+      }
+      const url = API_BASE_URL + `/orders/${startDate}/${endDate}/get`
+      fetchData(url)
+        .then(({ accumulated_sum, orders }) => {
+          $('.order__history--table-body').empty();
+
+          if (!orders) {
+            $('#expenditure__total__amount-entry').text(0);
+            return;
+          }
+
+          orders .forEach(({ order, customer, user }) => {
+            $('.order__history--table-body').append(
+              orderHistoryTableTemplate(order, customer)
+            );
+
+            $('#expenditure__total__amount-entry')
+              .text(accumulated_sum.toLocaleString())
+          })
+            .catch((error) => {
+              console.log(error);
+            });
+        });
+
+
     });
 });

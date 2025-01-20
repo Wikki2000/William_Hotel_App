@@ -31,12 +31,25 @@ $(document).ready(() => {
       );
       fetchData(bookingUrl)
         .then(
-          ( { booking, customer, room, checkin_by }
+          ( { booking, customer, room, checkin_by, checkout_by }
           ) => {
             const paymentStatus = (
               booking.is_paid === 'yes' ? { status: 'Paid', color: 'green' } :
               {status: 'Pending', color: 'red' }
             );
+            const checkout_staff = (
+              checkout_by ? {
+                first_name: checkout_by.first_name, 
+                last_name: checkout_by.last_name,
+                portfolio: checkout_by.portfolio
+              } :
+              {
+                first_name: checkin_by.first_name,
+                last_name: checkin_by.last_name,
+                portfolio: checkin_by.portfolio
+              }
+            );
+
 
             $('#guest__info').append(
               `<h3></h3>
@@ -47,11 +60,14 @@ $(document).ready(() => {
              <p><b>Guest Address</b> ${customer.address}</p>
              <p><b>Guest Gender</b> ${customer.gender}</p>
              <p><b>Checkin Date</b> ${britishDateFormat(booking.checkin)}</p>
-             <p><b>Expiration Duration</b> ${booking.duration}</p>
+             <p><b>Expiration Duration</b> ${booking.duration} Night(s)</p>
              <p><b>Check out Date</b> ${britishDateFormat(booking.checkout)}</p>
+             <p><b>Date Book</b> ${britishDateFormat(booking.created_at)}</p>
              <p><b>Payment Status</b> <span style="color: ${paymentStatus.color};">${paymentStatus.status}</span></p>
              <p><b>Room Rate</b> ₦${room.amount.toLocaleString()}</p>
-              <p><b>Checkin  By</b> ${checkin_by.first_name} ${checkin_by.last_name} (${checkin_by.portfolio})</p>`
+              <p><b>Checkin  By</b> ${checkin_by.first_name} ${checkin_by.last_name} (${checkin_by.portfolio})</p>
+              <p><b>Checkout  By</b> ${checkout_staff.first_name} ${checkout_staff.last_name} (${checkout_staff.portfolio})</p>`
+
             );
             $('#room__totalAmount')
               .text('₦' + room.amount.toLocaleString());
@@ -74,7 +90,7 @@ $(document).ready(() => {
             $('#guest__duration').val(booking.duration);
             $('#guest__checkout').val(canadianDateFormat(booking.checkout));
             $('#guest__roomNumber').val(room.number);
-	    $('#guest__roomType').val(room.name);
+            $('#guest__roomType').val(room.name);
             $('#guest__roomAmount').val('₦' + room.amount.toLocaleString());
             $('#guest__name').val(customer.name);
             $('#guest__phoneNumber').val(customer.phone);
@@ -168,6 +184,41 @@ $(document).ready(() => {
       );
     });
 
+  // Get expenditure at any interval of time.
+  $('#dynamic__load-dashboard')
+    .off('click', '.guest-table-column #inventory__searchbar')
+    .on('click', '.guest-table-column #inventory__searchbar', function() {
+      const startDate = $('#inventory__filter-start--date').val();
+      const endDate = $('#inventory__filter-end--date').val();
+
+      if (!startDate || !endDate) {
+        showNotification('Start date and end date required', true);
+        return;
+      }
+      const url = API_BASE_URL + `/bookings/${startDate}/${endDate}/get`
+      fetchData(url)
+        .then(({ bookings, accumulated_sum }) => {
+          console.log(bookings, accumulated_sum);
+
+          $('.guest-table-body').empty();
+          $('#expenditure__total__amount-entry').text(0);
+
+          bookings.forEach(({ guest, booking, room }) => {
+            const checkInDate = britishDateFormat(booking.checkin);
+            const checkoutDate = britishDateFormat(booking.checkout);
+            const date = { checkInDate, checkoutDate };
+            $('.guest-table-body').append(
+              guestListTableTemplate(guest, booking, room, date)
+            );
+          });
+
+          $('#expenditure__total__amount-entry')
+            .text(accumulated_sum.toLocaleString())
+        })
+        .catch((error) => {
+        });
+    });
+
   // Handle printing of booking reciept
   $('#dynamic__load-dashboard')
     .on('click', '.guest__listPrint, #booking__print-receipt',
@@ -178,5 +229,5 @@ $(document).ready(() => {
           APP_BASE_URL + `/bookings/print-receipt?room_number=${roomNumber}`
         );
         window.open(receiptUrl, '_blank');
-    });
+      });
 });
