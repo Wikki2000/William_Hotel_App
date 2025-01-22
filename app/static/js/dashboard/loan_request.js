@@ -3,7 +3,9 @@ import {
   showNotification, ajaxRequest, fetchData, britishDateFormat, togleTableMenuIcon
 } from '../global/utils.js';
 
-import { loanListTableTemplate, loanDetailTemplate } from '../global/templates.js';
+import {
+  loanListTableTemplate, loanDetailTemplate
+} from '../global/templates.js';
 
 $(document).ready(function() {
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
@@ -75,6 +77,7 @@ $(document).ready(function() {
           });
       }
     });
+
   // Form submission for staff loan request
   $('#dynamic__load-dashboard')
     .on('submit', '#staff__loan-requestForm', function(e) {

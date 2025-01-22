@@ -224,7 +224,6 @@ $(document).ready(() => {
     .on('click', '.guest__listPrint, #booking__print-receipt',
       function() {
         const roomNumber = $(this).data('id');
-        alert(roomNumber);
         const receiptUrl = (
           APP_BASE_URL + `/bookings/print-receipt?room_number=${roomNumber}`
         );
