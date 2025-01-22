@@ -1,13 +1,15 @@
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
 .container {
   background-color: var(--white_a700);
-  min-height: 100vh;
-  height: auto;
-  width: 100%;
   scrollbar-width: none;
+  width: 100%;
 
   margin: 0 auto;
   box-sizing: border-box;
-
 }
 
 .row {
@@ -104,7 +106,6 @@ div .column_two {
   /* Other styling */
 
 }
-
 
 .header__menu-icon {
   height: 2.75rem;
