@@ -3,7 +3,6 @@ import {
   getFormattedDate, validateForm, updateElementCount,
   showNotification, getBaseUrl, displayMenuList
 } from '../global/utils.js';
-/*import { roomTableTemplate } from '../global/templates.js';*/
 
 $(document).ready(function() {
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
@@ -14,7 +13,6 @@ $(document).ready(function() {
   async function getRoom() {
     try {
       const url = API_BASE_URL + '/rooms';
-      const bookingUrl = API_BASE_URL + '/bookings';
 
       // Fetch data only if not already fetched
       const rooms = await $.get(url); 
@@ -110,35 +108,6 @@ $(document).ready(function() {
         $('#main__popup-modal').hide();
       });
   });
-
-  // Handle view available rooms display when click on the cart button.
-  /*
-  $('#dynamic__load-dashboard')
-    .off('click', '#main__room-available--view')
-    .on('click', '#main__room-available--view', function() {
-
-      const $tableBody = $(".room-table-body");
-      const url = APP_BASE_URL + '/pages/room_service';
-      const isStaff = USER_ROLE === 'staff' ? true: false;
-      $('#dynamic__load-dashboard').load(url, function() {
-        $('#rooms').addClass('highlight-btn');
-        const roomUrl =  API_BASE_URL + '/rooms'
-        fetchData(roomUrl)
-          .then(({ rooms, rooms_count }) => {
-            console.log(rooms);
-            rooms.forEach((room) => {
-              if (room.status === 'available') {
-                const statusClass = 'room-status-4';
-                $tableBody
-                  .append(roomTableTemplate(room, statusClass, isStaff));
-              }
-            });
-          })
-          .catch((error) => {
-            console.error('Failed to fetch room data:', error);
-          });
-      });
-    });*/
 
   // Load and display popup menu list of room number
   $('#dynamic__load-dashboard').on(

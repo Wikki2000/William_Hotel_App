@@ -2,6 +2,7 @@
   height: 80vh;
 }
 
+/*
 .inventory__section-btn {
   display: flex;
   justify-content: space-around;
@@ -16,6 +17,7 @@
     margin-top: 10px;
   }
 }
+*/
 
 .inventory__container {
   margin-top: 20px;
@@ -127,14 +129,11 @@
   margin-top: 15px;
 }
 
-.save-btn {
+.expenditure #inventory__expenditure-form .save-btn {
   background-color: black;
   margin-left: auto;
   margin-bottom: 15px;
   color: #fff;
-  padding: 10px 20px;
-  font-size: 1.7rem;
-  font-weight: 400;
 }
 
 /* Expenditures table styles */
@@ -332,6 +331,9 @@
   }
   td:nth-child(2) {
     padding-left: 35px;
+  }
+  td:nth-child(3) {
+    padding-left: 15px;
   }
 }
 /*
