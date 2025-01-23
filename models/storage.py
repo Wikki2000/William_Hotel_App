@@ -24,6 +24,7 @@ from models.maintenance import Maintenance
 from models.expenditure import Expenditure
 from models.daily_expenditure_sum import DailyExpenditureSum
 from models.sale import DailySale
+from urllib.parse import quote_plus
 
 from dotenv import load_dotenv
 from os import getenv
@@ -47,7 +48,10 @@ class Storage:
             error = "Environment variables must be set for database URL"
             raise ValueError(error)
 
-        url = f'mysql+mysqldb://{username}:{password}@localhost:5432/{database}'
+        # URL encode the password to handle special characters
+        encoded_password = quote_plus(password)
+
+        url = f'mysql+mysqldb://{username}:{encoded_password}@localhost:3306/{database}'
         self.__engine = create_engine(url, pool_pre_ping=True)
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(bind=self.__engine)

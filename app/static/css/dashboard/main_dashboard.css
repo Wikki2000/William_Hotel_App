@@ -293,4 +293,34 @@ input:checked + .slider:before {
 }
 
 @media (max-width: 800px) {
+  .flex-row {
+    flex-direction: column;
+  }
+  .main__room-status1,
+  .main__room-status2,
+  .main__room-status3,
+  .main__room-status4 {
+    width: 95% !important;
+    margin-bottom: 10px;
+  }
+  .main__btn {
+    .highlight-btn {
+      margin-right: 10%;
+      width: 50% !important;
+    }
+  }
+  .main__room-status {
+    flex-direction: column;
+  }
+  div[class="card"] {
+    width: 95%;
+  }
+  .check__icon { 
+    right: 15%;
+  }
+  .main__container {
+  }
+  .row {
+	  margin-top: 15px;
+  }
 }

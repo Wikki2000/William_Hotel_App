@@ -58,4 +58,4 @@ def expired_token_callback(jwt_header, jwt_payload):
 
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True, host="0.0.0.0", port=5002)
+    socketio.run(app, debug=True, host="0.0.0.0", port=5000)
