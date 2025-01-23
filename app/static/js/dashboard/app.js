@@ -36,6 +36,7 @@ $(document).ready(function() {
       $('.sidebar__profile-image').attr('src', photoSrc);
       $('#main__username').text(username);
 
+/*
       if (USER_ROLE === 'admin') {
         $('#staff_performance-indexing')
           .text('100%');
@@ -43,6 +44,8 @@ $(document).ready(function() {
           .css('color', 'green');
         return;
       }
+
+*/
 
       const staffPerformanceColor = (
         performance < 50 ? 'red' : 'green'
@@ -95,7 +98,6 @@ $(document).ready(function() {
         $('#dynamic__load-dashboard').load(staffUrl, function() {
           const roomUrl = API_BASE_URL + '/rooms';
           const bookingUrl = API_BASE_URL + '/bookings';
-
           const performanceStatus = localStorage.getItem('performance');
           const staffPerformanceColor = (
             performanceStatus < 50 ? 'red' : 'green'
