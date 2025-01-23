@@ -3,6 +3,7 @@
   width: 1.13rem;
 }
 
+
 .sidebar {
   flex-direction: column;
   display: flex;
@@ -180,4 +181,14 @@
 }
 .hidden {
   display: none;
+}
+
+@media (max-width: 800px) {
+  .sidebar__menu {
+    overflow-y: scroll;
+  }
+  .side__nav-container {
+    width: 0px !important;
+    visibility: hidden;
+  }
 }

@@ -199,7 +199,6 @@ def book_room(user_id: str, user_role: str, room_number: str):
 
     # Add new daily transaction if exists else increase sum by existing one
     today_date = date.today()
-    print(today_date)
     transaction = storage.get_by(
         DailySale, entry_date=today_date
     )
@@ -227,7 +226,7 @@ def book_room(user_id: str, user_role: str, room_number: str):
 
     # Ensure that can't book room already in use
     if room.status == "occupied" or room.status == "reserved":
-        return jsonify({"error": "Room Already in Use"}), 409
+        return jsonify({"error": f"Room {room.number} is occupied"}), 409
 
     book_attr = {
             "checkin": booking_data.get("checkin"),

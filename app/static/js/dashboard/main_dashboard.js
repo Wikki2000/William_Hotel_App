@@ -118,11 +118,12 @@ $(document).ready(function() {
 
       switch(clickId) {
         case 'main__dropdown--room-no': {
-          const roomUrl = API_BASE_URL + '/rooms/available/filter';
+          //const roomUrl = API_BASE_URL + '/rooms/available/filter';
+          const roomUrl = API_BASE_URL + '/room-numbers';
           fetchData(roomUrl)
           .then((rooms) => {
-            const availableRooms = rooms.map((room) => room.number);
-            displayMenuList(availableRooms, $clickItem, 'order__menu');
+	    
+            displayMenuList(rooms, $clickItem, 'order__menu');
           })
           .catch((error) => {
             console.log(error);

@@ -148,3 +148,10 @@ div .column_two {
   width: 2.75rem;
   border-radius: var(--radius-xs);
 }
+
+@media (max-width: 800px) {
+  .header__search-row {
+  }	
+  .columnsearch {
+  }
+}
