@@ -36,17 +36,6 @@ $(document).ready(function() {
       $('.sidebar__profile-image').attr('src', photoSrc);
       $('#main__username').text(username);
 
-/*
-      if (USER_ROLE === 'admin') {
-        $('#staff_performance-indexing')
-          .text('100%');
-        $('#staff_performance-indexing')
-          .css('color', 'green');
-        return;
-      }
-
-*/
-
       const staffPerformanceColor = (
         performance < 50 ? 'red' : 'green'
       );
