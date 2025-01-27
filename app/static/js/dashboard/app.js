@@ -29,20 +29,18 @@ $(document).ready(function() {
         email.length > 23 ? email.slice(0, 23) + '...' : email
       );
 
+      const displayUsername = (
+        username.length > 7 ? username.slice(0, 7) + '...' : username
+      );
+
+
       $('#sidebar__email').attr('title', email);
 
       $('#sidebar__name').text(`${first_name} ${last_name}`);
       $('#sidebar__email').text(displayEmail);
       $('.sidebar__profile-image').attr('src', photoSrc);
-      $('#main__username').text(username);
-
-      if (USER_ROLE === 'admin') {
-        $('#staff_performance-indexing')
-          .text('100%');
-        $('#staff_performance-indexing')
-          .css('color', 'green');
-        return;
-      }
+      $('#main__username').text(displayUsername);
+      $('#main__username').attr('title', username);
 
       const staffPerformanceColor = (
         performance < 50 ? 'red' : 'green'
@@ -95,7 +93,6 @@ $(document).ready(function() {
         $('#dynamic__load-dashboard').load(staffUrl, function() {
           const roomUrl = API_BASE_URL + '/rooms';
           const bookingUrl = API_BASE_URL + '/bookings';
-
           const performanceStatus = localStorage.getItem('performance');
           const staffPerformanceColor = (
             performanceStatus < 50 ? 'red' : 'green'

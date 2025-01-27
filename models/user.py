@@ -5,7 +5,7 @@ from models.base_model import Base, BaseModel
 from sqlalchemy import (
     Column, Text, String, Boolean, LargeBinary, DateTime, Float, Integer
 )
-from sqlalchemy.dialects.mysql import ENUM 
+from sqlalchemy.dialects.mysql import ENUM, LONGBLOB 
 from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
 from models.booking import Booking
@@ -25,7 +25,7 @@ class User(BaseModel, Base):
     middle_name = Column(String(225))
     last_name =  Column(String(225), nullable=False)
     username = Column(String(20))
-    profile_photo = Column(LargeBinary)
+    profile_photo = Column(LONGBLOB)
     email = Column(String(225), nullable=False, unique=True)
     address = Column(String(225))
     gender = Column(String(30))

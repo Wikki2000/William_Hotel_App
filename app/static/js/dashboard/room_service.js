@@ -262,16 +262,14 @@ $(document).ready(function () {
   ==============================================================*/
   $('#dynamic__load-dashboard').on(
     'click', '#room__number-dropdown-btn', function() {
-      fetchData(roomUrl)
-        .then(({ rooms, rooms_count }) => {
+	    const occupiedRoomUrl = API_BASE_URL + '/occupied-room-number';
+      fetchData(occupiedRoomUrl)
+        .then((rooms) => {
           if (!rooms) {
             const msg = 'No room lodge at the moment !';
             showNotification(msg);
           }
-          const occupiedNumberList = rooms
-            .filter((room) => room.status === "occupied" ||
-              room.status === "reserved")
-            .map((room) => room.number);
+          const occupiedNumberList = rooms;
           displayMenuList(
             occupiedNumberList, $($(this)), 'room__menu'
           );

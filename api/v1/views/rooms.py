@@ -38,6 +38,20 @@ def add_room(user_role: str, user_id: str):
         storage.close()
 
 
+@api_views.route("/occupied-room-number")
+@role_required(["staff", "manager", "admin"])
+def get_available_room_numbers(user_role: str, user_id: str):
+    """Get numbers associated with rooms."""
+    rooms = storage.all(Room).values()
+    if not rooms:
+        return jsonify([]), 200
+
+    sorted_rooms = sorted(rooms, key=lambda room : room.number)
+    response = [room.number for room in sorted_rooms
+                    if room.status == "occupied"]
+    return jsonify(response), 200
+
+
 @api_views.route("/room-numbers")
 @role_required(["manager", "admin", "staff"])
 def room_number(user_role: str, user_id: str):

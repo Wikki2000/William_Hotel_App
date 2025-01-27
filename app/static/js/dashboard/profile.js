@@ -7,6 +7,7 @@ import {
 $(document).ready(function() {
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
   const APP_BASE_URL = getBaseUrl()['appBaseUrl'];
+  const USER_ROLE = localStorage.getItem('role');
 
   $('#sidebar__profile').click(function() {
     const profileUrl = APP_BASE_URL + '/pages/profile';
@@ -49,6 +50,20 @@ $(document).ready(function() {
         .catch((error) => {
           console.log(error);
         });
+
+      if (USER_ROLE != 'admin') {
+        $('#edit-fname').prop('readonly', true);
+        $('#edit-mname').prop('readonly', true);
+        $('#edit-lname').prop('readonly', true);
+        $('#edit-gender').prop('readonly', true);
+        $('#edit-religion').prop('readonly', true);
+        $('#edit-state').prop('readonly', true);
+        $('#edit__nok-phone').prop('readonly', true);
+        $('edit-nok-name').prop('readonly', true);
+        $('#edit__role').prop('readonly', true);
+        $('#edit-dob').prop('readonly', true);
+        $('#edit__role').prop('readonly', true);
+      }
 
       // Trigger file input when image is clicked.
       $('#dynamic__load-dashboard').off('click', '#profile__photo')

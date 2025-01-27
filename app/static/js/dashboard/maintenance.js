@@ -82,7 +82,7 @@ $(document).ready(function() {
   // Handle reporting of fault.
   $('#dynamic__load-dashboard').off('click', '#report-btn')
     .on('click', '#report-btn', function() {
-      const roomNumber = $('#maintenance__room-menu-btn span').text();
+      const roomNumber = $('#maintenance__room-menu-btn p').text();
       const faultType = $('#report').val();
       const description = $('#short-note').val();
       const image = $('input[name="fault_photo"]').val();
