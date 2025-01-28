@@ -320,6 +320,7 @@ $(document).ready(function() {
             .catch((error) => {
               console.log(error);
             });
+	  $('#food__update-form').addClass('stock__food-update');
         } else {
           $('#food__update-modal').css('display', 'flex');
           $('#food__update-form').addClass('stock__food-add');
@@ -332,6 +333,19 @@ $(document).ready(function() {
             const $formElement = $(this);
             const data = sanitizeInput(getFormDataAsDict($formElement));
 
+            let url;
+            let msg;
+            let method;
+            if ($formElement.hasClass('stock__food-add')) {
+              url = API_BASE_URL + '/foods';
+              msg = 'Stock Added Successfully !';
+              method = 'POST';
+            } else if ($formElement.hasClass('stock__food-update')) {
+              url = API_BASE_URL + `/foods/${foodId}/update`,
+              method = 'PUT';
+              msg = 'Stock Updated Successfully !'
+            }
+            /*
             const request = (
               $formElement.hasClass('stock__food-add') ?
               {
@@ -342,7 +356,7 @@ $(document).ready(function() {
                 url: API_BASE_URL + `/foods/${foodId}/update`,
                 method: 'PUT', msg: 'Stock Updated Successfully !'
               }
-            );
+            );*/
 
             ajaxRequest(request.url, request.method, JSON.stringify(data),
               (response) => {

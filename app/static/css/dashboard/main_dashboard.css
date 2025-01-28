@@ -177,17 +177,6 @@ input:checked + .slider:before {
     text-align: center;
   }
 }
-
-.check__icon-container {
-  position: relative;
-}
-
-.check__icon {
-  position: absolute;
-  top: 60%;
-  right: 10px;
-  transform: translateY(-50%);
-}
 .main__room-status {
   display: flex;
   justify-content: space-between;
