@@ -82,7 +82,6 @@ def update_password():
     """Update new password to database as enter by user."""
     data = request.get_json()
     email = get_jwt_identity()
-    print(email)
 
     # Handle 400 error
     required_fields = ["password"]
