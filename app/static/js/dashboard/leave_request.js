@@ -154,7 +154,7 @@ $(document).ready(function() {
         .on('click', '.staff__leave-confirmBtn', function() {
           const $clickItem = $(this);
           $clickItem.prop('disable', true);
-          confirmationModal(headingText, descriptionText, confirmBtCls);
+	  $('#order__confirmation-modal').empty();
           ajaxRequest(leaveUrl, 'POST', JSON.stringify(data),
             (response) => {
               $('#order__confirmation-modal').empty();
@@ -162,7 +162,6 @@ $(document).ready(function() {
               showNotification('Leave request sent successfull !');
             },
             (error) => {
-              $('#order__confirmation-modal').empty();
               $clickItem.prop('disable', false);
               showNotification('Error: Try Again!', true);
             }

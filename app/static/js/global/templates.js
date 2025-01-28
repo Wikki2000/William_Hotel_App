@@ -304,14 +304,13 @@ export function loanListTableTemplate(data, userRole) {
   if (data.is_approved_by_manager === 'rejected' && data.is_approved_by_ceo === 'rejected') {
     textColor = 'red';
     text = 'Rejected';
-  } else if(data.is_approved_by_manager === 'approved' && data.is_approved_by_ceo === 'approved') {
+  } else if(data.manager_approval_status === 'approved' && data.ceo_approval_status === 'approved') {
     textColor = 'green';
     text = 'Approved';
   } else {
     textColor = 'blue';
     text = 'Pending';
   }
-
 
   const row = `<tr>
       <td class="${hideFromStaff} name">

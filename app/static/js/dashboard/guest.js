@@ -59,6 +59,7 @@ $(document).ready(() => {
              <p><b>Guest Number</b> ${customer.phone}</p>
              <p><b>Guest Address</b> ${customer.address}</p>
              <p><b>Guest Gender</b> ${customer.gender}</p>
+	     <p><b>Guest Email</b> ${customer.email}</p>
              <p><b>Checkin Date</b> ${britishDateFormat(booking.checkin)}</p>
              <p><b>Expiration Duration</b> ${booking.duration} Night(s)</p>
              <p><b>Check out Date</b> ${britishDateFormat(booking.checkout)}</p>

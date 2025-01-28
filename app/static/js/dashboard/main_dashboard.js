@@ -46,7 +46,6 @@ $(document).ready(function() {
     }
 
     // Booking data
-    const duration = $('#main__book-duration').val();
     const expiration = $('#main__checkout-date').val();
     const guest_number = $('#main__guest-no').val();
     const is_paid = $('#main__is--paid-val').val().toLowerCase();
@@ -63,10 +62,23 @@ $(document).ready(function() {
     const gender = $('#main__guest--gender-val').val();
     const id_type = $('#main__id--type-val').val().toLowerCase();
     const id_number = $('#main__id--no-val').val();
+    const email = $('#main__guest-email').val();
+
+
+    if (new Date(checkout) < new Date(checkin)) {
+      showNotification(
+        'Check Out date must not be earlier than Check In date', true
+      );
+      return;
+    }
+    const diffIntTime = new Date(checkout) - new Date(checkin);
+    const duration = diffIntTime / (1000 * 60 * 60 *24);
+
+
 
     const BookingData = {
       book: { duration, expiration, guest_number, is_paid, checkin, checkout },
-      customer: { gender, name, address, phone, id_type, id_number }
+      customer: { gender, name, address, phone, id_type, id_number, email }
     };
 
     $('#main__popup-modal').css('display', 'flex');
