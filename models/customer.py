@@ -10,13 +10,14 @@ from models.order import Order
 class Customer(BaseModel, Base):
     """Define class for storing customers"""
     __tablename__ = "customers"
-    name =  Column(String(50), nullable=False)
-    address = Column(String(50))
+    name =  Column(String(225), nullable=False)
+    address = Column(String(225))
     gender = Column(ENUM("male", "female"))
     phone = Column(String(30))
     is_guest = Column(Boolean, default=False)
     id_type = Column(ENUM("voter_card", "nin", "driver_licence", "passport"))
-    id_number =  Column(String(50), unique=True)
+    id_number =  Column(String(225), unique=True)
+    email = Column(String(225))
 
     books = relationship('Booking', backref='customer',
                          cascade='all, delete-orphan')
