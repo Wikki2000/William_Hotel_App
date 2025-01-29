@@ -8,6 +8,7 @@ $(document).ready(() => {
 
   const APP_BASE_URL = getBaseUrl()['appBaseUrl'];
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
+  const USER_ROLE = localStorage.getItem('role');
 
   const $modal = $("#guestModal");
 
@@ -101,6 +102,8 @@ $(document).ready(() => {
             $('#guest__numberOccupant').val(booking.guest_number);
             $('#guest__address').val(customer.address);
 
+            $('#guest__room-number-menu').text(room.number);
+
             $('#guest__genderValue').val(customer.gender);
             $('#guest__idTypeValue').val(customer.id_type);
 
@@ -109,6 +112,11 @@ $(document).ready(() => {
           .catch((error) => {
             console.log(error);
           });
+
+	// Restrict a staff from changing room number
+	if (USER_ROLE === 'staff') {
+	  $('.guest-input-column .dropdown-menu').remove();
+	}
       });
 
       // Show dropdown menu
@@ -166,10 +174,15 @@ $(document).ready(() => {
       const duration = $('#guest__duration').val();
       const checkout =$('#guest__checkout').val();
 
+      // Room data
+      const roomNumber = $('#guest__room-number-menu').text();
+
       const data = {
         customer: { name, address, gender, phone, id_type, id_number },
         booking: { checkin, duration, checkout },
+        room: { room_number: roomNumber}
       }
+      console.log(data);
 
       const bookingId = $('#guest__booking-id').val();
       const editUrl = API_BASE_URL + `/bookings/${bookingId}/edit`;
@@ -185,7 +198,7 @@ $(document).ready(() => {
       );
     });
 
-  // Get expenditure at any interval of time.
+  // Get guest at any interval of time.
   $('#dynamic__load-dashboard')
     .off('click', '.guest-table-column #inventory__searchbar')
     .on('click', '.guest-table-column #inventory__searchbar', function() {

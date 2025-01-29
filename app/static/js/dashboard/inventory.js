@@ -45,9 +45,6 @@ $(document).ready(function() {
     });
 
 
-
-
-
   // Get sales at any interval of time.
   $('#dynamic__load-dashboard')
     .off('click', '#sales__profit-list #inventory__searchbar')
@@ -324,6 +321,7 @@ $(document).ready(function() {
         } else {
           $('#food__update-modal').css('display', 'flex');
           $('#food__update-form').addClass('stock__food-add');
+          $('#food__update-form').trigger('reset');
         }
         $('#dynamic__load-dashboard').off('submit', '#food__update-form')
           .on('submit', '#food__update-form', function(e) {
@@ -345,20 +343,8 @@ $(document).ready(function() {
               method = 'PUT';
               msg = 'Stock Updated Successfully !'
             }
-            /*
-            const request = (
-              $formElement.hasClass('stock__food-add') ?
-              {
-                url: API_BASE_URL + '/foods', method: 'POST',
-                msg: 'Stock Added Successfully !'
-              } :
-              {
-                url: API_BASE_URL + `/foods/${foodId}/update`,
-                method: 'PUT', msg: 'Stock Updated Successfully !'
-              }
-            );*/
 
-            ajaxRequest(request.url, request.method, JSON.stringify(data),
+            ajaxRequest(url, method, JSON.stringify(data),
               (response) => {
                 $formElement.trigger('reset');
                 if ($formElement.hasClass('stock__food-add')) {
@@ -368,13 +354,16 @@ $(document).ready(function() {
                 } else {
                   $(`#food__table-body tr[data-id="${foodId}"] .name`).text(response.name);
                   $(`#food__table-body tr[data-id="${foodId}"] .amount`).text('₦' + response.amount.toLocaleString());
+                  $(`#food__table-body tr[data-id="${foodId}"] .qty_stock`).text(response.qty_stock);
 
                 }
-                $('#food__update-form').removeClass('stock__drink-add');
-                showNotification(request.msg);
+                $('#food__update-form').removeClass('stock__food-add');
+                $('#food__update-form').removeClass('stock__food-update');
+                showNotification(msg);
               },
               (error) =>{
-                $('#stock__update-form').removeClass('stock__drink-add');
+                $('#food__update-form').removeClass('stock__food-add');
+                $('#food__update-form').removeClass('stock__food-update');
                 console.log(error);
               }
             );

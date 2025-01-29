@@ -301,7 +301,7 @@ export function loanListTableTemplate(data, userRole) {
   let textColor;
   let text;
 
-  if (data.is_approved_by_manager === 'rejected' && data.is_approved_by_ceo === 'rejected') {
+  if (data.manager_approval_status === 'rejected' && data.ceo_approval_status === 'rejected') {
     textColor = 'red';
     text = 'Rejected';
   } else if(data.manager_approval_status === 'approved' && data.ceo_approval_status === 'approved') {

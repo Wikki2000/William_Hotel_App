@@ -281,7 +281,7 @@ export function foodTableTemplate(index, data, date) {
         <p class="ui text size-textmd name">${data.name}</p>
       </td>
       <td class="">
-        <p class="ui text size-textmd name">${data.qty_stock}</p>
+        <p class="ui text size-textmd qty_stock">${data.qty_stock}</p>
       </td>
      <td class="">
         <p class="ui text size-textmd amount">₦${data.amount.toLocaleString()}</p>
