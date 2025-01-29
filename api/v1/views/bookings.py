@@ -196,7 +196,6 @@ def book_room(user_id: str, user_role: str, room_number: str):
 
     booking_data = data.get("book")
 
-
     # Add new daily transaction if exists else increase sum by existing one
     today_date = date.today()
     transaction = storage.get_by(

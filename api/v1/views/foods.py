@@ -64,7 +64,7 @@ def add_food(user_id: str, user_role: str) -> Dict:
     """Add new food in stock."""
     data = request.get_json()
 
-    required_fields = ["name", "amount"]
+    required_fields = ["name", "amount", "qty_stock"]
     error_404 = bad_request(data, required_fields)
     if error_404:
         return jsonify(error_404), 404
