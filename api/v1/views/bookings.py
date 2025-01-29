@@ -147,7 +147,7 @@ def check_out(user_id: str, user_role: str, room_number: str):
 def update_booking_data(user_id: str, user_role: str, booking_id: str):
     """Update guest data use in booking"""
     data = request.get_json()
-    required_fields = ["customer", "booking"]
+    required_fields = ["customer", "booking", "room"]
     error_response = bad_request(data, required_fields)
     if error_response:
         return jsonify(error_response), 400
@@ -158,14 +158,22 @@ def update_booking_data(user_id: str, user_role: str, booking_id: str):
 
     booking_data = data.get("booking")
     customer_data = data.get("customer")
-
+    room_data = data.get("room")
     customer = booking.customer
+
+    # Change new room statis to occupied
+    new_room = storage.get_by(Room, number=room_data.get("room_number"))
+    new_room.status = "occupied"
 
     # Update booking data
     for key, val in booking_data.items():
         setattr(booking, key, val)
     booking.checkin_by_id = user_id  # Update with staff that made changes
     booking.updated_at = datetime.utcnow()
+    
+    booking.room.status = "available"  # Change old room occupied to available
+
+    booking.room_id = new_room.id  # Book new room to guest
 
     # Update customer data
     for key, val in customer_data.items():

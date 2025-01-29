@@ -212,6 +212,7 @@ $(document).ready(function() {
 	    $('input[name="performance"]').val(data.performance);
 	    $('input[name="username"]').val(data.username);
 	    $('input[name="title"]').val(data.title);
+            $('input[name="rank_number"]').val('00' + data.rank_number);
 
             $('input[name="role"]').val(data.role);
             $('.profile__dropdown-btn p').text(data.role);

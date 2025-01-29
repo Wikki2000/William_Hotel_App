@@ -32,7 +32,7 @@ if not username or not password:
     error = "Environment variables must be set for database URL"
     raise ValueError(error)
 
-url = f'mysql+mysqldb://{username}:{password}@localhost:5432/{database}'
+url = f'mysql+mysqldb://{username}:{password}@localhost:3306/{database}'
 
 # Dynamically set the SQLAlchemy URL in Alembic configuration
 config.set_main_option("sqlalchemy.url", url)

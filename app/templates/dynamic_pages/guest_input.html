@@ -28,7 +28,22 @@
       <div class="guest-page-input-row" style="top: 5rem;">
         <div class="guest-page-edit-input">
           <label for="room_number">Room Number</label><br>
-          <input id="guest__roomNumber" required readonly />
+
+          <!-- Dropdown menu is handle main main_dashboard module -->
+          <div class="dropdown">
+            <div id="main__dropdown--room-no" class="main__dropdown-btn drop-down">
+              <span id="guest__room-number-menu">Select </span>
+              <img
+                  src="/static/images/public/img_arrow_down_black_900_01.svg"
+                  width="15px"  alt="dropdown"
+                                />
+            </div>
+            <div class="dropdown-menu">
+              <ul class="main__dropdown--menu-list">
+                <!-- Dynamically load  menu list -->
+              </ul>
+            </div>
+          </div>
         </div>
         <div class="guest-page-edit-input">
           <label for="room_type">Room Type</label><br>

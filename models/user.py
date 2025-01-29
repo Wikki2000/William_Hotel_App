@@ -38,6 +38,7 @@ class User(BaseModel, Base):
     religion = Column(String(225))
     state = Column(String(225))
     password = Column(String(1500), nullable=False)
+    rank_number = Column(String(1500), nullable=False)
     role = Column(ENUM("admin", "manager", "staff"),  nullable=False)
     portfolio = Column(String(1500), nullable=False)
     performance = Column(Integer)

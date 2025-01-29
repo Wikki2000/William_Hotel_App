@@ -11,7 +11,7 @@ try:
                 "first_name": "David", "last_name": "Moses",
                 "username": "david", "performance": 100,
                 "password": "12345", "email": "david@gmail.com",
-                "role": "admin", "portfolio": "CEO"
+                "role": "admin", "portfolio": "CEO", "rank_number": 0
             }
     gp = Group(name="WCHS Group")
     storage.new(gp)

@@ -17,29 +17,10 @@
         "state": "Ogun state ",
         "portfolio": "Manager",
 	"role": "manager",
-	"performance": 50
+	"performance": 50,
+	"rank_number": 1
     },
-    {
-        "title": "Mr.",
-        "role": "staff",
-        "password": "scrypt:32768:8:1$NTB4XIVps8E9MHN6$d556fa85efb03c52e6b352ccfc112755ea25dd3b0f4be5fcc9b8cdd99a9e02b56be37e2a467c6e155a1c181c050322d7bd5b95ca0e6c9105009f1b027054eba6",
-        "first_name": "Abayomi",
-        "middle_name": "Oluwaseun",
-        "last_name": "Abdul",
-        "username": "Yorhmee",
-        "email": "Kinghaybee23@gmail.com",
-        "gender": "Male",
-        "dob": "1991-08-11",
-        "address": "7 JOWA CRESCENT ILUPEJU CAMP ABEOKUTA OGUN STATE",
-        "number": "08081274218",
-        "nok": "Abdul Oluwadamilola",
-        "nok_number": "0906\u00a0560\u00a02176",
-        "religion": "Christian ",
-        "state": "Ogun State",
-        "portfolio": "Housekeeper",
-	"performance": 50
-    },
-    {
+   {
         "title": "Mr.",
         "password": "scrypt:32768:8:1$vBdmCvAurgedUtjL$057448039206298545c8ae2017a6d242c433d91bb11378758411b3400b45c1bb4603cee938fb4248e7fceb59eb86042526034bdf3f9b0666b54363205bf74a4d",
         "first_name": "Abayomi",
@@ -57,7 +38,8 @@
         "state": "Ogun State",
         "portfolio": "Housekeeper",
 	"role": "staff",
-	"performance": 50
+	"performance": 50,
+	"rank_number": 4
     },
     {
         "title": "Miss",
@@ -77,7 +59,8 @@
         "state": "Oyo",
         "portfolio": "Receptionist",
 	"role": "staff",
-	"performance": 50
+	"performance": 50,
+	"rank_number": 2
     },
     {
         "title": "Miss",
@@ -97,7 +80,8 @@
         "state": "Ondo State ",
         "portfolio": "Assistant Receptionist",
 	"role": "staff",
-	"performance": 50
+	"performance": 50,
+	"rank_number": 3
     },
     {
         "title": "Miss",
@@ -117,7 +101,8 @@
         "state": "Ogun state",
         "portfolio": "Cleaner work",
 	"role": "staff",
-	"performance": 50
+	"performance": 50,
+	"rank_number": 7
     },
     {
         "title": "Miss",
@@ -137,7 +122,8 @@
         "state": "Ogun state",
         "portfolio": "Chef",
 	"role": "staff",
-	"performance": 50
+	"performance": 50,
+	"rank_number": 5
     },
     {
         "title": "Miss",
@@ -157,6 +143,7 @@
         "religion": "Muslim ",
         "state": "Ogun State",
         "portfolio": "Bartender",
-	"performance": 50
+	"performance": 50,
+	"rank_number": 6
     }
 ]
