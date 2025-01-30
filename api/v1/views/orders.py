@@ -4,9 +4,9 @@ from models.user import User
 from models.customer import Customer
 from models.order import Order
 from models.drink import Drink
+from models.food import Food
 from models.order_item import OrderItem
 from models.sale import DailySale
-#from models.room import Room
 from models.booking import Booking
 from flask import abort, jsonify, request
 from api.v1.views import api_views
@@ -82,6 +82,14 @@ def order_items(user_role: str, user_id: str):
             item_field = ""
             if item.get("itemType") == "food":
                 item_field = "food_id"
+
+                # Reduce qty of food stock base on qty ordered.
+                food = storage.get_by(Food, id=item.get("itemId"))
+                food.qty_stock -= item.get("itemQty")
+                if food.qty_stock  < 1:
+                    return jsonify({
+                        "error": f"{food.name} low in stock"
+                    }), 422
             else:
                 item_field = "drink_id"
 

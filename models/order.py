@@ -2,7 +2,6 @@
 """order Module"""
 from datetime import datetime
 from models.base_model import Base, BaseModel
-#from models.vat import Vat
 from models.order_item import OrderItem
 from sqlalchemy import (
     Column, String, Boolean, ForeignKey, Float, ForeignKey, Integer
@@ -30,4 +29,3 @@ class Order(BaseModel, Base):
     # Relationships
     order_items = relationship('OrderItem', backref='order',
                                cascade='all, delete-orphan')
-    room_id = Column(String(60), ForeignKey("rooms.id"))
