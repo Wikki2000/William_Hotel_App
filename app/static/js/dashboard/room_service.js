@@ -295,7 +295,12 @@ $(document).ready(function () {
           const statusText = booking.is_paid === 'yes' ? 'Paid' : 'Pending';
           $('#room__ispaid').val(statusText);
 
-          const orderUrl = API_BASE_URL + `/rooms/${roomNumber}/room-ordered`;
+          // Retrieve and use while cjecking out guest.
+          $('#booking__id').val(booking.id);
+
+          const orderUrl = (
+            API_BASE_URL + `/orders/${customer.id}/lodged-guest-ordered`
+          );
           fetchData(orderUrl)
             .then(({ total_amount, orders }) => {
               $('.order__history--table-body').empty();
@@ -339,9 +344,11 @@ $(document).ready(function () {
         });
 
       // Checkout guest in a room
-      $('#dynamic__load-dashboard').on('click', '.room__checkout-btn', function() {
+      $('#dynamic__load-dashboard').off('click', '.room__checkout-btn')
+        .on('click', '.room__checkout-btn', function() {
         const roomNumber = $('#room__number-dropdown-btn span').text();
-        const checkoutUrl = API_BASE_URL + `/rooms/${roomNumber}/checkout`;
+        const bookingId = $('#booking__id').val();
+        const checkoutUrl = API_BASE_URL + `/rooms/${bookingId}/checkout`;
 
         const $button = $(this);
         $button.prop('disable', true);
@@ -366,7 +373,7 @@ $(document).ready(function () {
       });
     });
 
-  // Get service list
+  // Togle visibility of service list.
   $('#dynamic__load-dashboard')
     .on('click', '#show__service--list--btn', function() {
 

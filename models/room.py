@@ -25,6 +25,8 @@ class Room(BaseModel, Base):
 
     maintenances = relationship('Maintenance', backref='room',
                                 cascade='all, delete-orphan')
-    book = relationship('Booking', backref='room', uselist=False,
+    book = relationship('Booking', backref='room',
                          cascade='all, delete-orphan')
-    orders = relationship('Order', backref='room', cascade='all, delete-orphan')
+    orders = relationship(
+        'Order', backref='room', cascade='all, delete-orphan'
+    )

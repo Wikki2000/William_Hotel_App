@@ -272,13 +272,13 @@ export function guestListTableTemplate(guest, booking, room, date) {
     <td class="manage">
       <nav class="manage__nav">
         <ul class="manage__list">
-          <li data-id="${room.number}" class="manage__item guest__list-bookDetail guest__listMenu">
+          <li data-id="${booking.id}" class="manage__item guest__list-bookDetail guest__listMenu">
             <i class="fa fa-eye"></i>Booking Details
           </li>
-          <li data-id="${room.number}" class="manage__item guest__listEdit  guest__listMenu">
+          <li data-id="${booking.id}" class="manage__item guest__listEdit  guest__listMenu">
             <i class="fa fa-edit"></i>Edit Data
           </li>
-          <li data-id="${room.number}" class="manage__item guest__listPrint  guest__listMenu">
+          <li data-id="${booking.id}" class="manage__item guest__listPrint  guest__listMenu">
             <i class="fa fa-print"></i>Print Receipt
           </li>
         </ul>

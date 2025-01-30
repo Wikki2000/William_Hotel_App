@@ -28,7 +28,7 @@ $(document).ready(() => {
 
       $('#guest__info').empty();
       const bookingUrl = (
-        API_BASE_URL +  `/bookings/${clickItemId}/booking-data`
+        API_BASE_URL +  `/bookings/${clickItemId}/booking-details`
       );
       fetchData(bookingUrl)
         .then(
@@ -84,7 +84,7 @@ $(document).ready(() => {
       const guestEditUrl = APP_BASE_URL + '/pages/guest_input';
       $('#dynamic__load-dashboard').load(guestEditUrl, function() {
         const bookingUrl = (
-          API_BASE_URL +  `/bookings/${clickItemId}/booking-data`
+          API_BASE_URL +  `/bookings/${clickItemId}/booking-details`
         );
         fetchData(bookingUrl)
           .then(({ booking, customer, room }) => {
@@ -182,7 +182,6 @@ $(document).ready(() => {
         booking: { checkin, duration, checkout },
         room: { room_number: roomNumber}
       }
-      console.log(data);
 
       const bookingId = $('#guest__booking-id').val();
       const editUrl = API_BASE_URL + `/bookings/${bookingId}/edit`;
@@ -237,9 +236,9 @@ $(document).ready(() => {
   $('#dynamic__load-dashboard')
     .on('click', '.guest__listPrint, #booking__print-receipt',
       function() {
-        const roomNumber = $(this).data('id');
+        const bookingId = $(this).data('id');
         const receiptUrl = (
-          APP_BASE_URL + `/bookings/print-receipt?room_number=${roomNumber}`
+          APP_BASE_URL + `/bookings/print-receipt?booking_id=${bookingId}`
         );
         window.open(receiptUrl, '_blank');
       });

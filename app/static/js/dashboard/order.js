@@ -50,7 +50,7 @@ $(document).ready(function() {
 
             const date = britishDateFormat(order.updated_at);
             orderDetails(customer, order, order_items, cleared_by, ordered_by, date);
-         })
+          })
         .catch((error) => {
           console.log(error);
         });
@@ -148,10 +148,10 @@ $(document).ready(function() {
         .replaceAll(',', '').replaceAll('₦', '')
       );
 
-      const room_number = $('#order__room--number-selected').val().trim();
+      const customer_id = $('#order__customer-id--val').val().trim();
 
       // Ensure that room number is enter for lodged in guess.
-      if (!room_number && $('#order__guest-type span').text() === 'Lodged') {
+      if (!customer_id && $('#order__guest-type span').text() === 'Lodged') {
         $('#order__confirmation-modal').empty();
         showNotification('Room number missing for Lodged guest', true);
         return;
@@ -167,7 +167,7 @@ $(document).ready(function() {
       const data = {
         customerData: { name, is_guest},
         orderData: { payment_type, is_paid, amount },
-        itemOrderData: cartItemsList, room_number,
+        itemOrderData: cartItemsList, customer_id,
       };
 
       $('#order__confirmation-modal').empty();
@@ -219,14 +219,14 @@ $(document).ready(function() {
       fetchData(orderUrl)
         .then((data) => {
           data.forEach(({ order, customer }) => {
-	    const date = britishDateFormat(order.updated_at);
+            const date = britishDateFormat(order.updated_at);
             $('.order__history--table-body').append(
               orderHistoryTableTemplate(order, date, customer)
             );
           });
         })
         .catch((error) => {
-	  console.log(error);
+          console.log(error);
         });
     }
   });
@@ -312,6 +312,9 @@ $(document).ready(function() {
           // Clear the hidden input field for room number
           // once the guest type menu is click.
           $('#order__room--number-selected').val('');
+          $('#order__customer-id--val').val('');
+          $('#order__guest--name-val').val('');
+          $('#order__guest--name-val').prop('readonly', false);
           break;
         }
       }
@@ -422,10 +425,20 @@ $(document).ready(function() {
 
   // Retrieved menu when room number is clicked for guest lodging.
   $('#dynamic__load-dashboard').on('click', '.room__number-option', function() {
-    const roomNumber = $(this).text();
+    const roomNumber = $(this).text().trim();
     $('#room__number-dropdown').hide();
     $('#order__room--number-selected').val(roomNumber);
     if (roomNumber) {
+      const customerUrl = API_BASE_URL + `/rooms/${roomNumber}/guest-occupied`;
+      fetchData(customerUrl)
+        .then((data) => {
+          $('#order__guest--name-val').val(data.name);
+          $('#order__guest--name-val').prop('readonly', true);
+	  $('#order__customer-id--val').val(data.id);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
       showNotification(`Room ${roomNumber} Selected`);
     } else {
       showNotification(

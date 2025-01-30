@@ -6,7 +6,8 @@ from models.order import Order
 from models.drink import Drink
 from models.order_item import OrderItem
 from models.sale import DailySale
-from models.room import Room
+#from models.room import Room
+from models.booking import Booking
 from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import role_required
@@ -55,19 +56,19 @@ def order_items(user_role: str, user_id: str):
     try:
         user = storage.get_by(User, id=user_id)
 
-        # Add customer to db.
-        new_customer = Customer(**customer_data)
-        storage.new(new_customer)
-        storage.save()
+        customer = storage.get_by(Customer, id=data.get("customer_id"))
 
-        # Add room id if guest type is lodged (i.e., room number exist's)
-        if (data.get('room_number')):
-            room = storage.get_by(Room, number=data.get('room_number'))
-            order_data["room_id"] = room.id
+        # Add new or existing customer ID to order data
+        if customer:
+            order_data["customer_id"] = customer.id
+        else:
+            new_customer = Customer(**customer_data)
+            storage.new(new_customer)
+            storage.save()
+            order_data["customer_id"] = new_customer.id
 
-        # Add customer and user ID to order_data
+        # Add user ID to order_data
         order_data["ordered_by_id"] = user.id
-        order_data["customer_id"] = new_customer.id
 
         # Place new order
         order_data["order_number"] = (
@@ -245,18 +246,15 @@ def filter_orders(user_role: str, user_id: str, payment_status):
         storage.close()
 
 
-@api_views.route("/rooms/<string:room_number>/room-ordered")
+@api_views.route("/orders/<string:customer_id>/lodged-guest-ordered")
 @role_required(["manager", "admin", "staff"])
-def get_room_orders(user_role: str, user_id: str, room_number: str):
+def get_room_orders(user_role: str, user_id: str, customer_id: str):
     """Retrieved orders for a lodged in guest"""
-    room = storage.get_by(Room, number=room_number)
-    if not room:
+    customer = storage.get_by(Customer, id=customer_id)
+    if not customer:
         abort(404)
 
-    orders = room.orders
-    if not orders:
-        return jsonify([]), 200
-
+    orders = customer.orders
     sorted_orders = sorted(
         orders, key=lambda order : order.updated_at, reverse=True
     )

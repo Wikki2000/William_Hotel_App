@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """Handle API request for room module"""
 from models.room import Room
+from models.booking import Booking
 from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import role_required, bad_request, convert_to_binary
@@ -145,6 +146,20 @@ def get_room_numbers(user_role: str, user_id: str):
         return jsonify([]), 200
 
     return jsonify(sorted([room.number for room in rooms])), 200
+
+@api_views.route("/rooms/<string:room_number>/guest-occupied")
+@role_required(["staff", "manager", "admin"])
+def guest_lodged_in_room(user_role: str, user_id: str, room_number: str):
+    """Get guest lodged in a room"""
+    room = storage.get_by(Room, number=room_number)
+    if not room:
+        abort(404)
+
+    room_101_use_booking = storage.get_by(
+        Booking, room_id=room.id, is_use=True
+    )
+
+    return jsonify(room_101_use_booking.customer.to_dict()), 200
 
 
 @api_views.route("/rooms/<string:room_number>")

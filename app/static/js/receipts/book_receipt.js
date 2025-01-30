@@ -20,9 +20,9 @@ function formatedTime() {
 }
 
 $(document).ready(function() {
-  const roomNumber = getQueryParam('room_number');
+  const bookingId = getQueryParam('booking_id');
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
-  const bookingUrl = API_BASE_URL + `/bookings/${roomNumber}/booking-data`;
+  const bookingUrl = API_BASE_URL + `/bookings/${bookingId}/booking-details`;
 
   fetchData(bookingUrl)
     .then(({ booking, checkin_by, checkout_by, customer, room }) => {

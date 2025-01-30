@@ -84,34 +84,32 @@ def get_bookings_by_date(
     return jsonify(response), 200
 
 
-@api_views.route("/bookings/<string:room_number>/booking-data")
+@api_views.route("/bookings/<string:booking_id>/booking-details")
 @role_required(["staff", "manager", "admin"])
-def booking_data(user_id: str, user_role: str, room_number):
+def booking_data_by_id(user_id: str, user_role: str, booking_id: str):
     """Fetch booking data of a particular room"""
     try:
-        room = storage.get_by(Room, number=room_number)
-        if not room:
+        book = storage.get_by(Booking, id=booking_id)
+        if not book:
             abort(404)
 
-        booking = storage.get_by(Booking, room_id=room.id)
-
-        if not booking:
+        if not book:
             return jsonify({
-                "room": room.book.to_dict(), "booking": None,
+                "room": book.room.to_dict(), "booking": None,
                 "checkin_by": None, "checkout_by": None
             }), 200
 
         # Check if room has been checkout by staff
         checkout_by_dict = (
-            None if not booking.checkout_by
-            else booking.checkout_by.to_dict()
+            None if not book.checkout_by
+            else book.checkout_by.to_dict()
         )
 
         return jsonify({
-            "booking": booking.to_dict(),
-            "room": room.to_dict(),
-            "customer": room.book.customer.to_dict(),
-            "checkin_by": room.book.checkin_by.to_dict(),
+            "booking": book.to_dict(),
+            "room": book.room.to_dict(),
+            "customer": book.customer.to_dict(),
+            "checkin_by": book.checkin_by.to_dict(),
             "checkout_by": checkout_by_dict
         }), 200
     except Exception as e:
@@ -121,26 +119,69 @@ def booking_data(user_id: str, user_role: str, room_number):
         storage.close()
 
 
-@api_views.route("/rooms/<string:room_number>/checkout", methods=["PUT"])
+@api_views.route("/bookings/<string:room_number>/booking-data")
 @role_required(["staff", "manager", "admin"])
-def check_out(user_id: str, user_role: str, room_number: str):
+def booking_data(user_id: str, user_role: str, room_number):
+    """Fetch booking data of a particular room"""
+    try:
+        room = storage.get_by(Room, number=room_number)
+        if not room:
+            abort(404)
+
+        # Get booking currently in use, so as to get currently lodged guest.
+        book = storage.get_by(Booking, room_id=room.id, is_use=True)
+
+        if not book:
+            return jsonify({
+                "room": room.book.to_dict(), "booking": None,
+                "checkin_by": None, "checkout_by": None
+            }), 200
+
+        # Check if room has been checkout by staff
+        checkout_by_dict = (
+            None if not book.checkout_by
+            else book.checkout_by.to_dict()
+        )
+
+        return jsonify({
+            "booking": book.to_dict(),
+            "room": room.to_dict(),
+            "customer": book.customer.to_dict(),
+            "checkin_by": book.checkin_by.to_dict(),
+            "checkout_by": checkout_by_dict
+        }), 200
+    except Exception as e:
+        print(str(e))
+        return jsonify({"error": "An Internal Error Occured"}), 500
+    finally:
+        storage.close()
+
+
+@api_views.route("/rooms/<string:booking_id>/checkout", methods=["PUT"])
+@role_required(["staff", "manager", "admin"])
+def check_out(user_id: str, user_role: str, booking_id: str):
     """Check out customer from a room."""
-    room = storage.get_by(Room, number=room_number)
+    booking = storage.get_by(Booking, id=booking_id)
+    if not booking:
+        abort(404)
+
+    room = booking.room
+
     if room.status == "available":
         return jsonify({"error": "Room Already Available"}), 409
-    elif room.book.checkout_by_id:
-        first_name = room.book.checkout_by.first_name
-        last_name = room.book.checkout_by.last_name
+    elif booking.checkout_by_id:
+        first_name = booking.checkout_by.first_name
+        last_name = booking.checkout_by.last_name
         return jsonify({"error": f"{first_name} {last_name}"}), 409
 
     room.status = "available"
-    room.book.is_paid = "yes"
-    room.book.checkout_by_id = user_id  # Record staff that checkout guest
-    room.book.customer.is_guest = False  # No more guest once checkout
-    room.book.is_use = False
+    booking.is_paid = "yes"
+    booking.checkout_by_id = user_id  # Record staff that checkout guest
+    booking.customer.is_guest = False  # No more guest once checkout
+    booking.is_use = False
 
     # Clear all bill once guest is checkout
-    for order in room.orders:
+    for order in booking.customer.orders:
         order.is_paid = True
         order.cleared_by_id = user_id
 
@@ -222,19 +263,10 @@ def book_room(user_id: str, user_role: str, room_number: str):
     else:
         transaction.amount += room.amount
 
-
-    # Register customer if not exist's
-    customer = storage.get_by(
-        Customer, id_number=customer_data.get("id_number")
-    )
-    if not customer:
-        customer = Customer(**customer_data)
-        storage.new(customer)
-        customer.is_guest = True
-        storage.save()
-    else:
-        customer.is_guest = True
-        storage.save()
+    customer = Customer(**customer_data)
+    storage.new(customer)
+    customer.is_guest = True
+    storage.save()
 
 
     # Ensure that can't book room already in use

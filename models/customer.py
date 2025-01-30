@@ -16,7 +16,7 @@ class Customer(BaseModel, Base):
     phone = Column(String(30))
     is_guest = Column(Boolean, default=False)
     id_type = Column(ENUM("voter_card", "nin", "driver_licence", "passport"))
-    id_number =  Column(String(225), unique=True)
+    id_number =  Column(String(225))
     email = Column(String(225))
 
     books = relationship('Booking', backref='customer',
