@@ -138,6 +138,12 @@ def check_out(user_id: str, user_role: str, room_number: str):
     room.book.checkout_by_id = user_id  # Record staff that checkout guest
     room.book.customer.is_guest = False  # No more guest once checkout
     room.book.is_use = False
+
+    # Clear all bill once guest is checkout
+    for order in room.orders:
+        order.is_paid = True
+        order.cleared_by_id = user_id
+
     storage.save()
     return jsonify({"message": "Checkout Successful"}), 201
 

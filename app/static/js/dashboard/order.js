@@ -1,53 +1,8 @@
 import {
   updateElementCount, cartItemsTotalAmount, getBaseUrl, confirmationModal,
-  validateForm, showNotification, ajaxRequest, fetchData, britishDateFormat
+  validateForm, showNotification, ajaxRequest, fetchData, britishDateFormat,
 } from '../global/utils.js';
-
-function orderHistoryTableTemplate(order, customer) {
-  const paymentStatus = order.is_paid ? 'Paid' : 'Pending';
-  const textColor = order.is_paid ? 'green' : 'red';
-
-  const row = `
-<tr data-id="${order.id}">
-    <td>
-      <p class="ui text size-textmd">${customer.name}</p>
-    </td>
-    <td>
-      <p class="ui text size-textmd">${britishDateFormat(order.updated_at)}</p>
-    </td>
-    <td>
-      <p style="color: ${textColor}" class="ui text size-textmd order__bill-status">${paymentStatus}</p>
-    </td>
-    <td>
-      <p class="ui text size-textmd">₦${order.amount.toLocaleString()}</p>
-    </td>
-    <td>
-      <p class="ui text size-textmd">${order.payment_type}</p>
-    </td>
-
-    <td>
-      <p><i class="fa fa-ellipsis-v"></i></p>
-      <p><i style="display: none;" class="fa fa-times"></i></p>
-    </td>
-    <td class="manage">
-      <nav class="manage__nav">
-        <ul class="manage__list">
-          <li data-id="${order.id}" data-name="${customer.name}" class="manage__item  order__bill order__manageItem">
-            <i class="fa fa-money-bill-wave"></i>Clear Bill
-          </li>
-          <li data-id="${order.id}" class="manage__item order__manageItem order__showConfirmModal">
-             <i class="fa fa-shopping-cart"></i>Order Details
-           </li>
-          <li data-id="${order.id}" class="manage__item order__print order__manageItem">
-            <i class="fa fa-print"></i>Print Receipt
-          </li>
-        </ul>
-      </nav>
-    </td>
-</tr>`;
-  return row;
-
-}
+import { orderDetails, orderHistoryTableTemplate } from '../global/templates1.js';
 
 $(document).ready(function() {
 
@@ -92,38 +47,10 @@ $(document).ready(function() {
         .then(
           ({ order, customer, ordered_by, cleared_by, order_items }
           ) => {
-            const guestType = customer.is_guest ? 'Lodged' : 'Walk In';
-            const paymentStatus = (
-              order.is_paid ? { status: 'Paid', color: 'green' } : 
-              {status: 'Pending', color: 'red' }
-            );
 
-            // Check if bill has been cleared
-            const cleared = (
-              cleared_by !== null ? { firstName: cleared_by.first_name, lastName: cleared_by.last_name, role: cleared_by.portfolio  } : 
-              { firstName: ordered_by.first_name, lastName: ordered_by.last_name, role: ordered_by.portfolio }
-            );
-            $('#order__info').append(
-              `<h3>Order Info.</h3>
-             <p><b>Guest Name</b> - ${customer.name}</p>
-             <p><b>Guest Type</b> - ${guestType}</p>
-             <p><b>Purchase Date</b> - ${britishDateFormat(order.updated_at)}</p>
-             <p><b>Payment Method</b> - ${order.payment_type}</p>
-             <p><b>Payment Status</b> - <span style="color: ${paymentStatus.color};">${paymentStatus.status}</span></p><br />
-             <p><em><b>Ordered By</b> - ${ordered_by.first_name} ${ordered_by.last_name} (${ordered_by.portfolio})</em></p>
-             <p><em><b>Bill Handle By</b> - ${cleared.firstName} ${cleared.lastName} (${cleared.role})</em></p>
-             `
-            );
-            order_items.forEach(({ name, qty, amount }) => {
-              $('#order__itemList').append(`<li class="order__item">
-               ${name}&nbsp;&nbsp;&nbsp;
-               <em>${qty}&nbsp;&nbsp;&nbsp;</em>
-               <em>₦${amount.toLocaleString()}</em>
-             </li>`);
-            });
-            $('#order__totalAmount').text('₦' + order.amount.toLocaleString());
-            $('#order__print-receipt').attr('data-id', `${order.id}`);
-          })
+            const date = britishDateFormat(order.updated_at);
+            orderDetails(customer, order, order_items, cleared_by, ordered_by, date);
+         })
         .catch((error) => {
           console.log(error);
         });
@@ -221,6 +148,15 @@ $(document).ready(function() {
         .replaceAll(',', '').replaceAll('₦', '')
       );
 
+      const room_number = $('#order__room--number-selected').val().trim();
+
+      // Ensure that room number is enter for lodged in guess.
+      if (!room_number && $('#order__guest-type span').text() === 'Lodged') {
+        $('#order__confirmation-modal').empty();
+        showNotification('Room number missing for Lodged guest', true);
+        return;
+      }
+
       // Merges the ID with other data in cart
       const cartItemsList = [];
       CART.forEach((value, key) => {
@@ -231,7 +167,7 @@ $(document).ready(function() {
       const data = {
         customerData: { name, is_guest},
         orderData: { payment_type, is_paid, amount },
-        itemOrderData: cartItemsList,
+        itemOrderData: cartItemsList, room_number,
       };
 
       $('#order__confirmation-modal').empty();
@@ -283,12 +219,14 @@ $(document).ready(function() {
       fetchData(orderUrl)
         .then((data) => {
           data.forEach(({ order, customer }) => {
+	    const date = britishDateFormat(order.updated_at);
             $('.order__history--table-body').append(
-              orderHistoryTableTemplate(order, customer)
+              orderHistoryTableTemplate(order, date, customer)
             );
           });
         })
         .catch((error) => {
+	  console.log(error);
         });
     }
   });
@@ -367,10 +305,18 @@ $(document).ready(function() {
         }
         case 'order__guest-type': {
           $('#order__guest--type-dropdown').toggle();
+
+          // Hide room number when click on btn to select menu.
+          $('#room__number-dropdown').hide();
+
+          // Clear the hidden input field for room number
+          // once the guest type menu is click.
+          $('#order__room--number-selected').val('');
           break;
         }
       }
     });
+
 
   // Update amount and count of quantity of items ordered
   $('#dynamic__load-dashboard').on('click', '.order__count-btn', function() {
@@ -427,7 +373,6 @@ $(document).ready(function() {
       const parentId = $currentClickItem.closest('.dropdown')
         .find('.order__dropdown-btn').attr('id');
 
-
       // Update with selected option & Hide dropdown menu.
       $currentClickItem.closest('.dropdown')
         .find('.order__dropdown-btn span')
@@ -445,9 +390,49 @@ $(document).ready(function() {
 
         case 'order__guest-type':
           $('#order__guest--type-val').val(selectedOption);
+
+          // Show room number when guest type is Lodged
+          if (selectedOption === 'Lodged') {
+            const roomUrl = API_BASE_URL + '/occupied-room-number';
+            fetchData(roomUrl)
+              .then((rooms) => {
+                $('#room__number-dropdown .room__dropdown--menu-list').empty();
+                if (rooms.length < 1) {
+                  showNotification('No room is occupied by guest');
+                  $('#order__guest-type span').text('Select');
+                  return;
+                }
+                rooms.forEach((roomNunber) => {
+                  $('#room__number-dropdown .room__dropdown--menu-list')
+                    .append(
+                      `<li class="dropdown-item room__number-option">
+                        ${roomNunber}
+                      </li>`
+                    );
+                });
+                $('#room__number-dropdown').show();
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          }
           break;
       }
     });
+
+  // Retrieved menu when room number is clicked for guest lodging.
+  $('#dynamic__load-dashboard').on('click', '.room__number-option', function() {
+    const roomNumber = $(this).text();
+    $('#room__number-dropdown').hide();
+    $('#order__room--number-selected').val(roomNumber);
+    if (roomNumber) {
+      showNotification(`Room ${roomNumber} Selected`);
+    } else {
+      showNotification(
+        'No room number selected for a lodged in guest', true
+      );
+    }
+  });
 
   // Remove an item ordered from cart.
   $('#dynamic__load-dashboard')

@@ -166,19 +166,19 @@ export function expenditureTableTemplate(id, title, date, amount) {
 
       <td class="">
               <p><i class="fa fa-ellipsis-v"></i></p>
-	              <p><i style="display: none;" class="fa fa-times"></i></p>
-		            </td>
+                      <p><i style="display: none;" class="fa fa-times"></i></p>
+                            </td>
 
       <td class="manage">
               <nav class="manage__nav">
-	                <ul class="manage__list">
-			            <li data-id="${id}" class="manage__item expenditure__details">
-		              <i class="fa fa-eye"></i>Details
-	            </li>
+                        <ul class="manage__list">
+                                    <li data-id="${id}" class="manage__item expenditure__details">
+                              <i class="fa fa-eye"></i>Details
+                    </li>
 
-		          </ul>
-		        </nav>
-		      </td>
+                          </ul>
+                        </nav>
+                      </td>
 
 
  </tr>`;
@@ -194,15 +194,15 @@ export function inventoryFilterTemplate() {
     <div class="inventory__filter-by--date">
       <div class="inventory__filter-date--input">
         <p class="inventory__date-title">Date &nbsp;</p>
-	<input id="inventory__filter-start--date" class="inventory__filter-start--date deep__background" type="date" />
-	<span>&nbsp; - &nbsp;</span>
-	<input id="inventory__filter-end--date" class="inventory__filter-end--date deep__background" type="date" />
+        <input id="inventory__filter-start--date" class="inventory__filter-start--date deep__background" type="date" />
+        <span>&nbsp; - &nbsp;</span>
+        <input id="inventory__filter-end--date" class="inventory__filter-end--date deep__background" type="date" />
        </div>
        <i id="inventory__searchbar" class="fa fa-search"></i>
        <div class="inventory__filter-total--amount">
          <p>Amount</p>
-	   <p class="deep__background total__amount-entry">&nbsp;₦<span id="expenditure__total__amount-entry">0</span></p>
-	 </div>
+           <p class="deep__background total__amount-entry">&nbsp;₦<span id="expenditure__total__amount-entry">0</span></p>
+         </div>
       </div>
    </form>`
 }
@@ -243,11 +243,11 @@ export function drinkTableTemplate(index, data, date) {
         <nav class="manage__nav">
           <ul class="manage__list">
             <li data-id="${data.id}" class="manage__item inventory__update-stock">
-	      <i class="fa fa-wine-bottle"></i>Update Stock
+              <i class="fa fa-wine-bottle"></i>Update Stock
             </li>
-	    <li data-id="${data.id}" class="manage__item inventory__delete-stock">
-	      <i class="fa fa-trash"></i>Remove Item
-	    </li>
+            <li data-id="${data.id}" class="manage__item inventory__delete-stock">
+              <i class="fa fa-trash"></i>Remove Item
+            </li>
           </ul>
         </nav>
       </td>
@@ -297,12 +297,93 @@ export function foodTableTemplate(index, data, date) {
             <li data-id="${data.id}" class="manage__item food__update-stock">
               <i class="fa fa-utensils"></i>Update Stock
             </li>
-	    <li data-id="${data.id}" class="manage__item food__delete-stock">
-	      <i class="fa fa-trash"></i>Remove Item
-	    </li>
+            <li data-id="${data.id}" class="manage__item food__delete-stock">
+              <i class="fa fa-trash"></i>Remove Item
+            </li>
           </ul>
         </nav>
       </td>
     </tr>`;
   return row;
+}
+
+export function orderHistoryTableTemplate(order, date, customer = null) {
+  const paymentStatus = order.is_paid ? 'Paid' : 'Pending';
+  const textColor = order.is_paid ? 'green' : 'red';
+  const hideClass = customer ? '' : 'hide';
+  const customerName = customer ? customer.name : '';
+
+  const row = `
+<tr data-id="${order.id}">
+    <td class="${hideClass}">
+      <p class="ui text size-textmd">${customerName}</p>
+    </td>
+    <td>
+      <p class="ui text size-textmd">${date}</p>
+    </td>
+    <td>
+      <p style="color: ${textColor}" class="ui text size-textmd order__bill-status">${paymentStatus}</p>
+    </td>
+    <td>
+      <p class="ui text size-textmd">₦${order.amount.toLocaleString()}</p>
+    </td>
+    <td>
+      <p class="ui text size-textmd">${order.payment_type}</p>
+    </td>
+
+    <td>
+      <p><i class="fa fa-ellipsis-v"></i></p>
+      <p><i style="display: none;" class="fa fa-times"></i></p>
+    </td>
+    <td class="manage">
+      <nav class="manage__nav">
+        <ul class="manage__list">
+          <li data-id="${order.id}" data-name="${customerName}" class="manage__item  order__bill order__manageItem">
+            <i class="fa fa-money-bill-wave"></i>Clear Bill
+          </li>
+          <li data-id="${order.id}" class="manage__item order__manageItem order__showConfirmModal">
+             <i class="fa fa-shopping-cart"></i>Order Details
+           </li>
+          <li data-id="${order.id}" class="manage__item order__print order__manageItem">
+            <i class="fa fa-print"></i>Print Receipt
+          </li>
+        </ul>
+      </nav>
+    </td>
+</tr>`;
+  return row;
+}
+
+export function orderDetails(customer, order, order_items, cleared_by, ordered_by, date) {
+  const guestType = customer.is_guest ? 'Lodged' : 'Walk In';
+  const paymentStatus = (
+    order.is_paid ? { status: 'Paid', color: 'green' } :
+    {status: 'Pending', color: 'red' }
+  );
+
+  // Check if bill has been cleared
+  const cleared = (
+    cleared_by !== null ? { firstName: cleared_by.first_name, lastName: cleared_by.last_name, role: cleared_by.portfolio  } :
+    { firstName: ordered_by.first_name, lastName: ordered_by.last_name, role: ordered_by.portfolio }
+  );
+  $('#order__info').append(
+    `<h3>Order Info.</h3>
+             <p><b>Guest Name</b> - ${customer.name}</p>
+             <p><b>Guest Type</b> - ${guestType}</p>
+             <p><b>Purchase Date</b> - ${date}</p>
+             <p><b>Payment Method</b> - ${order.payment_type}</p>
+             <p><b>Payment Status</b> - <span style="color: ${paymentStatus.color};">${paymentStatus.status}</span></p><br />
+             <p><em><b>Ordered By</b> - ${ordered_by.first_name} ${ordered_by.last_name} (${ordered_by.portfolio})</em></p>
+             <p><em><b>Bill Handle By</b> - ${cleared.firstName} ${cleared.lastName} (${cleared.role})</em></p>
+             `
+  );
+  order_items.forEach(({ name, qty, amount }) => {
+    $('#order__itemList').append(`<li class="order__item">
+               ${name}&nbsp;&nbsp;&nbsp;
+               <em>${qty}&nbsp;&nbsp;&nbsp;</em>
+               <em>₦${amount.toLocaleString()}</em>
+             </li>`);
+  });
+  $('#order__totalAmount').text('₦' + order.amount.toLocaleString());
+  $('#order__print-receipt').attr('data-id', `${order.id}`);
 }

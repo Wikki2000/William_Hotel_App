@@ -30,3 +30,4 @@ class Order(BaseModel, Base):
     # Relationships
     order_items = relationship('OrderItem', backref='order',
                                cascade='all, delete-orphan')
+    room_id = Column(String(60), ForeignKey("rooms.id"))

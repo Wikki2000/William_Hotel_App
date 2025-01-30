@@ -30,6 +30,11 @@
                     <li class="order__dropdown-selector dropdown-item">Lodged</li>
                   </ul>
                 </div>
+
+                <div id="room__number-dropdown" class="dropdown-menu">
+                  <ul class="room__dropdown--menu-list">
+                    <!-- Dynamically load menu list -->
+                </div>
               </div>
             </div>
 
@@ -84,6 +89,7 @@
           <input id="order__guest--type-val" type="hidden" required />
           <input id="order__ispaid-val" type="hidden" />
           <input id="order__payment--type-val" type="hidden" required  />
+          <input id="order__room--number-selected" type="hidden" />
         </form>
       </div>
 
@@ -162,7 +168,7 @@
   </div>
 </div>
 
-<!-- Popup Modal -->
+<!-- Popup Modal for Order Details -->
 <div id="common__popupModal" class="popup-modal">
   <div class="popup-modal-content order__popup-modal">
     <!-- Close Button -->

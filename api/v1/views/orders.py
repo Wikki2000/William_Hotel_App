@@ -6,6 +6,7 @@ from models.order import Order
 from models.drink import Drink
 from models.order_item import OrderItem
 from models.sale import DailySale
+from models.room import Room
 from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import role_required
@@ -59,13 +60,18 @@ def order_items(user_role: str, user_id: str):
         storage.new(new_customer)
         storage.save()
 
+        # Add room id if guest type is lodged (i.e., room number exist's)
+        if (data.get('room_number')):
+            room = storage.get_by(Room, number=data.get('room_number'))
+            order_data["room_id"] = room.id
+
         # Add customer and user ID to order_data
         order_data["ordered_by_id"] = user.id
         order_data["customer_id"] = new_customer.id
 
         # Place new order
         order_data["order_number"] = (
-            "RSP" + str(randint(100000000, 999999999))
+            "WCHS" + str(randint(100000000, 999999999))
         )
         new_order = Order(**order_data)
         storage.new(new_order)
@@ -237,6 +243,30 @@ def filter_orders(user_role: str, user_id: str, payment_status):
         abort(500)
     finally:
         storage.close()
+
+
+@api_views.route("/rooms/<string:room_number>/room-ordered")
+@role_required(["manager", "admin", "staff"])
+def get_room_orders(user_role: str, user_id: str, room_number: str):
+    """Retrieved orders for a lodged in guest"""
+    room = storage.get_by(Room, number=room_number)
+    if not room:
+        abort(404)
+
+    orders = room.orders
+    if not orders:
+        return jsonify([]), 200
+
+    sorted_orders = sorted(
+        orders, key=lambda order : order.updated_at, reverse=True
+    )
+
+    total_amount = sum(order.amount for order in sorted_orders)
+    response = {
+        "orders": [order.to_dict() for order in sorted_orders],
+        "total_amount": total_amount
+    }
+    return jsonify(response), 200
 
 
 @api_views.route("/orders/<string:start_date>/<string:end_date>/get")

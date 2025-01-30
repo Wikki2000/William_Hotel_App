@@ -8,6 +8,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.mysql import ENUM, LONGBLOB
 from models.booking import Booking
 from models.maintenance import Maintenance
+from models.order import Order
 
 
 class Room(BaseModel, Base):
@@ -26,3 +27,4 @@ class Room(BaseModel, Base):
                                 cascade='all, delete-orphan')
     book = relationship('Booking', backref='room', uselist=False,
                          cascade='all, delete-orphan')
+    orders = relationship('Order', backref='room', cascade='all, delete-orphan')

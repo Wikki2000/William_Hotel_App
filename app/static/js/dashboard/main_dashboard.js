@@ -74,8 +74,6 @@ $(document).ready(function() {
     const diffIntTime = new Date(checkout) - new Date(checkin);
     const duration = diffIntTime / (1000 * 60 * 60 *24);
 
-
-
     const BookingData = {
       book: { duration, expiration, guest_number, is_paid, checkin, checkout },
       customer: { gender, name, address, phone, id_type, id_number, email }

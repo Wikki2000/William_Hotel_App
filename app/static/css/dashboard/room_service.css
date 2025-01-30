@@ -199,7 +199,7 @@ Service Section
   background-color: #FDF6E4;
   border-radius: 1rem;
   flex-grow: 1;
-  height: 100%;
+  height: 73vh;
   padding: 20px;
 
   .dropdown, input {
@@ -248,7 +248,6 @@ Service Section
   flex-direction: row;
   justify-content: flex-end;
   gap: 25px;
-  margin-top: 100px;
 }
 .print-proceed-btns .print-btn{
   background-color: #FDF6E4;
@@ -268,4 +267,23 @@ Service Section
   border-radius: 10px;
   border: none;
   color: #ffffff;
+  margin-top: 25px;
+}
+
+.service___list-orders {
+  margin-top: 15px;
+  display: none;
+  overflow-y: scroll;
+  height: 25vh;
+}
+
+.service___list-orders .order__history--table-body {
+  td:nth-child(1), td:nth-child(2),
+  td:nth-child(3), td:nth-child(4) {
+    padding-right: 5%;
+  }
+  .manage {
+    right: 15%;
+    top: 55px;
+  }
 }

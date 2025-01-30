@@ -15,7 +15,7 @@
         <h3 id="all__rooms" class="tab__item-2 ui heading size-texts filter highlight-btn">All Rooms</h3>
         <h3 id="rooms__available" class="tab__item-2 ui heading size-texts filter">Available</h3>
         <h4 id="rooms__occupied" class="tab__item-2 ui heading size-texts filter">Occupied</h4>
-	<!--<h5 id="rooms__reserved" class="tab__item-2 ui heading size-texts filter">Reserved</h5>-->
+        <!--<h5 id="rooms__reserved" class="tab__item-2 ui heading size-texts filter">Reserved</h5>-->
       </div>
       <h6 class="info-text ui heading size-texts">All Rooms come with a complementary breakfast!</h6>
     </div>
@@ -40,9 +40,9 @@
             <th width="200px">
               <!-- Heading for Edit Icon -->
             </th>
-	    <th width="200px">
+            <th width="200px">
               <!-- Heading for Delete Icon -->
-	    </th>
+            </th>
           </tr>
         </thead>
         <tbody id="room-table-body" class="room-table-body">
@@ -154,18 +154,58 @@
         </div>
 
         <div>
-          <h5 class="bottom-marg">Payment Status</h5>
+          <h5 class="bottom-marg">Room Payment Status</h5>
           <input id="room__ispaid" readonly placeholder="Auto-fill" required />
         </div>
       </div>
 
       <div class="service-list">
         <h4 class="description"><em>Service List</em></h4>
-        <img class="drop-down" src="/static/images/public/img_arrow_down_black_900_01.svg"width="15px" alt="dropdown">
+        <img id="show__service--list--btn" class="drop-down" src="/static/images/public/img_arrow_down_black_900_01.svg"width="15px" alt="dropdown">
       </div>
+
+      <div class="service___list-orders" id="service___list-orders">
+        <table  cellpadding="0" cellspacing="0">
+          <thead>
+            <tr>
+              <th width="348px">
+                <p class="table__header-cell ui heading size-headings">
+                  Purchase Date<br /><br />
+                </p>
+              </th>
+              <th width="348px">
+                <p class="table__header-cell ui heading size-headings">
+                  Payment Status<br /><br />
+                </p>
+              </th>
+              <th width="348px">
+                <p class="table__header-cell ui heading size-headings">
+                  Amount Paid<br /><br />
+                </p>
+              </th>
+              <th width="348px">
+                <p class="table__header-cell ui heading size-headings">
+                  Payment Type<br /><br />
+                </p>
+              </th>
+              <th width="348px">
+                <p class="table__header-cell ui heading size-headings">
+                  <!-- Placeholder for table menu icon -->
+                </p>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="order__history--table-body">
+            <!-- Table data will dynamically be loaded here -->
+          </tbody>
+        </table>
+      </div>
+
       <div class="total-charge">
         <h4 class="charge"><em>Total Charge</em></h4>
-        <h4 class="amount"><em>₦<span id="room__book-amount">0.00</span></em></h4>
+        <h4 class="amount">
+          <em>₦<span id="room__book-amount">0.00</span></em>
+        </h4>
       </div>
 
       <div class="print-proceed-btns">
@@ -173,6 +213,35 @@
         <button id="room__checkout-btn" class="proceed-btn">Check Out</button>
       </div>
   </section>
+</div>
+
+<!-- Popup Modal for Order Details -->
+<!-- This section is handled by order.js module -->
+<div id="common__popupModal" class="popup-modal">
+  <div class="popup-modal-content order__popup-modal">
+    <!-- Close Button -->
+    <button class="close-btn closePopupModal">×</button>
+
+    <h1>Order Details</h1>
+    <div class="order__details">
+      <div id="order__info" class="order__info">
+        <!-- Order info will be dynamically loaded here -->
+      </div>
+      <div class="order__item-list">
+        <h3>Order Items</h3>
+        <ul id="order__itemList">
+          <!-- Items ordered will be listed here -->
+        </ul>
+      </div>
+    </div>
+    <div class="order__summary">
+      <div class="order__total-cost">
+        <p>Amount</p>
+        <p id="order__totalAmount"></p>
+      </div>
+      <button id="order__print-receipt" class="highlight-btn">Print Receipt</button>
+    </div>
+  </div>
 </div>
 
 <!-- Confirmation Modal Dynamically Loaded Here. -->

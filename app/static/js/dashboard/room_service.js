@@ -1,9 +1,10 @@
 import {
   ajaxRequest, getBaseUrl, validateForm, getFormDataAsDict,
   confirmationModal, displayMenuList, showNotification, fetchData,
-  previewImageAndReurnBase64
+  previewImageAndReurnBase64, britishDateFormat,
 } from '../global/utils.js';
 import { displayRoomData, roomTableTemplate } from '../global/templates.js';
+import { orderHistoryTableTemplate } from '../global/templates1.js';
 
 $(document).ready(function () {
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
@@ -46,12 +47,12 @@ $(document).ready(function () {
           const roomUrl = API_BASE_URL + `/rooms/${roomId}/room-data`;
           fetchData(roomUrl)
             .then(({ id, name, number, amount, image }) => {
-                const defaultImage = (
-                  '/static/images/public/profile_photo_placeholder.png'
-                );
-                const imageSrc = (
-                  image ? 'data:image/;base64, ' + image : defaultImage
-                );
+              const defaultImage = (
+                '/static/images/public/profile_photo_placeholder.png'
+              );
+              const imageSrc = (
+                image ? 'data:image/;base64, ' + image : defaultImage
+              );
               $('#add__new-room').attr('src', imageSrc);
               $('input[name="name"]').val(name);
               $('input[name="number"]').val(number);
@@ -114,7 +115,7 @@ $(document).ready(function () {
         case 'rooms': {
           fetchData(roomUrl)
           .then(({ rooms, rooms_count }) => {
-              displayRoomData(rooms, isStaff);
+            displayRoomData(rooms, isStaff);
           })
           .catch((error) => {
             console.error('Failed to fetch room data:', error);
@@ -197,7 +198,7 @@ $(document).ready(function () {
 
       const roomId = $('#room__id').val();
       const roomNumber = $('input[name="number"]').val();
-      
+
       const addRoomUrl =  API_BASE_URL + '/rooms';
       const editRoomUrl = API_BASE_URL + `/rooms/${roomId}/edit`
       const editRoomMsg = `Room ${roomNumber} Updated Successfully !`;
@@ -242,18 +243,18 @@ $(document).ready(function () {
       .on('click', '.deleteRoom', function() {
 
         $clickItem.prop('disable', true);
-      ajaxRequest(deleteRoomUrl, 'DELETE', null,
-        (response) => {
-          $clickItem.prop('disable', false);
-          $('#order__confirmation-modal').empty();
-          showNotification(`Room ${response.number} Delete Successfully !`);
-          $(`#room-table-body tr[data-id="${roomId}"]`).remove();
-        },
-        (error) => {
-          $clickItem.prop('disable', false);
-          showNotification('An error occured. Try again !');
-        }
-      );
+        ajaxRequest(deleteRoomUrl, 'DELETE', null,
+          (response) => {
+            $clickItem.prop('disable', false);
+            $('#order__confirmation-modal').empty();
+            showNotification(`Room ${response.number} Delete Successfully !`);
+            $(`#room-table-body tr[data-id="${roomId}"]`).remove();
+          },
+          (error) => {
+            $clickItem.prop('disable', false);
+            showNotification('An error occured. Try again !');
+          }
+        );
       });
   });
 
@@ -262,7 +263,7 @@ $(document).ready(function () {
   ==============================================================*/
   $('#dynamic__load-dashboard').on(
     'click', '#room__number-dropdown-btn', function() {
-	    const occupiedRoomUrl = API_BASE_URL + '/occupied-room-number';
+      const occupiedRoomUrl = API_BASE_URL + '/occupied-room-number';
       fetchData(occupiedRoomUrl)
         .then((rooms) => {
           if (!rooms) {
@@ -279,68 +280,102 @@ $(document).ready(function () {
         });
     });
 
-  $('#dynamic__load-dashboard').on('click', '.room__menu', function() {
-    const $clickItem = $(this);
-    const roomNumber =  $clickItem.text();
-    $('#room__number-dropdown').hide();
+  $('#dynamic__load-dashboard').off('click', '.room__menu')
+    .on('click', '.room__menu', function() {
+      const $clickItem = $(this);
+      const roomNumber =  $clickItem.text();
+      $('#room__number-dropdown').hide();
 
-    const selectedRoomUrl =  API_BASE_URL + `/bookings/${roomNumber}/booking-data`;
-    fetchData(selectedRoomUrl)
-      .then(( { room, user, customer, booking }) => {
-        $clickItem.closest('.room__dropdown').find('span').text(roomNumber);
-        $('#room__type').val(room.name);
-        $('#room__occupant-name').val(customer.name);
-        $('#room__book-amount').text(room.amount.toLocaleString());
+      const selectedRoomUrl =  API_BASE_URL + `/bookings/${roomNumber}/booking-data`;
+      fetchData(selectedRoomUrl)
+        .then(( { room, user, customer, booking }) => {
+          $clickItem.closest('.room__dropdown').find('span').text(roomNumber);
+          $('#room__type').val(room.name);
+          $('#room__occupant-name').val(customer.name);
+          const statusText = booking.is_paid === 'yes' ? 'Paid' : 'Pending';
+          $('#room__ispaid').val(statusText);
 
-        const statusText = booking.is_paid === 'yes' ? 'Paid' : 'Pending';
+          const orderUrl = API_BASE_URL + `/rooms/${roomNumber}/room-ordered`;
+          fetchData(orderUrl)
+            .then(({ total_amount, orders }) => {
+              $('.order__history--table-body').empty();
+              if(orders) {
+                orders.forEach((order) => {
+                  const date = britishDateFormat(order.updated_at);
+                  $('.order__history--table-body').append(
+                    orderHistoryTableTemplate(order, date)
+                  );
+                });
+              }
 
-        $('#room__ispaid').val(statusText);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+              const totalServiceCharge = (
+                total_amount ? room.amount + total_amount : room.amount
+              );
+              $('#room__book-amount').text(totalServiceCharge.toLocaleString());
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
 
-    // Load confirmation modal for checkout
-    $('#dynamic__load-dashboard').on('click', '#room__checkout-btn', function() {
-      const roomNumber = $('#room__number-dropdown-btn span').text();
-      if (isNaN(roomNumber)) {
-        showNotification('Error ! No room number selected.', true);
-        return
-      }
-
-      // Load confirmation modal
-      const headingText = 'Confirm Checkout';
-      const descriptionText = 'This action cannot be undone !'
-      const confirmBtCls = 'room__checkout-btn';
-
-      confirmationModal(headingText, descriptionText, confirmBtCls);
-    });
-
-    // Checkout guest in a room
-    $('#dynamic__load-dashboard').on('click', '.room__checkout-btn', function() {
-      const roomNumber = $('#room__number-dropdown-btn span').text();
-      const checkoutUrl = API_BASE_URL + `/rooms/${roomNumber}/checkout`;
-
-      const $button = $(this);
-      $button.prop('disable', true);
-
-      ajaxRequest(checkoutUrl, 'PUT', null,
-        (response) => {
-          $('#order__confirmation-modal').empty();
-          $button.prop('disable', false);
-          showNotification(`Guest successfully checkout from room ${roomNumber}`);
-        },
-        (error) => {
-          if (error.status === 409) {
-            showNotification(error.responseJSON.error, true);
-            $('#order__confirmation-modal').empty();
-            return;
+      // Load confirmation modal for checkout
+      $('#dynamic__load-dashboard').off('click', '#room__checkout-btn')
+        .on('click', '#room__checkout-btn', function() {
+          const roomNumber = $('#room__number-dropdown-btn span').text();
+          if (isNaN(roomNumber)) {
+            showNotification('Error ! No room number selected.', true);
+            return
           }
-          $button.prop('disable', false);
-          $('#order__confirmation-modal').empty();
-          showNotification('An error checking out guest. Try Again !', true);
-        }
-      );
+
+          // Load confirmation modal
+          const headingText = 'Confirm Checkout';
+          const descriptionText = 'This action cannot be undone !'
+          const confirmBtCls = 'room__checkout-btn';
+
+          confirmationModal(headingText, descriptionText, confirmBtCls);
+        });
+
+      // Checkout guest in a room
+      $('#dynamic__load-dashboard').on('click', '.room__checkout-btn', function() {
+        const roomNumber = $('#room__number-dropdown-btn span').text();
+        const checkoutUrl = API_BASE_URL + `/rooms/${roomNumber}/checkout`;
+
+        const $button = $(this);
+        $button.prop('disable', true);
+
+        ajaxRequest(checkoutUrl, 'PUT', null,
+          (response) => {
+            $('#order__confirmation-modal').empty();
+            $button.prop('disable', false);
+            showNotification(`Guest successfully checkout from room ${roomNumber}`);
+          },
+          (error) => {
+            if (error.status === 409) {
+              showNotification(error.responseJSON.error, true);
+              $('#order__confirmation-modal').empty();
+              return;
+            }
+            $button.prop('disable', false);
+            $('#order__confirmation-modal').empty();
+            showNotification('An error checking out guest. Try Again !', true);
+          }
+        );
+      });
     });
-  });
+
+  // Get service list
+  $('#dynamic__load-dashboard')
+    .on('click', '#show__service--list--btn', function() {
+
+      const roomNumber = $('#room__number-dropdown-btn span').text();
+
+      if (isNaN(roomNumber)) {
+        showNotification('No room number selected.', true);
+        return;
+      }
+      $('#service___list-orders').toggle();
+    });
 });
