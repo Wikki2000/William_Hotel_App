@@ -65,7 +65,7 @@ $(document).ready(function() {
     const email = $('#main__guest-email').val();
 
 
-    if (new Date(checkout) < new Date(checkin)) {
+    if (new Date(checkout) <= new Date(checkin)) {
       showNotification(
         'Check Out date must not be earlier than Check In date', true
       );
@@ -74,8 +74,15 @@ $(document).ready(function() {
     const diffIntTime = new Date(checkout) - new Date(checkin);
     const duration = diffIntTime / (1000 * 60 * 60 *24);
 
+    // Get total amount of room book base on night durations.
+    const room_rate = $('#main__room-amount').val();
+    const amount = duration * room_rate;
+
     const BookingData = {
-      book: { duration, expiration, guest_number, is_paid, checkin, checkout },
+      book: {
+        duration, expiration, guest_number,
+        is_paid, checkin, checkout, amount
+      },
       customer: { gender, name, address, phone, id_type, id_number, email }
     };
 
@@ -170,6 +177,12 @@ $(document).ready(function() {
                       $('#main__room-rate')
                         .val('₦' + room.amount.toLocaleString());
                       $('#main__room-type').val(room.name);
+
+		      // The room amount to be retrieve when booking.
+                      // Stored in hidden input fields.
+
+		      $('#main__room-amount').val(room.amount);
+
                     })
                     .catch((error) => {
                       console.log(error);

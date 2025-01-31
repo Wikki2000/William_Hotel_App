@@ -281,7 +281,7 @@ def book_room(user_id: str, user_role: str, room_number: str):
             "is_paid": booking_data.get("is_paid"),
             "customer_id": customer.id, "checkin_by_id": user.id,
             "guest_number": booking_data.get("guest_number"),
-            "room_id": room.id
+            "room_id": room.id, "amount": booking_data.get("amount"),
     }
     try:
         book = Booking(**book_attr)

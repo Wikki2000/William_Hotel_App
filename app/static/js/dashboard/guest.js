@@ -51,7 +51,6 @@ $(document).ready(() => {
               }
             );
 
-
             $('#guest__info').append(
               `<h3></h3>
              <p><b>Guest Name</b> ${customer.name}</p>
@@ -66,7 +65,7 @@ $(document).ready(() => {
              <p><b>Check out Date</b> ${britishDateFormat(booking.checkout)}</p>
              <p><b>Date Book</b> ${britishDateFormat(booking.created_at)}</p>
              <p><b>Payment Status</b> <span style="color: ${paymentStatus.color};">${paymentStatus.status}</span></p>
-             <p><b>Room Rate</b> ₦${room.amount.toLocaleString()}</p>
+             <p><b>Booking Amount</b> ₦${booking.amount.toLocaleString()}</p>
               <p><b>Checkin  By</b> ${checkin_by.first_name} ${checkin_by.last_name} (${checkin_by.portfolio})</p>
               <p><b>Checkout  By</b> ${checkout_staff.first_name} ${checkout_staff.last_name} (${checkout_staff.portfolio})</p>`
 
@@ -93,7 +92,7 @@ $(document).ready(() => {
             $('#guest__checkout').val(canadianDateFormat(booking.checkout));
             $('#guest__roomNumber').val(room.number);
             $('#guest__roomType').val(room.name);
-            $('#guest__roomAmount').val('₦' + room.amount.toLocaleString());
+            $('#guest__roomAmount').val('₦' + booking.amount.toLocaleString());
             $('#guest__name').val(customer.name);
             $('#guest__phoneNumber').val(customer.phone);
             $('#guest-idType span').text(customer.id_type);

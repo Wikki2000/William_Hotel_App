@@ -263,7 +263,7 @@ export function guestListTableTemplate(guest, booking, room, date) {
       <p class="ui text size-textmd">${date.checkoutDate}</p>
     </td>
     <td class="">
-      <p class="ui text size-textmd">₦${room.amount.toLocaleString()}</p>
+      <p class="ui text size-textmd">₦${booking.amount.toLocaleString()}</p>
     </td>
     <td>
       <p><i class="fa fa-ellipsis-v"></i></p>

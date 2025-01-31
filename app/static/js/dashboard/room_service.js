@@ -314,7 +314,7 @@ $(document).ready(function () {
               }
 
               const totalServiceCharge = (
-                total_amount ? room.amount + total_amount : room.amount
+                total_amount ? booking.amount + total_amount : booking.amount
               );
               $('#room__book-amount').text(totalServiceCharge.toLocaleString());
             })

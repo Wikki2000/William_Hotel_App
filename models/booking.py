@@ -19,6 +19,7 @@ class Booking(BaseModel, Base):
     is_paid = Column(ENUM("yes", "no"), nullable=False)
     is_use = Column(Boolean, default=True)
     guest_number = Column(String(30), nullable=False)
+    amount = Column(Float, nullable=False)
     customer_id = Column(
         String(60), ForeignKey("customers.id"), nullable=False
     )
