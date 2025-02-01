@@ -65,14 +65,15 @@ $(document).ready(() => {
              <p><b>Check out Date</b> ${britishDateFormat(booking.checkout)}</p>
              <p><b>Date Book</b> ${britishDateFormat(booking.created_at)}</p>
              <p><b>Payment Status</b> <span style="color: ${paymentStatus.color};">${paymentStatus.status}</span></p>
+	     <p><b>Room(${room.number}) Rate</b> ₦${room.amount.toLocaleString()}</p>
              <p><b>Booking Amount</b> ₦${booking.amount.toLocaleString()}</p>
               <p><b>Checkin  By</b> ${checkin_by.first_name} ${checkin_by.last_name} (${checkin_by.portfolio})</p>
               <p><b>Checkout  By</b> ${checkout_staff.first_name} ${checkout_staff.last_name} (${checkout_staff.portfolio})</p>`
 
             );
             $('#room__totalAmount')
-              .text('₦' + room.amount.toLocaleString());
-            $('#booking__print-receipt').attr('data-id', `${room.number}`);
+              .text('₦' + booking.amount.toLocaleString());
+            $('#booking__print-receipt').attr('data-id', `${booking.id}`);
           })
         .catch((error) => {
           console.log(error);
