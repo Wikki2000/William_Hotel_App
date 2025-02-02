@@ -67,7 +67,7 @@ def get_bookings_by_date(
         reverse=True
     )
 
-    accumulated_sum = sum(booking.room.amount for booking in sorted_bookings)
+    accumulated_sum = sum(booking.amount for booking in sorted_bookings)
     response = {
         "bookings": [{
             "booking": booking.to_dict(),
@@ -212,6 +212,12 @@ def update_booking_data(user_id: str, user_role: str, booking_id: str):
     new_room = storage.get_by(Room, number=room_data.get("room_number"))
     new_room.status = "occupied"
 
+    # Update sales record of date when the room was book.
+    booking_date = booking.created_at.strftime("%Y-%m-%d")
+    today_sale = storage.get_by(DailySale, entry_date=booking_date)
+    today_sale.amount += booking_data.get("amount") - booking.amount
+    
+
     # Update booking data
     for key, val in booking_data.items():
         setattr(booking, key, val)
@@ -258,7 +264,9 @@ def book_room(user_id: str, user_role: str, room_number: str):
     )
 
     if not transaction:
-        transaction = DailySale(entry_date=today_date, amount=room.amount)
+        transaction = DailySale(
+            entry_date=today_date, amount=booking_data.get("amount")
+        )
         storage.new(transaction)
     else:
         transaction.amount += room.amount
@@ -289,7 +297,8 @@ def book_room(user_id: str, user_role: str, room_number: str):
         room.status = "occupied"   # Cheange room status once book
         storage.save()
 
-        return jsonify({"message": "Booking Successfully"}), 200
+        print(book.id)
+        return jsonify({"booking_id": book.id}), 200
     except Exception as e:
         print(str(e))
         return jsonify({

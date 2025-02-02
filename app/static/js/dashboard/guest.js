@@ -59,13 +59,13 @@ $(document).ready(() => {
              <p><b>Guest Number</b> ${customer.phone}</p>
              <p><b>Guest Address</b> ${customer.address}</p>
              <p><b>Guest Gender</b> ${customer.gender}</p>
-	     <p><b>Guest Email</b> ${customer.email}</p>
+             <p><b>Guest Email</b> ${customer.email}</p>
              <p><b>Checkin Date</b> ${britishDateFormat(booking.checkin)}</p>
              <p><b>Expiration Duration</b> ${booking.duration} Night(s)</p>
              <p><b>Check out Date</b> ${britishDateFormat(booking.checkout)}</p>
              <p><b>Date Book</b> ${britishDateFormat(booking.created_at)}</p>
              <p><b>Payment Status</b> <span style="color: ${paymentStatus.color};">${paymentStatus.status}</span></p>
-	     <p><b>Room(${room.number}) Rate</b> ₦${room.amount.toLocaleString()}</p>
+             <p><b>Room(${room.number}) Rate</b> ₦${room.amount.toLocaleString()}</p>
              <p><b>Booking Amount</b> ₦${booking.amount.toLocaleString()}</p>
               <p><b>Checkin  By</b> ${checkin_by.first_name} ${checkin_by.last_name} (${checkin_by.portfolio})</p>
               <p><b>Checkout  By</b> ${checkout_staff.first_name} ${checkout_staff.last_name} (${checkout_staff.portfolio})</p>`
@@ -93,7 +93,7 @@ $(document).ready(() => {
             $('#guest__checkout').val(canadianDateFormat(booking.checkout));
             $('#guest__roomNumber').val(room.number);
             $('#guest__roomType').val(room.name);
-            $('#guest__roomAmount').val('₦' + booking.amount.toLocaleString());
+            $('#guest__roomAmount').val('₦' + room.amount.toLocaleString());
             $('#guest__name').val(customer.name);
             $('#guest__phoneNumber').val(customer.phone);
             $('#guest-idType span').text(customer.id_type);
@@ -113,10 +113,12 @@ $(document).ready(() => {
             console.log(error);
           });
 
-	// Restrict a staff from changing room number
-	if (USER_ROLE === 'staff') {
-	  $('.guest-input-column .dropdown-menu').remove();
-	}
+        // Restrict a staff from changing room number
+        if (USER_ROLE === 'staff') {
+          $('.guest-input-column .dropdown-menu').remove();
+          $('#guest__checkinDate').prop('readonly', true);
+          $('#guest__checkout').prop('readonly', true);
+        }
       });
 
       // Show dropdown menu
@@ -171,15 +173,29 @@ $(document).ready(() => {
 
       // Booking Data
       const checkin = $('#guest__checkinDate').val();
-      const duration = $('#guest__duration').val();
       const checkout =$('#guest__checkout').val();
+
+      if (new Date(checkout) <= new Date(checkin)) {
+        showNotification(
+          'Check Out date must not be earlier than Check In date', true
+        );
+        return;
+      }
+      const diffIntTime = new Date(checkout) - new Date(checkin);
+      const duration = diffIntTime / (1000 * 60 * 60 *24);
+
+      // Get total amount of room book base on night durations.
+      const room_rate = parseFloat(
+        $('#guest__roomAmount').val().replaceAll(',', '').replaceAll('₦', '')
+      );
+      const amount = duration * room_rate;
 
       // Room data
       const roomNumber = $('#guest__room-number-menu').text();
 
       const data = {
         customer: { name, address, gender, phone, id_type, id_number },
-        booking: { checkin, duration, checkout },
+        booking: { checkin, duration, checkout, amount },
         room: { room_number: roomNumber}
       }
 
@@ -211,7 +227,6 @@ $(document).ready(() => {
       const url = API_BASE_URL + `/bookings/${startDate}/${endDate}/get`
       fetchData(url)
         .then(({ bookings, accumulated_sum }) => {
-          console.log(bookings, accumulated_sum);
 
           $('.guest-table-body').empty();
           $('#expenditure__total__amount-entry').text(0);
