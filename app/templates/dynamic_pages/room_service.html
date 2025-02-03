@@ -123,98 +123,102 @@
   <!-- Service Section -->
   <section id="services-section" class="services-section">
     <h2 class="bottom-marg quick_services"><em>Quick Service Check</em></h2>
-    <!--<div class="check-btn">
-      <button class="tab__item ui heading size-headingxs filter highlight-btn">Check Out</button>
-      <button class="tab__item ui heading size-headingxs filter">Book History</button>
-      </div><br />-->
-      <div class="room__details">
-        <div>
-          <h5 class="bottom-marg"><em>Room No.</em></h5>
-          <div class="dropdown room__dropdown">
-            <div id="room__number-dropdown-btn" class="drop-down">
-              <span>Select </span>
-              <img src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px" alt="dropdown" />
-            </div>
-            <div class="dropdown-menu" id="room__number-dropdown">
-              <ul class="main__dropdown--menu-list">
-                <!-- Menu list loaded here dynamically -->
-              </ul>
-            </div>
+    <div class="check-btn">
+      <button id="guest__extend-stay" class="tab__item ui heading size-headingxs highlight-btn">
+        Extend Guest Stay
+      </button>
+      <!--<button class="tab__item ui heading size-headingxs filter">
+        Book History
+        </button>-->
+    </div><br />
+    <div class="room__details">
+      <div>
+        <h5 class="bottom-marg"><em>Room No.</em></h5>
+        <div class="dropdown room__dropdown">
+          <div id="room__number-dropdown-btn" class="drop-down">
+            <span>Select </span>
+            <img src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px" alt="dropdown" />
+          </div>
+          <div class="dropdown-menu" id="room__number-dropdown">
+            <ul class="main__dropdown--menu-list">
+              <!-- Menu list loaded here dynamically -->
+            </ul>
           </div>
         </div>
-
-        <div>
-          <h5 class="bottom-marg"><em>Room Type</em></h5>
-          <input id="room__type" readonly placeholder="Auto-fill" required />
-        </div>
-
-        <div>
-          <h5 class="bottom-marg"><em>Guest Name</em></h5>
-          <input id="room__occupant-name" readonly placeholder="Auto-fill" required />
-        </div>
-
-        <div>
-          <h5 class="bottom-marg">Room Payment Status</h5>
-          <input id="room__ispaid" readonly placeholder="Auto-fill" required />
-        </div>
       </div>
 
-      <div class="service-list">
-        <h4 class="description"><em>Service List</em></h4>
-        <img id="show__service--list--btn" class="drop-down" src="/static/images/public/img_arrow_down_black_900_01.svg"width="15px" alt="dropdown">
+      <div>
+        <h5 class="bottom-marg"><em>Room Type</em></h5>
+        <input id="room__type" readonly placeholder="Auto-fill" required />
       </div>
 
-      <!-- Temporarily stored booking ID -->
-      <input id="booking__id" type="hidden" />
-
-      <div class="service___list-orders" id="service___list-orders">
-        <table  cellpadding="0" cellspacing="0">
-          <thead>
-            <tr>
-              <th width="348px">
-                <p class="table__header-cell ui heading size-headings">
-                  Purchase Date<br /><br />
-                </p>
-              </th>
-              <th width="348px">
-                <p class="table__header-cell ui heading size-headings">
-                  Payment Status<br /><br />
-                </p>
-              </th>
-              <th width="348px">
-                <p class="table__header-cell ui heading size-headings">
-                  Amount Paid<br /><br />
-                </p>
-              </th>
-              <th width="348px">
-                <p class="table__header-cell ui heading size-headings">
-                  Payment Type<br /><br />
-                </p>
-              </th>
-              <th width="348px">
-                <p class="table__header-cell ui heading size-headings">
-                  <!-- Placeholder for table menu icon -->
-                </p>
-              </th>
-            </tr>
-          </thead>
-          <tbody class="order__history--table-body">
-            <!-- Table data will dynamically be loaded here -->
-          </tbody>
-        </table>
+      <div>
+        <h5 class="bottom-marg">Room Rate</h5>
+        <input id="room__amount-rate" readonly placeholder="Auto-fill" required />
       </div>
 
-      <div class="total-charge">
-        <h4 class="charge"><em>Total Charge</em></h4>
-        <h4 class="amount">
-          <em>₦<span id="room__book-amount">0.00</span></em>
-        </h4>
+      <div>
+        <h5 class="bottom-marg"><em>Guest Name</em></h5>
+        <input id="room__occupant-name" readonly placeholder="Auto-fill" required />
       </div>
+    </div>
 
-      <div class="print-proceed-btns">
-        <!--<p class="print-btn">Print Receipt</p>-->
-        <button id="room__checkout-btn" class="proceed-btn">Check Out</button>
-      </div>
+    <div class="service-list">
+      <h4 class="description"><em>Service List</em></h4>
+      <img id="show__service--list--btn" class="drop-down" src="/static/images/public/img_arrow_down_black_900_01.svg"width="15px" alt="dropdown">
+    </div>
+
+    <!-- Temporarily stored booking ID -->
+    <input id="booking__id" type="hidden" />
+
+    <div class="service___list-orders" id="service___list-orders">
+      <table  cellpadding="0" cellspacing="0">
+        <thead>
+          <tr>
+            <th width="348px">
+              <p class="table__header-cell ui heading size-headings">
+              Purchase Item<br /><br />
+              </p>
+            </th>
+            <th width="348px">
+              <p class="table__header-cell ui heading size-headings">
+              Purchase Date<br /><br />
+              </p>
+            </th>
+            <th width="348px">
+              <p class="table__header-cell ui heading size-headings">
+              Payment Status<br /><br />
+              </p>
+            </th>
+            <th width="348px">
+              <p class="table__header-cell ui heading size-headings">
+              Amount Paid<br /><br />
+              </p>
+            </th>
+            <th width="348px">
+              <p class="table__header-cell ui heading size-headings">
+              <!-- Placeholder for table menu icon -->
+              </p>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="order__history--table-body">
+          <!-- Table data will dynamically be loaded here -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="total-charge">
+      <h4 class="charge"><em>Total Charge</em></h4>
+      <h4 class="amount">
+        <em>₦<span id="total__service-charge--amount">0.00</span></em>
+      </h4>
+    </div>
+
+    <div class="print-proceed-btns">
+      <!--<p class="print-btn">Print Receipt</p>-->
+      <button id="room__checkout-btn" class="proceed-btn">Check Out</button>
+    </div>
   </section>
 </div>
 
@@ -243,6 +247,66 @@
         <p id="order__totalAmount"></p>
       </div>
       <button id="order__print-receipt" class="highlight-btn">Print Receipt</button>
+    </div>
+  </div>
+</div>
+
+<!-- Popup modal to extend guest stay in a room -->
+<div id="guest__extend-stay--modal" class="popup-modal">
+  <div class="popup-modal-content guest__popup-modal-content">
+    <!-- Close Button -->
+    <button class="close-btn closePopupModal">×</button>
+    <form id="guest__extend-stay--form">
+      <h2>Extend Guest Stay</h2><br>
+      <b>Check In:</b> &nbsp;&nbsp;&nbsp;<input type="date" name="checkin" required><br><br>
+      <b>Check Out:</b> &nbsp;<input type="date" name="checkout" required></br><br>
+
+      <div class="guest__drop-down--menu">
+        <p><strong>Instance Payment:</strong></p>
+        <div class="dropdown guest__dropdown-btn--container">
+          <div id="guest__ispaid" class="guest__dropdown-btn drop-down">
+            <span>Select </span>
+            <img src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px" alt="dropdown" />
+          </div>
+          <div class="dropdown-menu" id="guest__ispaid-dropdown">
+            <ul class="guest__dropdown--menu-list">
+              <li class="guest__dropdown-selector dropdown-item">Yes</li>
+              <li class="guest__dropdown-selector dropdown-item">No</li>
+            </ul>
+          </div>
+        </div>
+      </div>    
+
+      <div class="guest__add-edit--btnContainer">
+        <button id="extend__guest-stay--btn" class="highlight-btn guest__add-edit--btn">Save</button>
+      </div>
+      <input id="guest__lodged-room--id" type="hidden" required />
+      <input id="guest__lodged-id" type="hidden" required />
+      <input id="room__price-val" type="hidden" required />
+      <input id="guest__occupant-no" type="hidden" required />
+      <input id="guest__ispaid-menu--selected" type="hidden" required />
+    </form>
+  </div>
+</div>
+
+<!-- Loading of this data is handle by guest.js module -->
+<!-- Popup Modal For Guest details -->
+<div id="guest__popupModal" class="popup-modal">
+  <div class="popup-modal-content guest__popup-modal">
+    <!-- Close Button -->
+    <button class="close-btn closePopupModal">&times;</button>
+
+    <h1>Booking Details</h1>
+    <div id="guest__info" class="guest__info">
+      <!-- Order info will be dynamically loaded here -->
+    </div>
+
+    <div class="room__summary">
+      <div class="room__total-cost">
+        <p>Amount</p>
+        <p id="room__totalAmount"></p>
+      </div>
+      <button id="booking__print-receipt" class="highlight-btn">Print Receipt</button>
     </div>
   </div>
 </div>

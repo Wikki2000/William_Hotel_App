@@ -81,7 +81,7 @@
   margin-top: 20px;
 }
 
-.guest-input-column #main__dropdown--room-no {
+.guest-input-column #guest__dropdown--room-no {
   display: flex;
   justify-content: space-between;
 }

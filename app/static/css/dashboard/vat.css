@@ -43,6 +43,7 @@
   }
 }
 
+/*
 #vat__add-edit {
   .vat__popup-modal-content {
     width: 35%;
@@ -75,7 +76,7 @@
     }
   }
 }
-
+*/
 #vat__list-table--body tr {
   padding: 10px;
   td {

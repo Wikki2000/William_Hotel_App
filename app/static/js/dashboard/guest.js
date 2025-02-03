@@ -1,6 +1,6 @@
 import {
   ajaxRequest, britishDateFormat, fetchData, getBaseUrl, canadianDateFormat,
-  confirmationModal, showNotification, validateForm,
+  confirmationModal, showNotification, validateForm, displayMenuList
 } from '../global/utils.js';
 import {  guestListTableTemplate }  from '../global/templates.js';
 
@@ -15,6 +15,7 @@ $(document).ready(() => {
   $('#dynamic__load-dashboard').on('click', '.guest__listMenu', function() {
     const $clickItem = $(this);
     const clickItemId = $clickItem.data('id');
+
 
     // Toggle visibility of icon to show and cancel table menu
     $clickItem.closest('td').siblings().find('.fa.fa-times').hide();
@@ -69,7 +70,6 @@ $(document).ready(() => {
              <p><b>Booking Amount</b> ₦${booking.amount.toLocaleString()}</p>
               <p><b>Checkin  By</b> ${checkin_by.first_name} ${checkin_by.last_name} (${checkin_by.portfolio})</p>
               <p><b>Checkout  By</b> ${checkout_staff.first_name} ${checkout_staff.last_name} (${checkout_staff.portfolio})</p>`
-
             );
             $('#room__totalAmount')
               .text('₦' + booking.amount.toLocaleString());
@@ -153,9 +153,55 @@ $(document).ready(() => {
           $('#guest__genderValue').val(selectedMenu);
           $('#guest-gender span').text(selectedMenu); // Display option
         }
+        else if($clickItem.hasClass('guest__dropdown--room-no')) {
+          const newRoomNumber = $(this).text();
+          const oldRoomNumber = $('#guest__room-number-menu').text();
+
+          $('#guest__room-number-menu').text(newRoomNumber);
+          console.log(oldRoomNumber, newRoomNumber);
+
+          const roomUpdateUrl = (
+            API_BASE_URL + 
+            `/guests/${oldRoomNumber}/${newRoomNumber}/change-room`
+          );
+          ajaxRequest(roomUpdateUrl, 'PUT', null,
+            ({ room, customer }) => {
+              $('#guest__roomAmount').val(room.amount);
+              $('#guest__roomType').val(room.name);
+              showNotification(
+              `Guest transfer from room ${oldRoomNumber} to room ${newRoomNumber}`
+              );
+            },
+            (error) => {
+              showNotification('An error: Try Again !', true);
+            }
+          );
+
+        }
       });
     }
   });
+
+  // Display room number menu
+  $('#dynamic__load-dashboard')
+    .off('click', '#guest__dropdown--room-no')
+    .on('click', '#guest__dropdown--room-no', function() {
+      const occupiedRoomUrl = API_BASE_URL + '/room-numbers';
+      fetchData(occupiedRoomUrl)
+        .then((rooms) => {
+          if (!rooms) {
+            const msg = 'No room lodge at the moment !';
+            showNotification(msg);
+          }
+          const occupiedNumberList = rooms;
+          displayMenuList(
+            occupiedNumberList, $($(this)), 'dropdown-item guest__dropdown--room-no'
+          );
+        })
+        .catch((error)  => {
+          console.log(error);
+        });
+    });
 
   // Handle update of guest data
   $('#dynamic__load-dashboard').off('click', '#guest__input_btn')

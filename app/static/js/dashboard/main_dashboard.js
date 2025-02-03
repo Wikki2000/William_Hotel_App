@@ -113,8 +113,6 @@ $(document).ready(function() {
 	      APP_BASE_URL + `/bookings/print-receipt?booking_id=${bookingId}`
 	    );
 	    window.open(receiptUrl, '_blank');
-
-
 	  },
 	  (error) => {
 	    $button.prop('disable', false);

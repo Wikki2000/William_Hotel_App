@@ -311,11 +311,11 @@ export function orderHistoryTableTemplate(order, date, customer = null) {
   const paymentStatus = order.is_paid ? 'Paid' : 'Pending';
   const textColor = order.is_paid ? 'green' : 'red';
   const hideClass = customer ? '' : 'hide';
-  const customerName = customer ? customer.name : '';
+  const customerName = customer ? customer.name : 'Food & Drink';
 
   const row = `
 <tr data-id="${order.id}">
-    <td class="${hideClass}">
+    <td class="">
       <p class="ui text size-textmd">${customerName}</p>
     </td>
     <td>
@@ -328,10 +328,10 @@ export function orderHistoryTableTemplate(order, date, customer = null) {
       <p class="ui text size-textmd">₦${order.amount.toLocaleString()}</p>
     </td>
     <td>
-      <p class="ui text size-textmd">${order.payment_type}</p>
+      <p class="${hideClass} ui text size-textmd">${order.payment_type}</p>
     </td>
 
-    <td>
+    <td class="order__table-menu">
       <p><i class="fa fa-ellipsis-v"></i></p>
       <p><i style="display: none;" class="fa fa-times"></i></p>
     </td>
@@ -354,6 +354,51 @@ export function orderHistoryTableTemplate(order, date, customer = null) {
   return row;
 }
 
+export function bookingServiceListTableTemplate(booking, date) {
+  const paymentStatus = booking.is_paid === 'yes' ? 'Paid' : 'Pending';
+  const textColor = booking.is_paid === 'yes' ? 'green' : 'red';
+
+  const row = `
+   <tr data-id="${booking.id}">
+    <td class="">
+      <p class="ui text size-textmd">Room Booking</p>
+    </td>
+    <td>
+      <p class="ui text size-textmd">${date}</p>
+    </td>
+    <td>
+      <p style="color: ${textColor}" class="ui text size-textmd booking__bill-status">${paymentStatus}</p>
+    </td>
+    <td>
+      <p class="ui text size-textmd">₦${booking.amount.toLocaleString()}</p>
+    </td>
+
+    <td>
+      <p class="ui text size-textmd"></p>
+    </td>
+
+    <td class="booking__table-menu">
+      <p><i class="fa fa-ellipsis-v"></i></p>
+      <p><i style="display: none;" class="fa fa-times"></i></p>
+    </td>
+    <td class="manage">
+      <nav class="manage__nav">
+        <ul class="manage__list">
+          <li data-id="${booking.id}" data-name="${booking.duration} Night(s) Booking" class="manage__item service__clear-room-bill">
+            <i class="fa fa-money-bill-wave"></i>Clear Bill
+          </li>
+	    <li data-id="${booking.id}" class="manage__item guest__list-bookDetail guest__listMenu">
+	      <i class="fa fa-eye"></i>Booking Details
+           </li>
+	   <li data-id="${booking.id}" class="manage__item guest__listPrint  guest__listMenu">
+            <i class="fa fa-print"></i>Print Receipt
+          </li>
+        </ul>
+      </nav>
+    </td>
+  </tr>`;
+  return row;
+}
 export function orderDetails(customer, order, order_items, cleared_by, ordered_by, date) {
   const guestType = customer.is_guest ? 'Lodged' : 'Walk In';
   const paymentStatus = (

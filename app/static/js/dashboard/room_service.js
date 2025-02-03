@@ -1,10 +1,12 @@
 import {
   ajaxRequest, getBaseUrl, validateForm, getFormDataAsDict,
   confirmationModal, displayMenuList, showNotification, fetchData,
-  previewImageAndReurnBase64, britishDateFormat,
+  previewImageAndReurnBase64, britishDateFormat, togleTableMenuIcon
 } from '../global/utils.js';
 import { displayRoomData, roomTableTemplate } from '../global/templates.js';
-import { orderHistoryTableTemplate } from '../global/templates1.js';
+import {
+  bookingServiceListTableTemplate, orderHistoryTableTemplate
+} from '../global/templates1.js';
 
 $(document).ready(function () {
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
@@ -286,24 +288,39 @@ $(document).ready(function () {
       const roomNumber =  $clickItem.text();
       $('#room__number-dropdown').hide();
 
-      const selectedRoomUrl =  API_BASE_URL + `/bookings/${roomNumber}/booking-data`;
+      const selectedRoomUrl =  (
+        API_BASE_URL + `/rooms/${roomNumber}/booking-data`
+      );
       fetchData(selectedRoomUrl)
         .then(( { room, user, customer, booking }) => {
           $clickItem.closest('.room__dropdown').find('span').text(roomNumber);
           $('#room__type').val(room.name);
           $('#room__occupant-name').val(customer.name);
-          const statusText = booking.is_paid === 'yes' ? 'Paid' : 'Pending';
-          $('#room__ispaid').val(statusText);
+          $('#room__amount-rate').val('₦' + room.amount.toLocaleString());
 
-          // Retrieve and use while cjecking out guest.
+          // Store in hidden input field to be use further..
           $('#booking__id').val(booking.id);
+          $('#guest__lodged-room--id').val(room.id);
+          $('#guest__lodged-id').val(customer.id);
+          $('#room__price-val').val(room.amount);
+          $('#guest__occupant-no').val(booking.guest_number);
 
           const orderUrl = (
-            API_BASE_URL + `/orders/${customer.id}/lodged-guest-ordered`
+            API_BASE_URL + `/guests/${customer.id}/${booking.id}/service-list`
           );
           fetchData(orderUrl)
-            .then(({ total_amount, orders }) => {
+            .then(({ bookings, orders, bookings_amount, orders_amount }) => {
               $('.order__history--table-body').empty();
+
+              if(bookings) {
+                bookings.forEach((booking) => {
+                  const date = britishDateFormat(booking.updated_at);
+                  $('.order__history--table-body').append(
+                    bookingServiceListTableTemplate(booking, date)
+                  );
+                });
+              }
+
               if(orders) {
                 orders.forEach((order) => {
                   const date = britishDateFormat(order.updated_at);
@@ -313,10 +330,9 @@ $(document).ready(function () {
                 });
               }
 
-              const totalServiceCharge = (
-                total_amount ? booking.amount + total_amount : booking.amount
-              );
-              $('#room__book-amount').text(totalServiceCharge.toLocaleString());
+              const totalAmount = bookings_amount + orders_amount;
+
+              $('#total__service-charge--amount').text(totalAmount.toLocaleString());
             })
             .catch((error) => {
               console.log(error);
@@ -346,43 +362,214 @@ $(document).ready(function () {
       // Checkout guest in a room
       $('#dynamic__load-dashboard').off('click', '.room__checkout-btn')
         .on('click', '.room__checkout-btn', function() {
-        const roomNumber = $('#room__number-dropdown-btn span').text();
-        const bookingId = $('#booking__id').val();
-        const checkoutUrl = API_BASE_URL + `/rooms/${bookingId}/checkout`;
+          const roomNumber = $('#room__number-dropdown-btn span').text();
+          const bookingId = $('#booking__id').val();
 
-        const $button = $(this);
-        $button.prop('disable', true);
+          // Retrieved from hidden input field.
+          const guestId = $('#guest__lodged-id').val();
+          const roomId = $('#guest__lodged-room--id').val();
+          const checkoutUrl = (
+            API_BASE_URL + `/rooms/${roomId}/customer/${guestId}/checkout`
+          );
 
-        ajaxRequest(checkoutUrl, 'PUT', null,
-          (response) => {
-            $('#order__confirmation-modal').empty();
-            $button.prop('disable', false);
-            showNotification(`Guest successfully checkout from room ${roomNumber}`);
-          },
-          (error) => {
-            if (error.status === 409) {
-              showNotification(error.responseJSON.error, true);
+          const $button = $(this);
+          $button.prop('disable', true);
+
+          ajaxRequest(checkoutUrl, 'PUT', null,
+            (response) => {
               $('#order__confirmation-modal').empty();
-              return;
+              $button.prop('disable', false);
+              showNotification(`Guest successfully checkout from room ${roomNumber}`);
+            },
+            (error) => {
+              if (error.status === 409) {
+                showNotification(error.responseJSON.error, true);
+                $('#order__confirmation-modal').empty();
+                return;
+              }
+              $button.prop('disable', false);
+              $('#order__confirmation-modal').empty();
+              showNotification('An error checking out guest. Try Again !', true);
             }
-            $button.prop('disable', false);
-            $('#order__confirmation-modal').empty();
-            showNotification('An error checking out guest. Try Again !', true);
-          }
-        );
-      });
+          );
+        });
     });
 
-  // Togle visibility of service list.
+  // Extend guest stay by placing new booking.
   $('#dynamic__load-dashboard')
-    .on('click', '#show__service--list--btn', function() {
+    .off('click', '#guest__extend-stay')
+    .on('click', '#guest__extend-stay', function() {
 
-      const roomNumber = $('#room__number-dropdown-btn span').text();
-
+      const roomNumber = $('#room__number-dropdown-btn').text();
       if (isNaN(roomNumber)) {
         showNotification('No room number selected.', true);
         return;
       }
-      $('#service___list-orders').toggle();
+
+      $('#guest__extend-stay--modal').css('display', 'flex');
     });
+
+  // Handle display and selection of payment status menu.
+  $('#dynamic__load-dashboard').off('click', '#guest__ispaid')
+    .on('click', '#guest__ispaid', function() {
+      $('#guest__ispaid-dropdown').show();
+
+      $('#dynamic__load-dashboard').off('click', '.guest__dropdown-selector')
+        .on('click', '.guest__dropdown-selector', function() {
+          const selectedOption = $(this).text();
+
+          $('#guest__ispaid span').text(selectedOption);
+          $('#guest__ispaid-dropdown').hide();
+          $('#guest__ispaid-menu--selected').val(selectedOption.toLowerCase());
+        });
+    });
+
+
+  // Form to handle submission to extend guest stay in a room.
+  $('#dynamic__load-dashboard').off('submit', '#guest__extend-stay--form')
+    .on('submit', '#guest__extend-stay--form', function(e) {
+
+      e.preventDefault();
+
+      const $formElement = $(this);
+
+      const headingText = 'Confirm New Booking';
+      const descriptionText = 'This action cannot be undone !'
+      const confirmBtCls = 'guest__extend-stay--confirm';
+
+      // Validate that required fields are entered correctly.
+      const checkin = $('input[name="checkin"]').val();
+      const checkout = $('input[name="checkout"]').val();
+
+      if (new Date(checkout) <= new Date(checkin)) {
+        showNotification(
+          'Check Out date must not be earlier than Check In date', true
+        );
+        return;
+      } else if (!validateForm($formElement)) {
+        showNotification('Please fill out all required fields.', true);
+        return;
+      }
+      confirmationModal(headingText, descriptionText, confirmBtCls);
+    });
+
+  $('#dynamic__load-dashboard').off('click', '.guest__extend-stay--confirm')
+    .on('click', '.guest__extend-stay--confirm', function() {
+
+      const customerId = $('#guest__lodged-id').val();
+      const roomId = $('#guest__lodged-room--id').val();
+
+      const checkin = $('input[name="checkin"]').val();
+      const checkout = $('input[name="checkout"]').val();
+      const guest_number = $('#guest__occupant-no').val();
+      const is_paid = $('#guest__ispaid-menu--selected').val();
+      const $button = $(this);
+
+      const url = (
+        API_BASE_URL + `/guests/${customerId}/rooms/${roomId}/extend-stay`
+      );
+
+      const diffIntTime = new Date(checkout) - new Date(checkin);
+      const duration = diffIntTime / (1000 * 60 * 60 *24);
+
+      // Get total amount of room book base on night durations.
+      const roomRate = $('#room__price-val').val();
+      const amount = duration * roomRate;
+
+      const BookingData = {
+        duration, guest_number, amount,
+        is_paid, checkin, checkout,
+      };
+
+      ajaxRequest(url, 'POST', JSON.stringify(BookingData),
+        (response) => {
+          $button.prop('disable', false);
+          $('#main__popup-modal').hide();
+          $('#order__confirmation-modal').empty();
+          $('#guest__extend-stay--form').trigger('reset');
+          $('#guest__extend-stay--modal').hide();
+          const msg = (
+            `Duration of guest extended by ${duration} Night(s)`
+          );
+          showNotification(msg);
+          
+
+          // Update the total service charge when new booking is made.
+          const previousServiceCharge = parseFloat(
+            $('#total__service-charge--amount').text().replaceAll(',','')
+          );
+          const updatedServiceCharge  = previousServiceCharge + amount;
+          $('#total__service-charge--amount').text(
+            updatedServiceCharge.toLocaleString()
+          );
+
+          const date = britishDateFormat(response.created_at);
+          $('.order__history--table-body').prepend(
+            bookingServiceListTableTemplate(response, date)
+          );
+
+            // Print receipt immediately room is book.
+            const bookingId = response.id;
+            const receiptUrl = (
+              APP_BASE_URL + `/bookings/print-receipt?booking_id=${bookingId}`
+            );
+            window.open(receiptUrl, '_blank');
+          },
+        (error) => {
+          $button.prop('disable', false);
+          if (error.status === 409) {
+            showNotification('Error! ' +  error.responseJSON.error, true);
+          } else {
+            showNotification('An Error occured. Try Again !', true);
+          }
+          $('#main__popup-modal').hide();
+        }
+          );
+    });
+
+      // Togle visibility of service list.
+      $('#dynamic__load-dashboard')
+        .on('click', '#show__service--list--btn', function() {
+
+          const roomNumber = $('#room__number-dropdown-btn span').text();
+
+          if (isNaN(roomNumber)) {
+            showNotification('No room number selected.', true);
+            return;
+          }
+          $('#service___list-orders').toggle();
+        });
+
+      // Clear guest room book bill
+      $('#dynamic__load-dashboard')
+        .off('click', '.service__clear-room-bill')
+        .on('click', '.service__clear-room-bill', function() {
+          const bookId = $(this).data('id');
+          const headingText = 'Confirm Clearing Bill';
+          const descriptionText = 'This action cannot be undone !'
+          const confirmBtCls = 'service__clear-room-billConfirm';
+          confirmationModal(headingText, descriptionText, confirmBtCls);
+
+          togleTableMenuIcon();
+
+          $('#dynamic__load-dashboard')
+            .off('click', '.service__clear-room-billConfirm')
+            .on('click', '.service__clear-room-billConfirm', function() {
+
+              $('#order__confirmation-modal').empty();
+
+              const url = API_BASE_URL + `/bookings/${bookId}/clear_bill`;
+              ajaxRequest(url, 'PUT', null,
+                (response) => {
+                  const msg = 'Guest Room Booking Bill Cleared Successfully!'
+                  showNotification(msg);
+                  $(`.order__history--table-body tr[data-id="${bookId}"] .booking__bill-status`).css('color', 'green');
+                  $(`.order__history--table-body tr[data-id="${bookId}"] .booking__bill-status`).text('Paid');
+                },
+                (error) => {
+                  showNotification('Loan Request Fail. Try Again !', true);
+                }
+              );
+            });
+        });
 });

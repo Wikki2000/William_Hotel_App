@@ -2,11 +2,13 @@
 """Handle API request for room module"""
 from models.room import Room
 from models.booking import Booking
+from models.customer import Customer
 from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import role_required, bad_request, convert_to_binary
 from models import storage
 from sqlalchemy.exc import IntegrityError
+from datetime import datetime
 
 
 @api_views.route("/rooms", methods=["POST"])
@@ -57,7 +59,7 @@ def get_available_room_numbers(user_role: str, user_id: str):
 @api_views.route("/room-numbers")
 @role_required(["manager", "admin", "staff"])
 def room_number(user_role: str, user_id: str):
-    """Get all room numbers"""
+    """Get all room numbers of available room"""
     rooms = storage.all(Room).values()
     if not rooms:
         return jsonify([]), 200
@@ -147,6 +149,7 @@ def get_room_numbers(user_role: str, user_id: str):
 
     return jsonify(sorted([room.number for room in rooms])), 200
 
+
 @api_views.route("/rooms/<string:room_number>/guest-occupied")
 @role_required(["staff", "manager", "admin"])
 def guest_lodged_in_room(user_role: str, user_id: str, room_number: str):
@@ -211,3 +214,72 @@ def filter_rooms(user_role: str, user_id: str, room_status):
         return jsonify({"error": "Internal Error Occured"}), 500
     finally:
         storage.close()
+
+
+@api_views.route("/rooms/<string:room_number>/booking-data")
+@role_required(["staff", "manager", "admin"])
+def booking_data(user_id: str, user_role: str, room_number):
+    """Fetch booking data of a particular room"""
+    try:
+        room = storage.get_by(Room, number=room_number)
+        if not room:
+            abort(404)
+
+        # Get booking currently in use, so as to get currently lodged guest.
+        book = storage.get_by(Booking, room_id=room.id, is_use=True)
+
+        if not book:
+            return jsonify({
+                "room": room.book.to_dict(), "booking": None,
+                "checkin_by": None, "checkout_by": None
+            }), 200
+
+        # Check if room has been checkout by staff
+        checkout_by_dict = (
+            None if not book.checkout_by
+            else book.checkout_by.to_dict()
+        )
+
+        return jsonify({
+            "booking": book.to_dict(),
+            "room": room.to_dict(),
+            "customer": book.customer.to_dict(),
+        }), 200
+    except Exception as e:
+        print(str(e))
+        return jsonify({"error": "An Internal Error Occured"}), 500
+    finally:
+        storage.close()
+
+
+@api_views.route(
+    "/rooms/<room_id>/customer/<customer_id>/checkout", methods=["PUT"]
+)
+@role_required(["staff", "manager", "admin"])
+def check_out(user_id: str, user_role: str, room_id: str, customer_id: str):
+    """Check out customer from a room."""
+    customer = storage.get_by(Customer, id=customer_id)
+    room = storage.get_by(Room, id=room_id)
+    if not customer or not room:
+        abort(404)
+
+    room.status = "available"
+    customer.is_guest = False  # No more guest once checkout
+
+    # Clear all bill once guest is checkout
+    for order in customer.orders:
+        order.is_paid = True
+        order.cleared_by_id = user_id
+        order.updated_at = datetime.utcnow()
+
+    for booking in customer.books:
+        booking.is_paid = "yes"
+        booking.is_use = False
+        booking.updated_at = datetime.utcnow()
+        
+        # Ensure that no two staff can checkout a guest from room.
+        if not booking.checkout_by_id:
+            booking.checkout_by_id = user_id
+
+    storage.save()
+    return jsonify({"message": "Checkout Successful"}), 201
