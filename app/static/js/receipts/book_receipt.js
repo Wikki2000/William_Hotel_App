@@ -27,8 +27,8 @@ $(document).ready(function() {
   fetchData(bookingUrl)
     .then(({ booking, checkin_by, checkout_by, customer, room }) => {
 
-      const vat = (7.5 / 100) * room.amount;
-      const subTotal = room.amount - vat;
+      const vat = (7.5 / 100) * booking.amount;
+      const subTotal = booking.amount - vat;
       const user = checkout_by ? checkout_by : checkin_by;
 
       // Render receipt info
@@ -50,7 +50,7 @@ $(document).ready(function() {
         <tr>
             <td>${room.name} (${room.number})</td>
             <td>${booking.duration} Night(s)</td>
-            <td>${room.amount.toLocaleString()}</td>
+            <td>${booking.amount.toLocaleString()}</td>
         </tr>
     `;
 
@@ -74,11 +74,11 @@ $(document).ready(function() {
         <div class="order-total">
             <div><p><strong>Subtotal</strong></p><p>${subTotal}</p></div>
             <div><p><strong>VAT</strong></p><p>${vat}</p></div>
-            <div><p><strong>Total</strong></p><p>${room.amount.toLocaleString()}</p></div>
+            <div><p><strong>Total</strong></p><p>${booking.amount.toLocaleString()}</p></div>
         </div>`;
       $("#totals").html(totals);
 
-      $(".total-payment").html(room.amount.toLocaleString());
+      $(".total-payment").html(booking.amount.toLocaleString());
     })
     .catch((error) => {
       showNotification('An error occurred. Please try again.', true);
