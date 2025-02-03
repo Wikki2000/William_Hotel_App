@@ -101,6 +101,18 @@ class Storage:
         obj = self.__session.query(cls).filter_by(**kwargs).first()
         return obj
 
+    def all_get_by(self, cls, **kwargs):
+        """Retrieve an instance with an arbituary fields/values.
+
+        Args:
+            cls (class) - The class to filter for an object.
+            kwargs (dict) - Dict of fields and value to filter for object.
+
+        Return: All the object filter from database
+        """
+        obj = self.__session.query(cls).filter_by(**kwargs).all()
+        return obj
+
     def count_by(self, cls, **kwargs):
         """Count an instance with an arbituary fields/values.
         Args:
@@ -160,8 +172,8 @@ class Storage:
         self.__session.close()
 
     def get_by_double_field(
-            self, model: Type, attr_val1: List, attr_val2: List
-            ) -> List:
+        self, model: Type, attr_val1: List, attr_val2: List
+    ) -> List:
         """
         Filter a model using two field.
 

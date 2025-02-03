@@ -6,13 +6,17 @@ from api.v1.views import api_views
 from api.v1.views.utils import role_required, bad_request
 from models import storage
 from sqlalchemy.exc import IntegrityError
-from datetime import datetime
+from dateutil.relativedelta import relativedelta
+from datetime import date, datetime
+from models.sale import DailySale
 
 
+
+"""
 @api_views.route("/vats", methods=["POST"])
 @role_required(["manager", "admin"])
 def add_vat(user_role: str, user_id: str):
-    """Add new VAT entry"""
+    Add new VAT entry
 
     # Get JSON data from the request
     data = request.get_json()
@@ -57,17 +61,42 @@ def add_vat(user_role: str, user_id: str):
     finally:
         # Close the database session
         storage.close()
-
+"""
 
 @api_views.route("/vats/<string:year>/get")
 @role_required(["manager", "admin"])
 def get_vats(user_role: str, user_id: str, year: str):
-    """Retrieve all vats for a specific year."""
+    """
+    => Retrieve all vats for a specific year.
+    => Get Vat on 19th of every month.
+    """
+
+    today_date = date.today()  # Crone job always runs on 19th of every month.
+
+    # Get Vat monthly payment on 19th of every month.
+    if today_date.day == 19:
+        previous_month_date = (
+            today_date - relativedelta(months=1)
+        ).replace(day=19)
+
+        # Vat monthly payment due on 19th of every month.
+        # Get the accumalated sum of daily sales till 19th.
+        monthly_sales = storage.get_by_date(
+            DailySale, previous_month_date, today_date, "entry_date"
+        )
+        accumulated_monthly_sales_sum = sum(
+            sale.amount for sale in monthly_sales
+        )
+        vat_amount = 0.075 * accumulated_monthly_sales_sum;
+        vat = Vat(month=today_date, amount=vat_amount)
+        storage.new(vat)
+        storage.save()
+        print(f"{today_date} Vat added successfully !")
+
+    # Get the vat of choosen year.
     vats = storage.all(Vat).values()
 
-    # Sort vats by updated_at in descending order
     sorted_vats = sorted(vats, key=lambda vat: vat.updated_at, reverse=True)
-
     if not sorted_vats:
         return jsonify([]), 200
 

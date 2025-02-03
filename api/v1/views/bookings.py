@@ -67,7 +67,7 @@ def get_bookings_by_date(
         reverse=True
     )
 
-    accumulated_sum = sum(booking.room.amount for booking in sorted_bookings)
+    accumulated_sum = sum(booking.amount for booking in sorted_bookings)
     response = {
         "bookings": [{
             "booking": booking.to_dict(),
@@ -119,74 +119,23 @@ def booking_data_by_id(user_id: str, user_role: str, booking_id: str):
         storage.close()
 
 
-@api_views.route("/bookings/<string:room_number>/booking-data")
+@api_views.route("/bookings/<booking_id>/clear_bill", methods=["PUT"])
 @role_required(["staff", "manager", "admin"])
-def booking_data(user_id: str, user_role: str, room_number):
-    """Fetch booking data of a particular room"""
-    try:
-        room = storage.get_by(Room, number=room_number)
-        if not room:
-            abort(404)
-
-        # Get booking currently in use, so as to get currently lodged guest.
-        book = storage.get_by(Booking, room_id=room.id, is_use=True)
-
-        if not book:
-            return jsonify({
-                "room": room.book.to_dict(), "booking": None,
-                "checkin_by": None, "checkout_by": None
-            }), 200
-
-        # Check if room has been checkout by staff
-        checkout_by_dict = (
-            None if not book.checkout_by
-            else book.checkout_by.to_dict()
-        )
-
-        return jsonify({
-            "booking": book.to_dict(),
-            "room": room.to_dict(),
-            "customer": book.customer.to_dict(),
-            "checkin_by": book.checkin_by.to_dict(),
-            "checkout_by": checkout_by_dict
-        }), 200
-    except Exception as e:
-        print(str(e))
-        return jsonify({"error": "An Internal Error Occured"}), 500
-    finally:
-        storage.close()
-
-
-@api_views.route("/rooms/<string:booking_id>/checkout", methods=["PUT"])
-@role_required(["staff", "manager", "admin"])
-def check_out(user_id: str, user_role: str, booking_id: str):
-    """Check out customer from a room."""
+def clear_booking_bill(user_id: str, user_role: str, booking_id: str):
+    """Clear guest room booking bill."""
     booking = storage.get_by(Booking, id=booking_id)
     if not booking:
         abort(404)
 
-    room = booking.room
-
-    if room.status == "available":
-        return jsonify({"error": "Room Already Available"}), 409
-    elif booking.checkout_by_id:
-        first_name = booking.checkout_by.first_name
-        last_name = booking.checkout_by.last_name
-        return jsonify({"error": f"{first_name} {last_name}"}), 409
-
-    room.status = "available"
     booking.is_paid = "yes"
-    booking.checkout_by_id = user_id  # Record staff that checkout guest
-    booking.customer.is_guest = False  # No more guest once checkout
-    booking.is_use = False
+    booking.updated_at = datetime.utcnow()
+    #booking.is_use = False
 
-    # Clear all bill once guest is checkout
-    for order in booking.customer.orders:
-        order.is_paid = True
-        order.cleared_by_id = user_id
-
+    # Ensure that a staff clear bill only onced
+    if not booking.checkout_by_id:
+        booking.checkout_by_id = user_id
     storage.save()
-    return jsonify({"message": "Checkout Successful"}), 201
+    return jsonify({"message": "Bill Clear Successfully"}), 201
 
 
 @api_views.route("/bookings/<booking_id>/edit", methods=["PUT"])
@@ -208,19 +157,17 @@ def update_booking_data(user_id: str, user_role: str, booking_id: str):
     room_data = data.get("room")
     customer = booking.customer
 
-    # Change new room statis to occupied
-    new_room = storage.get_by(Room, number=room_data.get("room_number"))
-    new_room.status = "occupied"
+    # Update sales record of date when the room was book.
+    booking_date = booking.created_at.strftime("%Y-%m-%d")
+    today_sale = storage.get_by(DailySale, entry_date=booking_date)
+    today_sale.amount += booking_data.get("amount") - booking.amount
+    
 
     # Update booking data
     for key, val in booking_data.items():
         setattr(booking, key, val)
     booking.checkin_by_id = user_id  # Update with staff that made changes
     booking.updated_at = datetime.utcnow()
-    
-    booking.room.status = "available"  # Change old room occupied to available
-
-    booking.room_id = new_room.id  # Book new room to guest
 
     # Update customer data
     for key, val in customer_data.items():
@@ -248,7 +195,6 @@ def book_room(user_id: str, user_role: str, room_number: str):
         abort(404)
 
     customer_data = data.get("customer")
-
     booking_data = data.get("book")
 
     # Add new daily transaction if exists else increase sum by existing one
@@ -258,7 +204,9 @@ def book_room(user_id: str, user_role: str, room_number: str):
     )
 
     if not transaction:
-        transaction = DailySale(entry_date=today_date, amount=room.amount)
+        transaction = DailySale(
+            entry_date=today_date, amount=booking_data.get("amount")
+        )
         storage.new(transaction)
     else:
         transaction.amount += room.amount
@@ -267,7 +215,6 @@ def book_room(user_id: str, user_role: str, room_number: str):
     storage.new(customer)
     customer.is_guest = True
     storage.save()
-
 
     # Ensure that can't book room already in use
     if room.status == "occupied" or room.status == "reserved":
@@ -289,7 +236,7 @@ def book_room(user_id: str, user_role: str, room_number: str):
         room.status = "occupied"   # Cheange room status once book
         storage.save()
 
-        return jsonify({"message": "Booking Successfully"}), 200
+        return jsonify({"booking_id": book.id}), 200
     except Exception as e:
         print(str(e))
         return jsonify({

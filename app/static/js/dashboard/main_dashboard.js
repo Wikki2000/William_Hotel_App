@@ -17,7 +17,7 @@ $(document).ready(function() {
       // Fetch data only if not already fetched
       const rooms = await $.get(url); 
       if (!rooms) {
-        return;
+	return;
       }
       const roomCounts = rooms.rooms_count;
 
@@ -67,7 +67,7 @@ $(document).ready(function() {
 
     if (new Date(checkout) <= new Date(checkin)) {
       showNotification(
-        'Check Out date must not be earlier than Check In date', true
+	'Check Out date must not be earlier than Check In date', true
       );
       return;
     }
@@ -80,8 +80,8 @@ $(document).ready(function() {
 
     const BookingData = {
       book: {
-        duration, expiration, guest_number,
-        is_paid, checkin, checkout, amount
+	duration, expiration, guest_number,
+	is_paid, checkin, checkout, amount
       },
       customer: { gender, name, address, phone, id_type, id_number, email }
     };
@@ -90,39 +90,46 @@ $(document).ready(function() {
 
     $('#dynamic__load-dashboard').off('click', '#main__confirm-btn')
       .on('click', '#main__confirm-btn', function() {
-        const bookUrl =  API_BASE_URL + `/rooms/${roomNumber}/book`;
+	const bookUrl =  API_BASE_URL + `/rooms/${roomNumber}/book`;
 
-        const $button = $(this);
-        $button.prop('disable', true);  // Disable btn to avoid multiple requests.
-        ajaxRequest(bookUrl, 'POST', JSON.stringify(BookingData),
-          (response) => {
-            $button.prop('disable', false);
-            $('#main__popup-modal').hide();
-            const msg = (
-              `Success! Room [${roomNumber}] has been booked for ${name}`
-            );
-            showNotification(msg);
+	const $button = $(this);
+	$button.prop('disable', true);  // Disable btn to avoid multiple requests.
+	ajaxRequest(bookUrl, 'POST', JSON.stringify(BookingData),
+	  (response) => {
+	    $button.prop('disable', false);
+	    $('#main__popup-modal').hide();
+	    const msg = (
+	      `Success! Room [${roomNumber}] has been booked for ${name}`
+	    );
+	    showNotification(msg);
 
-            // Update the count in ui
-            updateElementCount($('#main__room-available'));
-            updateElementCount($('#main__today-check--in'), true);
-          },
-          (error) => {
-            $button.prop('disable', false);
-            if (error.status === 409) {
-              showNotification('Error! ' +  error.responseJSON.error, true);
-            } else {
-              showNotification('An Error occured. Try Again !', true);
-            }
-            $('#main__popup-modal').hide();
-          }
-        );
+	    // Update the count in ui
+	    updateElementCount($('#main__room-available'));
+	    updateElementCount($('#main__today-check--in'), true);
+
+	    // Print receipt immediately room is book.
+	    const bookingId = response.booking_id;
+	    const receiptUrl = (
+	      APP_BASE_URL + `/bookings/print-receipt?booking_id=${bookingId}`
+	    );
+	    window.open(receiptUrl, '_blank');
+	  },
+	  (error) => {
+	    $button.prop('disable', false);
+	    if (error.status === 409) {
+	      showNotification('Error! ' +  error.responseJSON.error, true);
+	    } else {
+	      showNotification('An Error occured. Try Again !', true);
+	    }
+	    $('#main__popup-modal').hide();
+	  }
+	);
       });
 
     // Cancel Popup Modal
     $('#dynamic__load-dashboard').off('click', '#main__cancel-btn')
       .on('click', '#main__cancel-btn', function() {
-        $('#main__popup-modal').hide();
+	$('#main__popup-modal').hide();
       });
   });
 
@@ -134,135 +141,135 @@ $(document).ready(function() {
       const clickId = $clickItem.attr('id');
 
       switch(clickId) {
-        case 'main__dropdown--room-no': {
-          //const roomUrl = API_BASE_URL + '/rooms/available/filter';
-          const roomUrl = API_BASE_URL + '/room-numbers';
-          fetchData(roomUrl)
-          .then((rooms) => {
-	    
-            displayMenuList(rooms, $clickItem, 'order__menu');
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+	case 'main__dropdown--room-no': {
+	  //const roomUrl = API_BASE_URL + '/rooms/available/filter';
+	  const roomUrl = API_BASE_URL + '/room-numbers';
+	  fetchData(roomUrl)
+	  .then((rooms) => {
 
-          // Auto-fill the input field when room number selected in dropdown menu
-          $('#dynamic__load-dashboard').on(
-            'click', '.order__menu',
-            function() {
-              const $clickItem = $(this);
+	    displayMenuList(rooms, $clickItem, 'order__menu');
+	  })
+	  .catch((error) => {
+	    console.log(error);
+	  });
 
-              // Check if the clicked dropdown is within Room No. dropdown
-              if ($(this).closest('.dropdown')
-                .find('#main__dropdown--room-no').length) {
-                // Trim in case of extra spaces
-                const roomNumberSelected = $clickItem.text().trim(); 
+	  // Auto-fill the input field when room number selected in dropdown menu
+	  $('#dynamic__load-dashboard').on(
+	    'click', '.order__menu',
+	    function() {
+	      const $clickItem = $(this);
 
-                // Assign room number to input field to be summited with form.
-                $('#main__room--no-val').val(roomNumberSelected);
+	      // Check if the clicked dropdown is within Room No. dropdown
+	      if ($(this).closest('.dropdown')
+		.find('#main__dropdown--room-no').length) {
+		// Trim in case of extra spaces
+		const roomNumberSelected = $clickItem.text().trim(); 
 
-                if (isNaN(roomNumberSelected)) {
-                  $clickItem.closest('.dropdown')
-                    .find('.main__dropdown-btn span').text('Select');
-                  $('#main__room-rate, #main__room-type')
-                    .val('Auto-filled based on room no');
-                } else {
-                  const roomUrl = (
-                    API_BASE_URL + `/rooms/${roomNumberSelected}`
-                  );
+		// Assign room number to input field to be summited with form.
+		$('#main__room--no-val').val(roomNumberSelected);
 
-                  // Auto-fill the input field
-                  fetchData(roomUrl)
-                    .then((room) => {
-                      $('#main__room-rate')
-                        .val('₦' + room.amount.toLocaleString());
-                      $('#main__room-type').val(room.name);
+		if (isNaN(roomNumberSelected)) {
+		  $clickItem.closest('.dropdown')
+		    .find('.main__dropdown-btn span').text('Select');
+		  $('#main__room-rate, #main__room-type')
+		    .val('Auto-filled based on room no');
+		} else {
+		  const roomUrl = (
+		    API_BASE_URL + `/rooms/${roomNumberSelected}`
+		  );
+
+		  // Auto-fill the input field
+		  fetchData(roomUrl)
+		    .then((room) => {
+		      $('#main__room-rate')
+			.val('₦' + room.amount.toLocaleString());
+		      $('#main__room-type').val(room.name);
 
 		      // The room amount to be retrieve when booking.
-                      // Stored in hidden input fields.
+		      // Stored in hidden input fields.
 
 		      $('#main__room-amount').val(room.amount);
 
-                    })
-                    .catch((error) => {
-                      console.log(error);
-                    });
+		    })
+		    .catch((error) => {
+		      console.log(error);
+		    });
 
-                  // Populated with selected options from dropdown menu.
-                  $clickItem.closest('.dropdown')
-                    .find('.main__dropdown-btn span')
-                    .text(roomNumberSelected);
+		  // Populated with selected options from dropdown menu.
+		  $clickItem.closest('.dropdown')
+		    .find('.main__dropdown-btn span')
+		    .text(roomNumberSelected);
 
-                  $('#main__room--no-val').val(roomNumberSelected);
-                  $('.dropdown-menu').hide(); // Hide once option is selected
-                }
-              }
+		  $('#main__room--no-val').val(roomNumberSelected);
+		  $('.dropdown-menu').hide(); // Hide once option is selected
+		}
+	      }
 
-            });
-          break;
-        }
-        case 'main__guest-payment--status' : {
-          const isPaidOptions = ['Yes', 'No'];
-          displayMenuList(isPaidOptions, $clickItem);
+	    });
+	  break;
+	}
+	case 'main__guest-payment--status' : {
+	  const isPaidOptions = ['Yes', 'No'];
+	  displayMenuList(isPaidOptions, $clickItem);
 
-          $('#dynamic__load-dashboard').on(
-            'click', '.dropdown-item', function() {
+	  $('#dynamic__load-dashboard').on(
+	    'click', '.dropdown-item', function() {
 
-              // Check if the clicked dropdown is within
-              // the payment status dropdown
-              if ($(this).closest('.dropdown')
-                .find('#main__guest-payment--status').length) {
-                $('#main__is--paid-val').val($(this).text());
+	      // Check if the clicked dropdown is within
+	      // the payment status dropdown
+	      if ($(this).closest('.dropdown')
+		.find('#main__guest-payment--status').length) {
+		$('#main__is--paid-val').val($(this).text());
 
-                // Populated with selected options from dropdown menu.
-                $clickItem.closest('.dropdown')
-                  .find('.main__dropdown-btn span')
-                  .text($(this).text());
+		// Populated with selected options from dropdown menu.
+		$clickItem.closest('.dropdown')
+		  .find('.main__dropdown-btn span')
+		  .text($(this).text());
 
-                $('.dropdown-menu').hide(); // Hide once option is selected
-              }
-            });
-          break;
-        }
-        case 'main__guest-gender' : {
-          const genderOptions = ['Male', 'Female'];
-          displayMenuList(genderOptions, $clickItem);
-          $('#dynamic__load-dashboard').on(
-            'click', '.dropdown-item', function() {
-              if ($(this).closest('.dropdown')
-                .find('#main__guest-gender').length) {
-                $('#main__guest--gender-val').val($(this).text());
+		$('.dropdown-menu').hide(); // Hide once option is selected
+	      }
+	    });
+	  break;
+	}
+	case 'main__guest-gender' : {
+	  const genderOptions = ['Male', 'Female'];
+	  displayMenuList(genderOptions, $clickItem);
+	  $('#dynamic__load-dashboard').on(
+	    'click', '.dropdown-item', function() {
+	      if ($(this).closest('.dropdown')
+		.find('#main__guest-gender').length) {
+		$('#main__guest--gender-val').val($(this).text());
 
-                // Populated with selected options from dropdown menu.
-                $clickItem.closest('.dropdown')
-                  .find('.main__dropdown-btn span')
-                  .text($(this).text());
-                $('.dropdown-menu').hide();
-              }
-            });
-          break;
-        }
-        case 'main__guest-id--type': {
-          const idTypeOptions = ['NIN', 'Voter_Card',
-            'Passport', 'Driver_License'];
-          displayMenuList(idTypeOptions, $clickItem);
+		// Populated with selected options from dropdown menu.
+		$clickItem.closest('.dropdown')
+		  .find('.main__dropdown-btn span')
+		  .text($(this).text());
+		$('.dropdown-menu').hide();
+	      }
+	    });
+	  break;
+	}
+	case 'main__guest-id--type': {
+	  const idTypeOptions = ['NIN', 'Voter_Card',
+	    'Passport', 'Driver_License'];
+	  displayMenuList(idTypeOptions, $clickItem);
 
-          $('#dynamic__load-dashboard').on(
-            'click', '.dropdown-item', function() {
-              if ($(this).closest('.dropdown')
-                .find('#main__guest-id--type').length) {
-                $('#main__id--type-val').val($(this).text());
+	  $('#dynamic__load-dashboard').on(
+	    'click', '.dropdown-item', function() {
+	      if ($(this).closest('.dropdown')
+		.find('#main__guest-id--type').length) {
+		$('#main__id--type-val').val($(this).text());
 
-                // Populated with selected options from dropdown menu.
-                $clickItem.closest('.dropdown')
-                  .find('.main__dropdown-btn span')
-                  .text($(this).text());
+		// Populated with selected options from dropdown menu.
+		$clickItem.closest('.dropdown')
+		  .find('.main__dropdown-btn span')
+		  .text($(this).text());
 
-                $('.dropdown-menu').hide();
-              }
-            });
-          break;
-        }
+		$('.dropdown-menu').hide();
+	      }
+	    });
+	  break;
+	}
       }
     });
 });

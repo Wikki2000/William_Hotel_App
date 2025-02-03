@@ -254,10 +254,11 @@ def filter_orders(user_role: str, user_id: str, payment_status):
         storage.close()
 
 
-@api_views.route("/orders/<string:customer_id>/lodged-guest-ordered")
-@role_required(["manager", "admin", "staff"])
-def get_room_orders(user_role: str, user_id: str, customer_id: str):
+#@api_views.route("/orders/<string:customer_id>/lodged-guest-ordered")
+#@role_required(["manager", "admin", "staff"])
+#def get_room_orders(user_role: str, user_id: str, customer_id: str):
     """Retrieved orders for a lodged in guest"""
+    """
     customer = storage.get_by(Customer, id=customer_id)
     if not customer:
         abort(404)
@@ -273,6 +274,7 @@ def get_room_orders(user_role: str, user_id: str, customer_id: str):
         "total_amount": total_amount
     }
     return jsonify(response), 200
+    """
 
 
 @api_views.route("/orders/<string:start_date>/<string:end_date>/get")

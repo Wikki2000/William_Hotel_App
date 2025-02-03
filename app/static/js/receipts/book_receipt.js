@@ -72,8 +72,8 @@ $(document).ready(function() {
       // Render totals
       const totals = `
         <div class="order-total">
-            <div><p><strong>Subtotal</strong></p><p>${subTotal}</p></div>
-            <div><p><strong>VAT</strong></p><p>${vat}</p></div>
+           <div><p><strong>Subtotal</strong></p><p>${subTotal.toLocaleString()}</p></div>
+            <div><p><strong>VAT</strong></p><p>${vat.toLocaleString()}</p></div>
             <div><p><strong>Total</strong></p><p>${booking.amount.toLocaleString()}</p></div>
         </div>`;
       $("#totals").html(totals);
