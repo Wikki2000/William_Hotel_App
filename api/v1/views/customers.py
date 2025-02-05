@@ -6,8 +6,7 @@ from models.room import Room
 from models.sale import DailySale
 from flask import abort, jsonify, request
 from api.v1.views import api_views
-from api.v1.views.utils import role_required
-from api.v1.views.utils import bad_request
+from api.v1.views.utils import create_receipt, bad_request, role_required
 from models import storage
 from datetime import date
 
@@ -73,9 +72,14 @@ def extend_guest_stay(user_role: str, user_id: str, room_id, customer_id):
     else:
         transaction.amount += data.get("amount")
 
+    # Create booking object
     book = Booking(**data)
-
     storage.new(book)
+    storage.save()
+
+    # Create booking receipt object.
+    receipt = create_receipt("booking_id", book.id) 
+    storage.new(receipt)
     storage.save()
 
     book = storage.get_by(Booking, id=book.id)

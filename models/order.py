@@ -3,6 +3,7 @@
 from datetime import datetime
 from models.base_model import Base, BaseModel
 from models.order_item import OrderItem
+from models.receipt import Receipt
 from sqlalchemy import (
     Column, String, Boolean, ForeignKey, Float, ForeignKey, Integer
 )
@@ -15,7 +16,7 @@ class Order(BaseModel, Base):
     payment_type = Column(String(50), nullable=False)
     amount = Column(Float, nullable=False)
     is_paid = Column(Boolean, default=False)
-    order_number = Column(String(15), unique=True, nullable=False)
+    #order_number = Column(String(15), unique=True, nullable=False)
     customer_id = Column(
         String(60), ForeignKey("customers.id"), nullable=False
     )
@@ -29,3 +30,5 @@ class Order(BaseModel, Base):
     # Relationships
     order_items = relationship('OrderItem', backref='order',
                                cascade='all, delete-orphan')
+    receipt = relationship('Receipt', backref='order', uselist=False,
+                            cascade='all, delete-orphan')

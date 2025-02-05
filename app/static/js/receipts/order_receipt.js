@@ -37,7 +37,7 @@ $(document).ready(function() {
             <div><p><strong>Customer's Name</strong></p><p>${customer.name}</p></div>
             <div><p><strong>Date</strong></p><p>${formatedDate()}</p></div>
             <div><p><strong>Time</strong></p><p>${formatedTime()}</p></div>
-            <div><p><strong>Receipt No.</strong></p><p>${order.order_number}</p></div>
+            <div><p><strong>Receipt No.</strong></p><p>${order.order_receipt}</p></div>
             <div><p><strong>Terminal</strong></p><p>Ifelodun-ilupeju</p></div>
             <div><p><strong>Seller Name</strong></p><p>${user.first_name} ${user.last_name}</p></div>
         </div>`;

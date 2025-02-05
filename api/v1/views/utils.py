@@ -14,6 +14,7 @@ from typing import(
 )
 from redis import Redis
 from models.private_message import PrivateMessage
+from models.receipt import Receipt
 import base64
 
 
@@ -216,3 +217,50 @@ def user_friend_messages(
         messages, key=lambda msg: msg.created_at, reverse=is_reverse
     )
     return sorted_messages
+
+
+# ===================================================================== #
+#                          Redis Helper Function                        #
+# ===================================================================== #
+def rd_get(key: str = "receipt_number") -> Optional[bytes]:
+    """Retrievea value from Redis db.
+    
+    :key - The corresponding key to get value.
+
+    :returns - The value corresponding to the key if found else none.        
+    """
+    return r.get(key)
+
+
+def rd_set(value: Any, key: str = "receipt_number"):
+    """Insert a value to corresponnding key.
+
+    :key - The key of value to be inserted.
+    :value - The correspondig value to be stored.
+    """
+    r.set(key, value)
+
+
+def create_receipt(attr_str: str, obj_id: str) -> Optional[Receipt]:
+    """
+    Create receipt for every service render,
+    this receipt number are incremental by one on every sales.
+
+    :attr_str - The attr of bookin_id or order_id of receipts.
+    :obj_id - The ID of object of service to render, e.g., Bookings or Orders made.
+    
+    :retype - The object of receipt created or None on failure.
+    """
+    try:
+        # Check if Receipt class has the attribute attr_str.
+        getattr(Receipt, attr_str)
+    except AttributeError:
+        return None
+
+    val = rd_get()
+    receipt_no = int(val) + 1 if val else 1
+    rd_set(receipt_no)
+
+    # Dynamically pass the attribute as a keyword argument.
+    receipt = Receipt(receipt_no=f"WCHS{receipt_no:04}", **{attr_str: obj_id})
+    return receipt

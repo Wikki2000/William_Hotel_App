@@ -24,8 +24,9 @@ from models.maintenance import Maintenance
 from models.expenditure import Expenditure
 from models.daily_expenditure_sum import DailyExpenditureSum
 from models.sale import DailySale
-from urllib.parse import quote_plus
+from models.receipt import Receipt
 
+from urllib.parse import quote_plus
 from dotenv import load_dotenv
 from os import getenv
 from typing import Type, Any, List
