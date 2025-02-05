@@ -10,8 +10,7 @@ from models.sale import DailySale
 from models.booking import Booking
 from flask import abort, jsonify, request
 from api.v1.views import api_views
-from api.v1.views.utils import role_required
-from api.v1.views.utils import bad_request
+from api.v1.views.utils import bad_request, create_receipt, role_required
 from models import storage
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime, date
@@ -71,11 +70,13 @@ def order_items(user_role: str, user_id: str):
         order_data["ordered_by_id"] = user.id
 
         # Place new order
-        order_data["order_number"] = (
-            "WCHS" + str(randint(100000000, 999999999))
-        )
         new_order = Order(**order_data)
         storage.new(new_order)
+        storage.save()
+
+        # Create receipt for order made.
+        receipt = create_receipt("order_id", new_order.id)
+        storage.new(receipt)
         storage.save()
 
         for item in item_data:
@@ -170,7 +171,10 @@ def get_order(user_role: str, user_id: str, order_id: str):
         )
 
         response = {
-            "order": order.to_dict(),
+            "order": {
+                **order.to_dict(),
+                "order_receipt": order.receipt.receipt_no
+            },
             "customer": order.customer.to_dict(),
             "ordered_by": order.ordered_by.to_dict(),
             "cleared_by": cleared_by_dict,
@@ -252,29 +256,6 @@ def filter_orders(user_role: str, user_id: str, payment_status):
         abort(500)
     finally:
         storage.close()
-
-
-#@api_views.route("/orders/<string:customer_id>/lodged-guest-ordered")
-#@role_required(["manager", "admin", "staff"])
-#def get_room_orders(user_role: str, user_id: str, customer_id: str):
-    """Retrieved orders for a lodged in guest"""
-    """
-    customer = storage.get_by(Customer, id=customer_id)
-    if not customer:
-        abort(404)
-
-    orders = customer.orders
-    sorted_orders = sorted(
-        orders, key=lambda order : order.updated_at, reverse=True
-    )
-
-    total_amount = sum(order.amount for order in sorted_orders)
-    response = {
-        "orders": [order.to_dict() for order in sorted_orders],
-        "total_amount": total_amount
-    }
-    return jsonify(response), 200
-    """
 
 
 @api_views.route("/orders/<string:start_date>/<string:end_date>/get")

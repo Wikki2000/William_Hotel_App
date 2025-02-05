@@ -2,6 +2,7 @@
 """book Module"""
 from datetime import datetime
 from models.base_model import Base, BaseModel
+from models.receipt import Receipt
 from sqlalchemy import (
     Column, String, ForeignKey, Boolean, Float, Date
 )
@@ -31,3 +32,7 @@ class Booking(BaseModel, Base):
         String(60), ForeignKey("users.id"), nullable=False
     )
     checkout_by_id = Column(String(60), ForeignKey("users.id"))
+
+
+    receipt = relationship('Receipt', backref='booking', uselist=False,
+                            cascade='all, delete-orphan')

@@ -7,10 +7,11 @@ from models.user import User
 from models.sale import DailySale
 from flask import abort, jsonify, request
 from api.v1.views import api_views
-from api.v1.views.utils import bad_request, role_required
+from api.v1.views.utils import bad_request, role_required, create_receipt
 from models import storage
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime, date
+from models.receipt import Receipt
 
 
 @api_views.route("/bookings")
@@ -106,7 +107,10 @@ def booking_data_by_id(user_id: str, user_role: str, booking_id: str):
         )
 
         return jsonify({
-            "booking": book.to_dict(),
+            "booking": {
+                **book.to_dict(),
+                "book_receipt": book.receipt.receipt_no
+            },
             "room": book.room.to_dict(),
             "customer": book.customer.to_dict(),
             "checkin_by": book.checkin_by.to_dict(),
@@ -221,19 +225,24 @@ def book_room(user_id: str, user_role: str, room_number: str):
         return jsonify({"error": f"Room {room.number} is occupied"}), 409
 
     book_attr = {
-            "checkin": booking_data.get("checkin"),
-            "checkout": booking_data.get("checkout"),
-            "duration": booking_data.get("duration"),
-            "checkout": str(booking_data.get("expiration")),
-            "is_paid": booking_data.get("is_paid"),
-            "customer_id": customer.id, "checkin_by_id": user.id,
-            "guest_number": booking_data.get("guest_number"),
-            "room_id": room.id, "amount": booking_data.get("amount"),
+        "checkin": booking_data.get("checkin"),
+        "checkout": booking_data.get("checkout"),
+        "duration": booking_data.get("duration"),
+        "checkout": str(booking_data.get("expiration")),
+        "is_paid": booking_data.get("is_paid"),
+        "customer_id": customer.id, "checkin_by_id": user.id,
+        "guest_number": booking_data.get("guest_number"),
+        "room_id": room.id, "amount": booking_data.get("amount"),
     }
     try:
         book = Booking(**book_attr)
         storage.new(book)
         room.status = "occupied"   # Cheange room status once book
+        storage.save()
+
+        # Create receipt for every booking.
+        receipt = create_receipt("booking_id", book.id)
+        storage.new(receipt)
         storage.save()
 
         return jsonify({"booking_id": book.id}), 200

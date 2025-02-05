@@ -37,7 +37,7 @@ $(document).ready(function() {
             <div><p><strong>Customer's Name</strong></p><p>${customer.name}</p></div>
             <div><p><strong>Date</strong></p><p>${formatedDate()}</p></div>
             <div><p><strong>Time</strong></p><p>${formatedTime()}</p></div>
-            <div><p><strong>Receipt No.</strong></p><p>RSP86765675</p></div>
+            <div><p><strong>Receipt No.</strong></p><p>${booking.book_receipt}</p></div>
             <div><p><strong>Terminal</strong></p><p>Terminal One</p></div>
             <div><p><strong>Staff</strong></p><p>${user.first_name} ${user.last_name}</p></div>
 	    <div><p><strong>CheckIn</strong></p><p>12/10/2024</p></div>
