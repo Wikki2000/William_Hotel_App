@@ -46,6 +46,15 @@
           <p>Drinks in Stock</p>
           <a href="#" class="blue">drinks in stock</a>
         </div>
+
+        <!--<div id="inventory__game-cart" class="inventory-cart">
+          <div class="flex-display">
+            <p id="count-games">0</p>
+            <img src="/static/images/dashboard/inventory/transaction_cart_icon.png" />
+          </div>
+          <p>Available Games</p>
+          <a href="#" style="color: purple">all games</a>
+	</div>-->
       </div>
 
       <!-- Form to create daily expendirures -->
@@ -79,7 +88,7 @@
       </div>
 
       <!-- Table showing list of expenditures -->
-      <div id="expenditures__list" class="common-table-column expenditure__section">
+      <div style="" id="expenditures__list" class="common-table-column expenditure__section">
         <table cellpadding="0" cellspacing="0" class="common-tabletype ui table size-xs">
           <thead>
             <tr>
@@ -128,7 +137,9 @@
       <!-- Food stock table -->
       <div style="display: none;" id="food__stock-table--container" class="common-table-column">
         <h3 class="stock__item-heading">Foods in Stock
-          <button id="stock__new-food" class="highlight-btn tab__item ui heading size-headingxs">Add Item</button>
+          <button id="stock__new-food" class="highlight-btn tab__item ui heading size-headingxs">
+            Add Food
+          </button>
         </h3>
 
         <table cellpadding="0" cellspacing="0" class="common-tabletype ui table size-xs">
@@ -149,11 +160,11 @@
                 Food Name
                 </p>
               </th>
-	      <th width="380px">
-	        <p class="table__header-cell-1 ui heading size-headings">
-		  Qty Stock
-		</p>
-	      </th>
+              <th width="380px">
+                <p class="table__header-cell-1 ui heading size-headings">
+                Qty Stock
+                </p>
+              </th>
               <th width="380px">
                 <p class="table__header-cell-1 ui heading size-headings">
                 Price Tag
@@ -179,7 +190,7 @@
             <form id="food__update-form">
               <h2>Update Stock Item</h2><br>
               <b>Name:</b> &nbsp;&nbsp;&nbsp;<input name="name" required><br><br>
-	      <b>Qty:</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input name="qty_stock"  type="number" min="1"></br><br>
+              <b>Qty:</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input name="qty_stock"  type="number" min="1"></br><br>
               <b>Amount:</b> <input type="number" min="1" name="amount"></br><br>
               <div class="stock__add-edit--btnContainer">
                 <button class="highlight-btn stock__add-edit--btn">Save</button>
@@ -191,7 +202,12 @@
 
       <!-- Drinks stock table -->
       <div style="display: none;" id="drink__stock-list" class="common-table-column">
-        <h3 class="stock__item-heading">Drinks in Stock<button id="stock__new-drink" class="highlight-btn tab__item ui heading size-headingxs">Add Item</button></h3>
+        <h3 class="stock__item-heading">
+          Drinks in Stock
+          <button id="stock__new-drink" class="highlight-btn tab__item ui heading size-headingxs">
+            Add Drink
+          </button>
+        </h3>
 
         <table cellpadding="0" cellspacing="0" class="common-tabletype ui table size-xs">
           <thead>
@@ -229,6 +245,67 @@
             </tr>
           </thead>
           <tbody id="drink__stock-table--body" class="common-table-body">
+            <!-- Rows will be dynamically added here -->
+          </tbody>
+        </table>
+        <!-- Popup Modal to update stock -->
+        <div id="stock__update-modal" class="popup-modal">
+          <div class="popup-modal-content stock__popup-modal-content">
+            <!-- Close Button -->
+            <button class="close-btn closePopupModal">×</button>
+            <form id="stock__update-form">
+              <h2>Update Stock Item</h2><br>
+              <b>Name:</b> &nbsp;&nbsp;&nbsp;<input name="name" required><br><br>
+              <b>Qty:</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input name="qty_stock"  type="number" min="1"></br><br>
+              <b>Amount:</b> <input type="number" min="1" name="amount"></br><br>
+              <div class="stock__add-edit--btnContainer">
+                <button class="highlight-btn stock__add-edit--btn">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Games List table -->
+      <div style="display: none;" id="games__list-container" class="common-table-column">
+        <h3 class="stock__item-heading">
+          All Games
+          <button id="add__new-game" class="highlight-btn tab__item ui heading size-headingxs">
+            Add Game
+          </button>
+        </h3>
+
+        <table cellpadding="0" cellspacing="0" class="common-tabletype ui table size-xs">
+          <thead>
+            <tr>
+              <th width="380px">
+                <p class="table__header-cell ui heading size-headings">
+                S/N
+                </p>
+              </th>
+              <th width="380px">
+                <p class="table__header-cell ui heading size-headings">
+                Date Added
+                </p>
+              </th>
+              <th width="380px">
+                <p class="table__header-cell-1 ui heading size-headings">
+                Game Name
+                </p>
+              </th>
+              <th width="380px">
+                <p class="table__header-cell-1 ui heading size-headings">
+                Price Tag
+                </p>
+              </th>
+              <th width="380px">
+                <p class="table__header-cell-1 ui heading size-headings">
+                <!-- Placeholder for table Edit icon -->
+                </p>
+              </th>
+            </tr>
+          </thead>
+          <tbody id="games__table--body" class="common-table-body">
             <!-- Rows will be dynamically added here -->
           </tbody>
         </table>

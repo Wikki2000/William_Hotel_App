@@ -373,3 +373,9 @@ tr {
 .close-btn:hover {
   color: #ff0000;
 }
+
+
+
+.rotate__360deg-clockwise {
+  transform: rotate(360deg) !important;
+}

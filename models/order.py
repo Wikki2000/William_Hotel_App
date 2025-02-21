@@ -16,7 +16,6 @@ class Order(BaseModel, Base):
     payment_type = Column(String(50), nullable=False)
     amount = Column(Float, nullable=False)
     is_paid = Column(Boolean, default=False)
-    #order_number = Column(String(15), unique=True, nullable=False)
     customer_id = Column(
         String(60), ForeignKey("customers.id"), nullable=False
     )

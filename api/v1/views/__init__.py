@@ -26,3 +26,5 @@ from api.v1.views.cats import *
 from api.v1.views.expenditures import *
 from api.v1.views.sales import *
 from api.v1.views.inventories import *   
+from api.v1.views.games import *
+from api.v1.views.laundries import *

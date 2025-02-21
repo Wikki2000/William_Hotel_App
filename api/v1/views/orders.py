@@ -91,7 +91,7 @@ def order_items(user_role: str, user_id: str):
                     return jsonify({
                         "error": f"{food.name} low in stock"
                     }), 422
-            else:
+            elif item.get("itemType") == "drink":
                 item_field = "drink_id"
 
                 # Reduce qty of drink stock base on qty ordered.
@@ -101,6 +101,10 @@ def order_items(user_role: str, user_id: str):
                     return jsonify({
                         "error": f"{drink.name} low in stock"
                     }), 422
+            elif item.get("itemType") == "game":
+                item_field = "game_id"
+            elif item.get("itemType") == "clothe":
+                item_field = "laundry_id"
 
             # Stored all ordered items
             item_attr = {
@@ -133,6 +137,8 @@ def get_orders(user_role: str, user_id: str):
         sorted_orders = sorted(
             orders, key=lambda order : order.updated_at, reverse=True
         )
+        obj = sorted_orders[0]
+        print(obj.order_items)
         response = [{
             "order": order.to_dict(),
             "customer": order.customer.to_dict(),
@@ -144,7 +150,9 @@ def get_orders(user_role: str, user_id: str):
                     "name": (
                         order_item.drink.name
                         if order_item.drink_id
-                        else order_item.food.name
+                        else order_item.food.name if order_item.food_id
+                        else order_item.game.name if order_item.game_id
+                        else None
                     )
                 } for order_item in order.order_items]
         } for order in sorted_orders]
@@ -162,7 +170,6 @@ def get_order(user_role: str, user_id: str, order_id: str):
     """Retrieve order by it ID"""
     try:
         order = storage.get_by(Order, id=order_id)
-
         if not order:
             abort(404)
 
@@ -183,14 +190,18 @@ def get_order(user_role: str, user_id: str, order_id: str):
                     "qty": order_item.qty_order,
                     "amount": order_item.amount,
                     "name": (
-                        order_item.drink.name
-                        if order_item.drink_id
-                        else order_item.food.name
+                        order_item.drink.name if order_item.drink_id
+                        else order_item.food.name if order_item.food_id
+                        else order_item.game.name if order_item.game_id
+                        else order_item.laundry.name if order_item.laundry_id
+                        else None
                     ),
                     "price": (
-                        order_item.drink.amount
-                        if order_item.drink_id
-                        else order_item.food.amount
+                        order_item.drink.amount if order_item.drink_id
+                        else order_item.food.amount if order_item.food_id
+                        else order_item.game.amount if order_item.game_id
+                        else order_item.laundry.amount if order_item.laundry_id
+                        else None
                     )
                 } for order_item in order.order_items]
         }

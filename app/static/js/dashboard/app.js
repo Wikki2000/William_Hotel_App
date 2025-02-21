@@ -3,8 +3,9 @@ import {
   getBaseUrl, highLightOrderBtn, cartItemsTotalAmount
 } from '../global/utils.js';
 import  {
-  displayFoodDrink, displayRoomData, guestListTableTemplate,
-  roomTableTemplate, orderItemsTempleate, staffListTemplate
+  displayFoodDrink, displayRoomData, guestListTableTemplate, gameTemplate,
+  roomTableTemplate, orderItemsTempleate, staffListTemplate,
+  laundryTableTemplate
 } from '../global/templates.js';
 import {
   expenditureTableTemplate, displayMaintenance, staffManagementCommonCart
@@ -54,6 +55,24 @@ $(document).ready(function() {
       console.log(error);
     });
 
+  // Show service menu
+  $('#sidebar__service').click(function() {
+    $('#service__menu').toggleClass('hide');
+    $('#service__dropdown').toggleClass('rotate__360deg-clockwise');
+
+    // Highlight service sidebar only when the menu is selected and visibility hidden
+    if (
+      ($('#sidebar__game').hasClass('highlight-sidebar') ||
+        $('#sidebar__restaurant').hasClass('highlight-sidebar') ||
+        $('#sidebar__laundry').hasClass('highlight-sidebar')
+      ) && $('#service__menu').hasClass('hide')
+    ) {
+      $('#sidebar__service').addClass('highlight-sidebar');
+    } else {
+      $('#sidebar__service').removeClass('highlight-sidebar');
+    }
+  });
+
   // Handle side nav bar menu click
   $('#sidebar__staff--profile-btn').click(function() {
 
@@ -85,10 +104,14 @@ $(document).ready(function() {
 
     $('#dynamic__load-dashboard').empty(); // Empty to load a new section.
 
+    if (!$clickItem.closest('service__menu').hasClass('service__menu')) {
+      $('.sidebar__nav-icon').removeClass('highlight-sidebar');
+      $(this).addClass('highlight-sidebar');
+
+    }
 
     switch(clickId) {
       case 'sidebar__main': {
-
         const staffUrl = APP_BASE_URL + '/pages/main_dashboard';
         $('#dynamic__load-dashboard').load(staffUrl, function() {
           const roomUrl = API_BASE_URL + '/rooms';
@@ -162,23 +185,12 @@ $(document).ready(function() {
             $('#main__cart-loaded')
               .append(staffManagementCommonCart(cartTitle2, btn2, USER_ROLE, icon2, orangeClass));
           }
-
-          /*
-            fetchData(bookingUrl)
-              .then((data) => {
-                const todayBookingCount = data.filter(
-                  (data) => compareDate(data.created_at)
-                ).length;
-                $('#main__today-check--in').text(todayBookingCount);
-              })
-              .catch((error) => {
-                console.error('Failed to fetch room data:', error);
-              });*/
         });
         break;
       }
-      case 'sidebar__Room-service': {
+      case 'sidebar__Room': {
         const url = APP_BASE_URL + '/pages/room_service';
+
         $('#dynamic__load-dashboard').load(url, function() {
           $('#rooms').addClass('highlight-btn');
           const roomUrl =  API_BASE_URL + '/rooms'
@@ -208,7 +220,7 @@ $(document).ready(function() {
           $('#rooms').addClass('highlight-btn');
           fetchData(bookingUrl)
             .then((response) => {
-             response.forEach(({ guest, booking, room }) => {
+              response.forEach(({ guest, booking, room }) => {
                 const checkInDate = britishDateFormat(booking.checkin);
                 const checkoutDate = britishDateFormat(booking.checkout);
                 const date = { checkInDate, checkoutDate };
@@ -343,7 +355,6 @@ $(document).ready(function() {
         break;
       }
       case 'sidebar__inventory': {
-
         const url = APP_BASE_URL + '/pages/inventory';
         $('#dynamic__load-dashboard').load(url, function() {
 
@@ -370,6 +381,48 @@ $(document).ready(function() {
               $('#daily__sales').text(data.today_sales.toLocaleString());
               $('#stock__count-drink').text(data.total_drinks);
               $('#stock__count-food').text(data.total_foods);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        });
+        break;
+      }
+
+      case 'sidebar__game' : {
+        const url = APP_BASE_URL + '/pages/game';
+        $('#dynamic__load-dashboard').load(url, function() {
+          highLightOrderBtn(CART); // Highlight btn on chart.
+
+          const gameUrl = API_BASE_URL + '/games';
+          fetchData(gameUrl)
+            .then((data) => {
+              data.forEach((game) => {
+                $('#games__list').append(gameTemplate(game));
+                highLightOrderBtn(CART); // Highlight btn of items in cart.
+              });
+
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        });
+        break;
+      }
+      case 'sidebar__laundry' : {
+        const url = APP_BASE_URL + '/pages/laundry';
+        $('#dynamic__load-dashboard').load(url, function() {
+          highLightOrderBtn(CART); // Highlight btn on chart.
+
+          const laundryUrl = API_BASE_URL + '/laundries';
+          fetchData(laundryUrl)
+            .then((data) => {
+              console.log(data);
+              data.forEach((laundry) => {
+                $('#laundry__list').append(laundryTableTemplate(laundry));
+                highLightOrderBtn(CART); // Highlight btn of items in cart.
+              });
+
             })
             .catch((error) => {
               console.log(error);
