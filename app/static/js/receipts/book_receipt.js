@@ -27,8 +27,8 @@ $(document).ready(function() {
   fetchData(bookingUrl)
     .then(({ booking, checkin_by, checkout_by, customer, room }) => {
 
-      const vat = (7.5 / 100) * room.amount;
-      const subTotal = room.amount - vat;
+      const vat = (7.5 / 100) * booking.amount;
+      const subTotal = booking.amount - vat;
       const user = checkout_by ? checkout_by : checkin_by;
 
       // Render receipt info
@@ -72,7 +72,7 @@ $(document).ready(function() {
       // Render totals
       const totals = `
         <div class="order-total">
-            <div><p><strong>Subtotal</strong></p><p>${subTotal.toLocaleString()}</p></div>
+           <div><p><strong>Subtotal</strong></p><p>${subTotal.toLocaleString()}</p></div>
             <div><p><strong>VAT</strong></p><p>${vat.toLocaleString()}</p></div>
             <div><p><strong>Total</strong></p><p>${booking.amount.toLocaleString()}</p></div>
         </div>`;
