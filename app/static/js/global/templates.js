@@ -103,6 +103,37 @@ export function foodDrinkTemplate(id, name, type, amount) {
   return row;
 }
 
+export function gameTemplate(data) {
+  const row = `<div class="food-item">
+    <img src="data:image/;base64, ${data.image}" alt="Food Image" class="food-img" />
+    <h3 class="food-title">${data.name}</h3>
+    <p>Price: ₦${data.amount.toLocaleString()}</p>
+    <button
+      data-id="${data.id}" data-name="${data.name}"
+      data-amount="${data.amount}" data-type="game" 
+      class="order-btn">
+        Add To Cart
+     </button>
+    </div>`;
+   return row;
+}
+
+export function laundryTableTemplate(data) {
+  const row = `<div class="food-item">
+    <img src="data:image/;base64, ${data.image}" alt="Food Image" class="food-img" />
+    <h3 class="food-title">${data.name}</h3>
+    <p>Price: ₦${data.amount.toLocaleString()}</p>
+    <button
+      data-id="${data.id}" data-name="${data.name}"
+      data-amount="${data.amount}" data-type="clothe"
+      class="order-btn">
+        Add To Cart
+      </button>
+  </div>`
+  return row;
+}
+
+
 /**
  * Display the food/drink in the UI
  *
@@ -456,7 +487,6 @@ export function staffListTemplate(data) {
 
 /**
  */
-
 export function loanDetailTemplate(data) {
   function statusColor(leaveStatus) {
     if (leaveStatus === 'pending') {

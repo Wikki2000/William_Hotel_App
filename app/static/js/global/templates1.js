@@ -208,6 +208,54 @@ export function inventoryFilterTemplate() {
 }
 
 /**
+ * Template for displaying games.
+ *
+ * @param {integer} index - The index of each element.
+ * @param {object} data - The server response of games data.
+ * @param {object} date - The date in british format.
+ *
+ * @return {string} - The row of table.
+ */
+export function gameTableTemplate(index, data, date) {
+  const qtyColor = data.qty_stock < 10 ? 'red': '';
+  const row = `<tr data-id="${data.id}">
+      <td class="">
+        <p class="ui text size-textmd">${index + 1}</p>
+      </td>
+      <td class="">
+        <p class="ui text size-textmd">${date}</p>
+      </td>
+      <td class="">
+        <p class="ui text size-textmd name">${data.name}</p>
+      </td>
+      <!--<td class="">
+        <p class="ui text size-textmd qty_stock" style="color: ${qtyColor}">${data.qty_stock}</p>
+      </td>-->
+      <td class="">
+        <p class="ui text size-textmd amount">₦${data.amount.toLocaleString()}</p>
+      </td>
+      <td class="">
+        <p><i class="fa fa-ellipsis-v"></i></p>
+        <p><i style="display: none;" class="fa fa-times"></i></p>
+      </td>
+
+      <td class="manage">
+        <nav class="manage__nav">
+          <ul class="manage__list">
+            <li data-id="${data.id}" class="manage__item inventory__update-stock">
+              <i class="fa fa-wine-bottle"></i>Update Stock
+            </li>
+            <li data-id="${data.id}" class="manage__item inventory__delete-stock">
+              <i class="fa fa-trash"></i>Remove Item
+            </li>
+          </ul>
+        </nav>
+      </td>
+    </tr>`;
+  return row;
+}
+
+/**
  * Template for displaying drink.
  *
  * @param {integer} index - The index of each element.

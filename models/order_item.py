@@ -15,4 +15,6 @@ class OrderItem(BaseModel, Base):
     amount = Column(Float, nullable=False)
     food_id = Column(String(60), ForeignKey("foods.id"))
     drink_id = Column(String(60), ForeignKey("drinks.id"))
+    game_id = Column(String(60), ForeignKey("games.id"))
+    laundry_id = Column(String(60), ForeignKey("laundries.id"))
     order_id = Column(String(60), ForeignKey("orders.id"), nullable=False)

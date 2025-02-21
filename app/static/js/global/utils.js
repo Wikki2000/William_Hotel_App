@@ -448,6 +448,7 @@ export function hideAllInventoryDashboard() {
   $('#drink__stock-list').hide();
   $('#sales__profit-list').hide();
   $('#food__stock-table--container').hide();
+  $('#games__list-container').hide();
 }
 
 /**

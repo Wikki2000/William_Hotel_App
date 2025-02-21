@@ -1,24 +1,6 @@
 .inventory__stock-container {
   height: 80vh;
 }
-
-/*
-.inventory__section-btn {
-  display: flex;
-  justify-content: space-around;
-  width: 30%;
-  .inventory-btn,
-  .stock-btn {
-    border-radius: 10px;
-    width: 40%;
-    height: 35px;
-    font-size: 11px;
-    text-align: center;
-    margin-top: 10px;
-  }
-}
-*/
-
 .inventory__container {
   margin-top: 20px;
   margin-right: 1.5rem;
@@ -38,6 +20,7 @@
     justify-content: space-between;
     width: 100%;
     margin-top: 20px;
+    overflow-x: scroll;
 
     .inventory-cart {
       width: 23%;
@@ -223,7 +206,18 @@
 }
 
 
-/* Transactions table */
+/* Common Style for Inventory Tables (e.g., foods, drinks & games table) */
+.stock__item-heading {
+  width: 100%;
+  button {
+    margin-left: 76%;
+    padding: 10px;
+    border: 2px solid orange;
+    border-radius: 10px;
+  }
+}
+
+/* Drinks Table Styles */
 #drink__stock-list {
   background: none;
   height: 80%;
@@ -260,7 +254,6 @@
   }
 }
 
-
 #drink__stock-list > table {
   margin-top: 40px;
   td {
@@ -280,21 +273,38 @@
   }
 }
 
+/* Food Table Styles */
 #food__stock-table--container {
   background: none;
   height: 80%;
 }
 
-.stock__item-heading {
-  width: 100%;
-  button {
-    margin-left: 76%;
-    padding: 10px;
-    border: 2px solid orange;
-    border-radius: 10px;
+
+#food__stock-table--container > table {
+  margin-top: 40px;
+  td {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+  td:first-child {
+    padding-left: 45px;
+  }
+  td:nth-child(2),
+  td:nth-child(4) {
+    padding-left: 30px;
+  }
+  .manage {
+    right: 20%;
   }
 }
-#food__stock-table--container > table {
+
+/* Games Table Styles Begins */
+#games__list-container {
+  background: none;
+  height: 80%;
+}
+
+#games__list-container > table {
   margin-top: 40px;
   td {
     padding-top: 5px;

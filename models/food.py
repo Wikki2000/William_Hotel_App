@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 """Food Module"""
 from models.base_model import Base, BaseModel
-from sqlalchemy import Column, String, Boolean, Integer, Float, ForeignKey, LargeBinary
+from sqlalchemy import (
+    Column, String, Boolean, Integer, Float, ForeignKey, LargeBinary
+)
 from sqlalchemy.orm import relationship
 from models.order_item import OrderItem
 

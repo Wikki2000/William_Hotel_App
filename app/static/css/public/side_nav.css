@@ -3,6 +3,10 @@
   width: 1.13rem;
 }
 
+.service__menu {
+  width: 50%;
+  margin-left: 90px;
+}
 
 .sidebar {
   flex-direction: column;
@@ -12,6 +16,10 @@
   height: 100vh;
   position: sticky !important;
   top: 0rem;
+  overflow-y: scroll;
+}
+.service__dropdown {
+  transform: rotate(270deg);
 }
 
 #sidebar__order-count {
