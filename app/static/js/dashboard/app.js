@@ -235,10 +235,10 @@ $(document).ready(function() {
         });
         break;
       }
-      case 'sidebar__restaurant' : {
+      case 'sidebar__restaurant' :
+      case 'sidebar__bar': {
         const url = APP_BASE_URL + '/pages/restaurant';
         $('#dynamic__load-dashboard').load(url, function() {
-          const foodDrinkUrl = API_BASE_URL + '/foods/drinks';
 
           $('input[name="Search Input"]')
             .attr('placeholder', 'Search for Foods & Drinks');
@@ -260,7 +260,44 @@ $(document).ready(function() {
             highLightOrderBtn(CART); // Highlight btn on chart.
           });
 
+          if (clickId === 'sidebar__restaurant') {
+
+	    $('#restaurant__bar-title').text('Foods Menu List');
+
+            const foodUrl = API_BASE_URL + '/foods';
+            fetchData(foodUrl)
+              .then((foods) => {
+                displayFoodDrink(foods);
+                highLightOrderBtn(CART); // Highlight btn of items in cart
+
+                localStorage.setItem(
+                  'restaurant', JSON.stringify(foods)
+                );
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+
+          } else if (clickId === 'sidebar__bar') {
+
+	    $('#restaurant__bar-title').text('Drinks Menu List');
+
+            const drinkUrl = API_BASE_URL + '/drinks';
+            fetchData(drinkUrl)
+              .then((drinks) => {
+                displayFoodDrink(drinks);
+                highLightOrderBtn(CART); // Highlight btn of items in cart
+
+                localStorage.setItem(
+                  'restaurant', JSON.stringify(drinks)
+                );
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          }
           // Display food and drink once dashboard section is loaded
+          /*
           fetchData(foodDrinkUrl)
             .then(({ foods, drinks }) => {
               displayFoodDrink(foods, drinks);
@@ -274,7 +311,9 @@ $(document).ready(function() {
             .catch((error) => {
               console.log(error);
             });
-        });
+            */
+
+            });
         break;
       }
       case 'sidebar__order': {
