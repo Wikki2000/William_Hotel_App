@@ -22,7 +22,6 @@ def add_room(user_role: str, user_id: str):
     if error_response:
         return jsonify(error_response), 400
 
-
     data["amount"] = float(data.get("amount"))
     data["image"] = convert_to_binary(data.get("image"))
 
@@ -52,7 +51,6 @@ def get_available_room_numbers(user_role: str, user_id: str):
     sorted_rooms = sorted(rooms, key=lambda room : room.number)
     response = [room.number for room in sorted_rooms
                     if room.status == "occupied"]
-    print(response)
     return jsonify(response), 200
 
 

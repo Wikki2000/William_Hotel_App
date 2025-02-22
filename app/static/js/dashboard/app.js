@@ -122,7 +122,10 @@ $(document).ready(function() {
           );
 
           const username = localStorage.getItem('userName');
-          $('#main__username').text(username);
+		      const displayUsername = (
+			              username.length > 7 ? username.slice(0, 7) + '...' : username
+			            );
+          $('#main__username').text(displayUsername);
 
           $('#staff_performance-indexing')
             .text(String(performanceStatus) + '%');
@@ -138,7 +141,6 @@ $(document).ready(function() {
             .catch((error) => {
               console.error('Failed to fetch room data:', error);
             });
-          $('#main__username').text(localStorage.getItem('userName'));
           $('#main__date').text(getFormattedDate());
 
           // Handle display of common cart in main dashboard
