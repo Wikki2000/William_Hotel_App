@@ -93,7 +93,7 @@ export function foodDrinkTemplate(id, name, type, amount) {
   const row = `<div class="food-item">
     <img src="/static/images/public/hotel_logo.png" alt="Food Image" class="food-img" />
     <h3 class="food-title">${name}</h3>
-    <p>Price: ₦${amount.toLocaleString()}</p>
+    <p>Price:&nbsp;&#8358;${amount.toLocaleString()}</p>
     <button data-id="${id}" data-name="${name}"
       data-amount="${amount}" 
       data-type="${type}" class="order-btn"

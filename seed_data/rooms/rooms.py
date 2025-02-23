@@ -6,7 +6,7 @@ from seed_data.utils import read_image_file, get_file_names
 
 
 standard_room_price = 19500
-deluxe_room_price = 225000
+deluxe_room_price = 22500
 rooms_attr = [
     {
         "name": "standard", "number": "101", "amount": standard_room_price,
