@@ -2,7 +2,7 @@ import {
   getBaseUrl, confirmationModal, validateForm, closeConfirmationModal,
   showNotification, ajaxRequest, fetchData, britishDateFormat,
   togleTableMenuIcon, hideAllInventoryDashboard, getFormDataAsDict,
-  sanitizeInput,
+  sanitizeInput, updateElementCount
 } from '../../global/utils.js';
 
 import {

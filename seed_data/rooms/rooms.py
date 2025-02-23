@@ -6,12 +6,8 @@ from seed_data.utils import read_image_file, get_file_names
 
 
 standard_room_price = 19500
-<<<<<<< HEAD
 deluxe_room_price = 22500
-=======
-deluxe_room_price = 225000
 FILE_PATH_PREFIX = "/static/images/room_images"
->>>>>>> 2a472bf460b489d85a07fb51b5100acf26a12d79
 rooms_attr = [
     {
         "name": "standard", "number": "101", "amount": standard_room_price,
