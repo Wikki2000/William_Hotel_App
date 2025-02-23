@@ -269,7 +269,7 @@ $(document).ready(function() {
             const foodUrl = API_BASE_URL + '/foods';
             fetchData(foodUrl)
               .then((foods) => {
-                displayFoodDrink(foods);
+                displayFoodDrink(foods, null);
                 highLightOrderBtn(CART); // Highlight btn of items in cart
 
                 localStorage.setItem(
@@ -287,7 +287,7 @@ $(document).ready(function() {
             const drinkUrl = API_BASE_URL + '/drinks';
             fetchData(drinkUrl)
               .then((drinks) => {
-                displayFoodDrink(drinks);
+                displayFoodDrink(null, drinks);
                 highLightOrderBtn(CART); // Highlight btn of items in cart
 
                 localStorage.setItem(

@@ -1,7 +1,8 @@
 import {
   ajaxRequest, getBaseUrl, validateForm, getFormDataAsDict,
   confirmationModal, displayMenuList, showNotification, fetchData,
-  previewImageAndReurnBase64, britishDateFormat, togleTableMenuIcon
+  previewImageAndReurnBase64, britishDateFormat, togleTableMenuIcon,
+  canadianDateFormat
 } from '../global/utils.js';
 import { displayRoomData, roomTableTemplate } from '../global/templates.js';
 import {
@@ -304,6 +305,11 @@ $(document).ready(function () {
           $('#guest__lodged-id').val(customer.id);
           $('#room__price-val').val(room.amount);
           $('#guest__occupant-no').val(booking.guest_number);
+
+	  // Auto fill the form input to extend stay checkin date.
+	  $('input[name="checkin"]')
+	    .val(canadianDateFormat(booking.checkin));
+	  $('input[name="checkin"]').prop('readonly', true);
 
           const orderUrl = (
             API_BASE_URL + `/guests/${customer.id}/${booking.id}/service-list`
