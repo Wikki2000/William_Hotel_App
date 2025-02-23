@@ -13,7 +13,7 @@ export function roomTableTemplate(room, statusClass, isStaff = false) {
   // Create the table row HTML
   const defaultRoomImage = '/static/images/public/default_room_img.png';
   const image = (
-    room.image ? 'data:image/;base64, ' + room.image : defaultRoomImage
+    room.image ? 'data:image/;base64, ' + room.image : room.image_path
   );
   const hideClass = isStaff ? 'hide' : '';
   const row = `<tr data-id="${room.id}">
@@ -119,8 +119,9 @@ export function gameTemplate(data) {
 }
 
 export function laundryTableTemplate(data) {
+
   const row = `<div class="food-item">
-    <img src="data:image/;base64, ${data.image}" alt="Food Image" class="food-img" />
+    <img src="${data.image}" alt="Clothe Image" class="food-img" />
     <h3 class="food-title">${data.name}</h3>
     <p>Price: ₦${data.amount.toLocaleString()}</p>
     <button

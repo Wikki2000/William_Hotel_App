@@ -16,7 +16,9 @@ def get_laundries(user_id: str, user_role: str) -> Dict:
         laundries = storage.all(Laundry).values()
         if not laundries:
             return jsonify([]), 200
-        sorted_laundries = sorted(laundries, key=lambda laundry : laundry.updated_at)
+        sorted_laundries = sorted(
+            laundries, key=lambda laundry : laundry.name
+        )
         return jsonify([laundry.to_dict() for laundry in sorted_laundries]), 200
     except Exception as e:
         print(str(e))

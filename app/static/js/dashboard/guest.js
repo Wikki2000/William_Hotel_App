@@ -16,7 +16,6 @@ $(document).ready(() => {
     const $clickItem = $(this);
     const clickItemId = $clickItem.data('id');
 
-
     // Toggle visibility of icon to show and cancel table menu
     $clickItem.closest('td').siblings().find('.fa.fa-times').hide();
     $clickItem.closest('td').siblings().find('.fa.fa-ellipsis-v').show();

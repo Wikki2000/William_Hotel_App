@@ -13,8 +13,9 @@ from models.order import Order
 class Room(BaseModel, Base):
     """Define class for storing drinks"""
     __tablename__ = "rooms"
-    image = Column(LONGBLOB)
-    name =  Column(String(20), nullable=False)
+    image = Column(LONGBLOB)  # Stores image binary
+    image_path = Column(String(225), nullable=False)  # Stores image file path
+    name =  Column(String(225), nullable=False)
     status = Column(
         ENUM("available", "reserved", "occupied"),
         default="available"

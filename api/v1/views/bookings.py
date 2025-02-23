@@ -138,8 +138,15 @@ def clear_booking_bill(user_id: str, user_role: str, booking_id: str):
     # Ensure that a staff clear bill only onced
     if not booking.checkout_by_id:
         booking.checkout_by_id = user_id
-    storage.save()
-    return jsonify({"message": "Bill Clear Successfully"}), 201
+        storage.save()
+        return jsonify({"message": "Bill Clear Successfully"}), 201
+    else:
+        name = (
+            "You" if user_id == booking.checkout_by_id
+            else f"{booking.checkout_by.first_name} {booking.checkout_by.last_name}"
+        )
+        storage.rollback()
+        return jsonify({"error": f"Bill Already Cleared by {name} !"}), 409
 
 
 @api_views.route("/bookings/<booking_id>/edit", methods=["PUT"])

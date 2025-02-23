@@ -49,12 +49,9 @@ $(document).ready(function () {
           const roomId = $clickItem.data('id');
           const roomUrl = API_BASE_URL + `/rooms/${roomId}/room-data`;
           fetchData(roomUrl)
-            .then(({ id, name, number, amount, image }) => {
-              const defaultImage = (
-                '/static/images/public/profile_photo_placeholder.png'
-              );
+            .then(({ id, name, number, amount, image, image_path }) => {
               const imageSrc = (
-                image ? 'data:image/;base64, ' + image : defaultImage
+                image ? 'data:image/;base64, ' + image : image_path
               );
               $('#add__new-room').attr('src', imageSrc);
               $('input[name="name"]').val(name);
@@ -230,6 +227,8 @@ $(document).ready(function () {
       );
     });
 
+
+  // Delete a room.
   $('#dynamic__load-dashboard').on('click', '.deleteRoomIcon', function() {
     const $clickItem = $(this);
     const roomId = $clickItem.data('id');
@@ -364,7 +363,6 @@ $(document).ready(function () {
 
           confirmationModal(headingText, descriptionText, confirmBtCls);
         });
-
       // Checkout guest in a room
       $('#dynamic__load-dashboard').off('click', '.room__checkout-btn')
         .on('click', '.room__checkout-btn', function() {
@@ -543,7 +541,10 @@ $(document).ready(function () {
             showNotification('No room number selected.', true);
             return;
           }
+
           $('#service___list-orders').toggle();
+	  $('#show__service--list--btn')
+	    .toggleClass('rotate__270degree-clockwise');
         });
 
       // Clear guest room book bill
@@ -573,7 +574,12 @@ $(document).ready(function () {
                   $(`.order__history--table-body tr[data-id="${bookId}"] .booking__bill-status`).text('Paid');
                 },
                 (error) => {
-                  showNotification('Loan Request Fail. Try Again !', true);
+		  if (error.status === 409) {
+		    showNotification(error.responseJSON.error, true);
+		    return;
+		  }
+                  showNotification('An occured while clearing booking bill. Please try Again !', true);
+		  console.log(error);
                 }
               );
             });

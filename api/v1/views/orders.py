@@ -116,7 +116,7 @@ def order_items(user_role: str, user_id: str):
             item_order = OrderItem(**item_attr)
             storage.new(item_order)
         storage.save()
-        return jsonify({"message": "Order Successfull"}), 200
+        return jsonify({"order_id": new_order.id}), 200
     except Exception as e:
         print(str(e))
         return jsonify({"error": "An Internal Error Occured"}), 500
@@ -222,7 +222,11 @@ def update_status(user_role: str, user_id: str, order_id: str):
         abort(404)
     elif order.is_paid:
         user_obj = order.cleared_by if order.cleared_by else order.ordered_by
-        name = f"{user_obj.first_name} {user_obj.last_name}"
+
+        name = (
+            "You" if user_id == order.cleared_by.id
+            else f"{user_obj.first_name} {user_obj.last_name}"
+        )
         return jsonify({"error": f"Bill Already Cleared by {name} !"}), 409
 
     order.is_paid = True

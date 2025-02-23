@@ -359,7 +359,7 @@ export function orderHistoryTableTemplate(order, date, customer = null) {
   const paymentStatus = order.is_paid ? 'Paid' : 'Pending';
   const textColor = order.is_paid ? 'green' : 'red';
   const hideClass = customer ? '' : 'hide';
-  const customerName = customer ? customer.name : 'Food & Drink';
+  const customerName = customer ? customer.name : 'Guest Ordered';
 
   const row = `
 <tr data-id="${order.id}">
