@@ -248,6 +248,7 @@ Service Section
   border-bottom: 1px solid #F5D077;
   padding-top: 30px;
 }
+
 .print-proceed-btns{
   display: flex;
   flex-direction: row;

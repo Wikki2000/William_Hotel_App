@@ -374,7 +374,9 @@ tr {
   color: #ff0000;
 }
 
-
+.rotate__270degree-clockwise {
+  transform: rotate(270deg);
+}
 
 .rotate__360deg-clockwise {
   transform: rotate(360deg) !important;

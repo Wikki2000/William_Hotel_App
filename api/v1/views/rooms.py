@@ -267,17 +267,21 @@ def check_out(user_id: str, user_role: str, room_id: str, customer_id: str):
     # Clear all bill once guest is checkout
     for order in customer.orders:
         order.is_paid = True
-        order.cleared_by_id = user_id
         order.updated_at = datetime.utcnow()
+
+        # Ensure that no two staff can clear guest ordered bills from room.
+        if not order.cleared_by_id:
+            order.cleared_by_id = user_id
 
     for booking in customer.books:
         booking.is_paid = "yes"
         booking.is_use = False
         booking.updated_at = datetime.utcnow()
         
-        # Ensure that no two staff can checkout a guest from room.
+        # Ensure that no two staff can clear guest booking bills from room.
         if not booking.checkout_by_id:
             booking.checkout_by_id = user_id
+
 
     storage.save()
     return jsonify({"message": "Checkout Successful"}), 201

@@ -122,9 +122,9 @@ $(document).ready(function() {
           );
 
           const username = localStorage.getItem('userName');
-		      const displayUsername = (
-			              username.length > 7 ? username.slice(0, 7) + '...' : username
-			            );
+          const displayUsername = (
+            username.length > 7 ? username.slice(0, 7) + '...' : username
+          );
           $('#main__username').text(displayUsername);
 
           $('#staff_performance-indexing')
@@ -218,6 +218,10 @@ $(document).ready(function() {
           const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
           const bookingUrl = API_BASE_URL + '/bookings';
           const $tableBody = $(".guest-table-body");
+          // Prevent staff from getting sales at an interval of time.
+          if (USER_ROLE === 'staff') {
+            $('#inventory__filter-form').hide();
+          }
 
           $('#rooms').addClass('highlight-btn');
           fetchData(bookingUrl)
@@ -264,7 +268,7 @@ $(document).ready(function() {
 
           if (clickId === 'sidebar__restaurant') {
 
-	    $('#restaurant__bar-title').text('Foods Menu List');
+            $('#restaurant__bar-title').text('Foods Menu List');
 
             const foodUrl = API_BASE_URL + '/foods';
             fetchData(foodUrl)
@@ -282,7 +286,7 @@ $(document).ready(function() {
 
           } else if (clickId === 'sidebar__bar') {
 
-	    $('#restaurant__bar-title').text('Drinks Menu List');
+            $('#restaurant__bar-title').text('Drinks Menu List');
 
             const drinkUrl = API_BASE_URL + '/drinks';
             fetchData(drinkUrl)

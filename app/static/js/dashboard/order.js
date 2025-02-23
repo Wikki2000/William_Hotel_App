@@ -8,6 +8,8 @@ $(document).ready(function() {
 
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
   const APP_BASE_URL = getBaseUrl()['appBaseUrl'];
+  const USER_ID = localStorage.getItem('userId');
+  const USER_ROLE = localStorage.getItem('role');
 
   /*=========== Handle Order history table menu operation. ===========*/
   $('#dynamic__load-dashboard').on('click', '.order__manageItem', function() {
@@ -177,7 +179,11 @@ $(document).ready(function() {
         (response) => {
           showNotification(`Order for ${name} successfully made !`);
           $button.prop('disabled', false);
-
+		      const orderId = response.order_id;
+		      const receiptUrl = (
+			              APP_BASE_URL + `/orders/print-receipt?order_id=${orderId}`
+			            );
+		      window.open(receiptUrl, '_blank');
         },
         (error) => {
           if (error.status === 422) {
@@ -214,6 +220,11 @@ $(document).ready(function() {
       $('#order__filter-all').addClass('highlight-btn');
 
       $('.order__history--table-body').empty();
+
+      // Prevent staff from getting sales at an interval of time.
+      if (USER_ROLE === 'staff') {
+        $('#inventory__filter-form').hide();
+      }
 
       const orderUrl = API_BASE_URL + '/order-items';
       fetchData(orderUrl)
@@ -509,8 +520,9 @@ $(document).ready(function() {
           }
 
           orders .forEach(({ order, customer, user }) => {
+	    const date = britishDateFormat(order.updated_at);
             $('.order__history--table-body').append(
-              orderHistoryTableTemplate(order, customer)
+	      orderHistoryTableTemplate(order, date, customer)
             );
 
             $('#expenditure__total__amount-entry')

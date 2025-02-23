@@ -11,47 +11,55 @@ laundry_data = [
     {
         "name": "Agbada (Complete)",
         "amount": 3500,
-        "image": read_image_file("seed_data/laundry/images/agbada.jpeg")
+        #"image": read_image_file("seed_data/laundry/images/agbada.jpeg")
+        "image": "/static/images/clothe_images/agbada.jpeg"
     },
     {
         "name": "Native",
         "amount": 2500,
-        "image": read_image_file("seed_data/laundry/images/native.jpeg")
+        #"image": read_image_file("seed_data/laundry/images/native.jpeg")
+        "image": "/static/images/clothe_images/native.jpeg"
     },
     {
         "name": "Shirt",
         "amount": 700,
-        "image": read_image_file("seed_data/laundry/images/shirt.jpeg")
+        #"image": read_image_file("seed_data/laundry/images/shirt.jpeg")
     },
     {
         "name": "Round Neck",
         "amount": 500,
-        "image": read_image_file("seed_data/laundry/images/round_neck.jpeg")
+        #"image": read_image_file("seed_data/laundry/images/round_neck.jpeg")
+        "image": "/static/images/clothe_images/round_neck.jpeg"
     },
     {
         "name": "Trouser",
         "amount": 800,
-        "image": read_image_file("seed_data/laundry/images/trouser.jpeg")
+        "image": "/static/images/clothe_images/trouser.jpeg"
+        #"image": read_image_file("seed_data/laundry/images/trouser.jpeg")
     },
     {
         "name": "Polo",
         "amount": 500,
-        "image": read_image_file("seed_data/laundry/images/polo.jpeg")
+        #"image": read_image_file("seed_data/laundry/images/polo.jpeg")
+        "image": "/static/images/clothe_images/polo.jpeg" 
     },
     {
         "name": "Suite (Complete)",
         "amount": 1000,
-        "image": read_image_file("seed_data/laundry/images/suite.jpeg")
+        #"image": read_image_file("seed_data/laundry/images/suite.jpeg")
+        "image": "/static/images/clothe_images/suite.jpeg"
     },
     {
         "name": "Pajamas",
         "amount": 1000,
-        "image": read_image_file("seed_data/laundry/images/pajamas.jpeg")
+        #"image": read_image_file("seed_data/laundry/images/pajamas.jpeg")
+        "image": "/static/images/clothe_images/pajamas.jpeg"
     },
     {
         "name": "Sneakers",
         "amount": 2500,
-        "image": read_image_file("seed_data/laundry/images/sneaker.jpg")
+        #"image": read_image_file("seed_data/laundry/images/sneaker.jpg")
+        "image": "/static/images/clothe_images/sneaker.jpg" 
     },
 ]
 
