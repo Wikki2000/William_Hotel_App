@@ -55,7 +55,7 @@ def add_maintenance(user_role: str, user_id: str):
 
 
 @api_views.route("/maintenances/<maintenance_id>/delete", methods=["DELETE"])
-@role_required(["manager", "admin"])
+@role_required(["manager", "admin", "staff"])
 def delete_maintenance(user_role: str, user_id: str, maintenance_id: str):
     """Delete maintenance by it ID's."""
     try:

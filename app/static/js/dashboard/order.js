@@ -179,11 +179,11 @@ $(document).ready(function() {
         (response) => {
           showNotification(`Order for ${name} successfully made !`);
           $button.prop('disabled', false);
-		      const orderId = response.order_id;
-		      const receiptUrl = (
-			              APP_BASE_URL + `/orders/print-receipt?order_id=${orderId}`
-			            );
-		      window.open(receiptUrl, '_blank');
+          const orderId = response.order_id;
+          const receiptUrl = (
+            APP_BASE_URL + `/orders/print-receipt?order_id=${orderId}`
+          );
+          window.open(receiptUrl, '_blank');
         },
         (error) => {
           if (error.status === 422) {
@@ -254,8 +254,9 @@ $(document).ready(function() {
         fetchData(orderUrl)
         .then((data) => {
           data.forEach(({ order, customer, user }) => {
+            const date = britishDateFormat(order.updated_at);
             $('.order__history--table-body').append(
-              orderHistoryTableTemplate(order, customer)
+              orderHistoryTableTemplate(order, date, customer)
             );
           });
         })
@@ -268,8 +269,9 @@ $(document).ready(function() {
         fetchData(orderPendingPaymentUrl)
         .then((data) => {
           data.forEach(({ order, customer, user }) => {
+            const date = britishDateFormat(order.updated_at);
             $('.order__history--table-body').append(
-              orderHistoryTableTemplate(order, customer)
+              orderHistoryTableTemplate(order, date, customer)
             );
           });
         })
@@ -282,8 +284,9 @@ $(document).ready(function() {
         fetchData(orderPaidPaymentUrl)
         .then((data) => {
           data.forEach(({ order, customer, user }) => {
+            const date = britishDateFormat(order.updated_at);
             $('.order__history--table-body').append(
-              orderHistoryTableTemplate(order, customer)
+              orderHistoryTableTemplate(order, date, customer)
             );
           });
         })
@@ -445,7 +448,7 @@ $(document).ready(function() {
         .then((data) => {
           $('#order__guest--name-val').val(data.name);
           $('#order__guest--name-val').prop('readonly', true);
-	  $('#order__customer-id--val').val(data.id);
+          $('#order__customer-id--val').val(data.id);
         })
         .catch((error) => {
           console.log(error);
@@ -497,7 +500,6 @@ $(document).ready(function() {
       }
     });
 
-
   // Get order at any interval of time.
   $('#dynamic__load-dashboard')
     .off('click', '.order__history-table #inventory__searchbar')
@@ -520,9 +522,9 @@ $(document).ready(function() {
           }
 
           orders .forEach(({ order, customer, user }) => {
-	    const date = britishDateFormat(order.updated_at);
+            const date = britishDateFormat(order.updated_at);
             $('.order__history--table-body').append(
-	      orderHistoryTableTemplate(order, date, customer)
+              orderHistoryTableTemplate(order, date, customer)
             );
 
             $('#expenditure__total__amount-entry')

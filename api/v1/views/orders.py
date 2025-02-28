@@ -138,7 +138,6 @@ def get_orders(user_role: str, user_id: str):
             orders, key=lambda order : order.updated_at, reverse=True
         )
         obj = sorted_orders[0]
-        print(obj.order_items)
         response = [{
             "order": order.to_dict(),
             "customer": order.customer.to_dict(),

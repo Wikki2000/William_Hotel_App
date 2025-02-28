@@ -157,8 +157,6 @@ $(document).ready(() => {
           const oldRoomNumber = $('#guest__room-number-menu').text();
 
           $('#guest__room-number-menu').text(newRoomNumber);
-          console.log(oldRoomNumber, newRoomNumber);
-
           const roomUpdateUrl = (
             API_BASE_URL + 
             `/guests/${oldRoomNumber}/${newRoomNumber}/change-room`
@@ -168,11 +166,12 @@ $(document).ready(() => {
               $('#guest__roomAmount').val(room.amount);
               $('#guest__roomType').val(room.name);
               showNotification(
-              `Guest transfer from room ${oldRoomNumber} to room ${newRoomNumber}`
+                `Guest transfer from room ${oldRoomNumber} to room ${newRoomNumber}`
               );
             },
             (error) => {
               showNotification('An error: Try Again !', true);
+              console.log(error);
             }
           );
 
@@ -191,6 +190,10 @@ $(document).ready(() => {
           if (!rooms) {
             const msg = 'No room lodge at the moment !';
             showNotification(msg);
+          }
+          if (USER_ROLE === 'staff') {
+            showNotification('Access Restricted: Contact management to change guest room', true);
+            return;
           }
           const occupiedNumberList = rooms;
           displayMenuList(

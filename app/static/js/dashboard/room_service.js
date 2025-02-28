@@ -306,9 +306,13 @@ $(document).ready(function () {
           $('#guest__occupant-no').val(booking.guest_number);
 
 	  // Auto fill the form input to extend stay checkin date.
+          $('input[name="checkin"]')
+            .val(canadianDateFormat(new Date()));
+	  /*
 	  $('input[name="checkin"]')
-	    .val(canadianDateFormat(booking.checkin));
+	    .val(canadianDateFormat(booking.checkout));
 	  $('input[name="checkin"]').prop('readonly', true);
+	  */
 
           const orderUrl = (
             API_BASE_URL + `/guests/${customer.id}/${booking.id}/service-list`

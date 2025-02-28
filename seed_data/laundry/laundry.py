@@ -24,6 +24,7 @@ laundry_data = [
         "name": "Shirt",
         "amount": 700,
         #"image": read_image_file("seed_data/laundry/images/shirt.jpeg")
+        "image": "/static/images/clothe_images/shirt.jpeg"
     },
     {
         "name": "Round Neck",
