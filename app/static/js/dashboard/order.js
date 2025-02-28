@@ -171,6 +171,7 @@ $(document).ready(function() {
         orderData: { payment_type, is_paid, amount },
         itemOrderData: cartItemsList, customer_id,
       };
+	    console.log(data);
 
       $('#order__confirmation-modal').empty();
 

@@ -89,9 +89,10 @@ export function displayRoomData(data, isStaff) {
  *
  * @param {string} - The HTML templates of food/drink item.
  */
-export function foodDrinkTemplate(id, name, type, amount) { 
+export function foodDrinkTemplate(id, name, type, amount, image_path) { 
+  const image_src = image_path ? image_path : '/static/images/public/hotel_logo.png';
   const row = `<div class="food-item">
-    <img src="/static/images/public/hotel_logo.png" alt="Food Image" class="food-img" />
+    <img src="${image_src}" alt="Food or Drink Image" class="food-img" />
     <h3 class="food-title">${name}</h3>
     <p>Price:&nbsp;&#8358;${amount.toLocaleString()}</p>
     <button data-id="${id}" data-name="${name}"
@@ -147,7 +148,7 @@ export function displayFoodDrink(foodData, drinkData) {
   if (foodData) {
     foodData.forEach((data) => {
       $('#restaurant__food--drinks').append(
-        foodDrinkTemplate(data.id, data.name, "food", data.amount)
+        foodDrinkTemplate(data.id, data.name, "food", data.amount, data.image_path)
       );
     });
   }
@@ -156,7 +157,7 @@ export function displayFoodDrink(foodData, drinkData) {
   if (drinkData) {
     drinkData.forEach((data) => {
       $('#restaurant__food--drinks').append(
-        foodDrinkTemplate(data.id, data.name, "drink", data.amount)
+        foodDrinkTemplate(data.id, data.name, "drink", data.amount, data.image_path)
       );
     });
   }

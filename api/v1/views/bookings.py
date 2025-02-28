@@ -208,20 +208,6 @@ def book_room(user_id: str, user_role: str, room_number: str):
     customer_data = data.get("customer")
     booking_data = data.get("book")
 
-    # Add new daily transaction if exists else increase sum by existing one
-    today_date = date.today()
-    transaction = storage.get_by(
-        DailySale, entry_date=today_date
-    )
-
-    if not transaction:
-        transaction = DailySale(
-            entry_date=today_date, amount=booking_data.get("amount")
-        )
-        storage.new(transaction)
-    else:
-        transaction.amount += room.amount
-
     customer = Customer(**customer_data)
     storage.new(customer)
     customer.is_guest = True
@@ -250,8 +236,22 @@ def book_room(user_id: str, user_role: str, room_number: str):
         # Create receipt for every booking.
         receipt = create_receipt("booking_id", book.id)
         storage.new(receipt)
-        storage.save()
 
+        # Add new daily transaction if exists else increase sum by existing one
+        today_date = date.today()
+        transaction = storage.get_by(
+            DailySale, entry_date=today_date
+        )
+
+        if not transaction:
+            transaction = DailySale(
+                entry_date=today_date, amount=booking_data.get("amount")
+            )
+            storage.new(transaction)
+        else:
+            transaction.amount += room.amount
+
+        storage.save()
         return jsonify({"booking_id": book.id}), 200
     except Exception as e:
         print(str(e))

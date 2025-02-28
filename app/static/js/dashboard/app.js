@@ -250,24 +250,34 @@ $(document).ready(function() {
             .attr('placeholder', 'Search for Foods & Drinks');
 
           // Search an Item in restaurants
-          $('input[name="Search Input"]').on('input', function() {
-            const restaurants = JSON.parse(localStorage.getItem('restaurant'));
-            const searchKey = $('input[name="Search Input"]')
-              .val().trim().toLowerCase();
-            $('#restaurant__food--drinks').empty();
-            if (searchKey) {
-              const searchItems = restaurants.filter(
-                item => item.name.toLowerCase().includes(searchKey)
-              );
-              displayFoodDrink(searchItems);
-            } else {
-              displayFoodDrink(restaurants);
-            }
-            highLightOrderBtn(CART); // Highlight btn on chart.
-          });
+          function searchFoodDrink(is_food      ) {
+            $('input[name="Search Input"]').on('input', function() {
+              const restaurants = JSON.parse(localStorage.getItem('restaurant'));
+              const searchKey = $('input[name="Search Input"]')
+                .val().trim().toLowerCase();
+              $('#restaurant__food--drinks').empty();
+              if (searchKey) {
+                const searchItems = restaurants.filter(
+                  item => item.name.toLowerCase().includes(searchKey)
+                );
+                if (is_food) {
+                  displayFoodDrink(searchItems, null);
+                } else {
+                  displayFoodDrink(null, searchItems);
+                }
+              } else {
+                if (is_food) {
+                  displayFoodDrink(restaurants, null);
+                } else {
+                  displayFoodDrink(null, restaurants);
+                }
+              }
+              highLightOrderBtn(CART); // Highlight btn on chart.
+            });
+          }
 
           if (clickId === 'sidebar__restaurant') {
-
+            searchFoodDrink(true);
             $('#restaurant__bar-title').text('Foods Menu List');
 
             const foodUrl = API_BASE_URL + '/foods';
@@ -285,6 +295,7 @@ $(document).ready(function() {
               });
 
           } else if (clickId === 'sidebar__bar') {
+            searchFoodDrink(false);
 
             $('#restaurant__bar-title').text('Drinks Menu List');
 

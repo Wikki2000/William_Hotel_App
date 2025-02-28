@@ -10,6 +10,7 @@ class Drink(BaseModel, Base):
     """Define class for storing drinks"""
     __tablename__ = "drinks"
     image = Column(LargeBinary)
+    image_path = Column(String(225))
     name =  Column(String(225), nullable=False)
     qty_stock = Column(Integer, nullable=False)
     amount = Column(Float, nullable=False)

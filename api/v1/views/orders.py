@@ -38,20 +38,6 @@ def order_items(user_role: str, user_id: str):
     item_data = data.get("itemOrderData")
     order_data = data.get("orderData")
 
-    # Add new daily transaction if exists else increase sum by existing one
-    today_date = date.today()
-    transaction = storage.get_by(
-        DailySale, entry_date=today_date
-    )
-
-    if not transaction:
-        transaction = DailySale(
-            entry_date=today_date, amount=order_data.get("amount")
-    )
-        storage.new(transaction)
-    else:
-        transaction.amount += float(order_data.get("amount"))
-
     try:
         user = storage.get_by(User, id=user_id)
 
@@ -115,6 +101,21 @@ def order_items(user_role: str, user_id: str):
             }
             item_order = OrderItem(**item_attr)
             storage.new(item_order)
+
+            # Add new daily transaction if exists else increase sum by existing one
+            today_date = date.today()
+            transaction = storage.get_by(
+                DailySale, entry_date=today_date
+            )
+
+            if not transaction:
+                transaction = DailySale(
+                    entry_date=today_date, amount=order_data.get("amount")
+                )
+
+                storage.new(transaction)
+            else:
+                transaction.amount += float(order_data.get("amount"))
         storage.save()
         return jsonify({"order_id": new_order.id}), 200
     except Exception as e:

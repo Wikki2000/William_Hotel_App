@@ -11,6 +11,7 @@ class Food(BaseModel, Base):
     """Define class for storing drinks"""
     __tablename__ = "foods"
     image = Column(LargeBinary)
+    image_path = Column(String(225))
     name =  Column(String(60), nullable=False)
     qty_stock = Column(Integer, nullable=False)
     is_available = Column(Boolean, default=True)
