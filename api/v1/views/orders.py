@@ -304,17 +304,7 @@ def get_order_by_date(
                 "order": order.to_dict(),
                 "customer": order.customer.to_dict(),
                 "user": order.ordered_by.to_dict(),
-                "order_items": [
-                    {
-                        "qty": order_item.qty_order,
-                        "amount": order_item.amount,
-                        "name": (
-                            order_item.drink.name
-                            if order_item.drink_id
-                            else order_item.food.name
-                        )
-                    } for order_item in order.order_items]
-                } for order in sorted_sales
+               } for order in sorted_sales
             ],
             "accumulated_sum": accumulated_sum
     }
