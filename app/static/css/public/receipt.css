@@ -28,7 +28,8 @@ body {
     display: flex;
     align-items: center;
     
-    background-color: var(--black_900);
+    #background-color: var(--black_900);
+    background-color: orange;
     color: var(--white_a700);
     padding: 20px;
     border-radius: 10px 10px 0 0; /* Rounded corners at the top */
@@ -43,6 +44,7 @@ body {
 .receipt-header .letter-header {
     text-align: center;
     margin-left: 15%;
+    color: black !important;
 }
 
 .receipt-header .letter-header h1 {
@@ -58,7 +60,8 @@ body {
 
 .receipt-header .letter-header u {
     font-size: 0.8rem;
-    color: var(--orange_a100);
+    #color: var(--orange_a100);
+    color: var(--black_900);
 }
 
 /* Body Section */
