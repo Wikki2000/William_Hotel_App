@@ -48,21 +48,18 @@ body {
 }
 
 .receipt-header .letter-header h1 {
-    #font-size: 1.5rem;
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     margin: 0;
     font-weight: bold;
 }
 
 .receipt-header .letter-header p {
-    #font-size: 0.9rem;
-    font-size: 1.4rem;
+    font-size: 0.9rem;
     margin: 5px 0;
 }
 
 .receipt-header .letter-header u {
-    #font-size: 0.8rem;
-    font-size: 1.2rem;
+    font-size: 0.8rem;
     #color: var(--orange_a100);
     color: var(--black_900);
 }
@@ -72,23 +69,14 @@ body {
     padding: 20px;
 }
 
-.receipt-body > .order__print-receipt {
-  font-size: 1.2rem;
-}
 .receipt-body > p {
     background-color: var(--orange_a100);
     width: fit-content;
     padding: 10px 20px;
-    #font-size: 1.2rem;
-    font-size: 2.0rem;
+    font-size: 1.2rem;
     font-weight: bold;
-    #color: var(--white_a700);
+    color: var(--white_a700);
     border-radius: 5px;
-}
-
-.receipt-items, .order-total, 
-.total-payment > b, .total__title, .welcome__text {
-  font-size: 1.44rem;
 }
 
 /* Table Section */
@@ -121,6 +109,7 @@ body {
     margin: 10px 0;
     line-height: 1.5;
 }
+
 
 .order__print-receipt:hover {
   cursor: pointer;

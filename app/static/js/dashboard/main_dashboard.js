@@ -85,6 +85,7 @@ $(document).ready(function() {
       },
       customer: { gender, name, address, phone, id_type, id_number, email }
     };
+	  console.log(BookingData);
 
     $('#main__popup-modal').css('display', 'flex');
 
