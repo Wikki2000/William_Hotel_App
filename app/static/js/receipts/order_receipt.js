@@ -78,7 +78,7 @@ $(document).ready(function() {
         </div>`;
       $("#totals").html(totals);
 
-      $(".total-payment").html(order.amount.toLocaleString());
+      $(".total-payment").html(`<b>${order.amount.toLocaleString()}</b>`);
     })
     .catch((error) => {
       showNotification('An error occurred. Please try again.', true);

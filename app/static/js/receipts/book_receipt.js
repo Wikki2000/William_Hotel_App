@@ -1,4 +1,4 @@
-import { fetchData, getBaseUrl, getQueryParam, showNotification } from '../global/utils.js';
+import { britishDateFormat, fetchData, getBaseUrl, getQueryParam, showNotification } from '../global/utils.js';
 
 function formatedDate() {
   const today = new Date();
@@ -40,8 +40,8 @@ $(document).ready(function() {
             <div><p><strong>Receipt No.</strong></p><p>${booking.book_receipt}</p></div>
             <div><p><strong>Terminal</strong></p><p>Terminal One</p></div>
             <div><p><strong>Staff</strong></p><p>${user.first_name} ${user.last_name}</p></div>
-	    <div><p><strong>CheckIn</strong></p><p>12/10/2024</p></div>
-	    <div><p><strong>CheckOut</strong></p><p>12/10/2024</p></div>
+	    <div><p><strong>CheckIn</strong></p><p>${britishDateFormat(booking.checkin)}</p></div>
+	    <div><p><strong>CheckOut</strong></p><p>${britishDateFormat(booking.checkout)}</p></div>
         </div>`;
       $("#receipt-info").html(receiptInfo);
 

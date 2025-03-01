@@ -15,7 +15,7 @@ class Customer(BaseModel, Base):
     gender = Column(ENUM("male", "female"))
     phone = Column(String(30))
     is_guest = Column(Boolean, default=False)
-    id_type = Column(ENUM("voter_card", "nin", "driver_licence", "passport"))
+    id_type = Column(ENUM("voter_card", "nin", "driver_licence", "passport"), default="NILL")
     id_number =  Column(String(225))
     email = Column(String(225))
 
