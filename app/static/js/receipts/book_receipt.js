@@ -78,7 +78,7 @@ $(document).ready(function() {
         </div>`;
       $("#totals").html(totals);
 
-      $(".total-payment").html(booking.amount.toLocaleString());
+      $(".total-payment").html(`<b>${booking.amount.toLocaleString()}</b>`);
     })
     .catch((error) => {
       showNotification('An error occurred. Please try again.', true);
