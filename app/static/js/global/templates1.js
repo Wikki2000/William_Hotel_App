@@ -314,6 +314,22 @@ export function salesTableTemplate(index, amount, date) {
     <td class="">
       <p class="ui text size-textmd">₦${amount.toLocaleString()}</p>
     </td>
+
+    <td class="">
+      <p><i class="fa fa-ellipsis-v"></i></p>
+      <p><i style="display: none;" class="fa fa-times"></i></p>
+    </td>
+
+    <td class="manage">
+      <nav class="manage__nav">
+        <ul class="manage__list">
+	  <li data-id="{ata.id}" class="manage__item inventory__update-stock">
+	    <i class="fa fa-wine-bottle"></i>Update Stock
+	  </li>
+
+	</ul>
+      </nav>
+    </td>
   </tr>`
 }
 

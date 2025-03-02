@@ -8,7 +8,8 @@ import  {
   laundryTableTemplate
 } from '../global/templates.js';
 import {
-  expenditureTableTemplate, displayMaintenance, staffManagementCommonCart
+  expenditureTableTemplate, displayMaintenance, staffManagementCommonCart,
+  inventoryFilterTemplate
 } from '../global/templates1.js';
 
 $(document).ready(function() {
@@ -454,6 +455,8 @@ $(document).ready(function() {
             .catch((error) => {
             });
           $('.expenditure__section').show();
+		          $('.expenditure.expenditure__section .inventory__filter')
+		          .append(inventoryFilterTemplate());
 
           const inventoryUrl = API_BASE_URL + '/inventories';
           fetchData(inventoryUrl)
