@@ -45,7 +45,7 @@ def bookings(user_id: str, user_role: str):
 
 
 @api_views.route("/bookings/<string:start_date>/<string:end_date>/get")
-@role_required(["manager", "admin"])
+@role_required(["manager", "admin", "staff"])
 def get_bookings_by_date(
     user_role: str, user_id: str, start_date: str, end_date: str
 ):

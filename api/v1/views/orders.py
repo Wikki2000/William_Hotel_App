@@ -50,6 +50,7 @@ def order_items(user_role: str, user_id: str):
             new_customer = Customer(**customer_data)
             storage.new(new_customer)
             storage.save()
+            customer = new_customer
             order_data["customer_id"] = new_customer.id
 
         # Add user ID to order_data
@@ -72,21 +73,38 @@ def order_items(user_role: str, user_id: str):
 
                 # Reduce qty of food stock base on qty ordered.
                 food = storage.get_by(Food, id=item.get("itemId"))
-                food.qty_stock -= item.get("itemQty")
-                if food.qty_stock  < 1:
+                if food.qty_stock  < item.get("itemQty"):
+
+                    # Delete if item low in stock
+                    if not customer.is_guest:
+                        storage.delete(customer)
+                    storage.delete(new_order)
+                    storage.save()
+
                     return jsonify({
-                        "error": f"{food.name} low in stock"
+                        "error": f"{food.name} low in stock ({food.qty_stock} piece(s) available)"
                     }), 422
+                else:
+                    food.qty_stock -= item.get("itemQty")
             elif item.get("itemType") == "drink":
                 item_field = "drink_id"
 
                 # Reduce qty of drink stock base on qty ordered.
                 drink = storage.get_by(Drink, id=item.get("itemId"))
-                drink.qty_stock -= item.get("itemQty")
-                if drink.qty_stock  < 1:
+                if drink.qty_stock  < item.get("itemQty"):
+
+                    # Delete only guest not lodge
+                    if not customer.is_guest:
+                        storage.delete(customer)
+
+                    storage.delete(new_order)
+                    storage.save()
+
                     return jsonify({
-                        "error": f"{drink.name} low in stock"
+                        "error": f"{drink.name} low in stock ({drink.qty_stock} piece(s) available)"
                     }), 422
+                else:
+                    drink.qty_stock -= item.get("itemQty")
             elif item.get("itemType") == "game":
                 item_field = "game_id"
             elif item.get("itemType") == "clothe":
@@ -274,7 +292,7 @@ def filter_orders(user_role: str, user_id: str, payment_status):
 
 
 @api_views.route("/orders/<string:start_date>/<string:end_date>/get")
-@role_required(["manager", "admin"])
+@role_required(["manager", "admin", "staff"])
 def get_order_by_date(
     user_role: str, user_id: str, start_date: str, end_date: str
 ):
