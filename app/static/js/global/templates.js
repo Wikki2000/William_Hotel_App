@@ -194,7 +194,7 @@ export function orderItemsTempleate(itemId, itemDataObject) {
 
        <div class="order__counter">
          <button data-id="${itemId}" data-price="${itemDataObject.itemAmount}" class="order__count-btn">-</button>
-         <span class="order__counter-value">1</span>
+         <span class="order__counter-value">${itemDataObject.itemQty}</span>
          <button data-id="${itemId}" data-price="${itemDataObject.itemAmount}" class="order__count-btn order__btn-increase">+</button>
        </div>
      </div>

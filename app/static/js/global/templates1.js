@@ -142,7 +142,7 @@ export function displayMaintenance(data) {
  *
  * @return {string} - The cart template string.
  */
-export function staffManagementCommonCart(title, btn, userRole, icon, cartColor) {
+export function staffManagementCommonCart(title, btn, userRole, icon, cartColor, summaryId) {
   const hideClass = userRole === 'staff' ? '' : 'hidden';
   return `
     <div>
@@ -153,7 +153,7 @@ export function staffManagementCommonCart(title, btn, userRole, icon, cartColor)
     </div>
     <div class="main__row-2">
       <button id="${btn.id}" class="highlight-btn">${btn.content}</button>
-      <h1 style="visibility: ${hideClass}"><em id="main__today-check--in">0</em></h1>
+      <h1 style="visibility: ${hideClass}"><em id="${summaryId}">0</em></h1>
     </div>
   `
 }
@@ -318,6 +318,7 @@ export function salesTableTemplate(index, amount, date) {
 }
 
 export function foodTableTemplate(index, data, date) {
+  const qtyColor = data.qty_stock < 10 ? 'red': '';
   const row = `<tr data-id="${data.id}">
       <td class="">
         <p class="ui text size-textmd">${index + 1}</p>
@@ -329,7 +330,7 @@ export function foodTableTemplate(index, data, date) {
         <p class="ui text size-textmd name">${data.name}</p>
       </td>
       <td class="">
-        <p class="ui text size-textmd qty_stock">${data.qty_stock}</p>
+        <p class="ui text size-textmd qty_stock" style="color: ${qtyColor}">${data.qty_stock}</p>
       </td>
      <td class="">
         <p class="ui text size-textmd amount">₦${data.amount.toLocaleString()}</p>

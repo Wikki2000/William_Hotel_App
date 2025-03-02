@@ -136,7 +136,7 @@ $(document).ready(function() {
 
       // Guest data
       const is_guest = (
-        $('#order__guest--type-val').val() === 'Walk In' ? true : false
+        $('#order__guest--type-val').val() === 'Walk In' ? false : true
       );
       const name = $('#order__guest--name-val').val();
 
@@ -178,8 +178,10 @@ $(document).ready(function() {
       const orderUrl = API_BASE_URL + '/order-items';
       ajaxRequest(orderUrl, 'POST', JSON.stringify(data),
         (response) => {
+
           showNotification(`Order for ${name} successfully made !`);
           $button.prop('disabled', false);
+
           const orderId = response.order_id;
           const receiptUrl = (
             APP_BASE_URL + `/orders/print-receipt?order_id=${orderId}`

@@ -1,6 +1,6 @@
 import {
   britishDateFormat, compareDate, getFormattedDate, fetchData, ajaxRequest,
-  getBaseUrl, highLightOrderBtn, cartItemsTotalAmount
+  canadianDateFormat, getBaseUrl, highLightOrderBtn, cartItemsTotalAmount
 } from '../global/utils.js';
 import  {
   displayFoodDrink, displayRoomData, guestListTableTemplate, gameTemplate,
@@ -136,7 +136,6 @@ $(document).ready(function() {
             .then((data) => {
               const roomCounts = data.rooms_count;
               $('#main__room-available').text(roomCounts.total_available_room);
-              $('#main__room-reserved').text(roomCounts.total_reserved_room);
             })
             .catch((error) => {
               console.error('Failed to fetch room data:', error);
@@ -155,7 +154,7 @@ $(document).ready(function() {
             const cartTitle = 'Today CheckIn';
             const icon = 'fa-calendar';
             $('#main__common-cart--staffManagement')
-              .append(staffManagementCommonCart(cartTitle, btn, USER_ROLE, icon, greenClass));
+              .append(staffManagementCommonCart(cartTitle, btn, USER_ROLE, icon, greenClass, 'main__today-check--in'));
 
             // Second CART Staff
             const btn2 = {
@@ -165,7 +164,7 @@ $(document).ready(function() {
             const icon2 = 'fa-shopping-cart';
             const cartTitle2 = 'Today Order\'s'
             $('#main__cart-loaded')
-              .append(staffManagementCommonCart(cartTitle2, btn2, USER_ROLE,icon2, orangeClass));
+              .append(staffManagementCommonCart(cartTitle2, btn2, USER_ROLE,icon2, orangeClass, 'main__todays-order'));
           } else {
             // First CART for management
             const btn = {
@@ -187,6 +186,30 @@ $(document).ready(function() {
             $('#main__cart-loaded')
               .append(staffManagementCommonCart(cartTitle2, btn2, USER_ROLE, icon2, orangeClass));
           }
+
+
+          const today = canadianDateFormat(new Date());
+
+          // Get sumnary of today's order
+          const todayOrderUrl = API_BASE_URL + `/orders/${today}/${today}/get`;
+          fetchData(todayOrderUrl)
+            .then((data) => {
+              $('#main__todays-order').text(data.orders.length);
+            })
+            .catch((error) => {
+              console.error('Failed to fetch room data:', error);
+            });
+
+          // Get sumnary of today bookings
+          const todayBookingUrl = API_BASE_URL + `/bookings/${today}/${today}/get`;
+          fetchData(todayBookingUrl)
+            .then((data) => {
+              $('#main__today-check--in').text(data.bookings.length);
+            })
+            .catch((error) => {
+              console.error('Failed to fetch room data:', error);
+            });
+
         });
         break;
       }
@@ -339,6 +362,8 @@ $(document).ready(function() {
 
           $('.order__empty-cart').hide();
           $('.oder__first-col').hide();
+
+          console.log(CART);
 
           if (CART.size !== 0) {
             $('.oder__first-col').show();

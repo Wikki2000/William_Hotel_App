@@ -75,9 +75,13 @@ $(document).ready(function() {
 		  $('#food__table-body')
 		    .prepend(foodTableTemplate(-1, response, date));
 		} else {
+		  const qtyColor = response.qty_stock < 10 ? 'red': '';
+
 		  $(`#food__table-body tr[data-id="${foodId}"] .name`).text(response.name);
 		  $(`#food__table-body tr[data-id="${foodId}"] .amount`).text('₦' + response.amount.toLocaleString());
 		  $(`#food__table-body tr[data-id="${foodId}"] .qty_stock`).text(response.qty_stock);
+		  
+		  $(`#food__table-body tr[data-id="${foodId}"] .qty_stock`).css('color', qtyColor);
 
 		}
 		$('#food__update-form').removeClass('stock__food-add');
