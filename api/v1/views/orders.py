@@ -302,7 +302,7 @@ def get_order_by_date(
 
     # Retrieve expenditure at an interval of time
     sales = storage.get_by_date(
-        Order, start_date_obj, end_date_obj, "updated_at"
+        Order, start_date_obj, end_date_obj, "created_at"
     )
 
     # Handle case were there is no expenditure

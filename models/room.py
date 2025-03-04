@@ -15,7 +15,7 @@ class Room(BaseModel, Base):
     __tablename__ = "rooms"
     image = Column(LONGBLOB)  # Stores image binary
     image_path = Column(String(225), nullable=False)  # Stores image file path
-    name =  Column(String(225), nullable=False)
+    name =  Column(String(225))
     status = Column(
         ENUM("available", "reserved", "occupied"),
         default="available"

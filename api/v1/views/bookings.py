@@ -55,7 +55,7 @@ def get_bookings_by_date(
 
     # Retrieve expenditure at an interval of time
     bookings = storage.get_by_date(
-        Booking, start_date_obj, end_date_obj, "updated_at"
+        Booking, start_date_obj, end_date_obj, "created_at"
     )
 
     # Handle case were there is no expenditure
