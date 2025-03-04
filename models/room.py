@@ -6,7 +6,6 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.mysql import ENUM, LONGBLOB
-from models.maintenance import Maintenance
 from models.order import Order
 
 
@@ -14,7 +13,7 @@ class Room(BaseModel, Base):
     """Define class for storing drinks"""
     __tablename__ = "rooms"
     image = Column(LONGBLOB)  # Stores image binary
-    image_path = Column(String(225), nullable=False)  # Stores image file path
+    image_path = Column(String(225))  # Stores image file path
     name =  Column(String(225), nullable=False)
     status = Column(
         ENUM("available", "reserved", "occupied"),
@@ -23,7 +22,5 @@ class Room(BaseModel, Base):
     amount = Column(Float, nullable=False)
     number = Column(String(20), nullable=False, unique=True)
 
-    maintenances = relationship('Maintenance', backref='room',
-                                cascade='all, delete-orphan')
     book = relationship('Booking', backref='room',
                          cascade='all, delete-orphan')

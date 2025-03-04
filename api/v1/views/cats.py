@@ -8,7 +8,7 @@ from models import storage
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
-from models.sale import DailySale
+from models.sale import Sale
 
 
 @api_views.route("/cats/<string:year>/get")
@@ -30,11 +30,14 @@ def get_cats(user_role: str, user_id: str, year: str):
         # Vat monthly payment due on 19th of every month.
         # Get the accumalated sum of daily sales till 19th.
         monthly_sales = storage.get_by_date(
-            DailySale, previous_month_date, today_date, "entry_date"
+            Sale, previous_month_date, today_date, "entry_date"
         )
+
         accumulated_monthly_sales_sum = sum(
-            sale.amount for sale in monthly_sales
+            sale.food_sold + sale.drink_sold +
+            sale.laundry_sold + game_sold for sale in monthly_sales
         )
+
         vat_amount = 0.005 * accumulated_monthly_sales_sum;
         cat = Cat(month=today_date, amount=vat_amount)
         storage.new(cat)

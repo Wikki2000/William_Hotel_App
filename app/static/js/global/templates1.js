@@ -46,6 +46,49 @@ export function vatListTemplate(data) {
   return row;
 }
 
+export function dailyServiceSaleTableTemplate(index, id, is_paid, customer, itemName, qty, amount) {
+  const paymentStatus = is_paid ? 'Paid' : 'Pending';
+  const paymentStatusColor = is_paid ? 'green' : 'red';
+  const row = `
+  <tr data-id="${id}">
+    <td class="">
+      <p class="ui text size-textmd">${index + 1}</p>
+    </td>
+    <td class="">
+      <p class="ui text size-textmd">${customer}</p>
+    </td>
+    <td class="">
+      <p class="ui text size-textmd">${itemName}</p>
+    </td>
+    <td class="">
+      <p class="ui text size-textmd">${qty}</p>
+    </td>
+    <td>
+      <p style="color: ${paymentStatusColor}" class="ui text size-textmd order__bill-status">${paymentStatus}</p>
+    </td>
+    <td>
+      <p class="ui text size-textmd">₦${amount.toLocaleString()}</p>
+    </td>
+
+    <td class="order__table-menu">
+      <p><i class="fa fa-ellipsis-v"></i></p>
+      <p><i style="display: none;" class="fa fa-times"></i></p>
+    </td>
+    <td class="manage">
+      <nav class="manage__nav">
+        <ul class="manage__list">
+          <li data-id="${id}" class="manage__item order__manageItem order__showConfirmModal">
+             <i class="fa fa-shopping-cart"></i>Order Details
+           </li>
+          <li data-id="${id}" class="manage__item order__print order__manageItem">
+            <i class="fa fa-print"></i>Print Receipt
+          </li>
+        </ul>
+      </nav>
+    </td>
+</tr>`;
+ return row;
+}
 /*
  * Table template for displaying list of vendors.
  *
@@ -114,8 +157,7 @@ export function displayMaintenance(data) {
     <tr data-id="${data.id}">
       <td>
         <div class="room-info">
-          <p>${data.room_name}</p>
-          <p>#${data.room_number}</p>
+          <p>${data.location}</p>
         </div>
      </td>
           <td>${data.fault}</td>
@@ -303,13 +345,18 @@ export function drinkTableTemplate(index, data, date) {
   return row;
 }
 
-export function salesTableTemplate(index, amount, date) {
-  return `<tr>
+export function salesTableTemplate(index, id, saleStatus, amount, date) {
+  const isAproved = saleStatus ? 'Approved' : 'Pending';
+  const statusColor = saleStatus ? 'green': 'red';
+  return `<tr data-id="${id}">
     <td class="">
       <p class="ui text size-textmd">${index + 1}</p>
     </td>
     <td class="">
       <p class="ui text size-textmd">${date}</p>
+    </td>
+    <td class="">
+      <p class="ui text size-textmd sale__status" style="color: ${statusColor};">${isAproved}</p>
     </td>
     <td class="">
       <p class="ui text size-textmd">₦${amount.toLocaleString()}</p>
@@ -323,10 +370,13 @@ export function salesTableTemplate(index, amount, date) {
     <td class="manage">
       <nav class="manage__nav">
         <ul class="manage__list">
-	  <li data-id="{ata.id}" class="manage__item inventory__update-stock">
-	    <i class="fa fa-wine-bottle"></i>Update Stock
+	  <li data-id="${id}" class="manage__item sales__menu sales__details">
+	    <i class="fa fa-eye"></i>Details
 	  </li>
 
+	  <li data-id="${id}" class="manage__item sales__menu approved__record">
+	    <i class="fa fa-thumbs-up"></i>Approve Record
+	  </li>
 	</ul>
       </nav>
     </td>

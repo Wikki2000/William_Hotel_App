@@ -4,7 +4,7 @@ from models.booking import Booking
 from models.customer import Customer
 from models.room import Room
 from models.user import User
-from models.sale import DailySale
+from models.sale import Sale
 from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import bad_request, role_required, create_receipt
@@ -19,7 +19,12 @@ from models.receipt import Receipt
 def bookings(user_id: str, user_role: str):
     """Fetch booking data"""
     try:
-        books = storage.all(Booking).values()
+        #books = storage.all(Booking).values()
+        start_date_obj = end_date_obj = date.today()
+
+        books = storage.get_by_date(
+            Booking, start_date_obj, end_date_obj, "created_at",
+        )
         if not books:
             return jsonify([]), 200
 
@@ -239,17 +244,16 @@ def book_room(user_id: str, user_role: str, room_number: str):
 
         # Add new daily transaction if exists else increase sum by existing one
         today_date = date.today()
-        transaction = storage.get_by(
-            DailySale, entry_date=today_date
-        )
 
-        if not transaction:
-            transaction = DailySale(
-                entry_date=today_date, amount=booking_data.get("amount")
-            )
-            storage.new(transaction)
+        sale = storage.get_by(Sale, entry_date=today_date)
+        if not sale:
+            sale = Sale(entry_date=today_date)
+            storage.new(sale)
+
+        if sale.room_sold:
+            sale.room_sold += booking_data.get("amount")
         else:
-            transaction.amount += room.amount
+            sale.room_sold = booking_data.get("amount")
 
         storage.save()
         return jsonify({"booking_id": book.id}), 200

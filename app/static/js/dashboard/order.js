@@ -225,9 +225,10 @@ $(document).ready(function() {
       $('.order__history--table-body').empty();
 
       // Prevent staff from getting sales at an interval of time.
+      /*
       if (USER_ROLE === 'staff') {
         $('#inventory__filter-form').hide();
-      }
+      }*/
 
       const orderUrl = API_BASE_URL + '/order-items';
       fetchData(orderUrl)
@@ -253,11 +254,12 @@ $(document).ready(function() {
 
     switch (clickId) {
       case 'order__filter-all': {
+        $('.order_history-title ').text('Today Order List');
         const orderUrl = API_BASE_URL + '/order-items';
         fetchData(orderUrl)
         .then((data) => {
           data.forEach(({ order, customer, user }) => {
-            const date = britishDateFormat(order.updated_at);
+            const date = britishDateFormat(order.created_at);
             $('.order__history--table-body').append(
               orderHistoryTableTemplate(order, date, customer)
             );
@@ -271,8 +273,9 @@ $(document).ready(function() {
         const orderPendingPaymentUrl = API_BASE_URL + '/orders/pending';
         fetchData(orderPendingPaymentUrl)
         .then((data) => {
+	    $('.order_history-title ').text('All Pending Orders');
           data.forEach(({ order, customer, user }) => {
-            const date = britishDateFormat(order.updated_at);
+            const date = britishDateFormat(order.created_at);
             $('.order__history--table-body').append(
               orderHistoryTableTemplate(order, date, customer)
             );
@@ -284,10 +287,11 @@ $(document).ready(function() {
       }
       case 'order__filter-paid': {
         const orderPaidPaymentUrl = API_BASE_URL + '/orders/paid';
+        $('.order_history-title ').text('Today Paid Orders');
         fetchData(orderPaidPaymentUrl)
         .then((data) => {
           data.forEach(({ order, customer, user }) => {
-            const date = britishDateFormat(order.updated_at);
+            const date = britishDateFormat(order.created_at);
             $('.order__history--table-body').append(
               orderHistoryTableTemplate(order, date, customer)
             );
@@ -510,6 +514,9 @@ $(document).ready(function() {
       const startDate = $('.order__history-table #inventory__filter-start--date').val();
       const endDate = $('.order__history-table #inventory__filter-end--date').val();
 
+      const startDateFormated = britishDateFormat(startDate);
+      const endDateFormated = britishDateFormat(endDate);
+
       if (!startDate || !endDate) {
         showNotification('Start date and end date required', true);
         return;
@@ -523,9 +530,12 @@ $(document).ready(function() {
             $('#expenditure__total__amount-entry').text(0);
             return;
           }
+	  $('.order_history-title ').text(
+            `${startDateFormated} to ${endDateFormated} History`
+          );
 
-          orders .forEach(({ order, customer, user }) => {
-            const date = britishDateFormat(order.updated_at);
+          orders.forEach(({ order, customer, user }) => {
+            const date = britishDateFormat(order.created_at);
             $('.order__history--table-body').append(
               orderHistoryTableTemplate(order, date, customer)
             );

@@ -22,6 +22,8 @@ $(document).ready(function() {
 	const $clickItem = $(this);
 	const foodId = $clickItem.data('id');
 
+	$('#food__update-form').trigger('reset');
+
 	togleTableMenuIcon();
 	$('#food__update-modal').css('display', 'flex');
 
@@ -105,6 +107,8 @@ $(document).ready(function() {
 
 	const $clickItem = $(this);
 	const drinkId = $clickItem.data('id');
+
+	$('#stock__update-form').trigger('reset');
 
 	if ($clickItem.hasClass('inventory__update-stock')) {
 

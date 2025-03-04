@@ -6,8 +6,9 @@ from models.order import Order
 from models.drink import Drink
 from models.food import Food
 from models.order_item import OrderItem
-from models.sale import DailySale
+#from models.sale import DailySale
 from models.booking import Booking
+from models.sale import Sale
 from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import bad_request, create_receipt, role_required
@@ -27,6 +28,8 @@ def order_items(user_role: str, user_id: str):
     in total drink stock base on the amount order.
     """
     data = request.get_json()
+
+    today_date = date.today() 
 
     # Handle 404 error
     required_fields = ["customerData", "itemOrderData", "orderData"]
@@ -66,6 +69,11 @@ def order_items(user_role: str, user_id: str):
         storage.new(receipt)
         storage.save()
 
+        item_sold = storage.get_by(Sale, entry_date=today_date)
+        if not item_sold:
+            item_sold = Sale(entry_date=today_date)
+            storage.new(item_sold)
+
         for item in item_data:
             item_field = ""
             if item.get("itemType") == "food":
@@ -86,6 +94,12 @@ def order_items(user_role: str, user_id: str):
                     }), 422
                 else:
                     food.qty_stock -= item.get("itemQty")
+                    
+                    if item_sold.food_sold:
+                        item_sold.food_sold += item.get("itemAmount")
+                    else:
+                        item_sold.food_sold = item.get("itemAmount")
+
             elif item.get("itemType") == "drink":
                 item_field = "drink_id"
 
@@ -105,10 +119,25 @@ def order_items(user_role: str, user_id: str):
                     }), 422
                 else:
                     drink.qty_stock -= item.get("itemQty")
+
+                    if item_sold.drink_sold:
+                        item_sold.drink_sold += item.get("itemAmount")
+                    else:
+                        item_sold.drink_sold = item.get("itemAmount")
             elif item.get("itemType") == "game":
                 item_field = "game_id"
+
+                if item_sold.game_sold:
+                    item_sold.game_sold += item.get("itemAmount")
+                else:
+                    item_sold.game_sold = item.get("itemAmount")
             elif item.get("itemType") == "clothe":
                 item_field = "laundry_id"
+
+                if item_sold.laundry_sold:
+                    item_sold.laundry_sold += item.get("itemAmount")
+                else:
+                    item_sold.laundry_sold = item.get("itemAmount")
 
             # Stored all ordered items
             item_attr = {
@@ -121,7 +150,7 @@ def order_items(user_role: str, user_id: str):
             storage.new(item_order)
 
             # Add new daily transaction if exists else increase sum by existing one
-            today_date = date.today()
+            """
             transaction = storage.get_by(
                 DailySale, entry_date=today_date
             )
@@ -134,6 +163,7 @@ def order_items(user_role: str, user_id: str):
                 storage.new(transaction)
             else:
                 transaction.amount += float(order_data.get("amount"))
+            """
         storage.save()
         return jsonify({"order_id": new_order.id}), 200
     except Exception as e:
@@ -148,7 +178,13 @@ def order_items(user_role: str, user_id: str):
 def get_orders(user_role: str, user_id: str):
     """Retrieve all order items"""
     try:
-        orders = storage.all(Order).values()
+        #orders = storage.all(Order).values()
+
+        start_date_obj = end_date_obj = date.today()
+
+        orders = storage.get_by_date(
+            Order, start_date_obj, end_date_obj, "created_at",
+        )
 
         if not orders:
             return jsonify([]), 200
@@ -259,28 +295,40 @@ def update_status(user_role: str, user_id: str, order_id: str):
 def filter_orders(user_role: str, user_id: str, payment_status):
     """Filter ordered base on paid or pending payment."""
     try:
-        orders = storage.all(Order).values()
+        # Get all pending payment from databases
+        if payment_status == "pending":
+            all_pending_orders = storage.all_get_by(Order, is_paid=False)
+            if not all_pending_orders:
+                return jsonify([]), 200
+            else:
+                sorted_pending_orders = sorted(
+                    all_pending_orders,
+                    key=lambda order : order.updated_at,
+                    reverse=True
+                                                                                                )
+                response = [{
+                    "order": order.to_dict(),
+                    "customer": order.customer.to_dict(),
+                    "ordered_by": order.ordered_by.to_dict()
+                    } for order in  sorted_pending_orders]
+            return jsonify(response), 200
+        elif payment_status == "paid":
+            # Get paid orders for today
+            start_date_obj = end_date_obj = date.today()
+            orders = storage.get_by_date(
+                Order, start_date_obj, end_date_obj, "created_at",
+            )
 
-        if not orders:
-            return jsonify([]), 200
-
-        sorted_orders = sorted(
-            orders, key=lambda order : order.updated_at, reverse=True
-        )
-
-        response = None
-        if payment_status == "paid":
+            sorted_orders = sorted(
+                orders, key=lambda order : order.updated_at, reverse=True
+            )
+            if not orders:
+                return jsonify([]), 200
             response = [{
                 "order": order.to_dict(),
                 "customer": order.customer.to_dict(),
                 "ordered_by": order.ordered_by.to_dict()
             } for order in sorted_orders if order.is_paid]
-        elif payment_status == "pending":
-            response = [{
-                "order": order.to_dict(),
-                "customer": order.customer.to_dict(),
-                "ordered_by": order.ordered_by.to_dict()
-            } for order in sorted_orders if not order.is_paid]
         else:
             abort(404)
         return jsonify(response), 200

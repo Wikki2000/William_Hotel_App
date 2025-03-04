@@ -2,6 +2,7 @@ import {
   getBaseUrl, confirmationModal, validateForm, closeConfirmationModal,
   showNotification, ajaxRequest, fetchData, britishDateFormat,
   togleTableMenuIcon, updateElementCount, hideAllInventoryDashboard,
+  canadianDateFormat,
 } from '../../global/utils.js';
 
 import {
@@ -29,19 +30,23 @@ $(document).ready(function() {
 
       switch (clickItemId) {
 	case 'inventory__expenditure-cart': {
-	  const url = API_BASE_URL + '/expenditures';
+	  const today_date = canadianDateFormat(new Date());
+	  const url = (
+	    API_BASE_URL + `/expenditures/${today_date}/${today_date}/get`
+	  );
 
 	  $('#expenditure__list-table--body').empty();
 
 	  fetchData(url)
-	  .then((data) => {
-	    data.forEach(({ id, title, amount, created_at }) => {
+	  .then(({ daily_expenditures }) => {
+	    daily_expenditures.forEach(({ id, title, amount, created_at }) => {
 	      const date = britishDateFormat(created_at);
 	      $('#expenditure__list-table--body')
 		.append(expenditureTableTemplate(id, title, date, amount));
 	    });
 	  })
 	  .catch((error) => {
+	    console.log(error);
 	  });
 	  $('.expenditure__section').show();
 
@@ -63,9 +68,15 @@ $(document).ready(function() {
 	  fetchData(url)
 	  .then((data) => {
 	    data.forEach((sale, index) => {
+	      const totalSales = (
+                sale.food_sold + sale.drink_sold + sale.room_sold +
+                sale.laundry_sold + sale.game_sold
+              );
 	      const date = britishDateFormat(sale.created_at);
 	      $('#sales__profit-table--body')
-		.append(salesTableTemplate(index, sale.amount, date)); 
+		.append(
+		  salesTableTemplate(index, sale.id, sale.is_approved, totalSales, date)
+		); 
 	    });
 	  })
 	  .catch((error) => {

@@ -155,6 +155,9 @@ Order History Section
   .inventory__filter {
     margin-left: auto;
   }
+  .order_history-title {
+    margin-left: 20px;
+  }
 }
 
 .order__history--table-body {
@@ -181,6 +184,12 @@ Order History Section
     padding-top: 10px;
     border-bottom: 1px solid var(--orange_a100);
   }
+  /*
+  td:nth-child(2), td:nth-child(3),
+  td:nth-child(4), td:nth-child(5),  {
+    padding-left: 10px;
+    background-color: red;
+  }*/
 }
 .order__history--filter-btns {
   margin-left: 5%;

@@ -88,7 +88,7 @@
       </div>
 
       <!-- Table showing list of expenditures -->
-      <div style="" id="expenditures__list" class="common-table-column expenditure__section">
+      <div style="display: none" id="expenditures__list" class="common-table-column expenditure__section">
         <table cellpadding="0" cellspacing="0" class="common-tabletype ui table size-xs">
           <thead>
             <tr>
@@ -329,7 +329,7 @@
 
       <!-- Sales and Profit table -->
       <div style="display: none;" id="sales__profit-list" class="common-table-column">
-        <h3>Daily Sales</h3><br>
+        <h3 id="Daily__sales-title">Daily Sales</h3><br>
         <div class="inventory__filter">
           <!-- Date filter section dynamicaly loaded here -->
         </div>
@@ -347,6 +347,11 @@
                 Sales Date
                 </p>
               </th>
+	      <th width="380px">
+	        <p class="table__header-cell-1 ui heading size-headings">
+		  Status
+		 </p>
+	      </th>
               <th width="380px">
                 <p class="table__header-cell-1 ui heading size-headings">
                 Amount
@@ -361,10 +366,61 @@
             <!-- Rows will be dynamically added here -->
           </tbody>
         </table>
+
+       <!-- Popup Modal to for sales details -->
+        <div id="sales__breakdown" class="popup-modal">
+          <div class="popup-modal-content sales__popup-modal-content">
+            <!-- Close Button -->
+	    <div class="sale__button-date--container">
+              <p id="sales__date" class="sale__date-summary">2/03/2025</p>
+              <button class="close-btn closePopupModal">×</button>
+	    </div>
+	      <h5 class="sale__summary-title">
+                Daily Sales Breakdown
+              </h5>
+
+              <div>
+                <!-- This section is dynamically loaded -->
+                <div class="sale__summary-flex">
+                  <p>Total Room Sold</p>
+                  <p id="total__room-sale"></p>
+                  <button id="total__room-sale--btn" class="highlight-btn table__header-cell ui heading size-headings item__sold">View Details</p>
+                </div>
+                <div class="sale__summary-flex">
+                  <p>Total Drink Sold</p>
+                  <p id="total__drink-sale"></p>
+                  <button id="total__drink-sale--btn" class="highlight-btn table__header-cell ui heading size-headings item__sold">View Details</p>
+                </div>
+                <div class="sale__summary-flex">
+                  <p>Total Food Sold</p>
+                  <p id="total__food-sale"></p>
+                  <button id="total__food-sale--btn" class="highlight-btn table__header-cell ui heading size-headings item__sold">View Details</p>
+                </div>
+                <div class="sale__summary-flex">
+                  <p>Toatal Game Sold</p>
+                  <p id="total__game-sale"></p>
+                  <button id="total__game-sale--btn" class="item__sold highlight-btn table__header-cell ui heading size-headings item__sold">View Details</p>
+                </div>
+                <div class="sale__summary-flex">
+                  <p>Toatal Laundry Sold</p>
+                  <p id="total__laundry-sale"></p>
+                  <button id="total__laundry-sale--btn" class="highlight-btn table__header-cell ui heading size-headings item__sold">View Details</button>
+                </div>
+                <div class="sale__summary-total">
+                  <p class="table__header-cell ui heading size-headings">Total Amount</p>
+                  <p class="item__sold" id="total__sale"></p>
+                </div>
+		<input id="sales__summary-date" type="hidden" />
+              </div>
+
+          </div>
+        </div>
+      </div>
+
       </div>
 
       <!-- Confirmation Modal for Booking -->
       <div id="order__confirmation-modal">
       </div>
     </div>
-</div>
+</div>             

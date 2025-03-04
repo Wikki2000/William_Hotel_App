@@ -243,10 +243,10 @@ $(document).ready(function() {
           const bookingUrl = API_BASE_URL + '/bookings';
           const $tableBody = $(".guest-table-body");
           // Prevent staff from getting sales at an interval of time.
+          /*
           if (USER_ROLE === 'staff') {
             $('#inventory__filter-form').hide();
-          }
-
+          }*/
           $('#rooms').addClass('highlight-btn');
           fetchData(bookingUrl)
             .then((response) => {
@@ -364,8 +364,6 @@ $(document).ready(function() {
           $('.order__empty-cart').hide();
           $('.oder__first-col').hide();
 
-          console.log(CART);
-
           if (CART.size !== 0) {
             $('.oder__first-col').show();
             CART.forEach((value, key) => {
@@ -440,23 +438,27 @@ $(document).ready(function() {
         const url = APP_BASE_URL + '/pages/inventory';
         $('#dynamic__load-dashboard').load(url, function() {
 
-          const expendituresUrl = API_BASE_URL + '/expenditures';
+          const today_date = canadianDateFormat(new Date());
+          const expendituresUrl = (
+            API_BASE_URL + `/expenditures/${today_date}/${today_date}/get`
+          );
 
           $('#expenditure__list-table--body').empty();
 
           fetchData(expendituresUrl)
-            .then((data) => {
-              data.forEach(({ id, title, amount, created_at }) => {
+            .then(({ daily_expenditures }) => {
+              daily_expenditures.forEach(({ id, title, amount, created_at }) => {
                 const date = britishDateFormat(created_at);
                 $('#expenditure__list-table--body')
                   .append(expenditureTableTemplate(id, title, date, amount));
               });
             })
             .catch((error) => {
+              console.log(error);
             });
           $('.expenditure__section').show();
-		          $('.expenditure.expenditure__section .inventory__filter')
-		          .append(inventoryFilterTemplate());
+          $('.expenditure.expenditure__section .inventory__filter')
+            .append(inventoryFilterTemplate());
 
           const inventoryUrl = API_BASE_URL + '/inventories';
           fetchData(inventoryUrl)
