@@ -330,6 +330,57 @@
     margin-left: auto;
     margin-top: 25px;
   }
+
+  .sales__popup-modal-content {
+    width: 40%;
+    height: 70%;
+  }
+  .sale__button-date--container {
+    display: flex;
+    justify-content: right;
+    .sale__date-summary {
+      margin-right: 50px;
+    }
+  }
+  .sale__summary-title {
+    font-size: 20px;
+  }
+  .sale__summary-flex {
+    display: flex;
+    justify-content: space-between;
+    p, button {
+      margin-top: 20px;
+    }
+    button {
+      border-radius: 5px;
+      width: 130px;
+      height: 30px;
+      display: flex;
+      justify-content: center;
+      padding-left: 4px;
+      align-items: center;
+    }
+  }
+  .sale__summary-total {
+    margin-top: 15%;
+    display: flex;
+    background-color: #F5D07747;
+    width: 250px;
+    padding: 5px;
+    border-radius: 10px;
+    margin-left: auto;
+    p:first-child {
+      margin-right: 10px;
+      width: 50%;
+    }
+    p:nth-child(2) {
+      background-color: orange;
+      padding-left: 4px;
+      display: flex;
+      align-items: center;
+      width: 50%;
+    }
+  }
 }
 #sales__profit-list > table {
   td {
@@ -344,6 +395,12 @@
   }
   td:nth-child(3) {
     padding-left: 15px;
+  }
+  td:nth-child(4) { 
+    padding-right: 50%;
+  }
+  .manage {
+    right: 25%;
   }
 }
 /*

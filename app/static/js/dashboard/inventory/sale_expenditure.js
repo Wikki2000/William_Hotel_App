@@ -2,11 +2,12 @@ import {
   getBaseUrl, confirmationModal, validateForm, closeConfirmationModal,
   showNotification, ajaxRequest, fetchData, britishDateFormat,
   togleTableMenuIcon, hideAllInventoryDashboard, getFormDataAsDict,
-  sanitizeInput, updateElementCount
+  sanitizeInput, updateElementCount, canadianDateFormat
 } from '../../global/utils.js';
 
 import {
   expenditureTableTemplate, inventoryFilterTemplate, salesTableTemplate,
+  dailyServiceSaleTableTemplate
 } from '../../global/templates1.js';
 
 $(document).ready(function() {
@@ -19,26 +20,36 @@ $(document).ready(function() {
     .on('click', '#sales__profit-list #inventory__searchbar', function() {
       const startDate = $('#sales__profit-list #inventory__filter-start--date').val();
       const endDate = $('#sales__profit-list #inventory__filter-end--date').val();
+      const startDateFormat = britishDateFormat(startDate);
+      const endDateFormat = britishDateFormat(endDate);
 
       if (!startDate || !endDate) {
-	showNotification('Start date and end date required', true);
-	return;
+        showNotification('Start date and end date required', true);
+        return;
       }
+      $('#sales__profit-table--body').empty();
+      /*
+      $('#Daily__sales-title').text(
+        `${startDateFormat} to ${endDateFormat} Sales`
+      );*/
       const url = API_BASE_URL + `/sales/${startDate}/${endDate}/get`
       fetchData(url)
-	.then(({ daily_sales, accumulated_sum }) => {
-	  $('#sales__profit-table--body').empty();
-	  daily_sales.forEach((sale, index) => {
-	    const date = britishDateFormat(sale.created_at);
-	    $('#sales__profit-table--body')
-	      .append(salesTableTemplate(index, sale.amount, date));
-	  });
-	  $('#expenditure__total__amount-entry')
-	    .text(accumulated_sum.toLocaleString())
-	})
-	.catch((error) => {
-	  console.log(error);
-	});
+        .then(({ daily_sales, accumulated_sum }) => {
+          daily_sales.forEach((sale, index) => {
+            const totalSales = (
+              sale.food_sold + sale.drink_sold + sale.room_sold +
+              sale.laundry_sold + sale.game_sold
+            );
+            const date = britishDateFormat(sale.created_at);
+            $('#sales__profit-table--body')
+              .append(salesTableTemplate(index, sale.id, sale.is_approved, totalSales, date));
+          });
+          $('#expenditure__total__amount-entry')
+            .text(accumulated_sum.toLocaleString())
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     });
 
   // Get expenditure at any interval of time.
@@ -49,23 +60,23 @@ $(document).ready(function() {
       const endDate = $('#inventory__filter-end--date').val();
 
       if (!startDate || !endDate) {
-	showNotification('Start date and end date required', true);
-	return;
+        showNotification('Start date and end date required', true);
+        return;
       }
       const url = API_BASE_URL + `/expenditures/${startDate}/${endDate}/get`
       fetchData(url)
-	.then(({ daily_expenditures, daily_expenditure_sum }) => {
-	  $('#expenditure__list-table--body').empty();
-	  daily_expenditures.forEach(({ id, title, amount, created_at }) => {
-	    const date = britishDateFormat(created_at);
-	    $('#expenditure__list-table--body')
-	      .append(expenditureTableTemplate(id, title, date, amount));
-	  });
-	  $('#expenditure__total__amount-entry')
-	    .text(daily_expenditure_sum.toLocaleString())
-	})
-	.catch((error) => {
-	});
+        .then(({ daily_expenditures, daily_expenditure_sum }) => {
+          $('#expenditure__list-table--body').empty();
+          daily_expenditures.forEach(({ id, title, amount, created_at }) => {
+            const date = britishDateFormat(created_at);
+            $('#expenditure__list-table--body')
+              .append(expenditureTableTemplate(id, title, date, amount));
+          });
+          $('#expenditure__total__amount-entry')
+            .text(daily_expenditure_sum.toLocaleString())
+        })
+        .catch((error) => {
+        });
     });
 
   // Show expenditures details
@@ -73,23 +84,23 @@ $(document).ready(function() {
     .off('click', '#expenditure__list-table--body .expenditure__details')
     .on('click', '#expenditure__list-table--body .expenditure__details',
       function() {
-	const url = API_BASE_URL + `/expenditures/${$(this).data('id')}/get`;
+        const url = API_BASE_URL + `/expenditures/${$(this).data('id')}/get`;
 
-	togleTableMenuIcon();
+        togleTableMenuIcon();
 
-	fetchData(url)
-	  .then(({ id, title, amount, created_at, description }) => {
-	    const date = britishDateFormat(created_at);
+        fetchData(url)
+          .then(({ id, title, amount, created_at, description }) => {
+            const date = britishDateFormat(created_at);
 
-	    $('#expenditure__date').text(date);
-	    $('#expenditure__title').text(title);
-	    $('#expenditure__amount').text('₦' + amount.toLocaleString());
-	    $('#expenditure__description').text(description); 
-	  })
-	  .catch((error) => {
-	    console.log(error);
-	  });
-	$('#expenditure__details').css('display', 'flex');
+            $('#expenditure__date').text(date);
+            $('#expenditure__title').text(title);
+            $('#expenditure__amount').text('₦' + amount.toLocaleString());
+            $('#expenditure__description').text(description); 
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        $('#expenditure__details').css('display', 'flex');
       });
 
   // Add new expenditures
@@ -111,42 +122,173 @@ $(document).ready(function() {
 
       confirmationModal(headingText, descriptionText, confirmBtCls);
 
-
       // Send POST request to create daily expenditures.
       $('#dynamic__load-dashboard')
-	.off('click', '.inventory__expenditure-confirmBtn')
-	.on('click', '.inventory__expenditure-confirmBtn', function() {
-	  const url = API_BASE_URL + '/expenditures';
+        .off('click', '.inventory__expenditure-confirmBtn')
+        .on('click', '.inventory__expenditure-confirmBtn', function() {
+          const url = API_BASE_URL + '/expenditures';
 
-	  closeConfirmationModal();
-	  $formElement.trigger('reset');  // Reset form
+          closeConfirmationModal();
+          $formElement.trigger('reset');  // Reset form
 
-	  ajaxRequest(url, 'POST', JSON.stringify(data),
-	    ({ id, title, amount, created_at }) => {
-	      const date = britishDateFormat(created_at);
-	      togleTableMenuIcon();
-	      showNotification('Today expenses added successfully !');
-	      $('#expenditure__list-table--body')
-		.prepend(expenditureTableTemplate(id, title, date, amount));
+          ajaxRequest(url, 'POST', JSON.stringify(data),
+            ({ id, title, amount, created_at }) => {
+              const date = britishDateFormat(created_at);
+              togleTableMenuIcon();
+              showNotification('Today expenses added successfully !');
+              $('#expenditure__list-table--body')
+                .prepend(expenditureTableTemplate(id, title, date, amount));
 
-	      // Update the amount in the daily expenditures cart.
-	      const $targetElement = $('#daily__expenditures');
-	      const elementValue = parseFloat(
-		$('#daily__expenditures').text()
-		.replaceAll(',', '').replaceAll('₦', '')
-	      );
-	      const updatedValue = (
-		updateElementCount($targetElement, true, amount, elementValue)
-	      );
-	      $targetElement.text(updatedValue.toLocaleString());
-	    },
-	    (error) => {
-	      togleTableMenuIcon();
-	      showNotification('An error occured, please try again', true);
-	    }
-	  );
-	});
+              // Update the amount in the daily expenditures cart.
+              const $targetElement = $('#daily__expenditures');
+              const elementValue = parseFloat(
+                $('#daily__expenditures').text()
+                .replaceAll(',', '').replaceAll('₦', '')
+              );
+              const updatedValue = (
+                updateElementCount($targetElement, true, amount, elementValue)
+              );
+              $targetElement.text(updatedValue.toLocaleString());
+            },
+            (error) => {
+              togleTableMenuIcon();
+              showNotification('An error occured, please try again', true);
+            }
+          );
+        });
     });
+
+
+
+
+  /*
+  const today_date = canadianDateFormat(new Date());
+  const url = API_BASE_URL + `/sales/${today_date}/${today_date}/food`;
+  fetchData(url)
+    .then((data) => {
+      console.log(data);
+      data.forEach((sale, index) => {
+        $('.sales-table-body')
+          .append(dailyServiceSaleTableTemplate(index, sale)
+          );
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+    */
+
+
+  // Handle service table menu
+  $('#dynamic__load-dashboard').off('click', '#sales__profit-table--body .sales__menu')
+    .on('click', '#sales__profit-table--body .sales__menu', function() {
+      const $clickItem = $(this);
+      const saleId = $clickItem.data('id');
+
+      togleTableMenuIcon();
+
+      if ($clickItem.hasClass('sales__details')) {
+        const url = API_BASE_URL + `/sales/${saleId}/get`;
+        fetchData(url)
+          .then((sale) => {
+            const totalSales = (
+              sale.food_sold + sale.drink_sold + sale.room_sold +
+              sale.laundry_sold + sale.game_sold
+            );
+
+            $('#sales__date').text(britishDateFormat(sale.created_at));
+            $('#total__food-sale').html('&#8358;' + sale.food_sold);
+            $('#total__drink-sale').html('&#8358;' +sale.drink_sold);
+            $('#total__game-sale').html('&#8358;' +sale.game_sold);
+            $('#total__room-sale').html('&#8358;' +sale.room_sold);
+            $('#total__laundry-sale').html('&#8358;' +sale.laundry_sold);
+            $('#total__sale').html('&#8358;' + totalSales);
+            $('#sales__summary-date').val(canadianDateFormat(sale.created_at));
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        $('#sales__breakdown').css('display', 'flex');
+      } else if ($clickItem.hasClass('approved__record')) {
+        // Load confirmation modal to approved sales.
+        const confirmBtCls = 'sale__confirm-btn';
+        const headingText = 'Confirm Sale Approval';
+        const descriptionText = 'This action cannot be undone !'
+        confirmationModal(headingText, descriptionText, confirmBtCls)
+      }
+
+      // Approved sales record.
+      $('#dynamic__load-dashboard').off('click', '.sale__confirm-btn')
+        .on('click', '.sale__confirm-btn', function() {
+          const saleStatusUrl = (
+            API_BASE_URL + `/sales/${saleId}/approve-sale`
+          );
+
+          ajaxRequest(saleStatusUrl, 'PUT', null,
+            (response) => {
+              $('#order__confirmation-modal').empty();
+              showNotification(`Sales Record Approved Successfully !`);
+              $(`tr[data-id="${saleId}"]`)
+                .find('.sale__status').text('Approved');
+
+              $(`tr[data-id="${saleId}"]`)
+                .find('.sale__status').css('color', 'green');
+            },
+            (error) => {
+              showNotification('An error occurred. Please try again.', true);
+              $('#order__confirmation-modal').empty();
+            }
+          );
+        });
+    });
+
+  // Load sales breakdown for a particular services
+  $('#dynamic__load-dashboard').on('click', '.item__sold', function() {
+    const $clickItem = $(this);
+    const clickItemId = $clickItem.attr('id');
+    const salesDate = $('#sales__summary-date').val();
+
+    const today_date = canadianDateFormat(new Date());
+
+    switch (clickItemId) {
+      case 'total__food-sale--btn': {
+        const salesDate = $('#sales__summary-date').val();
+        const saleUrl = (
+          APP_BASE_URL + `/pages/sales_details?service=food&date=${salesDate}`
+        );
+        window.open(saleUrl, '_blank');
+        break;
+      }
+      case 'total__drink-sale--btn': {
+        const saleUrl = (
+          APP_BASE_URL + `/pages/sales_details?service=drink&date=${salesDate}`
+        );
+        window.open(saleUrl, '_blank');
+        break;
+      }
+      case 'total__game-sale--btn': {
+        const saleUrl = (
+          APP_BASE_URL + `/pages/sales_details?service=game&date=${salesDate}`
+        );
+        window.open(saleUrl, '_blank');
+        break;
+      }
+      case 'total__laundry-sale--btn': {
+        const saleUrl = (
+          APP_BASE_URL + `/pages/sales_details?service=laundry&date=${salesDate}`
+        );
+        window.open(saleUrl, '_blank');
+        break;
+      }
+      case 'total__room-sale--btn': {
+        const saleUrl = (
+          APP_BASE_URL + `/pages/sales_details?service=room&date=${salesDate}`
+        );
+        window.open(saleUrl, '_blank');
+        break;
+      }
+    }
+  });
 
   // Hide expenditure entry for wider view of expense table.
   $('#dynamic__load-dashboard')

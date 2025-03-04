@@ -3,7 +3,7 @@
 from models.food import Food
 from models.drink import Drink
 from models.daily_expenditure_sum import DailyExpenditureSum
-from models.sale import DailySale
+from models.sale import Sale
 from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import bad_request, role_required
@@ -21,11 +21,13 @@ def get_inventories(user_id: str, user_role: str) -> Dict:
         today_expenditure = storage.get_by(
             DailyExpenditureSum, entry_date=today_date
         )
-        today_sale = storage.get_by(DailySale, entry_date=today_date)
+        today_sale = storage.get_by(Sale, entry_date=today_date)
 
         return jsonify({
             "today_sales": (
-                today_sale.amount if today_sale else 0
+                today_sale.food_sold + today_sale.game_sold + 
+                today_sale.drink_sold + today_sale.laundry_sold + 
+                today_sale.room_sold if today_sale else 0
             ),
             "today_expenditures": (
                 today_expenditure.amount if today_expenditure else 0

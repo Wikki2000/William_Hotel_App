@@ -23,10 +23,10 @@ from models.vendor import Vendor
 from models.maintenance import Maintenance
 from models.expenditure import Expenditure
 from models.daily_expenditure_sum import DailyExpenditureSum
-from models.sale import DailySale
 from models.receipt import Receipt
 from models.game import Game
 from models.laundry import Laundry 
+from models.sale import Sale
 
 from urllib.parse import quote_plus
 from dotenv import load_dotenv

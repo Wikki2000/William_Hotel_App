@@ -3,7 +3,7 @@
 from models.customer import Customer
 from models.booking import Booking
 from models.room import Room
-from models.sale import DailySale
+from models.sale import Sale
 from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import create_receipt, bad_request, role_required
@@ -58,24 +58,23 @@ def extend_guest_stay(user_role: str, user_id: str, room_id, customer_id):
     data["customer_id"] = customer_id
     data["checkin_by_id"] = user_id
 
-    # Add new booking to daily sale
-    today_date = date.today()
-    transaction = storage.get_by(
-        DailySale, entry_date=today_date
-    )
-
-    if not transaction:
-        transaction = DailySale(
-            entry_date=today_date, amount=booking_data.get("amount")
-        )
-        storage.new(transaction)
-    else:
-        transaction.amount += data.get("amount")
-
     # Create booking object
     book = Booking(**data)
     storage.new(book)
     storage.save()
+
+    # Add new booking to daily sale
+    today_date = date.today()
+    transaction = storage.get_by(
+        Sale, entry_date=today_date
+    )
+    if not transaction:
+        transaction = Sale(
+            entry_date=today_date, room_sold=booking_data.get("amount")
+        )
+        storage.new(transaction)
+    else:
+        transaction.room_sold += data.get("amount")
 
     # Create booking receipt object.
     receipt = create_receipt("booking_id", book.id) 
@@ -83,6 +82,7 @@ def extend_guest_stay(user_role: str, user_id: str, room_id, customer_id):
     storage.save()
 
     book = storage.get_by(Booking, id=book.id)
+
     return jsonify(book.to_dict()), 200
 
 @api_views.route(

@@ -54,24 +54,6 @@ $(document).ready(function() {
         });
     });
 
-  // Load menu for room number
-  $('#dynamic__load-dashboard').off('click', '#maintenance__room-menu-btn')
-    .on('click', '#maintenance__room-menu-btn', function() {
-      $('#room-number').empty();
-      const url = API_BASE_URL + '/room-number';
-
-      fetchData(url)
-        .then((data) => {
-          data.forEach((roomNumber) => {
-            $('#maintenance__room-number--dropdown').show();
-            $('#maintenance__room-menu--list').append(`<li class="dropdown-item maintenance__room-dropdown-item">${roomNumber}</li>`);
-          });
-        })
-        .catch((error) => {
-          console,log(error);
-        });
-    });
-
   // Handle selection of option from table menu
   $('#dynamic__load-dashboard')
     .on('click', '.maintenance__room-dropdown-item', function() {
@@ -82,21 +64,14 @@ $(document).ready(function() {
   // Handle reporting of fault.
   $('#dynamic__load-dashboard').off('click', '#report-btn')
     .on('click', '#report-btn', function() {
-      const roomNumber = $('#maintenance__room-menu-btn p').text();
-      const faultType = $('#report').val();
+      const faultType = $('#fault__title').val();
+      const faultLocation = $('#fault__location').val();
       const description = $('#short-note').val();
       const image = $('input[name="fault_photo"]').val();
 
       const url = API_BASE_URL + '/maintenances';
 
-      if (!faultType || !description) {
-        showNotification('Please fill out all required fields', true);
-        return;
-      } else if(roomNumber === 'Select') {
-        showNotification('Please fill out all required fields', true);
-        return;
-      }
-      const data = { room_number: roomNumber, fault: faultType, description, image };
+     const data = { faultLocation, fault: faultType, description, image };
       ajaxRequest(url, 'POST', JSON.stringify(sanitizeInput(data)),
         (response) => {
           displayMaintenance(response);

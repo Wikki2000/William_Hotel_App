@@ -16,14 +16,13 @@ def add_maintenance(user_role: str, user_id: str):
     """Add new room maintenance"""
     data = request.get_json()
 
-    required_fields = ["fault", "room_number"]
+    required_fields = ["fault", "faultLocation"]
     error_response = bad_request(data, required_fields)
     if error_response:
         return jsonify(error_response), 400
 
-    room = storage.get_by(Room, number=data.get("room_number"))
     user = storage.get_by(User, id=user_id)
-    if not room or not user:
+    if not user:
         abort(404)
 
     # Convert image to binary if given
@@ -32,9 +31,9 @@ def add_maintenance(user_role: str, user_id: str):
 
     maintenance_attr = {
         "fault": data.get("fault"),
+        "location": data.get("faultLocation"),
         "description": data.get("description"),
-        "image": data.get("image"),
-        "room_id": room.id, "user_id": user_id
+        "image": data.get("image"), "user_id": user_id
     }
 
     try:
@@ -42,11 +41,7 @@ def add_maintenance(user_role: str, user_id: str):
         storage.new(maintenance)
         storage.save()
         maintenance = storage.get_by(Maintenance, id=maintenance.id)
-        return jsonify({
-            **maintenance.to_dict(),
-            "room_number": maintenance.room.number,
-            "room_name": maintenance.room.name
-        }), 200
+        return jsonify(maintenance.to_dict()), 200
     except Exception as e:
         print(str(e))
         abort(500)
@@ -86,8 +81,6 @@ def get_by_id(user_role: str, user_id: str, maintenance_id: str):
         )
         return jsonify({
             **maintenance.to_dict(),
-            "room_number": maintenance.room.number,
-            "room_name": maintenance.room.name,
             "reported_by": full_name
         }), 200
     except Exception as e:
@@ -109,8 +102,7 @@ def get_maintenances(user_role: str, user_id: str):
 
     response = [{
         **maintenance.to_dict(),
-        "room_number": maintenance.room.number,
-        "room_name": maintenance.room.name
+
     } for maintenance in sorted_maintenance]
 
     storage.close()

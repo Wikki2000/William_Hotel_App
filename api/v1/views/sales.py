@@ -5,7 +5,8 @@ from datetime import date, datetime
 from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import role_required, bad_request
-from models.sale import DailySale
+from models.sale import Sale
+from models.order_item import OrderItem
 from models import storage
 from sqlalchemy.exc import IntegrityError
 
@@ -14,7 +15,7 @@ from sqlalchemy.exc import IntegrityError
 @role_required(["manager", "admin"])
 def get_sales(user_role: str, user_id: str):
     """Retrieve all sales from databases."""
-    sales = storage.all(DailySale).values()
+    sales = storage.all(Sale).values()
 
     if not sales:
         return jsonify([]), 200
@@ -31,6 +32,16 @@ def get_sales(user_role: str, user_id: str):
     ]), 200
 
 
+@api_views.route("/sales/<string:sale_id>/get")
+@role_required(["manager", "admin"])
+def get_sale(user_role: str, user_id: str, sale_id: str):
+    """Get sales by it ID's"""
+    sale = storage.get_by(Sale, id=sale_id)
+    if not sale:
+        abort(404)
+    return jsonify(sale.to_dict())
+
+
 @api_views.route("/sales/<string:start_date>/<string:end_date>/get")
 @role_required(["manager", "admin"])
 def get_sale_by_date(
@@ -42,7 +53,7 @@ def get_sale_by_date(
 
     # Retrieve expenditure at an interval of time
     sales = storage.get_by_date(
-        DailySale, start_date_obj, end_date_obj, "entry_date"
+        Sale, start_date_obj, end_date_obj, "entry_date"
     )
 
     # Handle case were there is no expenditure
@@ -55,7 +66,10 @@ def get_sale_by_date(
         reverse=True
     )
 
-    accumulated_sum = sum(sale.amount for sale in sorted_sales)
+    accumulated_sum = sum(
+        sale.food_sold + sale.drink_sold + sale.room_sold +
+        sale.laundry_sold + sale.game_sold for sale in sorted_sales
+    )
     return jsonify({
         "daily_sales": [
             sale.to_dict()
@@ -63,3 +77,72 @@ def get_sale_by_date(
         ],
         "accumulated_sum": accumulated_sum
     }), 200
+
+
+@api_views.route(
+    "/sales/<string:start_date>/<string:end_date>/<string:service>"
+)
+@role_required(["manager", "admin"])
+def get_service_sales(
+    user_role: str, user_id: str, start_date: str, end_date: str, service: str
+):
+    """Retrieve sales of a particular service at any interval of time."""
+    start_date_obj = datetime.strptime(start_date, "%Y-%m-%d")
+    end_date_obj = datetime.strptime(end_date, "%Y-%m-%d")
+
+    service_mapping = {
+        "food": "food_id",
+        "drink": "drink_id",
+        "game": "game_id",
+        "room": "room_id",
+        "laundry": "laundry_id"
+    }
+
+    service_field = service_mapping.get(service)
+
+    if not service_field:
+        return jsonify([]), 200  # Invalid service, return empty list
+
+    # Retrieve sales filtered by date range and service type
+    sales = storage.get_by_date(
+        OrderItem, start_date_obj, end_date_obj, "created_at"
+    )
+
+    # Filter results based on the specific service field
+    filtered_sales = [
+        sale for sale in sales if getattr(sale, service_field, None) is not None
+    ]
+
+    sorted_sales = sorted(
+        filtered_sales, key=lambda sale: sale.updated_at, reverse=True
+    )
+
+    return jsonify([
+        {
+            "item_name": (
+                sale.drink.name if sale.drink_id
+                else sale.laundry.name if sale.laundry_id
+                else sale.game.name if sale.game_id
+                else sale.food.name if sale.food_id
+                else None
+            ),
+            "customer": sale.order.customer.name,
+            "quantity": sale.qty_order,
+            "is_paid": sale.order.is_paid,
+            "amount": sale.amount,
+            "order_id": sale.order.id
+        }
+        for sale in sorted_sales
+    ]), 200
+
+
+@api_views.route("/sales/<string:sale_id>/approve-sale", methods=["PUT"])
+@role_required(["manager", "admin"])
+def approve_daily_sales(user_role: str, user_id: str, sale_id: str):
+    """Approved Daily Sales"""
+    sale = storage.get_by(Sale, id=sale_id)
+    if not sale:
+        abort(404)
+    sale.is_approved = True
+    storage.save()
+    return jsonify({"message": "Sales Record Appproved Successfully"}), 201
