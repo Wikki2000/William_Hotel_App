@@ -51,7 +51,6 @@ def extend_guest_stay(user_role: str, user_id: str, room_id, customer_id):
     required_fields = ["duration", "checkin", "checkout", "amount", "is_paid"]
     error_response = bad_request(data, required_fields)
     if error_response:
-        print(error_response)
         abort(400)
 
     data["room_id"] = room_id

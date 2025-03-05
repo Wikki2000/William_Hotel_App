@@ -234,6 +234,9 @@ def book_room(user_id: str, user_role: str, room_number: str):
         "guest_number": booking_data.get("guest_number"),
         "room_id": room.id, "amount": booking_data.get("amount"),
     }
+
+    previous_room_sold = 0
+
     try:
         book = Booking(**book_attr)
         storage.new(book)
@@ -252,6 +255,8 @@ def book_room(user_id: str, user_role: str, room_number: str):
             sale = Sale(entry_date=today_date)
             storage.new(sale)
 
+        previous_room_sold = sale.room_sold if sale.room_sold else 0
+
         if sale.room_sold:
             sale.room_sold += booking_data.get("amount")
         else:
@@ -260,6 +265,15 @@ def book_room(user_id: str, user_role: str, room_number: str):
         storage.save()
         return jsonify({"booking_id": book.id}), 200
     except Exception as e:
+
+        # Delete booking if an error occur.
+        storage.delete(book)
+
+        # Return to previous value
+        sale.room_sold = previous_room_sold
+
+        storage.save()
+
         print(str(e))
         return jsonify({
             "error": "Internal Error Occured Booking Room"
