@@ -46,7 +46,7 @@ laundry_data = [
     },
     {
         "name": "Suite (Complete)",
-        "amount": 1000,
+        "amount": 4000,
         #"image": read_image_file("seed_data/laundry/images/suite.jpeg")
         "image": "/static/images/clothe_images/suite.jpeg"
     },
@@ -62,6 +62,14 @@ laundry_data = [
         #"image": read_image_file("seed_data/laundry/images/sneaker.jpg")
         "image": "/static/images/clothe_images/sneaker.jpg" 
     },
+    {
+        "name": "Short",
+        "amount": 500
+    },
+    {
+        "name": "Singlet / Boxer",
+        "amount": 300
+    }
 ]
 
 #game_data = read_json_file(json_file_path)

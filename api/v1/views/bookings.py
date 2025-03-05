@@ -7,7 +7,9 @@ from models.user import User
 from models.sale import Sale
 from flask import abort, jsonify, request
 from api.v1.views import api_views
-from api.v1.views.utils import bad_request, role_required, create_receipt
+from api.v1.views.utils import (
+    bad_request, role_required, create_receipt, nigeria_today_date
+)
 from models import storage
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime, date
@@ -20,7 +22,7 @@ def bookings(user_id: str, user_role: str):
     """Fetch booking data"""
     try:
         #books = storage.all(Booking).values()
-        start_date_obj = end_date_obj = date.today()
+        start_date_obj = end_date_obj = nigeria_today_date()
 
         books = storage.get_by_date(
             Booking, start_date_obj, end_date_obj, "created_at",
@@ -243,7 +245,7 @@ def book_room(user_id: str, user_role: str, room_number: str):
         storage.new(receipt)
 
         # Add new daily transaction if exists else increase sum by existing one
-        today_date = date.today()
+        today_date = nigeria_today_date()
 
         sale = storage.get_by(Sale, entry_date=today_date)
         if not sale:

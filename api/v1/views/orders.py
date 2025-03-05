@@ -11,7 +11,9 @@ from models.booking import Booking
 from models.sale import Sale
 from flask import abort, jsonify, request
 from api.v1.views import api_views
-from api.v1.views.utils import bad_request, create_receipt, role_required
+from api.v1.views.utils import (
+    bad_request, create_receipt, role_required, nigeria_today_date
+)
 from models import storage
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime, date
@@ -29,7 +31,7 @@ def order_items(user_role: str, user_id: str):
     """
     data = request.get_json()
 
-    today_date = date.today() 
+    today_date = nigeria_today_date() 
 
     # Handle 404 error
     required_fields = ["customerData", "itemOrderData", "orderData"]
@@ -149,21 +151,6 @@ def order_items(user_role: str, user_id: str):
             item_order = OrderItem(**item_attr)
             storage.new(item_order)
 
-            # Add new daily transaction if exists else increase sum by existing one
-            """
-            transaction = storage.get_by(
-                DailySale, entry_date=today_date
-            )
-
-            if not transaction:
-                transaction = DailySale(
-                    entry_date=today_date, amount=order_data.get("amount")
-                )
-
-                storage.new(transaction)
-            else:
-                transaction.amount += float(order_data.get("amount"))
-            """
         storage.save()
         return jsonify({"order_id": new_order.id}), 200
     except Exception as e:
@@ -180,7 +167,7 @@ def get_orders(user_role: str, user_id: str):
     try:
         #orders = storage.all(Order).values()
 
-        start_date_obj = end_date_obj = date.today()
+        start_date_obj = end_date_obj = nigeria_today_date()
 
         orders = storage.get_by_date(
             Order, start_date_obj, end_date_obj, "created_at",
@@ -314,7 +301,7 @@ def filter_orders(user_role: str, user_id: str, payment_status):
             return jsonify(response), 200
         elif payment_status == "paid":
             # Get paid orders for today
-            start_date_obj = end_date_obj = date.today()
+            start_date_obj = end_date_obj = nigeria_today_date()
             orders = storage.get_by_date(
                 Order, start_date_obj, end_date_obj, "created_at",
             )

@@ -39,6 +39,7 @@ $(document).ready(function() {
 
 	  fetchData(url)
 	  .then(({ daily_expenditures }) => {
+		  console.log(daily_expenditures);
 	    daily_expenditures.forEach(({ id, title, amount, created_at }) => {
 	      const date = britishDateFormat(created_at);
 	      $('#expenditure__list-table--body')

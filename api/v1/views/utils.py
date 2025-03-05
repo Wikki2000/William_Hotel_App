@@ -16,6 +16,8 @@ from redis import Redis
 from models.private_message import PrivateMessage
 from models.receipt import Receipt
 import base64
+from datetime import datetime
+import pytz
 
 
 r = Redis(host="localhost", port=6379, db=0)  # Create Redis instance
@@ -264,3 +266,10 @@ def create_receipt(attr_str: str, obj_id: str) -> Optional[Receipt]:
     # Dynamically pass the attribute as a keyword argument.
     receipt = Receipt(receipt_no=f"WCHS{receipt_no:04}", **{attr_str: obj_id})
     return receipt
+
+
+def nigeria_today_date():
+    nigeria_tz = pytz.timezone('Africa/Lagos')
+    nigeria_date = datetime.now(nigeria_tz).date()
+    return nigeria_date
+
