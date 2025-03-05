@@ -168,6 +168,10 @@ def order_items(user_role: str, user_id: str):
         return jsonify({"order_id": new_order.id}), 200
     except Exception as e:
         print(str(e))
+
+        # Delete an order if an error occured
+        storage.delete(new_order)
+        storage.save()
         return jsonify({"error": "An Internal Error Occured"}), 500
     finally:
         storage.close()
