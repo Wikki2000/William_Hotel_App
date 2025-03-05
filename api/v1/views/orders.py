@@ -20,6 +20,18 @@ from datetime import datetime, date
 from random import randint
 
 
+def update_sales_value(
+    sale_obj, food_sold, drink_sold,
+    game_sold, laundry_sold
+):
+    # Return accumulated amount sold when an error occured.
+    sale_obj.food_sold = food_sold
+    sale_obj.drink_sold = drink_sold
+    sale_obj.game_sold = game_sold
+    sale_obj.laundry_sold = laundry_sold
+
+
+
 @api_views.route("/order-items", methods=["POST"])
 @role_required(["staff", "manager", "admin"])
 def order_items(user_role: str, user_id: str):
@@ -42,6 +54,12 @@ def order_items(user_role: str, user_id: str):
     customer_data = data.get("customerData")
     item_data = data.get("itemOrderData")
     order_data = data.get("orderData")
+
+    previous_food_sold = 0
+    previous_drink_sold = 0
+    previous_game_sold = 0
+    previous_laundry_sold = 0
+
 
     try:
         user = storage.get_by(User, id=user_id)
@@ -76,6 +94,11 @@ def order_items(user_role: str, user_id: str):
             item_sold = Sale(entry_date=today_date)
             storage.new(item_sold)
 
+        previous_food_sold = item_sold.food_sold if item_sold.food_sold else 0
+        previous_drink_sold = item_sold.drink_sold if item_sold.drink_sold else 0
+        previous_game_sold = item_sold.game_sold if item_sold.game_sold else 0
+        previous_laundry_sold = item_sold.laundry_sold if item_sold.laundry_sold else 0
+
         for item in item_data:
             item_field = ""
             if item.get("itemType") == "food":
@@ -84,11 +107,16 @@ def order_items(user_role: str, user_id: str):
                 # Reduce qty of food stock base on qty ordered.
                 food = storage.get_by(Food, id=item.get("itemId"))
                 if food.qty_stock  < item.get("itemQty"):
-
-                    # Delete if item low in stock
+                    # Handle error case where food low in stock.
                     if not customer.is_guest:
                         storage.delete(customer)
                     storage.delete(new_order)
+
+                    update_sales_value(
+                        item_sold, previous_food_sold, previous_drink_sold,
+                        previous_game_sold, previous_laundry_sold
+                    )
+
                     storage.save()
 
                     return jsonify({
@@ -112,6 +140,11 @@ def order_items(user_role: str, user_id: str):
                     # Delete only guest not lodge
                     if not customer.is_guest:
                         storage.delete(customer)
+
+                    update_sales_value(
+                        item_sold, previous_food_sold, previous_drink_sold,
+                        previous_game_sold, previous_laundry_sold
+                    )
 
                     storage.delete(new_order)
                     storage.save()
@@ -151,6 +184,7 @@ def order_items(user_role: str, user_id: str):
             item_order = OrderItem(**item_attr)
             storage.new(item_order)
 
+
         storage.save()
         return jsonify({"order_id": new_order.id}), 200
     except Exception as e:
@@ -158,7 +192,15 @@ def order_items(user_role: str, user_id: str):
 
         # Delete an order if an error occured
         storage.delete(new_order)
+
+        # Return accumulated amount sold when an error occured.
+        update_sales_value(
+            item_sold, previous_food_sold, previous_drink_sold,
+            previous_game_sold, previous_laundry_sold
+        )
+        
         storage.save()
+
         return jsonify({"error": "An Internal Error Occured"}), 500
     finally:
         storage.close()
