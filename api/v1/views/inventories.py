@@ -6,7 +6,7 @@ from models.daily_expenditure_sum import DailyExpenditureSum
 from models.sale import Sale
 from flask import abort, jsonify, request
 from api.v1.views import api_views
-from api.v1.views.utils import bad_request, role_required
+from api.v1.views.utils import bad_request, role_required, nigeria_today_date
 from models import storage
 from datetime import date
 from typing import Dict
@@ -17,10 +17,11 @@ from typing import Dict
 def get_inventories(user_id: str, user_role: str) -> Dict:
     """Retrieve inventories from databases."""
     try:
-        today_date = date.today()
+        today_date = nigeria_today_date()
         today_expenditure = storage.get_by(
             DailyExpenditureSum, entry_date=today_date
         )
+        print(today_date)
         today_sale = storage.get_by(Sale, entry_date=today_date)
 
         return jsonify({

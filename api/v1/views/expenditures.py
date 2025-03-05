@@ -4,7 +4,7 @@ from models.expenditure import Expenditure
 from datetime import date, datetime
 from flask import abort, jsonify, request
 from api.v1.views import api_views
-from api.v1.views.utils import role_required, bad_request
+from api.v1.views.utils import nigeria_today_date,role_required, bad_request
 from models.daily_expenditure_sum import DailyExpenditureSum
 from models import storage
 from sqlalchemy.exc import IntegrityError
@@ -26,7 +26,7 @@ def add_expenditure(user_role: str, user_id: str):
 
 
     # Add the expenditure to daily expenditure sum.
-    today_date = date.today()
+    today_date =  nigeria_today_date()
     expense_summation = storage.get_by(
         DailyExpenditureSum, entry_date=today_date
     )

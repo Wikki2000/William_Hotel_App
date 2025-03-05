@@ -4,8 +4,8 @@ Guest List Section
 .sales-container {
   
   width: 100%;
-  height: 100vh;
   overflow: auto;
+  height: 100vh;
   background-color: var(--orange_a100_33);
 }
 .sales-table-column {
