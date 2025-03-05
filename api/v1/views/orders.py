@@ -184,7 +184,6 @@ def order_items(user_role: str, user_id: str):
             item_order = OrderItem(**item_attr)
             storage.new(item_order)
 
-
         storage.save()
         return jsonify({"order_id": new_order.id}), 200
     except Exception as e:
@@ -200,8 +199,7 @@ def order_items(user_role: str, user_id: str):
         )
         
         storage.save()
-
-        return jsonify({"error": "An Internal Error Occured"}), 500
+        return jsonify({"error": str(e)}), 500
     finally:
         storage.close()
 
@@ -246,7 +244,7 @@ def get_orders(user_role: str, user_id: str):
         return jsonify(response), 200
     except Exception as e:
         print(str(e))
-        return jsonify({"error": "An Internal Error Occured"}), 500
+        return jsonify({"error": str(e)}), 500
     finally:
         storage.close()
 
@@ -295,7 +293,7 @@ def get_order(user_role: str, user_id: str, order_id: str):
         return jsonify(response), 200
     except Exception as e:
         print(str(e))
-        return jsonify({"error": "An Internal Error Occured"}), 500
+        return jsonify({"error": str(e)}), 500
     finally:
         storage.close()
 
@@ -367,7 +365,7 @@ def filter_orders(user_role: str, user_id: str, payment_status):
         return jsonify(response), 200
     except Exception as e:
         print(str(e))
-        abort(500)
+        return jsonify({"error": str(e)}), 500
     finally:
         storage.close()
 

@@ -21,7 +21,6 @@ def get_inventories(user_id: str, user_role: str) -> Dict:
         today_expenditure = storage.get_by(
             DailyExpenditureSum, entry_date=today_date
         )
-        print(today_date)
         today_sale = storage.get_by(Sale, entry_date=today_date)
 
         return jsonify({
@@ -37,7 +36,6 @@ def get_inventories(user_id: str, user_role: str) -> Dict:
             "total_foods": len(storage.all(Food).values()) 
         }), 200
     except Exception as e:
-        print(str(e))
-        return jsonify({"error": "Internal Error Occured"}), 500
+        return jsonify({"error": str(e)}), 500
     finally:
         storage.close()
