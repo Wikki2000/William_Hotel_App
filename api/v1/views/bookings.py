@@ -46,7 +46,7 @@ def bookings(user_id: str, user_role: str):
         return jsonify(response), 200
     except Exception as e:
         print(str(e))
-        return jsonify({"error": "Internal Error Occured"}), 500
+        return jsonify({"error": str(e)}), 500
     finally:
         storage.close()
 
@@ -125,7 +125,7 @@ def booking_data_by_id(user_id: str, user_role: str, booking_id: str):
         }), 200
     except Exception as e:
         print(str(e))
-        return jsonify({"error": "An Internal Error Occured"}), 500
+        return jsonify({"error": str(e)}), 500
     finally:
         storage.close()
 
@@ -275,8 +275,6 @@ def book_room(user_id: str, user_role: str, room_number: str):
         storage.save()
 
         print(str(e))
-        return jsonify({
-            "error": "Internal Error Occured Booking Room"
-        }), 500
+        return jsonify({"error": str(e)}), 500
     finally:
         storage.close()
