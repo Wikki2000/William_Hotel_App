@@ -26,7 +26,8 @@ $(document).ready(function() {
         bookings.forEach((sale, index) => {
           $('.sales-table-body').append(dailyServiceSaleTableTemplate(
             index, sale.booking.id, sale.booking.is_paid, sale.guest.name,
-            `${sale.room.name} (${sale.room.number})`, 'NILL', sale.booking.amount
+            `${sale.room.name} (${sale.room.number})`,
+	    `${sale.booking.duration} Night(s)`, sale.booking.amount
           ));
         });
       })
