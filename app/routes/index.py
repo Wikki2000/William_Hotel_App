@@ -5,6 +5,7 @@ from flask_jwt_extended import jwt_required
 from app.routes import app_views
 from api.v1.views.utils import role_required
 from jinja2.exceptions import TemplateNotFound
+from uuid import uuid4
 
 
 @app_views.route("/pages/<string:page>")
@@ -30,6 +31,6 @@ def page(user_role: str, user_id: str, page: str):
     """
     try:
         DYNAMIC_PAGE_DIRECTORY = 'dynamic_pages/'
-        return render_template(f"{DYNAMIC_PAGE_DIRECTORY}{page}.html")
+        return render_template(f"{DYNAMIC_PAGE_DIRECTORY}{page}.html", cache_id=uuid4())
     except TemplateNotFound:
         abort(404)
