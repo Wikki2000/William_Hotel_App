@@ -46,7 +46,9 @@ export function vatListTemplate(data) {
   return row;
 }
 
-export function dailyServiceSaleTableTemplate(index, id, is_paid, customer, itemName, qty, amount) {
+export function dailyServiceSaleTableTemplate(
+  index, id, is_paid, customer, itemName, qty, amount
+) {
   const paymentStatus = is_paid ? 'Paid' : 'Pending';
   const paymentStatusColor = is_paid ? 'green' : 'red';
   const row = `
@@ -345,9 +347,12 @@ export function drinkTableTemplate(index, data, date) {
   return row;
 }
 
-export function salesTableTemplate(index, id, saleStatus, amount, date) {
+export function salesTableTemplate(index, id, saleStatus, amount, date, userRole) {
+	console.log(index, id, saleStatus, amount, date, userRole);
   const isAproved = saleStatus ? 'Approved' : 'Pending';
   const statusColor = saleStatus ? 'green': 'red';
+  const isHide = userRole != 'admin' ? 'hide' : '';
+
   return `<tr data-id="${id}">
     <td class="">
       <p class="ui text size-textmd">${index + 1}</p>
@@ -374,7 +379,7 @@ export function salesTableTemplate(index, id, saleStatus, amount, date) {
 	    <i class="fa fa-eye"></i>Details
 	  </li>
 
-	  <li data-id="${id}" class="manage__item sales__menu approved__record">
+	  <li data-id="${id}" class="${isHide} manage__item sales__menu approved__record">
 	    <i class="fa fa-thumbs-up"></i>Approve Record
 	  </li>
 	</ul>

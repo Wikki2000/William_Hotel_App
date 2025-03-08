@@ -13,6 +13,7 @@ import {
 $(document).ready(function() {
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
   const APP_BASE_URL = getBaseUrl()['appBaseUrl'];
+  const USER_ROLE = localStorage.getItem('role');
 
   // Show tables of different cart on click
   $('#dynamic__load-dashboard')
@@ -76,7 +77,7 @@ $(document).ready(function() {
 	      const date = britishDateFormat(sale.created_at);
 	      $('#sales__profit-table--body')
 		.append(
-		  salesTableTemplate(index, sale.id, sale.is_approved, totalSales, date)
+		  salesTableTemplate(index, sale.id, sale.is_approved, totalSales, date, USER_ROLE)
 		); 
 	    });
 	  })

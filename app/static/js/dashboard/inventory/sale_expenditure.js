@@ -13,6 +13,8 @@ import {
 $(document).ready(function() {
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
   const APP_BASE_URL = getBaseUrl()['appBaseUrl'];
+  
+  const USER_ROLE = localStorage.getItem('role');
 
   // Get sales at any interval of time.
   $('#dynamic__load-dashboard')
@@ -41,8 +43,9 @@ $(document).ready(function() {
               sale.laundry_sold + sale.game_sold
             );
             const date = britishDateFormat(sale.created_at);
+		  alert(USER_ROLE);
             $('#sales__profit-table--body')
-              .append(salesTableTemplate(index, sale.id, sale.is_approved, totalSales, date));
+              .append(salesTableTemplate(index, sale.id, sale.is_approved, totalSales, date, USER_ROLE));
           });
           $('#expenditure__total__amount-entry')
             .text(accumulated_sum.toLocaleString())
@@ -51,6 +54,7 @@ $(document).ready(function() {
           console.log(error);
         });
     });
+
 
   // Get expenditure at any interval of time.
   $('#dynamic__load-dashboard')
@@ -157,27 +161,6 @@ $(document).ready(function() {
           );
         });
     });
-
-
-
-
-  /*
-  const today_date = canadianDateFormat(new Date());
-  const url = API_BASE_URL + `/sales/${today_date}/${today_date}/food`;
-  fetchData(url)
-    .then((data) => {
-      console.log(data);
-      data.forEach((sale, index) => {
-        $('.sales-table-body')
-          .append(dailyServiceSaleTableTemplate(index, sale)
-          );
-      });
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-    */
-
 
   // Handle service table menu
   $('#dynamic__load-dashboard').off('click', '#sales__profit-table--body .sales__menu')
