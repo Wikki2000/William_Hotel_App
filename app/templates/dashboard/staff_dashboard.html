@@ -46,6 +46,8 @@
 
     <script type="module" defer src="/static/js/dashboard/common.js"></script>
 
+    <script type="module" defer src="/static/js/dashboard/constant.js"></script>
+
     <script type="module" defer src="/static/js/dashboard/restaurant.js"></script>
     <script type="module" defer src="/static/js/dashboard/room_service.js"></script>
     <script type="module" defer src="/static/js/dashboard/app.js"></script>
@@ -296,47 +298,22 @@
                     <h3>Add New Booking</h3>
                     <div class="flex-row">
                       <div>
-                        <p>Check In <span class="important">*</span></p>
-                        <input id="main__check-in" type="date" required>
-                      </div>
-
-                      <div class="check__icon-container">
-                        <p>Check Out <span class="important">*</span></p>
-                        <input id="main__checkout-date" type="date" required>
-                      </div>
-
-                      <div>
-                        <p>Instant Payment? <span class="important">*</span></p>
+                        <p>Instant Payment?<span class="important">*</span></p>
                         <div class="dropdown">
-                          <div id="main__guest-payment--status" class="main__dropdown-btn drop-down">
+                          <div id="main__guest-payment--status"  class="main__dropdown-btn drop-down">
                             <span>Select </span>
                             <img src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px" alt="dropdown" />
                           </div>
                           <div class="dropdown-menu">
                             <ul class="main__dropdown--menu-list">
-                              <!-- Dynamically load menu list -->
+                              <!-- ally load menu list -->
                             </ul>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div class="flex-row">
+
                       <div>
-                        <p>Guest Check in Early? <span class="important">*</span></p>
-                        <div class="dropdown">
-                          <div id="main__early-checkin" class="main__dropdown-btn drop-down">
-                            <span>Select </span>
-                            <img src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px" alt="dropdown" />
-                          </div>
-                          <div class="dropdown-menu">
-                            <ul class="main__dropdown--menu-list">
-                              <!-- Dynamically load menu list -->
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                      <div>
-                        <p>Type of Booking <span class="important">*</span></p>
+                        <p>Booking Type <span class="important">*</span></p>
                         <div class="dropdown">
                           <div id="main__booking-type" class="main__dropdown-btn drop-down">
                             <span>Select </span>
@@ -350,10 +327,39 @@
                         </div>
                       </div>
 
-                      <div style="visibility: hidden;">
+                      <div id="main__earlyin-container" class="hidden__visibility">
+                        <p>Early CheckIn? <span class="important">*</span></p>
+                        <div class="dropdown">
+                          <div id="main__early-checkin" class="main__dropdown-btn drop-down">
+                            <span>Select </span>
+                            <img src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px" alt="dropdown" />
+                          </div>
+                          <div class="dropdown-menu">
+                            <ul class="main__dropdown--menu-list">
+                              <!-- Dynamically load menu list -->
+                            </ul>
+                          </div>
+                        </div>
+
+                      </div>
+
+                    </div>
+                    <div class="flex-row">
+                      <div id="main__checkin-container" class="hide">
+                        <p>Check In <span class="important">*</span></p>
+                        <input id="main__check-in" type="date" required>
+                      </div>
+                      <div id="main__checkout-container" class="hide">
+                        <p>Check Out <span class="important">*</span></p>
+                        <input id="main__checkout-date" type="date" required>
+                      </div>
+
+                      <!-- Hide visibility to maintain serial display -->
+                      <!-- Just a dummy block -->
+                      <div id="main__dummy-block" class="hide">
                         <p>Instant Payment</p>
                         <div class="dropdown">
-                          <div id="main__guest-payment--status" class="main__dropdown-btn drop-down">
+                          <div class="main__dropdown-btn drop-down">
                             <span>Select </span>
                             <img src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px" alt="dropdown" />
                           </div>
@@ -365,7 +371,6 @@
                         </div>
                       </div>
                     </div>
-
 
                     <h3>Room Details</h3>
                     <div class="flex-row">
@@ -388,7 +393,7 @@
                       </div>
 
                       <div>
-                        <p>Room Rate <span class="important">*</span></p>
+                        <p>Booking Rate <span class="important">*</span></p>
                         <input id="main__room-rate" value="Auto-filled based on room no." readonly>
                       </div>
                       <div>
@@ -479,9 +484,9 @@
                     <input id="main__guest--gender-val" required type="hidden" /> <!-- Selected Gender. Option -->
                     <input id="main__id--type-val" type="hidden" /> <!-- Selected Room No. Option -->
                     <input id="main__id--checkin-val" type="hidden" /> <!-- Selected booking type option -->
-                    <input id="main__id--bookingtype-val" type="hidden" /> <!-- Selected if early checkin options -->
+                    <input id="main__id--bookingtype-val" type="hidden" required /> <!-- Selected if early checkin options -->
 
-                    <input id="main__room-amount" required type="hidden" />
+                    <!--<input id="main__room-amount" required type="idden" />-->
 
                   </div>
                 </form>
