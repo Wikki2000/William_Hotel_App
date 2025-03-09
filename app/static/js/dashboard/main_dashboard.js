@@ -84,9 +84,18 @@ $(document).ready(function() {
     const diffIntTime = new Date(checkout) - new Date(checkin);
     const duration = diffIntTime / (1000 * 60 * 60 *24);
 
-    // Get total amount of room book base on night durations.
+    // Get total amount of room book base on some criterias..
     const room_rate = $('#main__room-amount').val();
-    const amount = duration * room_rate;
+    let amount = duration * room_rate;
+
+    if ($('#main__id--checkin-val').val() === 'Yes') {
+      amount += 5000;
+    } if (
+      $('#main__id--bookingtype-val').val().toLowerCase() === 'short time'
+    ) {
+      amount = 5000;
+    }
+    showNotification(`Total booking amount is N${amount.toLocaleString()}`);
 
     const BookingData = {
       book: {
@@ -216,6 +225,43 @@ $(document).ready(function() {
                 }
               }
 
+            });
+          break;
+        }
+        case 'main__booking-type': {
+          const isBookingOptions = ['Short Time', 'Full Time'];
+          displayMenuList(isBookingOptions, $clickItem);
+          $('#dynamic__load-dashboard').on(
+            'click', '.dropdown-item', function() {
+              if ($(this).closest('.dropdown')
+                .find('#main__booking-type').length) {
+                $('#main__id--bookingtype-val').val($(this).text());
+
+                $clickItem.closest('.dropdown')
+                  .find('.main__dropdown-btn span')
+                  .text($(this).text());
+
+                $('.dropdown-menu').hide(); // Hide once option is selected
+              }
+            });
+
+          break;
+        }
+        case 'main__early-checkin': {
+          const isEarlyCheckinOptions = ['Yes', 'No'];
+          displayMenuList(isEarlyCheckinOptions, $clickItem);  
+          $('#dynamic__load-dashboard').on(
+            'click', '.dropdown-item', function() {
+              if ($(this).closest('.dropdown')
+                .find('#main__early-checkin').length) {
+                $('#main__id--checkin-val').val($(this).text());
+
+                $clickItem.closest('.dropdown')
+                  .find('.main__dropdown-btn span')
+                  .text($(this).text());
+
+                $('.dropdown-menu').hide(); // Hide once option is selected
+              }
             });
           break;
         }

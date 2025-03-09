@@ -166,6 +166,11 @@ Notification Modal
   background-color: #FDF6E4 !important;
 }
 
+.important {
+  color: red;
+  font-size: 20px;
+}
+
 .hide {
   display: none;
 }
