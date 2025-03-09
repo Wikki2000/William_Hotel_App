@@ -46,10 +46,11 @@ $(document).ready(function() {
       $("#receipt-info").html(receiptInfo);
 
       // Render customer order table
+      const time = booking.amount === SHORT_REST_AMOUNT ? 'Hours': 'Night(s)';
       let orderRows = `
         <tr>
             <td>${room.name} (${room.number})</td>
-            <td>${booking.duration} Night(s)</td>
+            <td>${booking.duration} ${time}</td>
             <td>${booking.amount.toLocaleString()}</td>
         </tr>
     `;

@@ -72,11 +72,11 @@ export function dailyServiceSaleTableTemplate(
       <p class="ui text size-textmd">₦${amount.toLocaleString()}</p>
     </td>
 
-    <td class="order__table-menu">
+    <td style="visibility: hidden;" class="order__table-menu">
       <p><i class="fa fa-ellipsis-v"></i></p>
       <p><i style="display: none;" class="fa fa-times"></i></p>
     </td>
-    <td class="manage">
+    <!--<td class="manage">
       <nav class="manage__nav">
         <ul class="manage__list">
           <li data-id="${id}" class="manage__item order__manageItem order__showConfirmModal">
@@ -87,7 +87,7 @@ export function dailyServiceSaleTableTemplate(
           </li>
         </ul>
       </nav>
-    </td>
+    </td>-->
 </tr>`;
  return row;
 }
@@ -348,7 +348,6 @@ export function drinkTableTemplate(index, data, date) {
 }
 
 export function salesTableTemplate(index, id, saleStatus, amount, date, userRole) {
-	console.log(index, id, saleStatus, amount, date, userRole);
   const isAproved = saleStatus ? 'Approved' : 'Pending';
   const statusColor = saleStatus ? 'green': 'red';
   const isHide = userRole != 'admin' ? 'hide' : '';

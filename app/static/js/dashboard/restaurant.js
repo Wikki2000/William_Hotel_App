@@ -4,8 +4,6 @@ import  { displayFoodDrink } from '../global/templates.js';
 $(document).ready(function() {
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
 
-  window.CART = new Map();  // Declare Globally
-
  $('#dynamic__load-dashboard').on('click', '.order-btn', function() {
     const $clickBtn = $(this);
 

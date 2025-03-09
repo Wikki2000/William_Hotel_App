@@ -4,6 +4,14 @@ import {
   showNotification, getBaseUrl, displayMenuList, canadianDateFormat
 } from '../global/utils.js';
 
+
+function resetRoomDetails() {
+  $('#main__room-rate, #main__room-type')
+    .val('Auto-filled based on room no');
+  $('#main__room--no-val').val('');
+  $('#main__dropdown--room-no span').text('Select ');
+  $('#main__night-count').val('');}
+
 $(document).ready(function() {
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
   const APP_BASE_URL = getBaseUrl()['appBaseUrl'];
@@ -45,6 +53,15 @@ $(document).ready(function() {
     await getRoom();
   })();
 
+  // Reset room details once the date input field is click.
+  $('#dynamic__load-dashboard').on('click', '#main__check-in, #main__checkout-date', function() {
+    resetRoomDetails();
+  });
+
+
+  // This values are assign when handling switch case Room Number menu display.
+  let CHECK_IN, CHECK_OUT, AMOUNT, DURATION;
+
   // Handle the form submission for the booking form
   $('#dynamic__load-dashboard').on('submit', '#main__book-form', function (e) {
     e.preventDefault(); // Prevent default form submission
@@ -59,8 +76,14 @@ $(document).ready(function() {
     const expiration = $('#main__checkout-date').val();
     const guest_number = $('#main__guest-no').val();
     const is_paid = $('#main__is--paid-val').val().toLowerCase();
-    const checkin = $('#main__check-in').val();
-    const checkout = $('#main__checkout-date').val();
+
+    // Set duration to 2hrs if date field not enter.
+    // And set check in and and check out to current date.
+    // This applies to short time.
+    DURATION = CHECK_OUT && CHECK_IN ? DURATION : 2;
+
+    CHECK_IN = CHECK_IN ? CHECK_IN : canadianDateFormat(new Date());
+    CHECK_OUT = CHECK_OUT ? CHECK_OUT : canadianDateFormat(new Date());
 
     // Room data
     const roomNumber = $('#main__room--no-val').val();
@@ -74,33 +97,10 @@ $(document).ready(function() {
     const id_number = $('#main__id--no-val').val();
     const email = $('#main__guest-email').val();
 
-
-    if (new Date(checkout) <= new Date(checkin)) {
-      showNotification(
-        'Check Out date must not be earlier than Check In date', true
-      );
-      return;
-    }
-    const diffIntTime = new Date(checkout) - new Date(checkin);
-    const duration = diffIntTime / (1000 * 60 * 60 *24);
-
-    // Get total amount of room book base on some criterias..
-    const room_rate = $('#main__room-amount').val();
-    let amount = duration * room_rate;
-
-    if ($('#main__id--checkin-val').val() === 'Yes') {
-      amount += 5000;
-    } if (
-      $('#main__id--bookingtype-val').val().toLowerCase() === 'short time'
-    ) {
-      amount = 5000;
-    }
-    showNotification(`Total booking amount is N${amount.toLocaleString()}`);
-
     const BookingData = {
       book: {
-        duration, expiration, guest_number,
-        is_paid, checkin, checkout, amount
+        duration: DURATION, guest_number, amount: AMOUNT,
+        is_paid, checkin: CHECK_IN, checkout: CHECK_OUT,
       },
       customer: { gender, name, address, phone, id_type, id_number, email }
     };
@@ -164,6 +164,23 @@ $(document).ready(function() {
         case 'main__dropdown--room-no': {
           //const roomUrl = API_BASE_URL + '/rooms/available/filter';
           const roomUrl = API_BASE_URL + '/room-numbers';
+
+          const bookingType = $('#main__id--bookingtype-val').val().toLowerCase();
+
+          if (!$('#main__id--bookingtype-val').val()) {
+            showNotification('Please enter an option for booking type to proceed', true);
+            return;
+          } else if (bookingType === 'full time' && !$('#main__id--checkin-val').val()) {
+            showNotification('Please enter option for Early Checkin', true);
+            return;
+          } else if (bookingType === 'full time' && !$('#main__check-in').val()) {
+            showNotification('Please enter Checkin date', true);
+            return;
+          } else if (bookingType === 'full time' && !$('#main__checkout-date').val()) {
+            showNotification('Please enter Checkout date', true);
+            return;
+          }
+
           fetchData(roomUrl)
           .then((rooms) => {
 
@@ -201,14 +218,46 @@ $(document).ready(function() {
                   // Auto-fill the input field
                   fetchData(roomUrl)
                     .then((room) => {
+
+
+                      CHECK_IN = $('#main__check-in').val();
+                      CHECK_OUT = $('#main__checkout-date').val();
+
+                      if (new Date(CHECK_IN) >= new Date(CHECK_OUT)) {
+                        showNotification(
+                          'Check Out date must not be earlier than Check In date', true
+                        );
+                        return;
+                      }
+                      const diffIntTime = new Date(CHECK_OUT) - new Date(CHECK_IN);
+                      DURATION = diffIntTime / (1000 * 60 * 60 *24);
+
+                      // Get total amount of room book base on some criterias..
+                      const room_rate = $('#main__room-amount').val();
+                      AMOUNT = DURATION * room.amount;
+                      if ($('#main__id--checkin-val').val() === 'Yes') {
+                        AMOUNT += EARLY_CHECKIN_AMOUNT;
+			$('#main__night-count').val(`${DURATION} Night(s)`);
+
+                      }
+                      else if (
+                        $('#main__id--bookingtype-val').val().toLowerCase() === 'short time'
+                      ) {
+                        AMOUNT = SHORT_REST_AMOUNT;
+			$('#main__night-count').val('2 Hours');
+                      } else {
+		        $('#main__night-count').val(`${DURATION} Night(s)`); 
+		      }
+
+
                       $('#main__room-rate')
-                        .val('₦' + room.amount.toLocaleString());
+                        .val('₦' + AMOUNT.toLocaleString());
                       $('#main__room-type').val(room.name);
 
                       // The room amount to be retrieve when booking.
                       // Stored in hidden input fields.
 
-                      $('#main__room-amount').val(room.amount);
+                      //$('#main__room-amount').val(room.amount);
 
                     })
                     .catch((error) => {
@@ -235,7 +284,34 @@ $(document).ready(function() {
             'click', '.dropdown-item', function() {
               if ($(this).closest('.dropdown')
                 .find('#main__booking-type').length) {
-                $('#main__id--bookingtype-val').val($(this).text());
+
+                const selectedOption = $(this).text();
+
+                // Reset once click on booking type.
+                resetRoomDetails();
+
+                $('#main__id--bookingtype-val').val(selectedOption);
+                $('#main__check-in, #main__checkout-date').val('');
+                $('#main__early-checkin span').text('Select ');
+                $('#main__id--checkin-val').val('');
+
+
+                if (selectedOption.toLowerCase() === 'full time') {
+                  $('#main__checkin-container, #main__checkout-container, #main__dummy-block').removeClass('hide');
+                  $('#main__earlyin-container').css('visibility', 'visible');
+                  $('#main__dummy-block').css('visibility', 'hidden');
+
+                  // Change the newly display input field to required.
+                  $('#main__check-in, #main__checkout-date, #main__id--checkin-val').attr('required');
+                } else {
+                  $('#main__checkin-container, #main__checkout-container, #main__dummy-block').addClass('hide');
+                  $('#main__dummy-block').css('visibility', 'hidden');
+                  $('#main__earlyin-container').css('visibility', 'hidden');
+
+                  //$('#main__room-rate').val('₦' + SHORT_REST_AMOUNT.toLocaleString());
+
+                  $('#main__check-in, #main__checkout-date, #main__id--checkin-val').removeAttr('required');
+                }
 
                 $clickItem.closest('.dropdown')
                   .find('.main__dropdown-btn span')
@@ -252,8 +328,12 @@ $(document).ready(function() {
           displayMenuList(isEarlyCheckinOptions, $clickItem);  
           $('#dynamic__load-dashboard').on(
             'click', '.dropdown-item', function() {
+
               if ($(this).closest('.dropdown')
                 .find('#main__early-checkin').length) {
+
+		resetRoomDetails();
+
                 $('#main__id--checkin-val').val($(this).text());
 
                 $clickItem.closest('.dropdown')

@@ -274,6 +274,8 @@ export function leaveListTableTemplate(data, date) {
  * @param {object} date - The checkin and checkout date in british format.
  */
 export function guestListTableTemplate(guest, booking, room, date) {
+
+  const time = booking.amount === 5000 ? 'Hours' : 'Night(s)';
   const row = `<tr>
     <td class="guest-name">
       <div class="featured">
@@ -287,7 +289,7 @@ export function guestListTableTemplate(guest, booking, room, date) {
       </div>
     </td>
     <td class="">
-      <p class="ui text size-textmd">${booking.duration} Night(s)</p>
+      <p class="ui text size-textmd">${booking.duration} ${time}</p>
     </td>
     <td class="">
       <p class="ui text size-textmd">${date.checkInDate}</p>

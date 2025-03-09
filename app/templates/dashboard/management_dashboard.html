@@ -47,8 +47,10 @@
     <!-- Link Staff_dashboard JS Files-->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 
-    <script type="module" defer src="/static/js/dashboard/main_dashboard.js"></script>
     <script type="module" defer src="/static/js/dashboard/common.js"></script>
+    <script type="module" defer src="/static/js/dashboard/constant.js"></script>
+
+    <script type="module" defer src="/static/js/dashboard/main_dashboard.js"></script>
     <script type="module" defer src="/static/js/dashboard/restaurant.js"></script>
     <script type="module" defer src="/static/js/dashboard/room_service.js"></script>
     <script type="module" defer src="/static/js/dashboard/app.js"></script>
@@ -94,7 +96,7 @@
               </li>
               <div id="service__menu" class="service__menu hide">
                 <a class="sidebar__nav-icon" id="sidebar__restaurant"> Restaurant </a>
-		<a class="sidebar__nav-icon" id="sidebar__bar"> Bar </a>
+                <a class="sidebar__nav-icon" id="sidebar__bar"> Bar </a>
                 <a class="sidebar__nav-icon" id="sidebar__laundry"> Laundry </a>
                 <a class="sidebar__nav-icon" id="sidebar__game"> Games </a>
               </div>
@@ -109,17 +111,17 @@
               </li>
               <li id="sidebar__Room" class="sidebar__nav-icon">
                 <a>
-		  <i class="fa fa-door-open"></i>
+                  <i class="fa fa-door-open"></i>
                   <span> Rooms </span>
                 </a>
               </li>
-             <li id="sidebar__guest" class="sidebar__nav-icon">
+              <li id="sidebar__guest" class="sidebar__nav-icon">
                 <a>
                   <img src="/static/images/dashboard/guests_icon.png" alt="Guests Icon" class="sidebar__icon--guests" />
                   <span> Guests </span>
                 </a>
               </li>
-             <li id="sidebar__inventory" class="sidebar__nav-icon">
+              <li id="sidebar__inventory" class="sidebar__nav-icon">
                 <a>
                   <img src="/static/images/dashboard/inventory_icon.png" alt="Inventory Icon" class="sidebar__icon--services" />
                   <span> Inventory</span>
@@ -326,50 +328,24 @@
                   <div class="flex-column">
                     <h3>Add New Booking</h3>
                     <div class="flex-row">
-                      <div>
-                        <p>Check In <span class="important">*</span></p>
-                        <input id="main__check-in" type="date" required>
-                      </div>
 
                       <div>
-                        <p>Check Out <span class="important">*</span></p>
-                        <input id="main__checkout-date" type="date" required>
-                      </div>
-
-                      <div>
-                        <p>Instant Payment <span class="important">*</span></p>
+                        <p>Instant Payment?<span class="important">*</span></p>
                         <div class="dropdown">
-                          <div id="main__guest-payment--status" class="main__dropdown-btn drop-down">
+                          <div id="main__guest-payment--status"  class="main__dropdown-btn drop-down">
                             <span>Select </span>
                             <img src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px" alt="dropdown" />
                           </div>
                           <div class="dropdown-menu">
                             <ul class="main__dropdown--menu-list">
-                              <!-- Dynamically load menu list -->
+                              <!-- ally load menu list -->
                             </ul>
                           </div>
                         </div>
                       </div>
-                    </div>
-
-<div class="flex-row">
 
                       <div>
-                        <p>Guest Check in Early? <span class="important">*</span></p>
-                        <div class="dropdown">
-                          <div id="main__early-checkin" class="main__dropdown-btn drop-down">
-                            <span>Select </span>
-                            <img src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px" alt="dropdown" />
-                          </div>
-                          <div class="dropdown-menu">
-                            <ul class="main__dropdown--menu-list">
-                              <!-- Dynamically load menu list -->
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                      <div>
-                        <p>Type of Booking <span class="important">*</span></p>
+                        <p>Booking Type <span class="important">*</span></p>
                         <div class="dropdown">
                           <div id="main__booking-type" class="main__dropdown-btn drop-down">
                             <span>Select </span>
@@ -382,11 +358,39 @@
                           </div>
                         </div>
                       </div>
+                      <div id="main__earlyin-container" class="hidden__visibility">
+                        <p>Early CheckIn? <span class="important">*</span></p>
+                        <div class="dropdown">
+                          <div id="main__early-checkin" class="main__dropdown-btn drop-down">
+                            <span>Select </span>
+                            <img src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px" alt="dropdown" />
+                          </div>
+                          <div class="dropdown-menu">
+                            <ul class="main__dropdown--menu-list">
+                              <!-- Dynamically load menu list -->
+                            </ul>
+                          </div>
+                        </div>
 
-                      <div style="visibility: hidden;">
+                      </div>                   
+                    </div>
+
+                    <div class="flex-row">
+                      <div id="main__checkin-container" class="hide">
+                        <p>Check In <span class="important">*</span></p>
+                        <input id="main__check-in" type="date" required>
+                      </div>
+                      <div id="main__checkout-container" class="hide">
+                        <p>Check Out <span class="important">*</span></p>
+                        <input id="main__checkout-date" type="date" required>
+                      </div>
+
+                      <!-- Hide visibility to maintain serial display -->
+                      <!-- Just a dummy block -->
+                      <div id="main__dummy-block" class="hide">
                         <p>Instant Payment</p>
                         <div class="dropdown">
-                          <div id="main__guest-payment--status" class="main__dropdown-btn drop-down">
+                          <div class="main__dropdown-btn drop-down">
                             <span>Select </span>
                             <img src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px" alt="dropdown" />
                           </div>
@@ -397,7 +401,6 @@
                           </div>
                         </div>
                       </div>
-
                     </div>
 
                     <h3>Room Details</h3>
@@ -421,12 +424,18 @@
                       </div>
 
                       <div>
-                        <p>Room Rate <span class="important">*</span></p>
+                        <p>Booking Rate <span class="important">*</span></p>
                         <input id="main__room-rate" value="Auto-filled based on room no." readonly required />
                       </div>
                       <div>
                         <p>Room Type <span class="important">*</span></p>
                         <input id="main__room-type" value="Auto-filled based on room no." readonly required />
+                      </div>
+                    </div>
+                    <div class="flex-row">
+                      <div>
+			<p>Duration <span class="important">*</span></p>
+                        <input id="main__night-count" readonly placeholder="Auto-filled based on room no." />
                       </div>
                     </div>
 
@@ -464,7 +473,7 @@
 
                       <div>
                         <p>Guest No. <span class="important">*</span></p>
-                         <input id="main__guest-no" placeholder="e.g., 1 male, 1 female" required>
+                        <input id="main__guest-no" placeholder="e.g., 1 male, 1 female" required>
                       </div>
 
                       <div>
@@ -495,10 +504,10 @@
                         <input id="main__guest-email" type="email" placeholder="e.g., john@gmail.com" >
                       </div>
 
-                      <div style="visibility: hidden">
-                        <!-- Hidden input field to maintain 3 fields per row -->
-                        <input>
-                      </div>
+                        <div style="visibility: hidden">
+                          <!-- Hidden input field to maintain 3 fields per row -->
+                          <input>
+                        </div>
                     </div>
 
                     <div class="main__btn">
@@ -511,10 +520,9 @@
                     <input id="main__room--no-val" required type="hidden" /> <!-- Selected Room No. Option -->
                     <input id="main__guest--gender-val" required type="hidden" /> <!-- Selected Gender. Option -->
                     <input id="main__id--type-val"  type="hidden" /> <!-- Selected Room No. Option -->
-		                        <input id="main__id--checkin-val" type="hidden" /> <!-- Selected booking type option -->
-					                    <input id="main__id--bookingtype-val" type="hidden" /> <!-- Selected if early checkin options -->
+                    <input id="main__id--checkin-val" type="hidden" /> <!-- Selected booking type option -->
+                    <input id="main__id--bookingtype-val" type="hidden" /> <!-- Selected if early checkin options -->
 
-		    <input id="main__room-amount" required type="hidden" />
                   </div>
                 </form>
               </div>

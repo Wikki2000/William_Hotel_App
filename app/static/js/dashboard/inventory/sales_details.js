@@ -24,10 +24,11 @@ $(document).ready(function() {
     fetchData(roomSalesUrl)
       .then(({ bookings }) => {
         bookings.forEach((sale, index) => {
+	  const time = sale.booking.amount === SHORT_REST ? 'Hours': 'Night(s)'; 
           $('.sales-table-body').append(dailyServiceSaleTableTemplate(
             index, sale.booking.id, sale.booking.is_paid, sale.guest.name,
             `${sale.room.name} (${sale.room.number})`,
-	    `${sale.booking.duration} Night(s)`, sale.booking.amount
+	    `${sale.booking.duration} ${time}`, sale.booking.amount
           ));
         });
       })
