@@ -20,6 +20,9 @@ from datetime import datetime, date
 from random import randint
 
 
+TODAY_DATE = nigeria_today_date()
+
+
 def update_sales_value(
     sale_obj, food_sold, drink_sold,
     game_sold, laundry_sold
@@ -29,7 +32,6 @@ def update_sales_value(
     sale_obj.drink_sold = drink_sold
     sale_obj.game_sold = game_sold
     sale_obj.laundry_sold = laundry_sold
-
 
 
 @api_views.route("/order-items", methods=["POST"])
@@ -42,8 +44,6 @@ def order_items(user_role: str, user_id: str):
     in total drink stock base on the amount order.
     """
     data = request.get_json()
-
-    today_date = nigeria_today_date() 
 
     # Handle 404 error
     required_fields = ["customerData", "itemOrderData", "orderData"]
@@ -60,7 +60,6 @@ def order_items(user_role: str, user_id: str):
     previous_game_sold = 0
     previous_laundry_sold = 0
 
-
     try:
         user = storage.get_by(User, id=user_id)
 
@@ -70,6 +69,7 @@ def order_items(user_role: str, user_id: str):
         if customer:
             order_data["customer_id"] = customer.id
         else:
+            customer_data["created_at"] = TODAY_DATE
             new_customer = Customer(**customer_data)
             storage.new(new_customer)
             storage.save()
@@ -78,6 +78,7 @@ def order_items(user_role: str, user_id: str):
 
         # Add user ID to order_data
         order_data["ordered_by_id"] = user.id
+        order_data["created_at"] = TODAY_DATE
 
         # Place new order
         new_order = Order(**order_data)
@@ -85,13 +86,13 @@ def order_items(user_role: str, user_id: str):
         storage.save()
 
         # Create receipt for order made.
-        receipt = create_receipt("order_id", new_order.id)
+        receipt = create_receipt("order_id", new_order.id, created_at=TODAY_DATE)
         storage.new(receipt)
         storage.save()
 
-        item_sold = storage.get_by(Sale, entry_date=today_date)
+        item_sold = storage.get_by(Sale, entry_date=TODAY_DATE)
         if not item_sold:
-            item_sold = Sale(entry_date=today_date)
+            item_sold = Sale(created_at=TODAY_DATE, entry_date=TODAY_DATE)
             storage.new(item_sold)
 
         previous_food_sold = item_sold.food_sold if item_sold.food_sold else 0
@@ -191,6 +192,8 @@ def order_items(user_role: str, user_id: str):
 
         # Delete an order if an error occured
         storage.delete(new_order)
+        print(new_order)
+        print(item_sold)
 
         # Return accumulated amount sold when an error occured.
         update_sales_value(
@@ -211,7 +214,7 @@ def get_orders(user_role: str, user_id: str):
     try:
         #orders = storage.all(Order).values()
 
-        start_date_obj = end_date_obj = nigeria_today_date()
+        start_date_obj = end_date_obj = TODAY_DATE
 
         orders = storage.get_by_date(
             Order, start_date_obj, end_date_obj, "created_at",
@@ -316,7 +319,7 @@ def update_status(user_role: str, user_id: str, order_id: str):
 
     order.is_paid = True
     order.cleared_by_id = user_id
-    order.updated_at = datetime.utcnow();
+    order.updated_at = TODAY_DATE
     storage.save()
     return jsonify({"message": "Payment Status Updated to Paid"}), 200
 
