@@ -139,7 +139,7 @@ def clear_booking_bill(user_id: str, user_role: str, booking_id: str):
         abort(404)
 
     booking.is_paid = "yes"
-    booking.updated_at = datetime.utcnow()
+    booking.updated_at = nigeria_today_date()
     #booking.is_use = False
 
     # Ensure that a staff clear bill only onced
@@ -185,7 +185,7 @@ def update_booking_data(user_id: str, user_role: str, booking_id: str):
     for key, val in booking_data.items():
         setattr(booking, key, val)
     booking.checkin_by_id = user_id  # Update with staff that made changes
-    booking.updated_at = datetime.utcnow()
+    booking.updated_at = nigeria_today_date()
 
     # Update customer data
     for key, val in customer_data.items():
@@ -228,11 +228,11 @@ def book_room(user_id: str, user_role: str, room_number: str):
         "checkin": booking_data.get("checkin"),
         "checkout": booking_data.get("checkout"),
         "duration": booking_data.get("duration"),
-        "checkout": str(booking_data.get("expiration")),
         "is_paid": booking_data.get("is_paid"),
         "customer_id": customer.id, "checkin_by_id": user.id,
         "guest_number": booking_data.get("guest_number"),
         "room_id": room.id, "amount": booking_data.get("amount"),
+        "created_at": nigeria_today_date()
     }
 
     previous_room_sold = 0
