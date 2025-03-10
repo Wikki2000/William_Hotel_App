@@ -34,7 +34,7 @@ $(document).ready(() => {
         .then(
           ( { booking, customer, room, checkin_by, checkout_by }
           ) => {
-	    const time = booking.amount === SHORT_REST ? 'Hours': 'Night(s)';
+	    const time = booking.amount === SHORT_REST_AMOUNT ? 'Hours': 'Night(s)';
             const paymentStatus = (
               booking.is_paid === 'yes' ? { status: 'Paid', color: 'green' } :
               {status: 'Pending', color: 'red' }
