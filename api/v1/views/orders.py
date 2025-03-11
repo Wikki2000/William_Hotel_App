@@ -6,13 +6,13 @@ from models.order import Order
 from models.drink import Drink
 from models.food import Food
 from models.order_item import OrderItem
-#from models.sale import DailySale
 from models.booking import Booking
 from models.sale import Sale
 from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import (
-    bad_request, create_receipt, role_required, nigeria_today_date
+    bad_request, create_receipt, role_required, nigeria_today_date,
+    update_item_stock, rollback_order_on_error, update_sales_data
 )
 from models import storage
 from sqlalchemy.exc import IntegrityError
@@ -23,197 +23,11 @@ from random import randint
 TODAY_DATE = nigeria_today_date()
 
 
-def update_sales_value(
-    sale_obj, food_sold, drink_sold,
-    game_sold, laundry_sold
-):
-    # Return accumulated amount sold when an error occured.
-    sale_obj.food_sold = food_sold
-    sale_obj.drink_sold = drink_sold
-    sale_obj.game_sold = game_sold
-    sale_obj.laundry_sold = laundry_sold
-
-
-@api_views.route("/order-items", methods=["POST"])
-@role_required(["staff", "manager", "admin"])
-def order_items(user_role: str, user_id: str):
-    """Store order details in database
-
-    This endpoint handle request for ordering food or drink items,
-    for a customer by a staff. It keep track of drink stock by reduction
-    in total drink stock base on the amount order.
-    """
-    data = request.get_json()
-
-    # Handle 404 error
-    required_fields = ["customerData", "itemOrderData", "orderData"]
-    error_response = bad_request(data, required_fields)
-    if error_response:
-        return jsonify(error_response), 400
-
-    customer_data = data.get("customerData")
-    item_data = data.get("itemOrderData")
-    order_data = data.get("orderData")
-
-    previous_food_sold = 0
-    previous_drink_sold = 0
-    previous_game_sold = 0
-    previous_laundry_sold = 0
-
-    try:
-        user = storage.get_by(User, id=user_id)
-
-        customer = storage.get_by(Customer, id=data.get("customer_id"))
-
-        # Add new or existing customer ID to order data
-        if customer:
-            order_data["customer_id"] = customer.id
-        else:
-            customer_data["created_at"] = TODAY_DATE
-            new_customer = Customer(**customer_data)
-            storage.new(new_customer)
-            storage.save()
-            customer = new_customer
-            order_data["customer_id"] = new_customer.id
-
-        # Add user ID to order_data
-        order_data["ordered_by_id"] = user.id
-        order_data["created_at"] = TODAY_DATE
-
-        # Place new order
-        new_order = Order(**order_data)
-        storage.new(new_order)
-        storage.save()
-
-        # Create receipt for order made.
-        receipt = create_receipt("order_id", new_order.id, created_at=TODAY_DATE)
-        storage.new(receipt)
-        storage.save()
-
-        item_sold = storage.get_by(Sale, entry_date=TODAY_DATE)
-        if not item_sold:
-            item_sold = Sale(created_at=TODAY_DATE, entry_date=TODAY_DATE)
-            storage.new(item_sold)
-
-        previous_food_sold = item_sold.food_sold if item_sold.food_sold else 0
-        previous_drink_sold = item_sold.drink_sold if item_sold.drink_sold else 0
-        previous_game_sold = item_sold.game_sold if item_sold.game_sold else 0
-        previous_laundry_sold = item_sold.laundry_sold if item_sold.laundry_sold else 0
-
-        for item in item_data:
-            item_field = ""
-            if item.get("itemType") == "food":
-                item_field = "food_id"
-
-                # Reduce qty of food stock base on qty ordered.
-                food = storage.get_by(Food, id=item.get("itemId"))
-                if food.qty_stock  < item.get("itemQty"):
-                    # Handle error case where food low in stock.
-                    if not customer.is_guest:
-                        storage.delete(customer)
-                    storage.delete(new_order)
-
-                    update_sales_value(
-                        item_sold, previous_food_sold, previous_drink_sold,
-                        previous_game_sold, previous_laundry_sold
-                    )
-
-                    storage.save()
-
-                    return jsonify({
-                        "error": f"{food.name} low in stock ({food.qty_stock} piece(s) available)"
-                    }), 422
-                else:
-                    food.qty_stock -= item.get("itemQty")
-                    
-                    if item_sold.food_sold:
-                        item_sold.food_sold += item.get("itemAmount")
-                    else:
-                        item_sold.food_sold = item.get("itemAmount")
-
-            elif item.get("itemType") == "drink":
-                item_field = "drink_id"
-
-                # Reduce qty of drink stock base on qty ordered.
-                drink = storage.get_by(Drink, id=item.get("itemId"))
-                if drink.qty_stock  < item.get("itemQty"):
-
-                    # Delete only guest not lodge
-                    if not customer.is_guest:
-                        storage.delete(customer)
-
-                    update_sales_value(
-                        item_sold, previous_food_sold, previous_drink_sold,
-                        previous_game_sold, previous_laundry_sold
-                    )
-
-                    storage.delete(new_order)
-                    storage.save()
-
-                    return jsonify({
-                        "error": f"{drink.name} low in stock ({drink.qty_stock} piece(s) available)"
-                    }), 422
-                else:
-                    drink.qty_stock -= item.get("itemQty")
-
-                    if item_sold.drink_sold:
-                        item_sold.drink_sold += item.get("itemAmount")
-                    else:
-                        item_sold.drink_sold = item.get("itemAmount")
-            elif item.get("itemType") == "game":
-                item_field = "game_id"
-
-                if item_sold.game_sold:
-                    item_sold.game_sold += item.get("itemAmount")
-                else:
-                    item_sold.game_sold = item.get("itemAmount")
-            elif item.get("itemType") == "clothe":
-                item_field = "laundry_id"
-
-                if item_sold.laundry_sold:
-                    item_sold.laundry_sold += item.get("itemAmount")
-                else:
-                    item_sold.laundry_sold = item.get("itemAmount")
-
-            # Stored all ordered items
-            item_attr = {
-                "amount": item.get("itemAmount"),
-                "qty_order": item.get("itemQty"),
-                f"{item_field}": item.get("itemId"),
-                "order_id": new_order.id
-            }
-            item_order = OrderItem(**item_attr)
-            storage.new(item_order)
-
-        storage.save()
-        return jsonify({"order_id": new_order.id}), 200
-    except Exception as e:
-        print(str(e))
-
-        # Delete an order if an error occured
-        storage.delete(new_order)
-        print(new_order)
-        print(item_sold)
-
-        # Return accumulated amount sold when an error occured.
-        update_sales_value(
-            item_sold, previous_food_sold, previous_drink_sold,
-            previous_game_sold, previous_laundry_sold
-        )
-        
-        storage.save()
-        return jsonify({"error": str(e)}), 500
-    finally:
-        storage.close()
-
-
 @api_views.route("/order-items")
 @role_required(["staff", "manager", "admin"])
 def get_orders(user_role: str, user_id: str):
     """Retrieve all order items"""
     try:
-        #orders = storage.all(Order).values()
-
         start_date_obj = end_date_obj = TODAY_DATE
 
         orders = storage.get_by_date(
@@ -409,3 +223,76 @@ def get_order_by_date(
             "accumulated_sum": accumulated_sum
     }
     return jsonify(response), 200
+
+
+@api_views.route("/order-items", methods=["POST"])
+@role_required(["staff", "manager", "admin"])
+def order_items(user_role: str, user_id: str):
+    """Store order details in database and track stock changes."""
+    data = request.get_json()
+
+    # Validate request body
+    required_fields = ["customerData", "itemOrderData", "orderData"]
+    error_response = bad_request(data, required_fields)
+    if error_response:
+        return jsonify(error_response), 400
+
+    customer_data = data["customerData"]
+    item_data = data["itemOrderData"]
+    order_data = data["orderData"]
+
+    # Track previous sales data for rollback
+    prev_sales = {"food": 0, "drink": 0, "game": 0, "laundry": 0}
+    new_order = None
+    item_sold = None
+
+    try:
+        user = storage.get_by(User, id=user_id)
+        customer = storage.get_by(Customer, id=data.get("customer_id"))
+
+        # Add new or existing customer
+        if not customer:
+            customer_data["created_at"] = TODAY_DATE
+            customer = Customer(**customer_data)
+            storage.new(customer)
+            storage.save()
+
+        order_data["customer_id"] = customer.id
+
+        # Create new order
+        order_data.update({
+            "ordered_by_id": user.id, 
+            "created_at": TODAY_DATE
+        })
+        new_order = Order(**order_data)
+        storage.new(new_order)
+        storage.save()
+
+        # Generate receipt
+        receipt = create_receipt("order_id", new_order.id)
+        storage.new(receipt)
+        storage.save()
+
+        # Get or create sales entry for today
+        item_sold = storage.get_by(Sale, entry_date=TODAY_DATE)
+        if not item_sold:
+            item_sold = Sale(created_at=TODAY_DATE, entry_date=TODAY_DATE)
+            storage.new(item_sold)
+
+        # Store previous sales values
+        for key in prev_sales:
+            prev_sales[key] = getattr(item_sold, f"{key}_sold", 0) or 0
+
+        # Process each ordered item
+        for item in item_data:
+            update_item_stock(item, customer, new_order, item_sold)
+
+        storage.save()
+        return jsonify({"order_id": new_order.id}), 200
+
+    except Exception as e:
+        rollback_order_on_error(new_order, item_sold, prev_sales)
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        storage.close()

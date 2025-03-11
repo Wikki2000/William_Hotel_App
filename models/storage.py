@@ -43,9 +43,22 @@ class Storage:
 
     def __init__(self):
         """ Create session engine to interact with database. """
-        username = getenv('WILLIAM_COURT')
-        password = getenv('WILLIAM_COURT_PASSWORD')
-        database = getenv('WILLIAM_COURT_DATABASE')
+        env_type = getenv('WILLIAM_COURT_ENV')
+
+        username = (
+            getenv('WILLIAM_COURT_TEST_USER')
+            if env_type == 'test' else getenv('WILLIAM_COURT_DEV_USER')
+        )
+
+        password = (
+            getenv('WILLIAM_COURT_TEST_PASSWORD')
+            if env_type == 'test' else getenv('WILLIAM_COURT_DEV_PASSWORD') 
+        )
+
+        database = (
+            getenv('WILLIAM_COURT_TEST_DATABASE')
+            if env_type == 'test' else getenv('WILLIAM_COURT_DEV_DATABASE')
+        )
 
         if not username or not password:
             error = "Environment variables must be set for database URL"
@@ -56,6 +69,13 @@ class Storage:
 
         url = f'mysql+mysqldb://{username}:{encoded_password}@localhost:3306/{database}'
         self.__engine = create_engine(url, pool_pre_ping=True)
+
+        # Drop all table if it is test env.
+        """
+        if env_type == 'test':
+            Base.metadata.drop_all(self.__engine)
+        """
+
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(bind=self.__engine)
         self.__session = scoped_session(session_factory)
@@ -164,6 +184,15 @@ class Storage:
     def delete(self, obj):
         """ Delete an instance of a class. """
         self.__session.delete(obj)
+
+    def delete_many(self, obj_list):
+        """ Delete multiple instance of a class. """
+        for obj in obj_list:
+            if obj.__class__.__name__ == "Customer" and obj.is_guest:
+                pass
+            else:
+                if obj:
+                    self.__session.delete(obj)
 
     def close(self):
         """ Close database session. """

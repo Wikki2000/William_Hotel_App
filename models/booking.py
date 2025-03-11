@@ -13,7 +13,7 @@ from sqlalchemy.orm import relationship
 class Booking(BaseModel, Base):
     """Define class for storing booking of rooms"""
     __tablename__ = "bookings"
-    duration = Column(String(20), default=datetime.utcnow())
+    duration = Column(String(20))
     checkin = Column(Date, nullable=False)
     checkout = Column(Date)
     is_paid = Column(ENUM("yes", "no"), nullable=False)

@@ -6,9 +6,14 @@ from models.room import Room
 from models.sale import Sale
 from flask import abort, jsonify, request
 from api.v1.views import api_views
-from api.v1.views.utils import create_receipt, bad_request, role_required
+from api.v1.views.utils import (
+    create_receipt, bad_request, role_required, nigeria_today_date
+)
 from models import storage
 from datetime import date
+
+
+TODAY_DATE = nigeria_today_date()
 
 
 @api_views.route(
@@ -53,36 +58,56 @@ def extend_guest_stay(user_role: str, user_id: str, room_id, customer_id):
     if error_response:
         abort(400)
 
-    data["room_id"] = room_id
-    data["customer_id"] = customer_id
-    data["checkin_by_id"] = user_id
+    data.update({
+        "room_id": room_id, "customer_id": customer_id,
+        "checkin_by_id": user_id, "created_at": TODAY_DATE
+    })
 
-    # Create booking object
-    book = Booking(**data)
-    storage.new(book)
-    storage.save()
+    previous_booking_amount = 0
+    book = None
+    receipt = None
+    try:
+        # Create booking object
+        book = Booking(**data)
+        storage.new(book)
+        storage.save()
 
-    # Add new booking to daily sale
-    today_date = date.today()
-    transaction = storage.get_by(
-        Sale, entry_date=today_date
-    )
-    if not transaction:
-        transaction = Sale(
-            entry_date=today_date, room_sold=booking_data.get("amount")
+        # Add new booking to daily sale
+        transaction = storage.get_by(
+            Sale, entry_date=TODAY_DATE
         )
-        storage.new(transaction)
-    else:
-        transaction.room_sold += data.get("amount")
 
-    # Create booking receipt object.
-    receipt = create_receipt("booking_id", book.id) 
-    storage.new(receipt)
-    storage.save()
+        if not transaction:
+            transaction = Sale(
+                created_at=TODAY_DATE, entry_date=TODAY_DATE,
+                room_sold=booking_data.get("amount")
+            )
+            storage.new(transaction)
 
-    book = storage.get_by(Booking, id=book.id)
+        else:
+            previous_booking_amount = getattr(transaction, "room_sold", 0)
+            transaction.room_sold += data.get("amount")
 
-    return jsonify(book.to_dict()), 200
+        # Create booking receipt object.
+        book = storage.get_by(Booking, id=book.id)
+        receipt = create_receipt("booking_id", book.id) 
+        storage.new(receipt)
+
+        storage.save()
+        return jsonify(book.to_dict()), 200
+
+    except Exception as e:
+
+        storage.delete_many([book, receipt])
+        if transaction:
+            if transaction.room_sold:
+                transaction.room_sold = previous_booking_amount
+        storage.save()
+        print(str(e))
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        storage.close()
 
 @api_views.route(
     "/guests/<string:customer_id>/<string:booking_id>/service-list"

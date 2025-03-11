@@ -48,7 +48,7 @@ def login():
             "error": f"{''.join(missing_fields)} Field Missing"
         }), 400
 
-    email_or_username =data.get("email_or_username")
+    email_or_username =data.get("email_or_username").strip()
     password = data.get("password")
 
     user = login_user(email_or_username)

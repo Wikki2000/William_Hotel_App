@@ -127,7 +127,7 @@ export function laundryTableTemplate(data) {
     <p>Price: ₦${data.amount.toLocaleString()}</p>
     <button
       data-id="${data.id}" data-name="${data.name}"
-      data-amount="${data.amount}" data-type="clothe"
+      data-amount="${data.amount}" data-type="laundry"
       class="order-btn">
         Add To Cart
       </button>

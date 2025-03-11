@@ -222,14 +222,71 @@ def user_friend_messages(
 
 
 # ===================================================================== #
+#                     Order Module Helper Function                   #
+# ===================================================================== #
+def update_item_stock(item, customer, new_order, item_sold):
+    """Update stock levels and sales records based on item type."""
+
+    from models.food import Food
+    from  models.drink import Drink
+    from models.order_item import OrderItem
+
+    item_type = item.get("itemType")
+    item_id = item.get("itemId")
+    item_qty = item.get("itemQty")
+    item_amount = item.get("itemAmount")
+
+    stock_model = {"food": Food, "drink": Drink}.get(item_type)
+    sales_field = f"{item_type}_sold" if item_type in ["food", "drink", "game", "laundry"] else None
+
+    if stock_model and (item_type == "food" or item_type == "drink"):
+        stock_item = storage.get_by(stock_model, id=item_id)
+        if stock_item.qty_stock < item_qty:
+            raise ValueError(f"{stock_item.name} low in stock ({stock_item.qty_stock} available)")
+
+        stock_item.qty_stock -= item_qty
+
+    if sales_field:
+        setattr(
+            item_sold, sales_field,
+            getattr(item_sold, sales_field, 0) + 
+            item_amount
+        )
+
+    # Store ordered item
+    order_item = OrderItem(
+        amount=item_amount, qty_order=item_qty, order_id=new_order.id,
+        **{f"{item_type}_id": item_id}
+    )
+    storage.new(order_item)
+
+
+def rollback_order_on_error(new_order, item_sold, prev_sales):
+    """Rollback order and restore sales data on error."""
+    if new_order:
+        storage.delete(new_order)
+
+    if item_sold:
+        update_sales_data(item_sold, prev_sales)
+
+    storage.save()
+
+
+def update_sales_data(item_sold, prev_sales):
+    """Restore previous sales values after an error."""
+    for key, value in prev_sales.items():
+        setattr(item_sold, f"{key}_sold", value)
+
+
+# ===================================================================== #
 #                          Redis Helper Function                        #
 # ===================================================================== #
 def rd_get(key: str = "receipt_number") -> Optional[bytes]:
     """Retrievea value from Redis db.
-    
+
     :key - The corresponding key to get value.
 
-    :returns - The value corresponding to the key if found else none.        
+    :returns - The value corresponding to the key if found else none.
     """
     return r.get(key)
 

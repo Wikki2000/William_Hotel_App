@@ -258,11 +258,22 @@
     <button class="close-btn closePopupModal">×</button>
     <form id="guest__extend-stay--form">
       <h2>Extend Guest Stay</h2><br>
-      <b>Check In:</b> &nbsp;&nbsp;&nbsp;<input type="date" name="checkin" required><br><br>
-      <b>Check Out:</b> &nbsp;<input type="date" name="checkout" required></br><br>
+      <b>Check In: 
+        <span class="important">*</span>
+      </b> &nbsp;&nbsp;&nbsp;
+      <input type="date" name="checkin" required><br><br>
+      <b>Check Out: 
+        <span class="important">*</span></b> &nbsp;
+      <input type="date" name="checkout" required></br><br>
+      <b>Duration: 
+        <span class="important">*</span>
+      </b> &nbsp;
+      <input id="count__nights" required readonly placeholder="Auto-filled"></br><br>
 
       <div class="guest__drop-down--menu">
-        <p><strong>Instance Payment:</strong></p>
+        <p><strong>Instance Payment:
+	  <span class="important">*</span>
+	</strong></p>
         <div class="dropdown guest__dropdown-btn--container">
           <div id="guest__ispaid" class="guest__dropdown-btn drop-down">
             <span>Select </span>

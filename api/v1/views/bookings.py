@@ -16,6 +16,9 @@ from datetime import datetime, date
 from models.receipt import Receipt
 
 
+TODAY_DATE = nigeria_today_date()
+
+
 @api_views.route("/bookings")
 @role_required(["staff", "manager", "admin"])
 def bookings(user_id: str, user_role: str):
@@ -215,14 +218,14 @@ def book_room(user_id: str, user_role: str, room_number: str):
     customer_data = data.get("customer")
     booking_data = data.get("book")
 
+    # Ensure that can't book room already in use 
+    if room.status == "occupied" or room.status == "reserved":
+        return jsonify({"error": f"Room {room.number} is occupied"}), 409
+
     customer = Customer(**customer_data)
     storage.new(customer)
     customer.is_guest = True
     storage.save()
-
-    # Ensure that can't book room already in use
-    if room.status == "occupied" or room.status == "reserved":
-        return jsonify({"error": f"Room {room.number} is occupied"}), 409
 
     book_attr = {
         "checkin": booking_data.get("checkin"),
@@ -248,33 +251,34 @@ def book_room(user_id: str, user_role: str, room_number: str):
         storage.new(receipt)
 
         # Add new daily transaction if exists else increase sum by existing one
-        today_date = nigeria_today_date()
 
-        sale = storage.get_by(Sale, entry_date=today_date)
+        sale = storage.get_by(Sale, entry_date=TODAY_DATE)
         if not sale:
-            sale = Sale(entry_date=today_date)
+            sale = Sale(
+                entry_date=TODAY_DATE, created_at=TODAY_DATE, 
+                room_sold=booking_data.get("amount")
+            )
             storage.new(sale)
-
-        previous_room_sold = sale.room_sold if sale.room_sold else 0
-
-        if sale.room_sold:
-            sale.room_sold += booking_data.get("amount")
         else:
-            sale.room_sold = booking_data.get("amount")
+            previous_room_sold = getattr(sale, "room_sold", 0)
+            sale.room_sold += booking_data.get("amount")
 
         storage.save()
         return jsonify({"booking_id": book.id}), 200
+
     except Exception as e:
+        storage.delete_many([customer, book, receipt])
 
-        # Delete booking if an error occur.
-        storage.delete(book)
+        if sale:
+            if sale.room_sold:
+                setattr(sale, "room_sold", previous_room_sold)
 
-        # Return to previous value
-        sale.room_sold = previous_room_sold
+        if room:
+            room.status = "available"
 
         storage.save()
-
         print(str(e))
         return jsonify({"error": str(e)}), 500
+
     finally:
         storage.close()

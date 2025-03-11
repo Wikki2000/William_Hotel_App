@@ -189,11 +189,7 @@ $(document).ready(function() {
           window.open(receiptUrl, '_blank');
         },
         (error) => {
-          if (error.status === 422) {
-            showNotification('Error: ' + error.responseJSON.error, true);
-          } else {
-            showNotification('An Error Occured. Try Again !.', true);
-          }
+	  showNotification('Error: ' + error.responseJSON.error, true);
           $button.prop('disabled', false);
           console.log(error);
         }

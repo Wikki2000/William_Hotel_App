@@ -224,6 +224,7 @@ $(document).ready(function() {
                       CHECK_OUT = $('#main__checkout-date').val();
 
                       if (new Date(CHECK_IN) >= new Date(CHECK_OUT)) {
+			resetRoomDetails();
                         showNotification(
                           'Check Out date must not be earlier than Check In date', true
                         );

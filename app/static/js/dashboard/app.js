@@ -503,7 +503,6 @@ $(document).ready(function() {
           const laundryUrl = API_BASE_URL + '/laundries';
           fetchData(laundryUrl)
             .then((data) => {
-              console.log(data);
               data.forEach((laundry) => {
                 $('#laundry__list').append(laundryTableTemplate(laundry));
                 highLightOrderBtn(CART); // Highlight btn of items in cart.
