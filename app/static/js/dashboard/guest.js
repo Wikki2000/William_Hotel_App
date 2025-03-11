@@ -256,7 +256,7 @@ $(document).ready(() => {
           showNotification('Updated Successfully !');
         },
         (error) => {
-          showNotification('An Error Occured. Try Again !');
+          showNotification('An Error Occured. Try Again !', true);
           $button.prop('disable', false);
         }
       );

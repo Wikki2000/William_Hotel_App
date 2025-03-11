@@ -89,11 +89,11 @@ def extend_guest_stay(user_role: str, user_id: str, room_id, customer_id):
             transaction.room_sold += data.get("amount")
 
         # Create booking receipt object.
-        book = storage.get_by(Booking, id=book.id)
         receipt = create_receipt("booking_id", book.id) 
         storage.new(receipt)
 
         storage.save()
+        book = storage.get_by(Booking, id=book.id)
         return jsonify(book.to_dict()), 200
 
     except Exception as e:

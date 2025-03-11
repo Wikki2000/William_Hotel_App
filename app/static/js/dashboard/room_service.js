@@ -539,6 +539,7 @@ $(document).ready(function () {
             updatedServiceCharge.toLocaleString()
           );
 
+		console.log(response);
           const date = britishDateFormat(response.created_at);
           $('.order__history--table-body').prepend(
             bookingServiceListTableTemplate(response, date)

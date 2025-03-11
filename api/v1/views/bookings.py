@@ -180,20 +180,20 @@ def update_booking_data(user_id: str, user_role: str, booking_id: str):
 
     # Update sales record of date when the room was book.
     booking_date = booking.created_at.strftime("%Y-%m-%d")
-    today_sale = storage.get_by(DailySale, entry_date=booking_date)
-    today_sale.amount += booking_data.get("amount") - booking.amount
+    today_sale = storage.get_by(Sale, entry_date=booking_date)
+    today_sale.room_sold += booking_data.get("amount") - booking.amount
     
 
     # Update booking data
     for key, val in booking_data.items():
         setattr(booking, key, val)
     booking.checkin_by_id = user_id  # Update with staff that made changes
-    booking.updated_at = nigeria_today_date()
+    booking.updated_at = TODAY_DATE
 
     # Update customer data
     for key, val in customer_data.items():
         setattr(customer, key, val)
-    customer.updated_at = datetime.utcnow()
+    customer.updated_at = TODAY_DATE
 
     storage.save()
     storage.close()

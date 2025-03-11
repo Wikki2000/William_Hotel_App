@@ -43,7 +43,6 @@ $(document).ready(function() {
               sale.laundry_sold + sale.game_sold
             );
             const date = britishDateFormat(sale.created_at);
-		  alert(USER_ROLE);
             $('#sales__profit-table--body')
               .append(salesTableTemplate(index, sale.id, sale.is_approved, totalSales, date, USER_ROLE));
           });
