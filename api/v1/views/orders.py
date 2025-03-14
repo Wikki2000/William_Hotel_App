@@ -12,7 +12,8 @@ from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import (
     bad_request, create_receipt, role_required, nigeria_today_date,
-    update_item_stock, rollback_order_on_error, update_sales_data
+    update_item_stock, rollback_order_on_error, update_sales_data,
+    write_to_file
 )
 from models import storage
 from sqlalchemy.exc import IntegrityError
@@ -21,12 +22,14 @@ from random import randint
 
 
 TODAY_DATE = nigeria_today_date()
-
+CURRENT_TIME = time = datetime.now().strftime("%I:%M %p")
+ERROR_LOG_FILE = "logs/error.log"
 
 @api_views.route("/order-items")
 @role_required(["staff", "manager", "admin"])
 def get_orders(user_role: str, user_id: str):
     """Retrieve all order items"""
+    api_path = request.path
     try:
         start_date_obj = end_date_obj = TODAY_DATE
 
@@ -38,7 +41,7 @@ def get_orders(user_role: str, user_id: str):
             return jsonify([]), 200
 
         sorted_orders = sorted(
-            orders, key=lambda order : order.updated_at, reverse=True
+            orders, key=lambda order : order.customer.name, #reverse=True
         )
         obj = sorted_orders[0]
         response = [{
@@ -61,6 +64,8 @@ def get_orders(user_role: str, user_id: str):
         return jsonify(response), 200
     except Exception as e:
         print(str(e))
+        error = f"{CURRENT_TIME}\t{TODAY_DATE}\t{api_path}\t{str(e)}\n\n"
+        write_to_file(ERROR_LOG_FILE, error)
         return jsonify({"error": str(e)}), 500
     finally:
         storage.close()
@@ -70,6 +75,7 @@ def get_orders(user_role: str, user_id: str):
 @role_required(["staff", "manager", "admin"])
 def get_order(user_role: str, user_id: str, order_id: str):
     """Retrieve order by it ID"""
+    api_path = request.path
     try:
         order = storage.get_by(Order, id=order_id)
         if not order:
@@ -110,6 +116,8 @@ def get_order(user_role: str, user_id: str, order_id: str):
         return jsonify(response), 200
     except Exception as e:
         print(str(e))
+        error = f"{CURRENT_TIME}\t{TODAY_DATE}\t{api_path}\t{str(e)}\n\n"
+        write_to_file(ERROR_LOG_FILE, error)
         return jsonify({"error": str(e)}), 500
     finally:
         storage.close()
@@ -142,6 +150,7 @@ def update_status(user_role: str, user_id: str, order_id: str):
 @role_required(["staff", "manager", "admin"])
 def filter_orders(user_role: str, user_id: str, payment_status):
     """Filter ordered base on paid or pending payment."""
+    api_path = request.path
     try:
         # Get all pending payment from databases
         if payment_status == "pending":
@@ -182,6 +191,8 @@ def filter_orders(user_role: str, user_id: str, payment_status):
         return jsonify(response), 200
     except Exception as e:
         print(str(e))
+        error = f"{CURRENT_TIME}\t{TODAY_DATE}\t{api_path}\t{str(e)}\n\n"
+        write_to_file(ERROR_LOG_FILE, error)
         return jsonify({"error": str(e)}), 500
     finally:
         storage.close()
@@ -230,6 +241,7 @@ def get_order_by_date(
 def order_items(user_role: str, user_id: str):
     """Store order details in database and track stock changes."""
     data = request.get_json()
+    api_path = request.path
 
     # Validate request body
     required_fields = ["customerData", "itemOrderData", "orderData"]
@@ -290,8 +302,15 @@ def order_items(user_role: str, user_id: str):
         storage.save()
         return jsonify({"order_id": new_order.id}), 200
 
-    except Exception as e:
+    except ValueError as e:
         rollback_order_on_error(new_order, item_sold, prev_sales)
+        return jsonify({"error": str(e)}), 422
+
+    except Exception as e:
+        print(str(e))
+        rollback_order_on_error(new_order, item_sold, prev_sales)
+        error = f"{CURRENT_TIME}\t{TODAY_DATE}\t{api_path}\t{str(e)}\n\n"
+        write_to_file(ERROR_LOG_FILE, error)
         return jsonify({"error": str(e)}), 500
 
     finally:

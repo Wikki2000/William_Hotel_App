@@ -34,7 +34,21 @@ $(document).ready(() => {
         .then(
           ( { booking, customer, room, checkin_by, checkout_by }
           ) => {
-	    const time = booking.amount === SHORT_REST_AMOUNT ? 'Hours': 'Night(s)';
+	    let time, hide, bookingType;
+
+            if (booking.is_short_rest) {
+              bookingType = 'Short Tiime';
+              time = 'Hours';
+              hide = 'none';
+            } else if (booking.is_late_checkout) {
+              bookingType = 'Late Checkout';
+              time = 'Hours';
+              hide = 'none';
+            } else {
+              bookingType = 'Full Tiime';
+              time = 'Night(s)';
+              hide = '';
+            }
             const paymentStatus = (
               booking.is_paid === 'yes' ? { status: 'Paid', color: 'green' } :
               {status: 'Pending', color: 'red' }
@@ -62,11 +76,12 @@ $(document).ready(() => {
              <p><b>Guest Gender</b> ${customer.gender}</p>
              <p><b>Guest Email</b> ${customer.email}</p>
              <p><b>Checkin Date</b> ${britishDateFormat(booking.checkin)}</p>
+             <p><b>Booking Type</b> ${bookingType}</p>
              <p><b>Expiration Duration</b> ${booking.duration} ${time}</p>
              <p><b>Check out Date</b> ${britishDateFormat(booking.checkout)}</p>
              <p><b>Date Book</b> ${britishDateFormat(booking.created_at)}</p>
              <p><b>Payment Status</b> <span style="color: ${paymentStatus.color};">${paymentStatus.status}</span></p>
-             <p><b>Room(${room.number}) Rate</b> ₦${room.amount.toLocaleString()}</p>
+             <p style="display: ${hide};"><b>Room(${room.number}) Rate</b> ₦${room.amount.toLocaleString()}</p>
              <p><b>Booking Amount</b> ₦${booking.amount.toLocaleString()}</p>
               <p><b>Checkin  By</b> ${checkin_by.first_name} ${checkin_by.last_name} (${checkin_by.portfolio})</p>
               <p><b>Checkout  By</b> ${checkout_staff.first_name} ${checkout_staff.last_name} (${checkout_staff.portfolio})</p>`

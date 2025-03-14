@@ -191,6 +191,10 @@ def convert_to_binary(base64_string: str) -> bytes:
     return img_binary_data
 
 
+def write_to_file(file_path, content):
+    with open(file_path, "a") as f:
+        f.write(content)
+
 # ===================================================================== #
 #                     Messages Module Helper Function                   #
 # ===================================================================== #

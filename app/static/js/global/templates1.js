@@ -476,11 +476,21 @@ export function orderHistoryTableTemplate(order, date, customer = null) {
 export function bookingServiceListTableTemplate(booking, date) {
   const paymentStatus = booking.is_paid === 'yes' ? 'Paid' : 'Pending';
   const textColor = booking.is_paid === 'yes' ? 'green' : 'red';
+  let bookingType;
+
+  if (booking.is_short_rest) {
+    bookingType = 'Short Time';
+  } else if (booking.is_late_checkout) {
+    bookingType = 'Late Checkout';
+
+  } else {
+    bookingType = 'Full Time';
+  }
 
   const row = `
    <tr data-id="${booking.id}">
     <td class="">
-      <p class="ui text size-textmd">Room Booking</p>
+      <p class="ui text size-textmd">${bookingType} Booking</p>
     </td>
     <td>
       <p class="ui text size-textmd">${date}</p>

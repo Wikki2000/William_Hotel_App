@@ -1,3 +1,5 @@
+@import url('variable.css');
+
 /*====================================
 Order Items Section
 =====================================*/
@@ -19,7 +21,7 @@ Order Items Section
 
 
 .oder__items-list {
-  background-color: var(--orange_a100_33);
+  background-color: var(--secondary-color);
   padding: 20px;
   border-radius: 15px;
   display: flex;

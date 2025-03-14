@@ -8,7 +8,7 @@
   padding: 10px;
   height: 100%;
   border-radius: 10px;
-  background-color: #FDF6E4;
+  background-color: var(--secondary-color);
 
   .expenditures__headings {
     display: flex;
@@ -364,7 +364,7 @@
   .sale__summary-total {
     margin-top: 15%;
     display: flex;
-    background-color: #F5D07747;
+    background-color: var(--secondary-color);
     width: 250px;
     padding: 5px;
     border-radius: 10px;

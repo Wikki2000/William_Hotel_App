@@ -1,3 +1,5 @@
+@import url('variable.css'); /* Import file holding css variables */
+
 /*=============================
 Room Section
 ==============================*/
@@ -196,7 +198,7 @@ Service Section
   display: none;
   margin-right: 1.5rem;
   margin: 1rem;
-  background-color: #FDF6E4;
+  background-color: var(--secondary-color);;
   border-radius: 1rem;
   flex-grow: 1;
   height: 73vh;
@@ -220,6 +222,10 @@ Service Section
     padding: 5px;
     border-radius: 5px;
   }
+  /*
+  button {
+    border: 2px solid orange;
+  }*/
 }
 
 .room__details {
@@ -283,10 +289,17 @@ Service Section
   height: 25vh;
 }
 
+.service___list-orders > table {
+  margin-bottom: 0px;
+}
 .service___list-orders .order__history--table-body {
-  td:nth-child(1), td:nth-child(2),
-  td:nth-child(3), td:nth-child(4) {
-    padding-right: 2%;
+  td:nth-child(2),
+  td:nth-child(3),
+  td:nth-child(4) {
+    padding-right: 4%;
+  }
+  td:nth-child(1) {
+    padding-left: 2%;
   }
   .manage {
     right: 15%;
@@ -297,6 +310,7 @@ Service Section
   }
 }
 
+/* Extend Stay by numbers of night style */
 #guest__extend-stay--modal {
   .guest__popup-modal-content {
     width: 35%;
@@ -334,5 +348,32 @@ Service Section
       height: 100%;
       align-items: center;
     }
+  }
+}
+
+/* Late Checkout Style */
+#late__checkout-popup--modal > .popup-modal-content {
+  width: 52%;
+  height: auto;
+  padding: 20px;
+
+  h1 {
+    text-align: center;
+  }
+
+  .late__checkout-dropdown--btn {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .latecheckout__button-container {
+    display: flex;
+    justify-content: right;
+    margin-top: 10px;
+  }
+  .confirm__late-checkout--btn {
+    padding: 10px;
+    width: 30%;
+    border-radius: 5px;
   }
 }

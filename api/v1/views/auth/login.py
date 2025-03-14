@@ -3,12 +3,18 @@
 from flask import request, jsonify
 from models.user import User
 from flask_jwt_extended import create_access_token, set_access_cookies
+from api.v1.views.utils import nigeria_today_date, write_to_file
 import datetime
 from api.v1.views import api_views
 from models.storage import Storage
 from models import storage
 from typing import Optional
 from flasgger.utils import swag_from
+
+
+TODAY_DATE = nigeria_today_date()
+CURRENT_TIME = time = datetime.datetime.now().strftime("%I:%M %p")
+ERROR_LOG_FILE = "logs/error.log"
 
 
 def login_user(email_or_username: str
@@ -33,38 +39,46 @@ def login_user(email_or_username: str
 @swag_from('../documentation/auth/login.yml')
 def login():
     """Route for user login with JSON data."""
+    api_path = request.path
+    try:
+        # Parse JSON data from request
+        data = request.get_json()
 
-    # Parse JSON data from request
-    data = request.get_json()
+        if not data:
+            return jsonify({"error": "No input data provided"}), 400
 
-    if not data:
-        return jsonify({"error": "No input data provided"}), 400
+        # Ensure all required fields are in the JSON data
+        required_fields = ["email_or_username", "password"]
+        missing_fields = [field for field in required_fields if field not in data]
+        if missing_fields:
+            return jsonify({
+                "error": f"{', '.join(missing_fields)} Field(s) Missing"
+            }), 400
 
-    # Ensure all required fields are in the JSON data
-    required_fields = ["email_or_username", "password"]
-    missing_fields = [field for field in required_fields if field not in data]
-    if missing_fields:
-        return jsonify({
-            "error": f"{''.join(missing_fields)} Field Missing"
-        }), 400
+        email_or_username = data.get("email_or_username").strip()
+        password = data.get("password")
 
-    email_or_username =data.get("email_or_username").strip()
-    password = data.get("password")
+        user = login_user(email_or_username)
 
-    user = login_user(email_or_username)
+        if not user or not user.check_password(password):
+            return jsonify({"error": "Invalid email or password"}), 401
 
-    if not user or not user.check_password(password):
-        return jsonify({"error": "Invalid email or password"}), 401
+        user.is_active = True
+        storage.save()
 
-    user.is_active = True
-    storage.save()
+        # Create JWT token with additional claims
+        access_token = create_access_token(
+            identity=user.id, additional_claims={"role": user.role}
+        )
 
-    # Create JWT token with addditional claims
-    access_token = create_access_token(
-        identity=user.id, additional_claims={"role": user.role}
-    )
+        # Return response with access token
+        response = jsonify({**user.to_dict()})
+        set_access_cookies(response, access_token)  # Set JWT in cookie
+        return response, 200
 
-    # Return response with aceess token
-    response =  jsonify({**user.to_dict()})
-    set_access_cookies(response, access_token)  # Set JWT in cookie
-    return response, 200
+    except Exception as e:
+        error = f"{CURRENT_TIME}\t{TODAY_DATE}\t{api_path}\t{str(e)}\n\n"
+        write_to_file(ERROR_LOG_FILE, error)
+        print(str(e))
+        return jsonify({"error": "An internal error occurred. Please try again later."}), 500
+

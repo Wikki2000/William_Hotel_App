@@ -403,10 +403,13 @@ $(document).ready(function () {
         });
     });
 
-  // Extend guest stay by placing new booking.
+  // Handler for clicking Extend Guest Stay & Late Checkout..
   $('#dynamic__load-dashboard')
-    .off('click', '#guest__extend-stay')
-    .on('click', '#guest__extend-stay', function() {
+    .off('click', '#guest__extend-stay, #late__checkout')
+    .on('click', '#guest__extend-stay, #late__checkout', function() {
+
+      const $clickItem = $(this);
+      const clickId = $clickItem.attr('id');
 
       const roomNumber = $('#room__number-dropdown-btn').text();
       if (isNaN(roomNumber)) {
@@ -414,22 +417,61 @@ $(document).ready(function () {
         return;
       }
 
-      $('#guest__extend-stay--modal').css('display', 'flex');
+      // Reset the hidden field for instant payment type,
+      // Once click on extend stay or late checkout.
+      $('#guest__ispaid-menu--selected').val('');
+      /*
+      $clickItem.addClass('highlight-btn');
+      $clickItem.siblings().removeClass('highlight-btn');
+      */
+
+      if (clickId  === 'guest__extend-stay') {
+        $('#guest__extend-stay--modal').css('display', 'flex');
+      } else if (clickId  === 'late__checkout') {
+        const roomNumber = $('#room__number-dropdown-btn span').text();
+        $('#latecheckout__confirmation-description').text(
+          `You are about to extend the duration of Room ${roomNumber} ` +
+          `by ${LATE_CHECK_OUT_DURATION} Hours. An additionally charge of ` +
+          `N${LATE_CHECK_OUT_AMOUNT} is required. Please select ` +
+          `the option and click \"confirm\" button to proeced.`
+        )
+        $('#late__checkout-popup--modal').css('display', 'flex');
+
+      }
     });
 
   // Handle display and selection of payment status menu.
-  $('#dynamic__load-dashboard').off('click', '#guest__ispaid')
-    .on('click', '#guest__ispaid', function() {
-      $('#guest__ispaid-dropdown').show();
+  $('#dynamic__load-dashboard')
+    .off('click', '#guest__ispaid, #late__checkout-ispaid')
+    .on('click', '#guest__ispaid, #late__checkout-ispaid', function() {
 
-      $('#dynamic__load-dashboard').off('click', '.guest__dropdown-selector')
-        .on('click', '.guest__dropdown-selector', function() {
-          const selectedOption = $(this).text();
+      const $clickItem = $(this);
+      const clickItemId = $clickItem.attr('id');
 
-          $('#guest__ispaid span').text(selectedOption);
-          $('#guest__ispaid-dropdown').hide();
-          $('#guest__ispaid-menu--selected').val(selectedOption.toLowerCase());
-        });
+      if (clickItemId === 'guest__ispaid') {
+        $('#guest__ispaid-dropdown').toggle();
+      } else if (clickItemId === 'late__checkout-ispaid') {
+        $('#late__checkout-ispaid--dropdown').toggle();
+      }
+
+      $('#dynamic__load-dashboard')
+        .off('click', '.guest__dropdown-selector, .latecheckout__dropdown-selector')
+        .on('click', '.guest__dropdown-selector, .latecheckout__dropdown-selector',
+          function() {
+            const $clickItem = $(this);
+            const selectedOption = $clickItem.text();
+
+            if ($clickItem.hasClass('guest__dropdown-selector')) {
+              $('#guest__ispaid span').text(selectedOption);
+              $('#guest__ispaid-dropdown').hide();
+            } else if (
+              $clickItem.hasClass('latecheckout__dropdown-selector')
+            ) {
+              $('#late__checkout-ispaid span').text(selectedOption);
+              $('#late__checkout-ispaid--dropdown').hide();
+            }
+            $('#guest__ispaid-menu--selected').val(selectedOption.toLowerCase());
+          });
     });
 
   $('#dynamic__load-dashboard')
@@ -457,7 +499,7 @@ $(document).ready(function () {
           const diffIntTime = new Date(checkout) - new Date(checkin);
           const duration = diffIntTime / (1000 * 60 * 60 *24);
           $('#guest__extend-stay--modal #count__nights')
-          .val(`${duration} Night(s)`);
+            .val(`${duration} Night(s)`);
         }
       });
 
@@ -482,86 +524,114 @@ $(document).ready(function () {
           'Check Out date must not be earlier than Check In date', true
         );
         return;
-      } else if (!validateForm($formElement)) {
-        showNotification('Please fill out all required fields.', true);
+      } else if (!$('#guest__ispaid-menu--selected').val()) {
+        const msg = (
+          'Please select an option for Instant Payment'
+        );
+        showNotification(msg, true);
         return;
       }
       confirmationModal(headingText, descriptionText, confirmBtCls);
     });
 
-  $('#dynamic__load-dashboard').off('click', '.guest__extend-stay--confirm')
-    .on('click', '.guest__extend-stay--confirm', function() {
+  // Confirm handler to extend guest stay by certain duration.
+  $('#dynamic__load-dashboard')
+    .off('click', '.guest__extend-stay--confirm, .confirm__late-checkout--btn')
+    .on('click', '.guest__extend-stay--confirm, .confirm__late-checkout--btn',
+      function() {
+        const $clickItem = $(this);
 
-      const customerId = $('#guest__lodged-id').val();
-      const roomId = $('#guest__lodged-room--id').val();
+        const customerId = $('#guest__lodged-id').val();
+        const roomId = $('#guest__lodged-room--id').val();
 
-      const checkin = $('input[name="checkin"]').val();
-      const checkout = $('input[name="checkout"]').val();
-      const guest_number = $('#guest__occupant-no').val();
-      const is_paid = $('#guest__ispaid-menu--selected').val();
-      const $button = $(this);
+        let checkin = $('input[name="checkin"]').val();
+        let checkout = $('input[name="checkout"]').val();
+        const guest_number = $('#guest__occupant-no').val();
+        const is_paid = $('#guest__ispaid-menu--selected').val();
+        const $button = $(this);
 
-      const url = (
-        API_BASE_URL + `/guests/${customerId}/rooms/${roomId}/extend-stay`
-      );
+        const url = (
+          API_BASE_URL + `/guests/${customerId}/rooms/${roomId}/extend-stay`
+        );
 
-      const diffIntTime = new Date(checkout) - new Date(checkin);
-      const duration = diffIntTime / (1000 * 60 * 60 *24);
-
-      // Get total amount of room book base on night durations.
-      const roomRate = $('#room__price-val').val();
-      const amount = duration * roomRate;
-
-      const BookingData = {
-        duration, guest_number, amount,
-        is_paid, checkin, checkout,
-      };
-
-      ajaxRequest(url, 'POST', JSON.stringify(BookingData),
-        (response) => {
-          $button.prop('disable', false);
-          $('#main__popup-modal').hide();
-          $('#order__confirmation-modal').empty();
-          $('#guest__extend-stay--form').trigger('reset');
-          $('#guest__extend-stay--modal').hide();
+        if (!is_paid) {
           const msg = (
-            `Duration of guest extended by ${duration} Night(s)`
+            'Please select an option for Instant Payment'
           );
-          showNotification(msg);
-
-
-          // Update the total service charge when new booking is made.
-          const previousServiceCharge = parseFloat(
-            $('#total__service-charge--amount').text().replaceAll(',','')
-          );
-          const updatedServiceCharge  = previousServiceCharge + amount;
-          $('#total__service-charge--amount').text(
-            updatedServiceCharge.toLocaleString()
-          );
-
-          const date = britishDateFormat(response.created_at);
-          $('.order__history--table-body').prepend(
-            bookingServiceListTableTemplate(response, date)
-          );
-
-          // Print receipt immediately room is book.
-          const bookingId = response.id;
-          const receiptUrl = (
-            APP_BASE_URL + `/bookings/print-receipt?booking_id=${bookingId}`
-          );
-          window.open(receiptUrl, '_blank');
-        },
-        (error) => {
-          $button.prop('disable', false);
-          if (error.status === 409) {
-            showNotification('Error! ' +  error.responseJSON.error, true);
-          } else {
-            showNotification('An Error occured. Try Again !', true);
-          }
-          $('#main__popup-modal').hide();
+          showNotification(msg, true);
+          return;
         }
-      );
-    });
+
+        let duration, amount, is_late_checkout;
+        if ($clickItem.hasClass('guest__extend-stay--confirm')) {
+
+          const diffIntTime = new Date(checkout) - new Date(checkin);
+          duration = diffIntTime / (1000 * 60 * 60 *24);
+          is_late_checkout = false;
+
+          // Get total amount of room book base on night durations.
+          const roomRate = $('#room__price-val').val();
+          amount = duration * roomRate;
+        } else if ($clickItem.hasClass('confirm__late-checkout--btn')) {
+          is_late_checkout = true;
+          amount = LATE_CHECK_OUT_AMOUNT;
+          duration = LATE_CHECK_OUT_DURATION;
+          checkout = checkin = canadianDateFormat(new Date());
+        }
+
+        const BookingData = {
+          duration, guest_number, amount,
+          is_paid, checkin, checkout, is_late_checkout,
+        };
+
+        ajaxRequest(url, 'POST', JSON.stringify(BookingData),
+          (response) => {
+            $button.prop('disable', false);
+            $('#main__popup-modal').hide();
+
+            $('#order__confirmation-modal').empty();
+	    $('#late__checkout-popup--modal').empty();
+
+            $('#guest__extend-stay--form').trigger('reset');
+            $('#guest__extend-stay--modal').hide();
+            const msg = (
+              `Duration of guest extended by ${duration} Night(s)`
+            );
+            showNotification(msg);
+
+
+            // Update the total service charge when new booking is made.
+            const previousServiceCharge = parseFloat(
+              $('#total__service-charge--amount').text().replaceAll(',','')
+            );
+            const updatedServiceCharge  = previousServiceCharge + amount;
+            $('#total__service-charge--amount').text(
+              updatedServiceCharge.toLocaleString()
+            );
+
+            const date = britishDateFormat(response.created_at);
+            $('.order__history--table-body').prepend(
+              bookingServiceListTableTemplate(response, date)
+            );
+
+            // Print receipt immediately room is book.
+            const bookingId = response.id;
+            const receiptUrl = (
+              APP_BASE_URL + `/bookings/print-receipt?booking_id=${bookingId}`
+            );
+            window.open(receiptUrl, '_blank');
+          },
+          (error) => {
+            $button.prop('disable', false);
+            if (error.status === 409) {
+              showNotification('Error! ' +  error.responseJSON.error, true);
+            } else {
+              showNotification('An Error occured. Try Again !', true);
+            }
+            $('#main__popup-modal').hide();
+          }
+        );
+      });
 
   // Togle visibility of service list.
   $('#dynamic__load-dashboard')

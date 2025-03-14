@@ -8,7 +8,8 @@ from models.sale import Sale
 from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import (
-    bad_request, role_required, create_receipt, nigeria_today_date
+    bad_request, role_required, create_receipt, nigeria_today_date,
+    write_to_file, 
 )
 from models import storage
 from sqlalchemy.exc import IntegrityError
@@ -17,15 +18,17 @@ from models.receipt import Receipt
 
 
 TODAY_DATE = nigeria_today_date()
+CURRENT_TIME = time = datetime.now().strftime("%I:%M %p")
+ERROR_LOG_FILE = "logs/error.log"
 
 
 @api_views.route("/bookings")
 @role_required(["staff", "manager", "admin"])
 def bookings(user_id: str, user_role: str):
     """Fetch booking data"""
+    api_path = request.path
     try:
-        #books = storage.all(Booking).values()
-        start_date_obj = end_date_obj = nigeria_today_date()
+        start_date_obj = end_date_obj = TODAY_DATE
 
         books = storage.get_by_date(
             Booking, start_date_obj, end_date_obj, "created_at",
@@ -48,6 +51,8 @@ def bookings(user_id: str, user_role: str):
             )} for booking in sorted_books]
         return jsonify(response), 200
     except Exception as e:
+        error = f"{CURRENT_TIME}\t{TODAY_DATE}\t{api_path}\t{str(e)}\n\n"
+        write_to_file(ERROR_LOG_FILE, error)
         print(str(e))
         return jsonify({"error": str(e)}), 500
     finally:
@@ -99,6 +104,7 @@ def get_bookings_by_date(
 @role_required(["staff", "manager", "admin"])
 def booking_data_by_id(user_id: str, user_role: str, booking_id: str):
     """Fetch booking data of a particular room"""
+    api_path = request.path
     try:
         book = storage.get_by(Booking, id=booking_id)
         if not book:
@@ -128,6 +134,8 @@ def booking_data_by_id(user_id: str, user_role: str, booking_id: str):
         }), 200
     except Exception as e:
         print(str(e))
+        error = f"{CURRENT_TIME}\t{TODAY_DATE}\t{api_path}\t{str(e)}\n\n"
+        write_to_file(ERROR_LOG_FILE, error)
         return jsonify({"error": str(e)}), 500
     finally:
         storage.close()
@@ -142,7 +150,7 @@ def clear_booking_bill(user_id: str, user_role: str, booking_id: str):
         abort(404)
 
     booking.is_paid = "yes"
-    booking.updated_at = nigeria_today_date()
+    booking.updated_at = TODAY_DATE
     #booking.is_use = False
 
     # Ensure that a staff clear bill only onced
@@ -188,12 +196,12 @@ def update_booking_data(user_id: str, user_role: str, booking_id: str):
     for key, val in booking_data.items():
         setattr(booking, key, val)
     booking.checkin_by_id = user_id  # Update with staff that made changes
-    booking.updated_at = nigeria_today_date()
+    booking.updated_at = TODAY_DATE
 
     # Update customer data
     for key, val in customer_data.items():
         setattr(customer, key, val)
-    customer.updated_at = datetime.utcnow()
+    customer.updated_at = TODAY_DATE
 
     storage.save()
     storage.close()
@@ -205,6 +213,7 @@ def update_booking_data(user_id: str, user_role: str, booking_id: str):
 def book_room(user_id: str, user_role: str, room_number: str):
     """Book a room"""
     data = request.get_json()
+    api_path = request.path
 
     # Handle Bad Request error
     if not data:
@@ -235,10 +244,12 @@ def book_room(user_id: str, user_role: str, room_number: str):
         "customer_id": customer.id, "checkin_by_id": user.id,
         "guest_number": booking_data.get("guest_number"),
         "room_id": room.id, "amount": booking_data.get("amount"),
-        "created_at": nigeria_today_date()
+        "created_at": TODAY_DATE,
+        "is_short_rest": booking_data.get("is_short_rest")
     }
 
     previous_room_sold = 0
+    receipt = None
 
     try:
         book = Booking(**book_attr)
@@ -278,6 +289,8 @@ def book_room(user_id: str, user_role: str, room_number: str):
 
         storage.save()
         print(str(e))
+        error = f"{CURRENT_TIME}\t{TODAY_DATE}\t{api_path}\t{str(e)}\n\n"
+        write_to_file(ERROR_LOG_FILE, error)
         return jsonify({"error": str(e)}), 500
 
     finally:

@@ -46,7 +46,14 @@ $(document).ready(function() {
       $("#receipt-info").html(receiptInfo);
 
       // Render customer order table
-      const time = booking.amount === SHORT_REST_AMOUNT ? 'Hours': 'Night(s)';
+      let time;
+      if (booking.is_short_rest) {
+        time = 'Hours';
+      } else if (booking.is_late_checkout) {
+        time =  'Hours';
+      } else {
+        time = 'Night(s)';
+      }
       let orderRows = `
         <tr>
             <td>${room.name} (${room.number})</td>

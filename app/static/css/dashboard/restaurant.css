@@ -1,3 +1,5 @@
+@import url('variable.css');
+
 .dashboard-section {
   height: 600px;
   white-space: nowrap;
@@ -40,7 +42,7 @@
 .food-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  background-color: var(--orange_a100_33);
+  background-color: var(--secondary-color);
   row-gap: 20px; 
   padding: 20px;
   border-radius: 15px;

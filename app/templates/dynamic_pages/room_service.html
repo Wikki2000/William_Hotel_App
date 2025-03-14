@@ -127,9 +127,9 @@
       <button id="guest__extend-stay" class="tab__item ui heading size-headingxs highlight-btn">
         Extend Guest Stay
       </button>
-      <!--<button class="tab__item ui heading size-headingxs filter">
-        Book History
-        </button>-->
+      <button id="late__checkout" class="tab__item ui heading size-headingxs highlight-btn">
+        Late Checkout
+      </button>
     </div><br />
     <div class="room__details">
       <div>
@@ -272,8 +272,8 @@
 
       <div class="guest__drop-down--menu">
         <p><strong>Instance Payment:
-	  <span class="important">*</span>
-	</strong></p>
+          <span class="important">*</span>
+        </strong></p>
         <div class="dropdown guest__dropdown-btn--container">
           <div id="guest__ispaid" class="guest__dropdown-btn drop-down">
             <span>Select </span>
@@ -295,7 +295,6 @@
       <input id="guest__lodged-id" type="hidden" required />
       <input id="room__price-val" type="hidden" required />
       <input id="guest__occupant-no" type="hidden" required />
-      <input id="guest__ispaid-menu--selected" type="hidden" required />
     </form>
   </div>
 </div>
@@ -321,6 +320,45 @@
     </div>
   </div>
 </div>
+
+<div id="late__checkout-popup--modal" class="popup-modal">
+  <div class="popup-modal-content">
+    <!-- Close Button -->
+    <button class="close-btn closePopupModal">&times;</button>
+    <h1>Late Checkout Payment</h1>
+
+    <div>
+      <p id="latecheckout__confirmation-description">
+        <!-- This section dynamically loaded -->
+      </p>
+
+      <div class="latecheckout__drop-down--menu">
+        <p><strong>Instance Payment?:
+          <span class="important">*</span>
+        </strong></p>
+        <div class="dropdown latecheckout__dropdown-btn--container">
+          <div id="late__checkout-ispaid" class="late__checkout-dropdown--btn drop-down">
+            <span>Select </span>
+            <img src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px" alt="dropdown" />
+          </div>
+          <div class="dropdown-menu" id="late__checkout-ispaid--dropdown">
+            <ul class="latecheckout__dropdown--menu-list">
+              <li class="latecheckout__dropdown-selector dropdown-item">Yes</li>
+              <li class="latecheckout__dropdown-selector dropdown-item">No</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="latecheckout__button-container">
+        <button class="confirm__late-checkout--btn highlight-btn">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Storage for further use -->
+<input id="guest__ispaid-menu--selected" type="hidden" required />
 
 <!-- Confirmation Modal Dynamically Loaded Here. -->
 <div id="order__confirmation-modal">

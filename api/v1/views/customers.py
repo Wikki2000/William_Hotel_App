@@ -7,13 +7,16 @@ from models.sale import Sale
 from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import (
-    create_receipt, bad_request, role_required, nigeria_today_date
+    create_receipt, bad_request, role_required, nigeria_today_date,
+    write_to_file
 )
 from models import storage
-from datetime import date
+from datetime import date, datetime
 
 
 TODAY_DATE = nigeria_today_date()
+CURRENT_TIME = time = datetime.now().strftime("%I:%M %p")
+ERROR_LOG_FILE = "logs/error.log"
 
 
 @api_views.route(
@@ -52,8 +55,12 @@ def change_guest_room(
 def extend_guest_stay(user_role: str, user_id: str, room_id, customer_id):
     """Extend guest stay by placing new booking."""
     data = request.get_json()
+    api_path = request.path
 
-    required_fields = ["duration", "checkin", "checkout", "amount", "is_paid"]
+    required_fields = [
+        "duration", "checkin", "checkout",
+        "amount", "is_paid", "is_late_checkout"
+    ]
     error_response = bad_request(data, required_fields)
     if error_response:
         abort(400)
@@ -94,16 +101,18 @@ def extend_guest_stay(user_role: str, user_id: str, room_id, customer_id):
         storage.new(receipt)
 
         storage.save()
+        book = storage.get_by(Booking, id=book.id)
         return jsonify(book.to_dict()), 200
 
     except Exception as e:
-
         storage.delete_many([book, receipt])
         if transaction:
             if transaction.room_sold:
                 transaction.room_sold = previous_booking_amount
         storage.save()
         print(str(e))
+        error = f"{CURRENT_TIME}\t{TODAY_DATE}\t{api_path}\t{str(e)}\n\n"
+        write_to_file(ERROR_LOG_FILE, error)
         return jsonify({"error": str(e)}), 500
 
     finally:

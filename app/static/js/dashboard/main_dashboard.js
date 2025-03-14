@@ -60,7 +60,7 @@ $(document).ready(function() {
 
 
   // This values are assign when handling switch case Room Number menu display.
-  let CHECK_IN, CHECK_OUT, AMOUNT, DURATION;
+  let CHECK_IN, CHECK_OUT, AMOUNT, DURATION, SHORT_REST_OPTION;
 
   // Handle the form submission for the booking form
   $('#dynamic__load-dashboard').on('submit', '#main__book-form', function (e) {
@@ -84,6 +84,7 @@ $(document).ready(function() {
 
     CHECK_IN = CHECK_IN ? CHECK_IN : canadianDateFormat(new Date());
     CHECK_OUT = CHECK_OUT ? CHECK_OUT : canadianDateFormat(new Date());
+    const is_short_rest = SHORT_REST_OPTION;
 
     // Room data
     const roomNumber = $('#main__room--no-val').val();
@@ -100,7 +101,7 @@ $(document).ready(function() {
     const BookingData = {
       book: {
         duration: DURATION, guest_number, amount: AMOUNT,
-        is_paid, checkin: CHECK_IN, checkout: CHECK_OUT,
+        is_paid, checkin: CHECK_IN, checkout: CHECK_OUT, is_short_rest,
       },
       customer: { gender, name, address, phone, id_type, id_number, email }
     };
@@ -159,6 +160,7 @@ $(document).ready(function() {
     function () {
       const $clickItem = $(this);
       const clickId = $clickItem.attr('id');
+
 
       switch(clickId) {
         case 'main__dropdown--room-no': {
@@ -302,6 +304,8 @@ $(document).ready(function() {
                   $('#main__earlyin-container').css('visibility', 'visible');
                   $('#main__dummy-block').css('visibility', 'hidden');
 
+                  SHORT_REST_OPTION = false;
+
                   // Change the newly display input field to required.
                   $('#main__check-in, #main__checkout-date, #main__id--checkin-val').attr('required');
                 } else {
@@ -309,7 +313,7 @@ $(document).ready(function() {
                   $('#main__dummy-block').css('visibility', 'hidden');
                   $('#main__earlyin-container').css('visibility', 'hidden');
 
-                  //$('#main__room-rate').val('₦' + SHORT_REST_AMOUNT.toLocaleString());
+                  SHORT_REST_OPTION = true;
 
                   $('#main__check-in, #main__checkout-date, #main__id--checkin-val').removeAttr('required');
                 }

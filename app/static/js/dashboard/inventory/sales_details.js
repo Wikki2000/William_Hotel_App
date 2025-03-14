@@ -24,10 +24,20 @@ $(document).ready(function() {
     fetchData(roomSalesUrl)
       .then(({ bookings }) => {
         bookings.forEach((sale, index) => {
-	  const time = sale.booking.amount === SHORT_REST_AMOUNT ? 'Hours': 'Night(s)'; 
+          let description = '', time;
+          if (sale.booking.is_short_rest) {
+            description ='Short Time';
+	    time = 'Hours';
+          } else if (sale.booking.is_late_checkout) {
+            description ='Late Checkout';
+	     time = 'Hours';
+          } else {
+            description ='Full Time';
+	    time = 'Night(s)';
+          }
           $('.sales-table-body').append(dailyServiceSaleTableTemplate(
             index, sale.booking.id, sale.booking.is_paid, sale.guest.name,
-            `${sale.room.name} (${sale.room.number})`,
+            `${sale.room.name} (${sale.room.number}) ${description}`,
 	    `${sale.booking.duration} ${time}`, sale.booking.amount
           ));
         });

@@ -1,0 +1,4 @@
+ALTER TABLE bookings
+ADD COLUMN is_late_checkout TINYINT(1) NOT NULL DEFAULT 0,
+ADD COLUMN is_short_rest TINYINT(1) NOT NULL DEFAULT 0;
+

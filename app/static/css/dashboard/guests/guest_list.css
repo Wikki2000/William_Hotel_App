@@ -18,7 +18,7 @@ Guest List Section
   width: 100%;
   height: 70vh;
   overflow: auto;
-  background-color: var(--orange_a100_33);
+  background-color: var(--secondary-color);
   border-radius: 20px 20px 0px 0px;
   top: 1rem;
 }
@@ -65,7 +65,7 @@ Guest details popup modal
 ===============================================*/
 .guest__popup-modal {
   width: 50%;
-  height: auto;
+  height: 97%;
   margin-left: 20%;
   h3 {
     border-bottom: 3px dotted orange;
@@ -79,7 +79,7 @@ Guest details popup modal
     p {
       display: flex;
       justify-content: space-between;
-      margin-top: 10px;
+      margin-top: 5px;
     }
   }
   h1 {
