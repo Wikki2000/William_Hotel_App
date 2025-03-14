@@ -599,6 +599,14 @@ $(document).ready(function () {
             );
             showNotification(msg);
 
+<<<<<<< HEAD
+=======
+		console.log(response);
+          const date = britishDateFormat(response.created_at);
+          $('.order__history--table-body').prepend(
+            bookingServiceListTableTemplate(response, date)
+          );
+>>>>>>> b224aebbfa19dbe707cb0b9b2e7220b36e6efe7c
 
             // Update the total service charge when new booking is made.
             const previousServiceCharge = parseFloat(

@@ -188,8 +188,8 @@ def update_booking_data(user_id: str, user_role: str, booking_id: str):
 
     # Update sales record of date when the room was book.
     booking_date = booking.created_at.strftime("%Y-%m-%d")
-    today_sale = storage.get_by(DailySale, entry_date=booking_date)
-    today_sale.amount += booking_data.get("amount") - booking.amount
+    today_sale = storage.get_by(Sale, entry_date=booking_date)
+    today_sale.room_sold += booking_data.get("amount") - booking.amount
     
 
     # Update booking data
