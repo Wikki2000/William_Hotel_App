@@ -67,7 +67,7 @@ class Storage:
         # URL encode the password to handle special characters
         encoded_password = quote_plus(password)
 
-        url = f'mysql+mysqldb://{username}:{encoded_password}@localhost:3306/{database}'
+        url = f'mysql+mysqldb://{username}:{encoded_password}@127.0.0.1:3306/{database}'
         self.__engine = create_engine(url, pool_pre_ping=True)
 
         # Drop all table if it is test env.

@@ -274,7 +274,7 @@ def order_items(user_role: str, user_id: str):
         # Create new order
         order_data.update({
             "ordered_by_id": user.id, 
-            "created_at": TODAY_DATE
+            #"created_at": TODAY_DATE
         })
         new_order = Order(**order_data)
         storage.new(new_order)
@@ -288,7 +288,7 @@ def order_items(user_role: str, user_id: str):
         # Get or create sales entry for today
         item_sold = storage.get_by(Sale, entry_date=TODAY_DATE)
         if not item_sold:
-            item_sold = Sale(created_at=TODAY_DATE, entry_date=TODAY_DATE)
+            item_sold = Sale(entry_date=TODAY_DATE)
             storage.new(item_sold)
 
         # Store previous sales values
@@ -300,6 +300,7 @@ def order_items(user_role: str, user_id: str):
             update_item_stock(item, customer, new_order, item_sold)
 
         storage.save()
+        print(new_order.created_at, TODAY_DATE)
         return jsonify({"order_id": new_order.id}), 200
 
     except ValueError as e:

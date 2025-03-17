@@ -234,7 +234,7 @@ $(document).ready(function() {
       fetchData(orderUrl)
         .then((data) => {
           data.forEach(({ order, customer }) => {
-            const date = britishDateFormat(order.updated_at);
+            const date = britishDateFormat(order.created_at);
             $('.order__history--table-body').append(
               orderHistoryTableTemplate(order, date, customer)
             );

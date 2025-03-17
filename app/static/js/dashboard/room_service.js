@@ -323,7 +323,7 @@ $(document).ready(function () {
 
               if(bookings) {
                 bookings.forEach((booking) => {
-                  const date = britishDateFormat(booking.updated_at);
+                  const date = britishDateFormat(booking.created_at);
                   $('.order__history--table-body').append(
                     bookingServiceListTableTemplate(booking, date)
                   );
@@ -332,7 +332,7 @@ $(document).ready(function () {
 
               if(orders) {
                 orders.forEach((order) => {
-                  const date = britishDateFormat(order.updated_at);
+                  const date = britishDateFormat(order.created_at);
                   $('.order__history--table-body').append(
                     orderHistoryTableTemplate(order, date)
                   );
@@ -599,22 +599,9 @@ $(document).ready(function () {
             );
             showNotification(msg);
 
-<<<<<<< HEAD
-=======
-		console.log(response);
-          const date = britishDateFormat(response.created_at);
-          $('.order__history--table-body').prepend(
-            bookingServiceListTableTemplate(response, date)
-          );
->>>>>>> b224aebbfa19dbe707cb0b9b2e7220b36e6efe7c
-
             // Update the total service charge when new booking is made.
             const previousServiceCharge = parseFloat(
               $('#total__service-charge--amount').text().replaceAll(',','')
-            );
-            const updatedServiceCharge  = previousServiceCharge + amount;
-            $('#total__service-charge--amount').text(
-              updatedServiceCharge.toLocaleString()
             );
 
             const date = britishDateFormat(response.created_at);

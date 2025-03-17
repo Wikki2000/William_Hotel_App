@@ -244,7 +244,6 @@ def book_room(user_id: str, user_role: str, room_number: str):
         "customer_id": customer.id, "checkin_by_id": user.id,
         "guest_number": booking_data.get("guest_number"),
         "room_id": room.id, "amount": booking_data.get("amount"),
-        "created_at": TODAY_DATE,
         "is_short_rest": booking_data.get("is_short_rest")
     }
 
@@ -266,8 +265,7 @@ def book_room(user_id: str, user_role: str, room_number: str):
         sale = storage.get_by(Sale, entry_date=TODAY_DATE)
         if not sale:
             sale = Sale(
-                entry_date=TODAY_DATE, created_at=TODAY_DATE, 
-                room_sold=booking_data.get("amount")
+                entry_date=TODAY_DATE, room_sold=booking_data.get("amount")
             )
             storage.new(sale)
         else:
