@@ -249,6 +249,7 @@ def book_room(user_id: str, user_role: str, room_number: str):
 
     previous_room_sold = 0
     receipt = None
+    sale = None
 
     try:
         book = Booking(**book_attr)
