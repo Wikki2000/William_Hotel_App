@@ -16,7 +16,7 @@ class Booking(BaseModel, Base):
     duration = Column(String(20))
     checkin = Column(Date, nullable=False)
     checkout = Column(Date)
-    is_paid = Column(ENUM("yes", "no"), nullable=False)
+    is_paid = Column(ENUM("yes", "no"), nullable=False, default="no")
     is_use = Column(Boolean, default=True)
     is_short_rest = Column(Boolean, default=False)
     is_late_checkout = Column(Boolean, default=False)

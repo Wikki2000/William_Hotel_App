@@ -300,7 +300,6 @@ def order_items(user_role: str, user_id: str):
             update_item_stock(item, customer, new_order, item_sold)
 
         storage.save()
-        print(new_order.created_at, TODAY_DATE)
         return jsonify({"order_id": new_order.id}), 200
 
     except ValueError as e:

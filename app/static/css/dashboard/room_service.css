@@ -201,7 +201,7 @@ Service Section
   background-color: var(--secondary-color);;
   border-radius: 1rem;
   flex-grow: 1;
-  height: 73vh;
+  height: 75vh;
   padding: 20px;
 
   .dropdown, input {
@@ -287,6 +287,14 @@ Service Section
   display: none;
   overflow-y: scroll;
   height: 25vh;
+}
+
+.servicelist__filterBtn-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  margin-left: 25px;
+  width: 20%;
 }
 
 .service___list-orders > table {

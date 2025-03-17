@@ -4,6 +4,7 @@ from models.customer import Customer
 from models.booking import Booking
 from models.room import Room
 from models.sale import Sale
+from models.order import Order
 from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import (
@@ -57,17 +58,13 @@ def extend_guest_stay(user_role: str, user_id: str, room_id, customer_id):
     data = request.get_json()
     api_path = request.path
 
-    required_fields = [
-        "duration", "checkin", "checkout",
-        "amount", "is_paid", "is_late_checkout"
-    ]
+    required_fields = ["duration", "checkin", "checkout", "amount", "is_paid"]
     error_response = bad_request(data, required_fields)
     if error_response:
         abort(400)
 
     data.update({
-        "room_id": room_id, "customer_id": customer_id,
-        "checkin_by_id": user_id, "created_at": TODAY_DATE
+        "room_id": room_id, "customer_id": customer_id, "checkin_by_id": user_id
     })
 
     previous_booking_amount = 0
@@ -118,19 +115,34 @@ def extend_guest_stay(user_role: str, user_id: str, room_id, customer_id):
         storage.close()
 
 @api_views.route(
-    "/guests/<string:customer_id>/<string:booking_id>/service-list"
+    "/guests/<string:customer_id>/<string:booking_id>/<string:status>/service-list"
 )
 @role_required(["manager", "admin", "staff"])
 def customer_service_list(
-    user_role: str, user_id: str, booking_id: str, customer_id: str
+    user_role: str, user_id: str, booking_id: str,
+    customer_id: str, status: str
 ):
     """Retrieve all services given to a guest."""
     customer = storage.get_by(Customer, id=customer_id)
     if not customer:
         abort(404)
 
-    bookings = storage.all_get_by(Booking, customer_id=customer_id, is_use=True)
-    orders = customer.orders
+    orders = bookings = None
+    # Filter base on payment status
+    if status == "all":
+        bookings = storage.all_get_by(Booking, customer_id=customer_id, is_use=True)
+        #orders = customer.orders
+        orders = storage.all_get_by(Order, customer_id=customer_id)
+    elif status == "pending":
+        bookings = storage.all_get_by(
+            Booking, customer_id=customer_id, is_use=True, is_paid="no"
+        )
+        orders = storage.all_get_by(Order, customer_id=customer_id, is_paid=False)
+    elif status == "paid":
+        bookings = storage.all_get_by(
+            Booking, customer_id=customer_id, is_use=True, is_paid="yes"
+        )
+        orders = storage.all_get_by(Order, customer_id=customer_id, is_paid=True)
 
     if not orders and not bookings:
         return jsonify([]), 200

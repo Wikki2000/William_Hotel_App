@@ -228,7 +228,7 @@ def book_room(user_id: str, user_role: str, room_number: str):
     booking_data = data.get("book")
 
     # Ensure that can't book room already in use 
-    if room.status == "occupied" or room.status == "reserved":
+    if room.status == "occupied":
         return jsonify({"error": f"Room {room.number} is occupied"}), 409
 
     customer = Customer(**customer_data)

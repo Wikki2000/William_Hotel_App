@@ -282,6 +282,65 @@ $(document).ready(function () {
         });
     });
 
+  // Show tables of different cart on click
+  $('#dynamic__load-dashboard')
+    .off('click', '.service__filter-btn')
+    .on('click', '.service__filter-btn', function() {
+      const $clickItem = $(this);
+      const clickItemId = $clickItem.attr('id');
+      const bookingId = $('#booking__id').val();
+      const customerId = $('#guest__lodged-id').val();
+
+      $clickItem.siblings().removeClass('highlight-btn');
+      $clickItem.addClass('highlight-btn');
+
+      let url;
+      if (clickItemId === 'servicelist__all--btn') {
+        url = (
+          API_BASE_URL + `/guests/${customerId}/${bookingId}/all/service-list`
+        );
+      } else if (clickItemId === 'servicelist__pending--btn') {
+        url = (
+          API_BASE_URL + `/guests/${customerId}/${bookingId}/pending/service-list`
+        );
+      } else if (clickItemId === 'servicelist__paid--btn') {
+        url = (
+          API_BASE_URL + `/guests/${customerId}/${bookingId}/paid/service-list`
+        );
+      }
+
+      fetchData(url)
+        .then(({ bookings, orders, bookings_amount, orders_amount }) => {
+          $('.order__history--table-body').empty();
+
+          if(bookings) {
+            bookings.forEach((booking) => {
+              const date = britishDateFormat(booking.created_at);
+              $('.order__history--table-body').append(
+                bookingServiceListTableTemplate(booking, date)
+              );
+            });
+          }
+
+          if(orders) {
+            orders.forEach((order) => {
+              const date = britishDateFormat(order.created_at);
+              $('.order__history--table-body').append(
+                orderHistoryTableTemplate(order, date)
+              );
+            });
+          }
+
+          const totalAmount = bookings_amount + orders_amount;
+
+          $('#total__service-charge--amount').text(totalAmount.toLocaleString());
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    })
+
+  // Load the service list of a room.
   $('#dynamic__load-dashboard').off('click', '.room__menu')
     .on('click', '.room__menu', function() {
       const $clickItem = $(this);
@@ -308,14 +367,9 @@ $(document).ready(function () {
           // Auto fill the form input to extend stay checkin date.
           $('input[name="checkin"]')
             .val(canadianDateFormat(new Date()));
-          /*
-          $('input[name="checkin"]')
-            .val(canadianDateFormat(booking.checkout));
-          $('input[name="checkin"]').prop('readonly', true);
-          */
 
           const orderUrl = (
-            API_BASE_URL + `/guests/${customer.id}/${booking.id}/service-list`
+            API_BASE_URL + `/guests/${customer.id}/${booking.id}/all/service-list`
           );
           fetchData(orderUrl)
             .then(({ bookings, orders, bookings_amount, orders_amount }) => {
@@ -587,10 +641,10 @@ $(document).ready(function () {
         ajaxRequest(url, 'POST', JSON.stringify(BookingData),
           (response) => {
             $button.prop('disable', false);
-            $('#main__popup-modal').hide();
+            $('#main__popup-modal').empty();
 
-            $('#order__confirmation-modal').empty();
-	    $('#late__checkout-popup--modal').empty();
+            $('#order__confirmation-modal').hide();
+            $('#late__checkout-popup--modal').hide();
 
             $('#guest__extend-stay--form').trigger('reset');
             $('#guest__extend-stay--modal').hide();
