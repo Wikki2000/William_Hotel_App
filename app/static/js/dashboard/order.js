@@ -50,7 +50,7 @@ $(document).ready(function() {
           ({ order, customer, ordered_by, cleared_by, order_items }
           ) => {
 
-            const date = britishDateFormat(order.updated_at);
+            const date = britishDateFormat(order.created_at);
             orderDetails(customer, order, order_items, cleared_by, ordered_by, date);
           })
         .catch((error) => {

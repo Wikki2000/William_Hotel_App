@@ -32,6 +32,7 @@ def get_orders(user_role: str, user_id: str):
     api_path = request.path
     try:
         start_date_obj = end_date_obj = TODAY_DATE
+        print(TODAY_DATE)
 
         orders = storage.get_by_date(
             Order, start_date_obj, end_date_obj, "created_at",
