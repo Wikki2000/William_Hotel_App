@@ -1,6 +1,7 @@
 import {
   updateElementCount, cartItemsTotalAmount, getBaseUrl, confirmationModal,
   validateForm, showNotification, ajaxRequest, fetchData, britishDateFormat,
+  getFormattedTime
 } from '../global/utils.js';
 import { orderDetails, orderHistoryTableTemplate } from '../global/templates1.js';
 
@@ -50,8 +51,11 @@ $(document).ready(function() {
           ({ order, customer, ordered_by, cleared_by, order_items }
           ) => {
 
-            const date = britishDateFormat(order.updated_at);
-            orderDetails(customer, order, order_items, cleared_by, ordered_by, date);
+            const date = britishDateFormat(order.created_at);
+	    const time = getFormattedTime(order.created_at);
+            orderDetails(
+	      customer, order, order_items, cleared_by, ordered_by, date, time
+	    );
           })
         .catch((error) => {
           console.log(error);
@@ -340,7 +344,6 @@ $(document).ready(function() {
         }
       }
     });
-
 
   // Update amount and count of quantity of items ordered
   $('#dynamic__load-dashboard').on('click', '.order__count-btn', function() {

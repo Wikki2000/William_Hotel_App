@@ -26,7 +26,7 @@ def get_users(user_role: str, user_id: str):
     if not users:
         return jsonify([]), 200
 
-    sorted_users = sorted(users, key=lambda user : user.rank_number)
+    sorted_users = sorted(users, key=lambda user : int(user.rank_number))
     return jsonify([user.to_dict() for user in sorted_users
                     if user.role != 'admin']), 200
 

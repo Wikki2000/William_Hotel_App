@@ -15,8 +15,6 @@ from models import storage
 from datetime import date, datetime
 
 
-TODAY_DATE = nigeria_today_date()
-CURRENT_TIME = time = datetime.now().strftime("%I:%M %p")
 ERROR_LOG_FILE = "logs/error.log"
 
 
@@ -29,6 +27,8 @@ def change_guest_room(
     user_role: str, user_id: str, old_room_number, new_room_number
 ):
     """Checkout guest to a different room."""
+    TODAY_DATE = nigeria_today_date()
+    CURRENT_TIME = time = datetime.now().strftime("%I:%M %p")
     old_room = storage.get_by(Room, number=old_room_number)
     new_room = storage.get_by(Room, number=new_room_number)
     if not old_room or not new_room:
@@ -55,6 +55,8 @@ def change_guest_room(
 @role_required(["manager", "admin", "staff"])
 def extend_guest_stay(user_role: str, user_id: str, room_id, customer_id):
     """Extend guest stay by placing new booking."""
+    TODAY_DATE = nigeria_today_date()
+    CURRENT_TIME = time = datetime.now().strftime("%I:%M %p")
     data = request.get_json()
     api_path = request.path
 
@@ -83,7 +85,7 @@ def extend_guest_stay(user_role: str, user_id: str, room_id, customer_id):
 
         if not transaction:
             transaction = Sale(
-                created_at=TODAY_DATE, entry_date=TODAY_DATE,
+                entry_date=TODAY_DATE,
                 room_sold=booking_data.get("amount")
             )
             storage.new(transaction)
@@ -123,6 +125,8 @@ def customer_service_list(
     customer_id: str, status: str
 ):
     """Retrieve all services given to a guest."""
+    TODAY_DATE = nigeria_today_date()
+    CURRENT_TIME = time = datetime.now().strftime("%I:%M %p")
     customer = storage.get_by(Customer, id=customer_id)
     if not customer:
         abort(404)

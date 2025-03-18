@@ -1,0 +1,2 @@
+ALTER TABLE bookings
+ADD COLUMN is_reserve TINYINT(1) NOT NULL DEFAULT 0;

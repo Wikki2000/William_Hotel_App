@@ -63,8 +63,10 @@ def room_number(user_role: str, user_id: str):
         return jsonify([]), 200
 
     sorted_rooms = sorted(rooms, key=lambda room : room.number)
-    return jsonify([room.number for room in sorted_rooms
-                    if room.status == "available"])
+    return jsonify([
+        room.number for room in sorted_rooms
+        if room.status == "available" or room.status == "reserved"
+    ]), 200
 
 
 @api_views.route("/rooms/<room_id>/edit", methods=["PUT"])
@@ -122,15 +124,18 @@ def get_rooms(user_role: str, user_id: str):
     if not rooms:
         return jsonify([]), 200
 
-    total_available_room = storage.count_by(Room, status="available")
-    total_reserved_room = storage.count_by(Room, status="reserved")
+    total_available_room = (
+        storage.count_by(Room, status="available") +
+        storage.count_by(Room, status="reserved")
+    )
+    #total_reserved_room = storage.count_by(Room, status="reserved")
 
     response = {
         "rooms": [room.to_dict() for room in sorted_rooms],
         "rooms_count": {
             "total_room": len(rooms),
             "total_available_room": total_available_room,
-            "total_reserved_room": total_reserved_room
+            #"total_reserved_room": total_reserved_room
         }
     }
     storage.close()

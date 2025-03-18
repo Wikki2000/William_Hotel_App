@@ -20,6 +20,7 @@ class Booking(BaseModel, Base):
     is_use = Column(Boolean, default=True)
     is_short_rest = Column(Boolean, default=False)
     is_late_checkout = Column(Boolean, default=False)
+    is_reserve = Column(Boolean, default=False)
     guest_number = Column(String(30), nullable=False)
     amount = Column(Float, nullable=False)
     customer_id = Column(

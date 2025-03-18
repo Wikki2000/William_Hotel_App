@@ -17,8 +17,6 @@ from datetime import datetime, date
 from models.receipt import Receipt
 
 
-TODAY_DATE = nigeria_today_date()
-CURRENT_TIME = time = datetime.now().strftime("%I:%M %p")
 ERROR_LOG_FILE = "logs/error.log"
 
 
@@ -26,6 +24,8 @@ ERROR_LOG_FILE = "logs/error.log"
 @role_required(["staff", "manager", "admin"])
 def bookings(user_id: str, user_role: str):
     """Fetch booking data"""
+    TODAY_DATE = nigeria_today_date()
+    CURRENT_TIME = time = datetime.now().strftime("%I:%M %p")
     api_path = request.path
     try:
         start_date_obj = end_date_obj = TODAY_DATE
@@ -65,6 +65,8 @@ def get_bookings_by_date(
     user_role: str, user_id: str, start_date: str, end_date: str
 ):
     """Retrieve bookings at any interval of time."""
+    TODAY_DATE = nigeria_today_date()
+    CURRENT_TIME = time = datetime.now().strftime("%I:%M %p")
     start_date_obj = datetime.strptime(start_date, "%Y-%m-%d")
     end_date_obj = datetime.strptime(end_date, "%Y-%m-%d")
 
@@ -104,6 +106,8 @@ def get_bookings_by_date(
 @role_required(["staff", "manager", "admin"])
 def booking_data_by_id(user_id: str, user_role: str, booking_id: str):
     """Fetch booking data of a particular room"""
+    TODAY_DATE = nigeria_today_date()
+    CURRENT_TIME = time = datetime.now().strftime("%I:%M %p")
     api_path = request.path
     try:
         book = storage.get_by(Booking, id=booking_id)
@@ -145,6 +149,8 @@ def booking_data_by_id(user_id: str, user_role: str, booking_id: str):
 @role_required(["staff", "manager", "admin"])
 def clear_booking_bill(user_id: str, user_role: str, booking_id: str):
     """Clear guest room booking bill."""
+    TODAY_DATE = nigeria_today_date()
+    CURRENT_TIME = time = datetime.now().strftime("%I:%M %p")
     booking = storage.get_by(Booking, id=booking_id)
     if not booking:
         abort(404)
@@ -170,6 +176,8 @@ def clear_booking_bill(user_id: str, user_role: str, booking_id: str):
 @api_views.route("/bookings/<booking_id>/edit", methods=["PUT"])
 @role_required(["staff", "manager", "admin"])
 def update_booking_data(user_id: str, user_role: str, booking_id: str):
+    TODAY_DATE = nigeria_today_date()
+    CURRENT_TIME = time = datetime.now().strftime("%I:%M %p")
     """Update guest data use in booking"""
     data = request.get_json()
     required_fields = ["customer", "booking", "room"]
@@ -212,6 +220,8 @@ def update_booking_data(user_id: str, user_role: str, booking_id: str):
 @role_required(["staff", "manager", "admin"])
 def book_room(user_id: str, user_role: str, room_number: str):
     """Book a room"""
+    TODAY_DATE = nigeria_today_date()
+    CURRENT_TIME = time = datetime.now().strftime("%I:%M %p")
     data = request.get_json()
     api_path = request.path
 
@@ -224,8 +234,29 @@ def book_room(user_id: str, user_role: str, room_number: str):
     if not user or not room:
         abort(404)
 
-    customer_data = data.get("customer")
+    customer_data = data.get("customer") 
     booking_data = data.get("book")
+
+    # Check that same room is not reserved same time
+    booking = storage.get_by(Booking, room_id=room.id, is_reserve=True)
+    checkin_date = booking_data.get("checkin")
+    checkout_date = booking_data.get("checkout") 
+
+    if (
+        room.status == "reserved" and 
+        booking.checkin.strftime("%Y-%m-%d") <= checkin_date
+        <= booking.checkout.strftime("%Y-%m-%d")
+    ):
+        msg = (
+            f"Room {room.number} already reserved for " +
+            f"{booking.customer.name} from {checkin_date} to " +
+            f"{checkout_date}. Please contact the management to cancel or " +
+            "adjust reservation date."
+        )
+        return jsonify({"error": msg}), 422
+
+    reserve_status = booking_data.get("is_reserve")
+    is_use = True if not reserve_status else False
 
     # Ensure that can't book room already in use 
     if room.status == "occupied":
@@ -237,10 +268,9 @@ def book_room(user_id: str, user_role: str, room_number: str):
     storage.save()
 
     book_attr = {
-        "checkin": booking_data.get("checkin"),
-        "checkout": booking_data.get("checkout"),
-        "duration": booking_data.get("duration"),
-        "is_paid": booking_data.get("is_paid"),
+        "checkin": checkin_date, "checkout": checkout_date,
+        "duration": booking_data.get("duration"), "is_reserve": reserve_status,
+        "is_paid": booking_data.get("is_paid"), "is_use": is_use,
         "customer_id": customer.id, "checkin_by_id": user.id,
         "guest_number": booking_data.get("guest_number"),
         "room_id": room.id, "amount": booking_data.get("amount"),
@@ -248,12 +278,13 @@ def book_room(user_id: str, user_role: str, room_number: str):
     }
 
     previous_room_sold = 0
-    receipt = None
+    receipt = sale = book = receipt = None
 
     try:
+        room_status = "occupied" if not reserve_status else "reserved"
         book = Booking(**book_attr)
         storage.new(book)
-        room.status = "occupied"   # Cheange room status once book
+        room.status = room_status   # Cheange room status once book
         storage.save()
 
         # Create receipt for every booking.
@@ -273,7 +304,10 @@ def book_room(user_id: str, user_role: str, room_number: str):
             sale.room_sold += booking_data.get("amount")
 
         storage.save()
-        return jsonify({"booking_id": book.id}), 200
+        return jsonify({
+            "booking_id": book.id, 
+            "is_reserve": book.is_reserve
+        }), 200
 
     except Exception as e:
         storage.delete_many([customer, book, receipt])

@@ -21,14 +21,14 @@ from datetime import datetime, date
 from random import randint
 
 
-TODAY_DATE = nigeria_today_date()
-CURRENT_TIME = time = datetime.now().strftime("%I:%M %p")
 ERROR_LOG_FILE = "logs/error.log"
 
 @api_views.route("/order-items")
 @role_required(["staff", "manager", "admin"])
 def get_orders(user_role: str, user_id: str):
     """Retrieve all order items"""
+    TODAY_DATE = nigeria_today_date()
+    CURRENT_TIME = time = datetime.now().strftime("%I:%M %p")
     api_path = request.path
     try:
         start_date_obj = end_date_obj = TODAY_DATE
@@ -75,6 +75,8 @@ def get_orders(user_role: str, user_id: str):
 @role_required(["staff", "manager", "admin"])
 def get_order(user_role: str, user_id: str, order_id: str):
     """Retrieve order by it ID"""
+    TODAY_DATE = nigeria_today_date()
+    CURRENT_TIME = time = datetime.now().strftime("%I:%M %p")
     api_path = request.path
     try:
         order = storage.get_by(Order, id=order_id)
@@ -127,6 +129,10 @@ def get_order(user_role: str, user_id: str, order_id: str):
 @role_required(["staff", "manager", "admin"])
 def update_status(user_role: str, user_id: str, order_id: str):
     """Clear Bill of Customer."""
+
+    TODAY_DATE = nigeria_today_date()
+    CURRENT_TIME = time = datetime.now().strftime("%I:%M %p")
+
     order = storage.get_by(Order, id=order_id)
     if not order:
         abort(404)
@@ -150,6 +156,8 @@ def update_status(user_role: str, user_id: str, order_id: str):
 @role_required(["staff", "manager", "admin"])
 def filter_orders(user_role: str, user_id: str, payment_status):
     """Filter ordered base on paid or pending payment."""
+    TODAY_DATE = nigeria_today_date()
+    CURRENT_TIME = time = datetime.now().strftime("%I:%M %p")
     api_path = request.path
     try:
         # Get all pending payment from databases
@@ -203,6 +211,8 @@ def filter_orders(user_role: str, user_id: str, payment_status):
 def get_order_by_date(
     user_role: str, user_id: str, start_date: str, end_date: str
 ):
+    TODAY_DATE = nigeria_today_date()
+    CURRENT_TIME = time = datetime.now().strftime("%I:%M %p")
     """Retrieve sales at any interval of time."""
     start_date_obj = datetime.strptime(start_date, "%Y-%m-%d")
     end_date_obj = datetime.strptime(end_date, "%Y-%m-%d")
@@ -240,6 +250,8 @@ def get_order_by_date(
 @role_required(["staff", "manager", "admin"])
 def order_items(user_role: str, user_id: str):
     """Store order details in database and track stock changes."""
+    TODAY_DATE = nigeria_today_date()
+    CURRENT_TIME = time = datetime.now().strftime("%I:%M %p")
     data = request.get_json()
     api_path = request.path
 
