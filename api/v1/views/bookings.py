@@ -19,7 +19,6 @@ from models.receipt import Receipt
 
 ERROR_LOG_FILE = "logs/error.log"
 
-
 @api_views.route("/bookings")
 @role_required(["staff", "manager", "admin"])
 def bookings(user_id: str, user_role: str):

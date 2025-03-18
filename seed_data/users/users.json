@@ -20,27 +20,6 @@
 	"performance": 50,
 	"rank_number": 1
     },
-   {
-        "title": "Mr.",
-        "password": "scrypt:32768:8:1$vBdmCvAurgedUtjL$057448039206298545c8ae2017a6d242c433d91bb11378758411b3400b45c1bb4603cee938fb4248e7fceb59eb86042526034bdf3f9b0666b54363205bf74a4d",
-        "first_name": "Victor",
-        "middle_name": "Ehis",
-        "last_name": "Osoba",
-        "username": "victor",
-        "email": "NILL",
-        "gender": "Male",
-        "dob": "1996-07-14",
-        "address": "22 Aaya Street",
-        "number": "08081274218",
-        "nok": "Joshua Osoba",
-        "nok_number": "NILL",
-        "religion": "Christian",
-        "state": "Edo",
-        "portfolio": "Housekeeper",
-	"role": "staff",
-	"performance": 50,
-	"rank_number": 4
-    },
     {
         "title": "Miss",
         "password": "scrypt:32768:8:1$sQn9zlv91JBBdvKR$5a2b9bdabda6762983e55df7347941597835b489c2379d9c568a0f28f5657e7d77f2cd54eafa5a2b8b404cd39c7911073160c2127df14f8046db782eee589317",

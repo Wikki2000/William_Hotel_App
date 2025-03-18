@@ -282,7 +282,7 @@ $(document).ready(function () {
         });
     });
 
-  // Show tables of different cart on click
+  // Filter service list base on payment status.
   $('#dynamic__load-dashboard')
     .off('click', '.service__filter-btn')
     .on('click', '.service__filter-btn', function() {
@@ -293,6 +293,8 @@ $(document).ready(function () {
 
       $clickItem.siblings().removeClass('highlight-btn');
       $clickItem.addClass('highlight-btn');
+
+      $('.order__history--table-body').empty();
 
       let url;
       if (clickItemId === 'servicelist__all--btn') {
@@ -311,8 +313,6 @@ $(document).ready(function () {
 
       fetchData(url)
         .then(({ bookings, orders, bookings_amount, orders_amount }) => {
-          $('.order__history--table-body').empty();
-
           if(bookings) {
             bookings.forEach((booking) => {
               const date = britishDateFormat(booking.created_at);
