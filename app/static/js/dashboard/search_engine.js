@@ -7,8 +7,28 @@ import  {
 } from '../global/templates.js';
 
 import  {
-    orderHistoryTableTemplate
+  orderHistoryTableTemplate, drinkTableTemplate, foodTableTemplate
 } from '../global/templates1.js';
+
+
+function searchFoodDrinkStock(stockList, searchKey) {
+
+  if (searchKey) {
+    const searchItems = stockList.filter(
+      item => item.name.toLowerCase().includes(searchKey)
+    );
+
+    //  Return the search items if found.
+    //  Else return all the stock.
+    if (searchItems) {
+      return searchItems;
+    } else {
+      return [];
+    }
+  } else {
+    return stockList;
+  }
+}
 
 $(document).ready(function() {
 
@@ -17,6 +37,7 @@ $(document).ready(function() {
   $('#search__bar').on('click', function(){
     const currentPageId = sessionStorage.getItem('pageId');
     const searchString = $('input[name="Search Input"]').val();
+	  alert(currentPageId);
 
     switch (currentPageId) {
       case 'sidebar__guest': {
@@ -44,8 +65,10 @@ $(document).ready(function() {
       }
       case 'sidebar__order': {
         const orderUrl = API_BASE_URL + `/order-items?search_string=${searchString}`;
-
         $('.order__history--table-body').empty();
+        $('.order_history-title').text('Guest Unpaid Bill'); 
+        $('.order__filter').removeClass('highlight-btn');
+        $('#order__filter-pending').addClass('highlight-btn');
         fetchData(orderUrl)
         .then((orders) => {
           orders.forEach(({ order, customer }) => {
@@ -60,6 +83,67 @@ $(document).ready(function() {
         });
         break;
       }
+        /*
+      case 'inventoryFoodList': {
+        const cacheItemStr = sessionStorage.getItem('cacheInventoryData');
+        const itemList = JSON.parse(cacheItemStr);
+
+        data.forEach((food, index) => {
+          const date = britishDateFormat(food.updated_at);
+          $('#food__table-body')
+            .append(foodTableTemplate(index, food, date));
+        });
+        break;
+      }
+      case 'inventoryDrinkList': {
+        const cacheItemStr = sessionStorage.getItem('cacheInventoryData');
+        const itemList = JSON.parse(cacheItemStr);
+
+        searchFoodDrinkStock(itemList)
+        data.forEach((drink, index) => {
+          const date = britishDateFormat(drink.updated_at);
+          $('#drink__stock-table--body')
+            .append(drinkTableTemplate(index, drink, date));
+        });
+        break;
+      }
+      */
     }
+  });
+
+  // Filter on input of each text
+  $('input[name="Search Input"]').on('input', function() {
+    const currentPageId = sessionStorage.getItem('pageId');
+    const cacheItemStr = sessionStorage.getItem('cacheInventoryData');
+    const stockList = JSON.parse(cacheItemStr);
+
+    const searchKey = $('input[name="Search Input"]')
+      .val().trim().toLowerCase();
+
+    switch (currentPageId) {
+      case 'inventoryFoodList': {
+        const searchStockList = searchFoodDrinkStock(stockList, searchKey);
+
+        $('#food__table-body').empty();
+        searchStockList.forEach((food, index) => {
+          const date = britishDateFormat(food.updated_at);
+          $('#food__table-body')
+            .append(foodTableTemplate(index, food, date));
+        });
+        break;
+      }
+      case 'inventoryDrinkList': {
+        const searchStockList = searchFoodDrinkStock(stockList, searchKey);
+
+        $('#drink__stock-table--body').empty();
+        searchStockList.forEach((drink, index) => {
+          const date = britishDateFormat(drink.updated_at);
+          $('#drink__stock-table--body')
+            .append(drinkTableTemplate(index, drink, date));
+        });
+        break;
+      }
+    }
+
   });
 });
