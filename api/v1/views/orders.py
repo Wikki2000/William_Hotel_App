@@ -41,6 +41,7 @@ def get_orders(user_role: str, user_id: str):
             )
         else:
             guests = storage.get_start_with(Customer, "name", search_string)
+
             for guest in guests:
                 order = storage.get_by(Order, customer_id=guest.id, is_paid=False)
                 if order: orders.append(order)
