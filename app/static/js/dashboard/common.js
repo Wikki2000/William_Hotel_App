@@ -30,4 +30,12 @@ $(document).ready(function() {
     $clickItem.closest('td').find('.fa.fa-ellipsis-v').show();
     $clickItem.closest('td').siblings('.manage').hide();
   });
+
+  // Use the class (ensure__sentence-case) for the input to change to sentence case.
+  $('#dynamic__load-dashboard').off('change', '.ensure__sentence-case')
+    .on('change', '.ensure__sentence-case', function() {           
+      const text = $('.ensure__sentence-case').val();
+      const sentenceCase = text[0].toUpperCase() + text.slice(1);
+      $('.ensure__sentence-case').val(sentenceCase);
+    }); 
 });

@@ -43,9 +43,16 @@ def get_orders(user_role: str, user_id: str):
             guests = storage.get_start_with(Customer, "name", search_string)
 
             for guest in guests:
-                order = storage.get_by(Order, customer_id=guest.id, is_paid=False)
-                if order: orders.append(order)
-            
+
+                # Retrieve orders made by a guest corresponding to search string
+                # Many orders can be made by one guest.
+                orders_by_guest = storage.all_get_by(
+                    Order, customer_id=guest.id, is_paid=False
+                )
+
+                for order in orders_by_guest:
+                    orders.append(order)
+
         if not orders:
             return jsonify([]), 200
 

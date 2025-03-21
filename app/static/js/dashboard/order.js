@@ -224,8 +224,9 @@ $(document).ready(function() {
       }
     } else if (clickId === 'order__history') {
       $('#order__history-section').show();
-	    $('.order__filter').removeClass('highlight-btn');
+      $('.order__filter').removeClass('highlight-btn');
       $('#order__filter-all').addClass('highlight-btn');
+	     $('.order_history-title ').text('Today Order List');
 
       $('.order__history--table-body').empty();
 

@@ -93,10 +93,6 @@ $(document).ready(function() {
     $('input[name="Search Input"]').attr('placeholder', 'Search');
     $('input[name="Search Input"]').val('');
 
-    // Remove stored items for dashboard section(s)
-    localStorage.removeItem('restaurant');
-
-
     $clickItem.siblings().removeClass('highlight-sidebar');
     $clickItem.addClass('highlight-sidebar');
 
@@ -113,8 +109,10 @@ $(document).ready(function() {
 
     }
 
-    // Remove data set to auto-fill booking page.
-    sessionStorage.removeItem('guestData');
+    // Remove all cache data when loading different page..
+    sessionStorage.removeItem('guestData');  // Set in guest_list.js to auto-fill booking form
+    sessionStorage.getItem('cacheInventoryData');  // Set in 
+    localStorage.removeItem('restaurant');
 
     switch(clickId) {
       case 'sidebar__main': {
