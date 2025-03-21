@@ -1,0 +1,24 @@
+11:47 PM	2025-03-20	/api/v1/bookings	name 'search_string' is not defined
+
+11:53 PM	2025-03-20	/api/v1/bookings	name 'inspect' is not defined
+
+11:54 PM	2025-03-20	/api/v1/bookings	Field name does not exist in Booking
+
+12:00 AM	2025-03-21	/api/v1/bookings	Neither 'Function' object nor 'Comparator' object has an attribute 'startawith'
+
+12:01 AM	2025-03-21	/api/v1/bookings	Neither 'Function' object nor 'Comparator' object has an attribute 'startawith'
+
+12:46 AM	2025-03-21	/api/v1/order-items	name 'booking' is not defined
+
+12:46 AM	2025-03-21	/api/v1/order-items	'NoneType' object has no attribute 'customer'
+
+12:48 AM	2025-03-21	/api/v1/order-items	'NoneType' object has no attribute 'customer'
+
+12:49 AM	2025-03-21	/api/v1/order-items	'NoneType' object has no attribute 'customer'
+
+12:50 AM	2025-03-21	/api/v1/order-items	'NoneType' object has no attribute 'customer'
+
+12:52 AM	2025-03-21	/api/v1/order-items	'NoneType' object has no attribute 'customer'
+
+12:52 AM	2025-03-21	/api/v1/order-items	'NoneType' object has no attribute 'customer'
+

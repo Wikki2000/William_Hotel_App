@@ -287,6 +287,10 @@ def check_out(user_id: str, user_role: str, room_id: str, customer_id: str):
         if not booking.checkout_by_id:
             booking.checkout_by_id = user_id
 
+    # Change room status to "reserved" if any reserve booking.
+    bookings = storage.all_get_by(Booking, room_id=room_id, is_reserve=True)
+    if bookings:
+        room.status = "reserved"
 
     storage.save()
     return jsonify({"message": "Checkout Successful"}), 201

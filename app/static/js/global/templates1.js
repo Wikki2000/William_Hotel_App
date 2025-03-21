@@ -432,10 +432,14 @@ export function orderHistoryTableTemplate(order, date, customer = null) {
   const hideClass = customer ? '' : 'hide';
   const customerName = customer ? customer.name : 'Guest Ordered';
 
+  const sliceName = (
+    customerName.length >= 14 ? `${customerName.slice(0, 15)}...` : customerName
+  );
+
   const row = `
 <tr data-id="${order.id}">
     <td class="">
-      <p class="ui text size-textmd">${customerName}</p>
+      <p title="${customerName}" class="ui text size-textmd">${sliceName}</p>
     </td>
     <td>
       <p class="ui text size-textmd">${date}</p>

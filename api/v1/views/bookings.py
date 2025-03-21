@@ -9,7 +9,7 @@ from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import (
     bad_request, role_required, create_receipt, nigeria_today_date,
-    write_to_file, 
+    write_to_file, check_reservation
 )
 from models import storage
 from sqlalchemy.exc import IntegrityError
@@ -18,6 +18,56 @@ from models.receipt import Receipt
 
 
 ERROR_LOG_FILE = "logs/error.log"
+
+
+@api_views.route(
+    "/bookings/<string:booking_id>/update-reservation-status", methods=["PUT"]
+)
+@role_required(["staff", "manager", "admin"])
+def update_booking_status(user_id: str, user_role: str, booking_id: str):
+    """Fetch booking data of a particular room"""
+    TODAY_DATE = nigeria_today_date()
+    CURRENT_TIME = time = datetime.now().strftime("%I:%M %p")
+    api_path = request.path
+    book = None
+    room_status =""
+    try:
+
+        book = storage.get_by(Booking, id=booking_id)
+        if not book:
+            abort(404)
+
+        checkin_date = book.checkin 
+        checkout_date = book.checkout
+        room_status = book.room.status
+        if checkin_date <= TODAY_DATE <= checkout_date:
+            book.is_reserve = False 
+            book.is_use = True
+            book.updated_at = TODAY_DATE 
+
+            book.room.status = "occupied"
+            storage.save()
+            return jsonify({"msg": "Booking Status Update Successfully"}), 200
+        else:
+            msg = (
+                "Guest can only be check-in during reservation duration " +
+                f"within {checkin_date} to {checkout_date}. Please contact " +
+                "management for change of date"
+            )
+            return jsonify({"error": msg}), 422
+        
+    except Exception as e:
+        book.is_reserve = True
+        book.is_use = False
+        book.room.status = room_status
+
+        print(str(e))                                                               
+        error = f"{CURRENT_TIME}\t{TODAY_DATE}\t{api_path}\t{str(e)}\n\n"
+        write_to_file(ERROR_LOG_FILE, error)
+        return jsonify({"error": str(e)}), 500
+    finally:
+        storage.close()
+
 
 @api_views.route("/bookings")
 @role_required(["staff", "manager", "admin"])
@@ -28,16 +78,24 @@ def bookings(user_id: str, user_role: str):
     api_path = request.path
     try:
         start_date_obj = end_date_obj = TODAY_DATE
+        search_string = request.args.get('search_string');
 
-        books = storage.get_by_date(
-            Booking, start_date_obj, end_date_obj, "created_at",
-        )
+        books = []
+
+        if not search_string:
+            books = storage.get_by_date(
+                Booking, start_date_obj, end_date_obj, "created_at",
+            )
+        else:
+            guests = storage.get_start_with(Customer, "name", search_string)
+            for guest in guests:
+                booking = storage.get_by(Booking, customer_id=guest.id)
+                if booking: books.append(booking)
+            
         if not books:
             return jsonify([]), 200
 
-        sorted_books = sorted(
-            books, key=lambda book : book.updated_at, reverse=True
-        )
+        sorted_books = sorted(books, key=lambda book : book.updated_at)
 
         response = [{
             "booking": booking.to_dict(),
@@ -162,6 +220,7 @@ def clear_booking_bill(user_id: str, user_role: str, booking_id: str):
     if not booking.checkout_by_id:
         booking.checkout_by_id = user_id
         storage.save()
+        storage.close()
         return jsonify({"message": "Bill Clear Successfully"}), 201
     else:
         name = (
@@ -169,6 +228,7 @@ def clear_booking_bill(user_id: str, user_role: str, booking_id: str):
             else f"{booking.checkout_by.first_name} {booking.checkout_by.last_name}"
         )
         storage.rollback()
+        storage.close()
         return jsonify({"error": f"Bill Already Cleared by {name} !"}), 409
 
 
@@ -237,22 +297,14 @@ def book_room(user_id: str, user_role: str, room_number: str):
     booking_data = data.get("book")
 
     # Check that same room is not reserved same time
-    booking = storage.get_by(Booking, room_id=room.id, is_reserve=True)
     checkin_date = booking_data.get("checkin")
     checkout_date = booking_data.get("checkout") 
 
-    if (
-        room.status == "reserved" and 
-        booking.checkin.strftime("%Y-%m-%d") <= checkin_date
-        <= booking.checkout.strftime("%Y-%m-%d")
-    ):
-        msg = (
-            f"Room {room.number} already reserved for " +
-            f"{booking.customer.name} from {checkin_date} to " +
-            f"{checkout_date}. Please contact the management to cancel or " +
-            "adjust reservation date."
-        )
-        return jsonify({"error": msg}), 422
+    bookings = storage.all_get_by(Booking, room_id=room.id, is_reserve=True)
+
+    resarvation_error_msg = check_reservation(bookings, checkout_date, checkin_date, room.number)
+    if resarvation_error_msg:
+        return jsonify(resarvation_error_msg), 422
 
     reserve_status = booking_data.get("is_reserve")
     is_use = True if not reserve_status else False

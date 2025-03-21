@@ -83,9 +83,11 @@ $(document).ready(function() {
     $clickItem.css('color', 'white');
     $('.notifications-dropdown').removeClass('hidden');
   });
-  $('.sidebar__nav-icon').click(function() {
+  $('.sidebar__nav-icon').off('click').on('click', function() {
     const $clickItem = $(this);
     const clickId = $clickItem.attr('id');
+
+    sessionStorage.setItem('pageId', clickId);
 
     // The default search bar placeholder
     $('input[name="Search Input"]').attr('placeholder', 'Search');
@@ -110,6 +112,9 @@ $(document).ready(function() {
       $(this).addClass('highlight-sidebar');
 
     }
+
+    // Remove data set to auto-fill booking page.
+    sessionStorage.removeItem('guestData');
 
     switch(clickId) {
       case 'sidebar__main': {
@@ -242,6 +247,10 @@ $(document).ready(function() {
           const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
           const bookingUrl = API_BASE_URL + '/bookings';
           const $tableBody = $(".guest-table-body");
+
+          $('input[name="Search Input"]')
+            .attr('placeholder', 'Search for Guest Name');
+
           // Prevent staff from getting sales at an interval of time.
           /*
           if (USER_ROLE === 'staff') {
@@ -274,7 +283,7 @@ $(document).ready(function() {
             .attr('placeholder', 'Search for Foods & Drinks');
 
           // Search an Item in restaurants
-          function searchFoodDrink(is_food      ) {
+          function searchFoodDrink(is_food) {
             $('input[name="Search Input"]').on('input', function() {
               const restaurants = JSON.parse(localStorage.getItem('restaurant'));
               const searchKey = $('input[name="Search Input"]')
@@ -359,6 +368,10 @@ $(document).ready(function() {
       }
       case 'sidebar__order': {
         const url = APP_BASE_URL + '/pages/order';
+
+	$('input[name="Search Input"]')                                                                                                                                
+	  .attr('placeholder', 'Search for Guest Orders');
+
         $('#dynamic__load-dashboard').load(url, function() {
 
           $('.order__empty-cart').hide();
@@ -397,8 +410,8 @@ $(document).ready(function() {
       case 'sidebar__staff-management': {
         const url = APP_BASE_URL + '/pages/staff_management';
         $('#dynamic__load-dashboard').load(url, function() {
-          const userUrl = API_BASE_URL + '/users';
 
+          const userUrl = API_BASE_URL + '/users';
           fetchData(userUrl)
             .then((response) => {
               response.forEach((data) => {
