@@ -9,7 +9,7 @@ from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import (
     create_receipt, bad_request, role_required, nigeria_today_date,
-    write_to_file
+    check_reservation, write_to_file
 )
 from models import storage
 from datetime import date, datetime
@@ -64,6 +64,14 @@ def extend_guest_stay(user_role: str, user_id: str, room_id, customer_id):
     error_response = bad_request(data, required_fields)
     if error_response:
         abort(400)
+
+    bookings = storage.all_get_by(Booking, room_id=room_id, is_reserve=True)
+    room = storage.get_by(Room, id=room_id)
+    checkout_date = data.get("checkout")
+    checkin_date = data.get("checkin")
+    resarvation_error_msg = check_reservation(bookings, checkout_date, checkin_date, room.number)
+    if resarvation_error_msg:
+        return jsonify(resarvation_error_msg), 422
 
     data.update({
         "room_id": room_id, "customer_id": customer_id, "checkin_by_id": user_id

@@ -276,7 +276,14 @@ export function leaveListTableTemplate(data, date) {
 export function guestListTableTemplate(guest, booking, room, date) {
 
   const time = booking.amount === 5000 ? 'Hours' : 'Night(s)';
-  const row = `<tr>
+
+  const bookingStatus = booking.is_reserve ? 'Reserved' : 'Booked';
+  const bookingStatusColor = booking.is_reserve ? 'red' : 'green';
+  const bookingText = booking.is_reserve ? 'Check-in Guest' : 'Select Guest';
+  const bookingIcon = booking.is_reserve ? 'fa fa-sign-in-alt' : 'fa fa-user';
+  const bookingReserve = booking.is_reserve ? 'reserve' : 'book';
+
+  const row = `<tr data-id="${booking.id}">
     <td class="guest-name">
       <div class="featured">
         <p>${guest.name}</p>
@@ -297,6 +304,9 @@ export function guestListTableTemplate(guest, booking, room, date) {
     <td class="">
       <p class="ui text size-textmd">${date.checkoutDate}</p>
     </td>
+    <td class=""> 
+      <p style="color: ${bookingStatusColor};" class="booking-status ui text size-textmd">${bookingStatus}</p> 
+    </td>
     <td class="">
       <p class="ui text size-textmd">₦${booking.amount.toLocaleString()}</p>
     </td>
@@ -310,6 +320,10 @@ export function guestListTableTemplate(guest, booking, room, date) {
           <li data-id="${booking.id}" class="manage__item guest__list-bookDetail guest__listMenu">
             <i class="fa fa-eye"></i>Booking Details
           </li>
+	  <li data-id="${booking.id}"  class="manage__item guest__list-bookReserve guest__listMenu"">
+	    <input class="bookingReserveOption" value="${bookingReserve}" type="hidden" \>
+	    <i class="${bookingIcon}"></i><span>${bookingText}</span>
+	  </li>
           <li data-id="${booking.id}" class="manage__item guest__listEdit  guest__listMenu">
             <i class="fa fa-edit"></i>Edit Data
           </li>

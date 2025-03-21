@@ -32,12 +32,19 @@ def get_orders(user_role: str, user_id: str):
     api_path = request.path
     try:
         start_date_obj = end_date_obj = TODAY_DATE
-        print(TODAY_DATE)
+        search_string = request.args.get('search_string');
+        orders = []
 
-        orders = storage.get_by_date(
-            Order, start_date_obj, end_date_obj, "created_at",
-        )
-
+        if not search_string:
+            orders = storage.get_by_date(
+                Order, start_date_obj, end_date_obj, "created_at",
+            )
+        else:
+            guests = storage.get_start_with(Customer, "name", search_string)
+            for guest in guests:
+                order = storage.get_by(Order, customer_id=guest.id)
+                if order: orders.append(order)
+            
         if not orders:
             return jsonify([]), 200
 
@@ -171,7 +178,8 @@ def filter_orders(user_role: str, user_id: str, payment_status):
                     all_pending_orders,
                     key=lambda order : order.updated_at,
                     reverse=True
-                                                                                                )
+                                                                                                
+                )
                 response = [{
                     "order": order.to_dict(),
                     "customer": order.customer.to_dict(),

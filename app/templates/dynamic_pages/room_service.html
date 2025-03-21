@@ -216,7 +216,10 @@
     <div class="total-charge">
       <h4 class="charge"><em>Total Charge</em></h4>
       <h4 class="amount">
-        <em>₦<span id="total__service-charge--amount">0.00</span></em>
+        <em>
+	  <span id="service__dollar-sign">₦</span>
+	  <span id="total__service-charge--amount">0.00</span>
+	</em>
       </h4>
     </div>
 
@@ -266,7 +269,7 @@
       <b>Check In: 
         <span class="important">*</span>
       </b> &nbsp;&nbsp;&nbsp;
-      <input type="date" name="checkin" required><br><br>
+      <input type="date" name="checkin" required readonly \><br><br>
       <b>Check Out: 
         <span class="important">*</span></b> &nbsp;
       <input type="date" name="checkout" required></br><br>

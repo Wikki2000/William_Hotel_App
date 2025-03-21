@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """This module models the storage of the authentication API"""
-from sqlalchemy import create_engine, func, or_, update, cast, Date, and_
+from sqlalchemy import create_engine, func, or_, update, cast, Date, and_, inspect
 from sqlalchemy.orm import sessionmaker, scoped_session
 
 from models.base_model import Base
@@ -130,6 +130,20 @@ class Storage:
         """
         obj = self.__session.query(cls).filter_by(**kwargs).all()
         return obj
+
+    def get_start_with(self, cls, field, prefix):
+        mapper = inspect(cls)
+        
+        if field not in mapper.columns:
+            msg = (
+                f"Field {field} does not exist in {cls.__name__}"
+            )
+            raise ValueError(msg)
+        column = getattr(cls, field)
+        obj_list = self.__session.query(cls).filter(
+            column.ilike(f"%{prefix}%")
+        ).all()
+        return obj_list
 
     def count_by(self, cls, **kwargs):
         """Count an instance with an arbituary fields/values.

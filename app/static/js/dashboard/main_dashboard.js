@@ -17,6 +17,23 @@ $(document).ready(function() {
   const APP_BASE_URL = getBaseUrl()['appBaseUrl'];
   const USER_ROLE = localStorage.getItem('role');
 
+  // Auto-fill booking page with guest data selected in guestlist.
+  const guestDataStr = sessionStorage.getItem('guestData');
+  if (guestDataStr) {
+    const guestData = JSON.parse(guestDataStr);
+    $('#main__guest-name').val(guestData.name);
+    $('#main__guest-phone').val(guestData.phone);
+    $('#main__guest-address').val(guestData.address);
+    $('#main__guest-email').val(guestData.email);
+    $('#main__id--no-val').val(guestData.id_numbe);
+
+    $('#main__guest--gender-val').val(guestData.gender);
+    $('#main__guest-gender span').text(guestData.gender);
+
+    $('#main__id--type-val').val(guestData.id_typ);
+    $('#main__guest-id--type span').text(guestData.id_typ); 
+  }
+
   // Function to fetch rooms data
   async function getRoom() {
     try {
@@ -121,8 +138,10 @@ $(document).ready(function() {
           (response) => {
             $button.prop('disable', false);
             $('#main__popup-modal').hide();
+
+	    const reserveOrBookText = response.is_reserve ? 'reserved' : 'booked';
             const msg = (
-              `Success! Room [${roomNumber}] has been booked for ${name}`
+              `Success! Room [${roomNumber}] has been ${reserveOrBookText} for ${name}`
             );
             showNotification(msg);
 
@@ -131,6 +150,9 @@ $(document).ready(function() {
               updateElementCount($('#main__room-available'));
               updateElementCount($('#main__today-check--in'), true);
             }
+
+	    // Remove guest data if selected from guest list.
+	    sessionStorage.removeItem('guestData');
 
             // Print receipt immediately room is book.
             const bookingId = response.booking_id;
@@ -167,7 +189,6 @@ $(document).ready(function() {
       const $clickItem = $(this);
       const clickId = $clickItem.attr('id');
 
-
       switch(clickId) {
         case 'main__dropdown--room-no': {
           //const roomUrl = API_BASE_URL + '/rooms/available/filter';
@@ -186,6 +207,9 @@ $(document).ready(function() {
             return;
           } else if (bookingType === 'full time' && !$('#main__checkout-date').val()) {
             showNotification('Please enter Checkout date', true);
+            return;
+          } else if ($('#main__check-in').val() < canadianDateFormat(new Date()) && bookingType === 'full time') {
+            showNotification('Check-in date must be earlier than today\'s date', true);
             return;
           }
 

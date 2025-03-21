@@ -1,7 +1,7 @@
 import {
   updateElementCount, cartItemsTotalAmount, getBaseUrl, confirmationModal,
   validateForm, showNotification, ajaxRequest, fetchData, britishDateFormat,
-  getFormattedTime
+  getFormattedTime, canadianDateFormat
 } from '../global/utils.js';
 import { orderDetails, orderHistoryTableTemplate } from '../global/templates1.js';
 
@@ -52,10 +52,10 @@ $(document).ready(function() {
           ) => {
 
             const date = britishDateFormat(order.created_at);
-	    const time = getFormattedTime(order.created_at);
+            const time = getFormattedTime(order.created_at);
             orderDetails(
-	      customer, order, order_items, cleared_by, ordered_by, date, time
-	    );
+              customer, order, order_items, cleared_by, ordered_by, date, time
+            );
           })
         .catch((error) => {
           console.log(error);
@@ -224,6 +224,7 @@ $(document).ready(function() {
       }
     } else if (clickId === 'order__history') {
       $('#order__history-section').show();
+	    $('.order__filter').removeClass('highlight-btn');
       $('#order__filter-all').addClass('highlight-btn');
 
       $('.order__history--table-body').empty();
@@ -234,10 +235,13 @@ $(document).ready(function() {
         $('#inventory__filter-form').hide();
       }*/
 
-      const orderUrl = API_BASE_URL + '/order-items';
+      //const orderUrl = API_BASE_URL + '/order-items';
+      const startDate = canadianDateFormat(new Date());
+      const endDate = canadianDateFormat(new Date());
+      const orderUrl = API_BASE_URL + `/orders/${startDate}/${endDate}/get`
       fetchData(orderUrl)
-        .then((data) => {
-          data.forEach(({ order, customer }) => {
+        .then(({ orders }) => {
+          orders.forEach(({ order, customer }) => {
             const date = britishDateFormat(order.created_at);
             $('.order__history--table-body').append(
               orderHistoryTableTemplate(order, date, customer)
@@ -259,10 +263,13 @@ $(document).ready(function() {
     switch (clickId) {
       case 'order__filter-all': {
         $('.order_history-title ').text('Today Order List');
-        const orderUrl = API_BASE_URL + '/order-items';
-        fetchData(orderUrl)
-        .then((data) => {
-          data.forEach(({ order, customer, user }) => {
+        //const orderUrl = API_BASE_URL + '/order-items';
+        const startDate = canadianDateFormat(new Date());    
+        const endDate = canadianDateFormat(new Date()); 
+        const orderUrl = API_BASE_URL + `/orders/${startDate}/${endDate}/get`;
+        fetchData(orderUrl)                                                
+        .then(({ orders }) => {     
+          orders.forEach(({ order, customer }) => { 
             const date = britishDateFormat(order.created_at);
             $('.order__history--table-body').append(
               orderHistoryTableTemplate(order, date, customer)
@@ -277,7 +284,7 @@ $(document).ready(function() {
         const orderPendingPaymentUrl = API_BASE_URL + '/orders/pending';
         fetchData(orderPendingPaymentUrl)
         .then((data) => {
-	    $('.order_history-title ').text('All Pending Orders');
+          $('.order_history-title ').text('All Pending Orders');
           data.forEach(({ order, customer, user }) => {
             const date = britishDateFormat(order.created_at);
             $('.order__history--table-body').append(
@@ -533,7 +540,7 @@ $(document).ready(function() {
             $('#expenditure__total__amount-entry').text(0);
             return;
           }
-	  $('.order_history-title ').text(
+          $('.order_history-title ').text(
             `${startDateFormated} to ${endDateFormated} History`
           );
 

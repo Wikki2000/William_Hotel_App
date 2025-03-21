@@ -2,7 +2,7 @@
 """Maintenance Module"""
 from models.base_model import Base, BaseModel
 from sqlalchemy import (
-    Boolean, Column, String, Integer, ForeignKey, LargeBinary, Text
+    Boolean, Column, String, Integer, ForeignKey, Text
 )
 from sqlalchemy.dialects.mysql import LONGBLOB
 

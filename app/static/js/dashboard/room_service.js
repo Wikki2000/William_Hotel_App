@@ -2,7 +2,7 @@ import {
   ajaxRequest, getBaseUrl, validateForm, getFormDataAsDict,
   confirmationModal, displayMenuList, showNotification, fetchData,
   previewImageAndReurnBase64, britishDateFormat, togleTableMenuIcon,
-  canadianDateFormat
+  canadianDateFormat, closeConfirmationModal
 } from '../global/utils.js';
 import { displayRoomData, roomTableTemplate } from '../global/templates.js';
 import {
@@ -36,6 +36,15 @@ $(document).ready(function () {
       if (clickId === 'rooms') {
         $('#rooms-section').show();
         $('#rooms').addClass('highlight-btn');
+
+
+        // Always highlight the "all" filter.
+        const $roomsFilterId = $(
+          '#all__rooms, #rooms__occupied, #rooms__available, #rooms__reserved'
+        );
+        $roomsFilterId.removeClass('highlight-btn');
+        $('#all__rooms').addClass('highlight-btn');
+
       }
       else if (clickId === 'services') {
         $('#services-section').show();
@@ -333,7 +342,13 @@ $(document).ready(function () {
 
           const totalAmount = bookings_amount + orders_amount;
 
-          $('#total__service-charge--amount').text(totalAmount.toLocaleString());
+          if (!isNaN(totalAmount)) {
+            $('#total__service-charge--amount')
+              .text(`₦${totalAmount.toLocaleString()}`);
+          } else {
+            $('#service__dollar-sign').text('');
+            $('#total__service-charge--amount').text('');
+          }
         })
         .catch((error) => {
           console.log(error);
@@ -345,7 +360,12 @@ $(document).ready(function () {
     .on('click', '.room__menu', function() {
       const $clickItem = $(this);
       const roomNumber =  $clickItem.text();
+
       $('#room__number-dropdown').hide();
+
+      // Highligt the all button when select room number.
+      $('.service__filter-btn').removeClass('highlight-btn');
+      $('#servicelist__all--btn.service__filter-btn').addClass('highlight-btn');
 
       const selectedRoomUrl =  (
         API_BASE_URL + `/rooms/${roomNumber}/booking-data`
@@ -594,7 +614,6 @@ $(document).ready(function () {
     .on('click', '.guest__extend-stay--confirm, .confirm__late-checkout--btn',
       function() {
         const $clickItem = $(this);
-
         const customerId = $('#guest__lodged-id').val();
         const roomId = $('#guest__lodged-room--id').val();
 
@@ -607,6 +626,8 @@ $(document).ready(function () {
         const url = (
           API_BASE_URL + `/guests/${customerId}/rooms/${roomId}/extend-stay`
         );
+
+        closeConfirmationModal();
 
         if (!is_paid) {
           const msg = (
@@ -626,11 +647,16 @@ $(document).ready(function () {
           // Get total amount of room book base on night durations.
           const roomRate = $('#room__price-val').val();
           amount = duration * roomRate;
+
+          $('#guest__extend-stay--modal').hide();
+          $('#guest__ispaid span').text('Select');
         } else if ($clickItem.hasClass('confirm__late-checkout--btn')) {
           is_late_checkout = true;
           amount = LATE_CHECK_OUT_AMOUNT;
           duration = LATE_CHECK_OUT_DURATION;
           checkout = checkin = canadianDateFormat(new Date());
+
+          $('#late__checkout-popup--modal').hide();
         }
 
         const BookingData = {
@@ -641,13 +667,11 @@ $(document).ready(function () {
         ajaxRequest(url, 'POST', JSON.stringify(BookingData),
           (response) => {
             $button.prop('disable', false);
-            $('#main__popup-modal').empty();
-
-            $('#order__confirmation-modal').hide();
-            $('#late__checkout-popup--modal').hide();
 
             $('#guest__extend-stay--form').trigger('reset');
-            $('#guest__extend-stay--modal').hide();
+            $('#guest__extend-stay--form input[name="checkin"]')
+              .val(canadianDateFormat(new Date()));
+
             const msg = (
               `Duration of guest extended by ${duration} Night(s)`
             );
@@ -674,10 +698,11 @@ $(document).ready(function () {
             $button.prop('disable', false);
             if (error.status === 409) {
               showNotification('Error! ' +  error.responseJSON.error, true);
+            } else if (error.status === 422) {
+              showNotification('Error! ' +  error.responseJSON.error, true);
             } else {
               showNotification('An Error occured. Try Again !', true);
             }
-            $('#main__popup-modal').hide();
           }
         );
       });

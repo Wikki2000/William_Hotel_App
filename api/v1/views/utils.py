@@ -329,6 +329,38 @@ def create_receipt(attr_str: str, obj_id: str) -> Optional[Receipt]:
     return receipt
 
 
+def check_reservation(obj_list, checkout_date, checkin_date, room_no):
+    """ 
+    Check if there is reservation for a room with a set time.
+
+    :obj_list - The list of all reserved room.
+    :checkout_date - The booking check out date.
+    :checkout_in_date - The booking check im date. 
+    :room_no - The room number to check for reservation.
+
+    :rtype - The message string of reservation found.
+    """
+    if not checkin_date or not checkout_date or not obj_list:
+        return None
+    for booking in obj_list:
+        booking_checkin_date = booking.checkin.strftime("%Y-%m-%d")
+        booking_checkout_date = booking.checkout.strftime("%Y-%m-%d")
+        if (
+                booking.is_reserve and
+                booking_checkin_date <= checkin_date or
+                booking_checkin_date <= checkout_date
+            ):
+            msg = (
+                f"Room {room_no} already reserved for " +
+                f"{booking.customer.name} from {booking_checkin_date} to " +
+                f"{booking_checkout_date}. Please contact the management " +
+                "to cancel or adjust reservation date."
+            )
+            return {"error": msg}
+
+
+
+
 def nigeria_today_date():
     nigeria_tz = pytz.timezone('Africa/Lagos')
     nigeria_date = datetime.now(nigeria_tz).date()

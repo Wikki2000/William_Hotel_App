@@ -181,17 +181,26 @@ Order History Section
 }
 .order__history--table-body {
 
-  td {
+  .manage {
+    right: 10%;
+  }
+  td:nth-child(1) {
+    text-align: left;
+    padding-left: 35px;
+  }
+  td:nth-child(1), td:nth-child(2),
+  td:nth-child(3), td:nth-child(4), 
+  td:nth-child(5), td:nth-child(6) {
     padding-bottom: 10px;
-    padding-top: 10px;
+    padding-top: 10px;  
     border-bottom: 1px solid var(--orange_a100);
   }
-  /*
-  td:nth-child(2), td:nth-child(3),
-  td:nth-child(4), td:nth-child(5),  {
-    padding-left: 10px;
-    background-color: red;
-  }*/
+
+  td:nth-child(2),
+  td:nth-child(3), td:nth-child(4),
+  td:nth-child(5), td:nth-child(6) {
+     padding-right: 50px;
+  }
 }
 .order__history--filter-btns {
   margin-left: 5%;
