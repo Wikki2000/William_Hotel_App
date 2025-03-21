@@ -60,7 +60,7 @@ $(document).ready(function() {
 
 
   // This values are assign when handling switch case Room Number menu display.
-  let CHECK_IN, CHECK_OUT, AMOUNT, DURATION, SHORT_REST_OPTION;
+  let CHECK_IN, CHECK_OUT, AMOUNT, DURATION, SHORT_REST_OPTION, IS_RESERVE;
 
   // Handle the form submission for the booking form
   $('#dynamic__load-dashboard').on('submit', '#main__book-form', function (e) {
@@ -76,6 +76,9 @@ $(document).ready(function() {
     const expiration = $('#main__checkout-date').val();
     const guest_number = $('#main__guest-no').val();
     const is_paid = $('#main__is--paid-val').val().toLowerCase();
+    const is_reserve = (
+      CHECK_IN > canadianDateFormat(new Date()) ? true : false
+    );
 
     // Set duration to 2hrs if date field not enter.
     // And set check in and and check out to current date.
@@ -100,12 +103,11 @@ $(document).ready(function() {
 
     const BookingData = {
       book: {
-        duration: DURATION, guest_number, amount: AMOUNT,
+        duration: DURATION, guest_number, amount: AMOUNT, is_reserve,
         is_paid, checkin: CHECK_IN, checkout: CHECK_OUT, is_short_rest,
       },
       customer: { gender, name, address, phone, id_type, id_number, email }
     };
-    console.log(BookingData);
 
     $('#main__popup-modal').css('display', 'flex');
 
@@ -124,9 +126,11 @@ $(document).ready(function() {
             );
             showNotification(msg);
 
-            // Update the count in ui
-            updateElementCount($('#main__room-available'));
-            updateElementCount($('#main__today-check--in'), true);
+            // Update the count in ui if not reservations.
+            if (!response.is_reserve) {
+              updateElementCount($('#main__room-available'));
+              updateElementCount($('#main__today-check--in'), true);
+            }
 
             // Print receipt immediately room is book.
             const bookingId = response.booking_id;
@@ -138,6 +142,8 @@ $(document).ready(function() {
           (error) => {
             $button.prop('disable', false);
             if (error.status === 409) {
+              showNotification('Error! ' +  error.responseJSON.error, true);
+            } else if (error.status === 422) {
               showNotification('Error! ' +  error.responseJSON.error, true);
             } else {
               showNotification('An Error occured. Try Again !', true);
@@ -308,6 +314,7 @@ $(document).ready(function() {
 
                   // Change the newly display input field to required.
                   $('#main__check-in, #main__checkout-date, #main__id--checkin-val').attr('required');
+			$('#main__check-in').val(canadianDateFormat(new Date));
                 } else {
                   $('#main__checkin-container, #main__checkout-container, #main__dummy-block').addClass('hide');
                   $('#main__dummy-block').css('visibility', 'hidden');

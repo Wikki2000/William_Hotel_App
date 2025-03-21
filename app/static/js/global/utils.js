@@ -128,6 +128,20 @@ export function getFormattedDate(serverDate = null) {
   return date.toDateString('en-us', options);
 }
 
+
+/**
+ * Gets the time in the format "10 : 40 : 00 PM".
+ * @param {string} dateTimeStr  - The date from server
+ * @returns {string} The formatted time string..
+ */
+export function getFormattedTime(dateTimeStr) {
+  const isoString = dateTimeStr.replace('', 'T');
+  const date = new Date(dateTimeStr);
+
+  const options = { hour: 'numeric', minute: 'numeric', hour12: true };
+  return new Intl.DateTimeFormat('en-us', options).format(date);
+}
+
 /**
  * Load confirmation modal.
  *

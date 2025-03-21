@@ -528,7 +528,9 @@ export function bookingServiceListTableTemplate(booking, date) {
   </tr>`;
   return row;
 }
-export function orderDetails(customer, order, order_items, cleared_by, ordered_by, date) {
+export function orderDetails(
+  customer, order, order_items, cleared_by, ordered_by, date, time
+) {
   const guestType = customer.is_guest ? 'Lodged' : 'Walk In';
   const paymentStatus = (
     order.is_paid ? { status: 'Paid', color: 'green' } :
@@ -542,13 +544,14 @@ export function orderDetails(customer, order, order_items, cleared_by, ordered_b
   );
   $('#order__info').append(
     `<h3>Order Info.</h3>
-             <p><b>Guest Name</b> - ${customer.name}</p>
-             <p><b>Guest Type</b> - ${guestType}</p>
-             <p><b>Purchase Date</b> - ${date}</p>
-             <p><b>Payment Method</b> - ${order.payment_type}</p>
-             <p><b>Payment Status</b> - <span style="color: ${paymentStatus.color};">${paymentStatus.status}</span></p><br />
-             <p><em><b>Ordered By</b> - ${ordered_by.first_name} ${ordered_by.last_name} (${ordered_by.portfolio})</em></p>
-             <p><em><b>Bill Handle By</b> - ${cleared.firstName} ${cleared.lastName} (${cleared.role})</em></p>
+      <p><b>Guest Name</b> - ${customer.name}</p>
+      <p><b>Guest Type</b> - ${guestType}</p>
+      <p><b>Purchase Date</b> - ${date}</p>
+      <p><b>Purchase Time</b> - ${time}</p> 
+      <p><b>Payment Method</b> - ${order.payment_type}</p>
+      <p><b>Payment Status</b> - <span style="color: ${paymentStatus.color};">${paymentStatus.status}</span></p><br />
+      <p><em><b>Ordered By</b> - ${ordered_by.first_name} ${ordered_by.last_name} (${ordered_by.portfolio})</em></p>
+      <p><em><b>Bill Handle By</b> - ${cleared.firstName} ${cleared.lastName} (${cleared.role})</em></p>
              `
   );
   order_items.forEach(({ name, qty, amount }) => {

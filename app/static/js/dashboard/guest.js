@@ -1,6 +1,7 @@
 import {
   ajaxRequest, britishDateFormat, fetchData, getBaseUrl, canadianDateFormat,
-  confirmationModal, showNotification, validateForm, displayMenuList
+  confirmationModal, showNotification, validateForm, displayMenuList,
+  getFormattedTime
 } from '../global/utils.js';
 import {  guestListTableTemplate }  from '../global/templates.js';
 
@@ -75,6 +76,7 @@ $(document).ready(() => {
              <p><b>Guest Address</b> ${customer.address}</p>
              <p><b>Guest Gender</b> ${customer.gender}</p>
              <p><b>Guest Email</b> ${customer.email}</p>
+	     <p><b>Booking Time</b> ${getFormattedTime(booking.created_at)}</p>
              <p><b>Checkin Date</b> ${britishDateFormat(booking.checkin)}</p>
              <p><b>Booking Type</b> ${bookingType}</p>
              <p><b>Expiration Duration</b> ${booking.duration} ${time}</p>

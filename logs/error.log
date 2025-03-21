@@ -1,12 +1,2 @@
-10:48 AM	2025-03-17	/api/v1/order-items	Error 111 connecting to localhost:6379. Connection refused.
-
-10:48 AM	2025-03-17	/api/v1/order-items	Error 111 connecting to localhost:6379. Connection refused.
-
-10:52 AM	2025-03-17	/api/v1/order-items	Error 111 connecting to localhost:6379. Connection refused.
-
-04:15 PM	2025-03-17	/api/v1/rooms/101/book	Error 111 connecting to localhost:6379. Connection refused.
-
-11:29 AM	2025-03-18	/api/v1/account/login	email_or_username must be a valid string
-
-11:29 AM	2025-03-18	/api/v1/account/login	email_or_username must be a valid string
+12:10 AM	2025-03-19	/api/v1/account/login	email_or_username must be a valid string
 
