@@ -370,7 +370,7 @@ $(document).ready(function() {
         const url = APP_BASE_URL + '/pages/order';
 
 	$('input[name="Search Input"]')                                                                                                                                
-	  .attr('placeholder', 'Search for Guest Orders');
+	  .attr('placeholder', 'Search for Guest Pending Orders');
 
         $('#dynamic__load-dashboard').load(url, function() {
 
