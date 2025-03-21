@@ -327,7 +327,11 @@ $('#dynamic__load-dashboard').off('click', '#guest__input_btn')
 	showNotification('Updated Successfully !');
       },
       (error) => {
-	showNotification('An Error Occured. Try Again !', true);
+        if (error.status === 422) {
+          showNotification('Error: ' + error.responseJSON.error, true);
+        } else {
+          showNotification('An Error Occured. Try Again !', true);
+        }
 	$button.prop('disable', false);
       }
     );

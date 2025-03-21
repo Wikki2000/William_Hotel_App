@@ -248,6 +248,15 @@ def update_booking_data(user_id: str, user_role: str, booking_id: str):
     if not booking:
         abort(404)
 
+    print(booking.is_reserve)
+
+    if not booking.is_use and not booking.is_reserve:
+        msg = (
+            "You only edit data for reserved guest " +
+            "or guest currently lodging"
+        )
+        return jsonify({"error": f"{msg}"}), 422
+
     booking_data = data.get("booking")
     customer_data = data.get("customer")
     room_data = data.get("room")

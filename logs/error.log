@@ -16,3 +16,5 @@
 
 10:22 AM	2025-03-21	/api/v1/order-items	'list' object has no attribute 'customer'
 
+08:58 PM	2025-03-21	/api/v1/rooms/101/book	Error 111 connecting to localhost:6379. Connection refused.
+
