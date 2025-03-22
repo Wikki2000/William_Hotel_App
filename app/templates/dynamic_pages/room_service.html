@@ -125,10 +125,13 @@
     <h2 class="bottom-marg quick_services"><em>Quick Service Check</em></h2>
     <div class="check-btn">
       <button id="guest__extend-stay" class="tab__item ui heading size-headingxs highlight-btn">
-        Extend Guest Stay
+        Extend by Night(s)
+      </button>
+      <button id="half__day-booking" class="tab__item ui heading size-headingxs highlight-btn">
+	Extend by Half Day
       </button>
       <button id="late__checkout" class="tab__item ui heading size-headingxs highlight-btn">
-        Late Checkout
+	Late Checkout
       </button>
     </div><br />
     <div class="room__details">
@@ -265,7 +268,7 @@
     <!-- Close Button -->
     <button class="close-btn closePopupModal">×</button>
     <form id="guest__extend-stay--form">
-      <h2>Extend Guest Stay</h2><br>
+      <h2>Night(s) Extension Booking</h2><br>
       <b>Check In: 
         <span class="important">*</span>
       </b> &nbsp;&nbsp;&nbsp;
@@ -333,11 +336,15 @@
   <div class="popup-modal-content">
     <!-- Close Button -->
     <button class="close-btn closePopupModal">&times;</button>
-    <h1>Late Checkout Payment</h1>
+    <h1 id="booking__extension-title"><!-- Title Dynamically Loaded --></h1>
 
     <div>
       <p id="latecheckout__confirmation-description">
       <!-- This section dynamically loaded -->
+      You are about to extend the duration of Room <span id="booking__extension-room"></span>
+       by <span id="booking__extension-duration"></span>. An additionally charge of
+       N<span id="booking__extension-amoumt"></span> is required. Please select
+       the option and click "confirm" button to proeced. 
       </p>
 
       <div class="latecheckout__drop-down--menu">
@@ -361,6 +368,9 @@
       <div class="latecheckout__button-container">
         <button class="confirm__late-checkout--btn highlight-btn">Confirm</button>
       </div>
+
+      <input id="store__typeof-extension">
+
     </div>
   </div>
 </div>
