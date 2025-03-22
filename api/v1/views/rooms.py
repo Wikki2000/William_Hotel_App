@@ -205,12 +205,27 @@ def get_room_by_id(user_role: str, user_id: str, room_id):
 def filter_rooms(user_role: str, user_id: str, room_status):
     """Filter room base on it's status e.g., available"""
     try:
-        rooms = storage.all(Room).values();
-        sorted_rooms = sorted(rooms, key=lambda room : room.number)
+        if room_status not in ["occupied", "available", "reserved"]:
+            abort(404)
+
+        rooms = storage.all_get_by(Room, status=room_status)
         if not rooms:
             return jsonify([]), 200
-        response = [room.to_dict() for room in sorted_rooms
-                    if room.status == room_status]
+
+        # Ensure that reserved room are also shown for available rooms
+        if room_status == "available":
+            rooms = storage.all(Room).values()
+            sorted_rooms = sorted(rooms, key=lambda room : room.number)
+            response = [
+                room.to_dict() for room in sorted_rooms
+                    if room.status == "available" or 
+                    room.status == "reserved"
+                ]
+            return jsonify(response), 200
+
+        sorted_rooms = sorted(rooms, key=lambda room : room.number) 
+        response = [room.to_dict() for room  in sorted_rooms ]
+
         return  jsonify(response), 200
     except Exception as e:
         print(str(e))

@@ -342,13 +342,14 @@ def check_reservation(obj_list, checkout_date, checkin_date, room_no):
     """
     if not checkin_date or not checkout_date or not obj_list:
         return None
+
     for booking in obj_list:
         booking_checkin_date = booking.checkin.strftime("%Y-%m-%d")
         booking_checkout_date = booking.checkout.strftime("%Y-%m-%d")
         if (
                 booking.is_reserve and
                 booking_checkin_date <= checkin_date or
-                booking_checkin_date <= checkout_date
+                booking_checkin_date < checkout_date
             ):
             msg = (
                 f"Room {room_no} already reserved for " +

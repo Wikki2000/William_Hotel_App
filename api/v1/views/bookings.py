@@ -40,6 +40,13 @@ def update_booking_status(user_id: str, user_role: str, booking_id: str):
         checkin_date = book.checkin 
         checkout_date = book.checkout
         room_status = book.room.status
+        if room_status == "occupied":
+            msg = (
+                f"{book.room.number} currently occupied. " +
+                "Please check out existing guest"
+            )
+            return jsonify({"error": msg}), 422
+
         if checkin_date <= TODAY_DATE <= checkout_date:
             book.is_reserve = False 
             book.is_use = True

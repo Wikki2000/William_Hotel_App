@@ -18,9 +18,13 @@ class Booking(BaseModel, Base):
     checkout = Column(Date)
     is_paid = Column(ENUM("yes", "no"), nullable=False, default="no")
     is_use = Column(Boolean, default=True)
+
+    # Set flag for types of booking
     is_short_rest = Column(Boolean, default=False)
     is_late_checkout = Column(Boolean, default=False)
     is_reserve = Column(Boolean, default=False)
+    is_half_booking = Column(Boolean, default=False)
+
     guest_number = Column(String(30), nullable=False)
     amount = Column(Float, nullable=False)
     customer_id = Column(
