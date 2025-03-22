@@ -9,7 +9,7 @@
  *
  * @return {string} - The table and contents
  */
-export function roomTableTemplate(room, statusClass, isStaff = false) {
+export function roomTableTemplate(room, statusClass, isStaff = false, roomStatusText) {
   // Create the table row HTML
   const defaultRoomImage = '/static/images/public/default_room_img.png';
   const image = (
@@ -35,7 +35,7 @@ export function roomTableTemplate(room, statusClass, isStaff = false) {
     </td>
 
     <td>
-      <p class="${statusClass} ui text size-textmd">${room.status}</p>
+      <p class="${statusClass} ui text size-textmd">${roomStatusText}</p>
     </td>
     <td class="${hideClass}">
       <p class="ui text size-textmd editRoomIcon" data-id="${room.id}">
@@ -63,16 +63,20 @@ export function displayRoomData(data, isStaff) {
     // Iterate over the fetched data
     data.forEach((room) => {
       let statusClass = "";
+      let roomStatusText = "";
       if (room.status === "available") {
         statusClass = "room-status-4";
+        roomStatusText = "Available";
       } else if (room.status === "reserved") {
         statusClass = "room-status-3";
+        roomStatusText = "Reserved";
       } else if (room.status === "occupied") {
+        roomStatusText = "Occupied";
         statusClass = "room-status";
       }
 
       // Append the row to the table body
-      $tableBody.append(roomTableTemplate(room, statusClass, isStaff));
+      $tableBody.append(roomTableTemplate(room, statusClass, isStaff, roomStatusText));
     });
   } catch (error) {
     console.error("Error fetching room data:", error);
@@ -116,7 +120,7 @@ export function gameTemplate(data) {
         Add To Cart
      </button>
     </div>`;
-   return row;
+  return row;
 }
 
 export function laundryTableTemplate(data) {
@@ -255,9 +259,9 @@ export function leaveListTableTemplate(data, date) {
           <li data-id="${data.id}" class="manage__item approveLeave ${hideFromStaff}">
             <i class="fa fa-thumbs-up"></i>Approve
           </li>
-	  <li data-id="${data.id}" class="manage__item rejectLeave ${hideFromStaff}">
-	    <i class="fa fa-thumbs-down"></i>Reject
-	  </li>
+          <li data-id="${data.id}" class="manage__item rejectLeave ${hideFromStaff}">
+            <i class="fa fa-thumbs-down"></i>Reject
+          </li>
         </ul>
       </nav>
     </td>
@@ -275,7 +279,16 @@ export function leaveListTableTemplate(data, date) {
  */
 export function guestListTableTemplate(guest, booking, room, date) {
 
-  const time = booking.amount === 5000 ? 'Hours' : 'Night(s)';
+  let time = '';
+  if (booking.is_short_rest) {
+    time = 'Hours';
+  } else if (booking.is_late_checkout) {
+    time = 'Hours';
+  } else if (booking.is_half_booking) {
+    time = 'Hours';
+  } else {
+    time = 'Night(s)';
+  }
 
   const bookingStatus = booking.is_reserve ? 'Reserved' : 'Booked';
   const bookingStatusColor = booking.is_reserve ? 'red' : 'green';
@@ -320,10 +333,10 @@ export function guestListTableTemplate(guest, booking, room, date) {
           <li data-id="${booking.id}" class="manage__item guest__list-bookDetail guest__listMenu">
             <i class="fa fa-eye"></i>Booking Details
           </li>
-	  <li data-id="${booking.id}"  class="manage__item guest__list-bookReserve guest__listMenu"">
-	    <input class="bookingReserveOption" value="${bookingReserve}" type="hidden" \>
-	    <i class="${bookingIcon}"></i><span>${bookingText}</span>
-	  </li>
+          <li data-id="${booking.id}"  class="manage__item guest__list-bookReserve guest__listMenu"">
+            <input class="bookingReserveOption" value="${bookingReserve}" type="hidden" \>
+            <i class="${bookingIcon}"></i><span>${bookingText}</span>
+          </li>
           <li data-id="${booking.id}" class="manage__item guest__listEdit  guest__listMenu">
             <i class="fa fa-edit"></i>Edit Data
           </li>
@@ -390,13 +403,13 @@ export function loanListTableTemplate(data, userRole) {
               <i class="fa fa-eye"></i>Details
             </li>
 
-	    <li data-id="${data.id}" class="manage__item approveLoan ${hideFromStaff}">
-	      <i class="fa fa-thumbs-up"></i>Approve
-	    </li>
+            <li data-id="${data.id}" class="manage__item approveLoan ${hideFromStaff}">
+              <i class="fa fa-thumbs-up"></i>Approve
+            </li>
 
-	    <li data-id="${data.id}" class="manage__item rejectLoan ${hideFromStaff}">
-	      <i class="fa fa-thumbs-down"></i>Reject
-	    </li>
+            <li data-id="${data.id}" class="manage__item rejectLoan ${hideFromStaff}">
+              <i class="fa fa-thumbs-down"></i>Reject
+            </li>
 
           </ul>
         </nav>
@@ -504,7 +517,7 @@ export function staffListTemplate(data) {
 }
 
 /**
- */
+*/
 export function loanDetailTemplate(data) {
   function statusColor(leaveStatus) {
     if (leaveStatus === 'pending') {

@@ -494,10 +494,11 @@ export function bookingServiceListTableTemplate(booking, date) {
   } else if (booking.is_late_checkout) {
     bookingType = 'Late Checkout';
 
+  }  else if (booking.is_half_booking) {
+    bookingType = 'Half Day';
   } else {
     bookingType = 'Full Time';
   }
-
   const row = `
    <tr data-id="${booking.id}">
     <td class="">

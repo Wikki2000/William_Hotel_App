@@ -31,7 +31,10 @@ $(document).ready(function() {
           } else if (sale.booking.is_late_checkout) {
             description ='Late Checkout';
 	     time = 'Hours';
-          } else {
+          } else if (sale.booking.is_half_booking) {
+	    description ='Half Day';
+	    time = 'Hours';
+	  } else {
             description ='Full Time';
 	    time = 'Night(s)';
           }

@@ -133,14 +133,14 @@ $(document).ready(function () {
           break;
         }
         case 'rooms__available': {
-          fetchData(roomUrl)
-          .then(({ rooms, rooms_count }) => {
+          const availableRoomsUrl = API_BASE_URL + '/rooms/available/filter'; 
+          fetchData(availableRoomsUrl)
+          .then((rooms) => {
             rooms.forEach((room) => {
-              if (room.status === 'available') {
-                const statusClass = 'room-status-4';
-                $tableBody
-                  .append(roomTableTemplate(room, statusClass, isStaff));
-              }
+              const statusClass = 'room-status-4';
+              const roomStatusText = 'Available';
+              $tableBody
+                .append(roomTableTemplate(room, statusClass, isStaff, roomStatusText));
             });
           })
           .catch((error) => {
@@ -150,14 +150,14 @@ $(document).ready(function () {
           break;
         }
         case 'rooms__occupied': {
-          fetchData(roomUrl)
-          .then(({ rooms, rooms_count }) => {
-            rooms.forEach((room) => {
-              if (room.status === 'occupied') {
-                const statusClass = 'room-status';
-                $tableBody
-                  .append(roomTableTemplate(room, statusClass, isStaff));
-              }
+          const occupiedRoomsUrl = API_BASE_URL + '/rooms/occupied/filter';
+          fetchData(occupiedRoomsUrl)
+          .then((rooms) => {
+            rooms.forEach((rooms) => {
+              const statusClass = 'room-status';
+              const roomStatusText = 'Occupied';
+              $tableBody
+                .append(roomTableTemplate(rooms, statusClass, isStaff, roomStatusText));
             });
           })
           .catch((error) => {
@@ -166,14 +166,14 @@ $(document).ready(function () {
           break;
         }
         case 'rooms__reserved': {
-          fetchData(roomUrl)
-          .then(({ rooms, rooms_count }) => {
+          const reservedRoomsUrl = API_BASE_URL + '/rooms/reserved/filter'; 
+          fetchData(reservedRoomsUrl)
+          .then((rooms) => {
             rooms.forEach((room) => {
-              if (room.status === 'reserved') {
-                const statusClass = 'room-status-3';
-                $tableBody
-                  .append(roomTableTemplate(room, statusClass, isStaff));
-              }
+              const statusClass = 'room-status-3';
+              const roomStatusText = 'Reserved';
+              $tableBody
+                .append(roomTableTemplate(room, statusClass, isStaff, roomStatusText));
             });
           })
           .catch((error) => {
@@ -243,6 +243,11 @@ $(document).ready(function () {
     const roomId = $clickItem.data('id');
     const deleteRoomUrl =  API_BASE_URL + `/rooms/${roomId}/delete`;
 
+    // Prevent room deletion tiil updating database not to cascade delete.
+    alert(
+      "You can't delete a Room at this moment. Thie section under maintainence!"
+    );
+    return;
     // Load confirmation modal
     const headingText = 'Confirm Delete';
     const descriptionText = 'This action cannot be undone !'
@@ -479,40 +484,53 @@ $(document).ready(function () {
 
   // Handler for clicking Extend Guest Stay & Late Checkout..
   $('#dynamic__load-dashboard')
-    .off('click', '#guest__extend-stay, #late__checkout')
-    .on('click', '#guest__extend-stay, #late__checkout', function() {
+    .off('click', '#guest__extend-stay, #late__checkout, #half__day-booking')
+    .on('click', '#guest__extend-stay, #late__checkout, #half__day-booking',
+      function() {
 
-      const $clickItem = $(this);
-      const clickId = $clickItem.attr('id');
+        const $clickItem = $(this);
+        const clickId = $clickItem.attr('id');
 
-      const roomNumber = $('#room__number-dropdown-btn').text();
-      if (isNaN(roomNumber)) {
-        showNotification('No room number selected.', true);
-        return;
-      }
+        const roomNumber = $('#room__number-dropdown-btn').text();
+        if (isNaN(roomNumber)) {
+          showNotification('No room number selected.', true);
+          return;
+        }
 
-      // Reset the hidden field for instant payment type,
-      // Once click on extend stay or late checkout.
-      $('#guest__ispaid-menu--selected').val('');
-      /*
+        // Reset the hidden field for instant payment type,
+        // Once click on extend stay or late checkout.
+        $('#guest__ispaid-menu--selected').val('');
+        $('#late__checkout-ispaid span').text('Selected');
+        /*
       $clickItem.addClass('highlight-btn');
       $clickItem.siblings().removeClass('highlight-btn');
       */
 
-      if (clickId  === 'guest__extend-stay') {
-        $('#guest__extend-stay--modal').css('display', 'flex');
-      } else if (clickId  === 'late__checkout') {
-        const roomNumber = $('#room__number-dropdown-btn span').text();
-        $('#latecheckout__confirmation-description').text(
-          `You are about to extend the duration of Room ${roomNumber} ` +
-          `by ${LATE_CHECK_OUT_DURATION} Hours. An additionally charge of ` +
-          `N${LATE_CHECK_OUT_AMOUNT} is required. Please select ` +
-          `the option and click \"confirm\" button to proeced.`
-        )
-        $('#late__checkout-popup--modal').css('display', 'flex');
+        if (clickId  === 'guest__extend-stay') {
+          $('#guest__extend-stay--modal').css('display', 'flex');
+        } else if (clickId  === 'late__checkout') {
+          const roomNumber = $('#room__number-dropdown-btn span').text();
+          $('#booking__extension-room').text(roomNumber);
+          $('#booking__extension-duration').text(`${LATE_CHECK_OUT_DURATION} Hours`);
+          $('#booking__extension-amoumt').text(LATE_CHECK_OUT_AMOUNT.toLocaleString());
+          $('#booking__extension-title').text('Late Checkout Extension Booking');
+          $('#late__checkout-popup--modal').css('display', 'flex');
 
-      }
-    });
+          $('#store__typeof-extension').val('lateCheckoutBooking');
+        } else if (clickId  === 'half__day-booking') {
+          const roomAmount = parseFloat(
+            $('#room__amount-rate').val().replaceAll('₦', '').replaceAll(',', '')
+          );
+          const halfDayBookingAmount = roomAmount  / 2;
+          $('#booking__extension-room').text(roomNumber);
+          $('#booking__extension-duration').text('half a day'); 
+          $('#booking__extension-amoumt').text(halfDayBookingAmount.toLocaleString());
+          $('#booking__extension-title').text('Half Day Extension Booking');
+          $('#late__checkout-popup--modal').css('display', 'flex');
+
+          $('#store__typeof-extension').val('halfDayBooking');
+        }
+      });
 
   // Handle display and selection of payment status menu.
   $('#dynamic__load-dashboard')
@@ -637,7 +655,7 @@ $(document).ready(function () {
           return;
         }
 
-        let duration, amount, is_late_checkout;
+        let duration, amount, is_late_checkout, is_half_booking;
         if ($clickItem.hasClass('guest__extend-stay--confirm')) {
 
           const diffIntTime = new Date(checkout) - new Date(checkin);
@@ -651,16 +669,27 @@ $(document).ready(function () {
           $('#guest__extend-stay--modal').hide();
           $('#guest__ispaid span').text('Select');
         } else if ($clickItem.hasClass('confirm__late-checkout--btn')) {
-          is_late_checkout = true;
-          amount = LATE_CHECK_OUT_AMOUNT;
-          duration = LATE_CHECK_OUT_DURATION;
-          checkout = checkin = canadianDateFormat(new Date());
 
-          $('#late__checkout-popup--modal').hide();
+          const extensionBookingType = $('#store__typeof-extension').val();
+
+          if (extensionBookingType === 'lateCheckoutBooking') {
+            is_late_checkout = true;
+            amount = LATE_CHECK_OUT_AMOUNT;
+            duration = LATE_CHECK_OUT_DURATION;
+            checkout = checkin = canadianDateFormat(new Date());
+
+            $('#late__checkout-popup--modal').hide();
+          } else if (extensionBookingType === 'halfDayBooking') {
+            const roomRate = $('#room__price-val').val();
+            amount = roomRate / 2;
+            checkout = checkin = canadianDateFormat(new Date());
+            is_half_booking = true;
+            duration = 6;
+          }
         }
 
         const BookingData = {
-          duration, guest_number, amount,
+          duration, guest_number, amount, is_half_booking,
           is_paid, checkin, checkout, is_late_checkout,
         };
 

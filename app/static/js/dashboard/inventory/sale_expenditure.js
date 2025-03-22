@@ -179,11 +179,11 @@ $(document).ready(function() {
             );
 
             $('#sales__date').text(britishDateFormat(sale.created_at));
-            $('#total__food-sale').html('&#8358;' + sale.food_sold);
-            $('#total__drink-sale').html('&#8358;' +sale.drink_sold);
-            $('#total__game-sale').html('&#8358;' +sale.game_sold);
-            $('#total__room-sale').html('&#8358;' +sale.room_sold);
-            $('#total__laundry-sale').html('&#8358;' +sale.laundry_sold);
+            $('#total__food-sale').html('&#8358;' + sale.food_sold.toLocaleString());
+            $('#total__drink-sale').html('&#8358;' + sale.drink_sold.toLocaleString());
+            $('#total__game-sale').html('&#8358;' + sale.game_sold.toLocaleString());
+            $('#total__room-sale').html('&#8358;' + sale.room_sold.toLocaleString());
+            $('#total__laundry-sale').html('&#8358;' + sale.laundry_sold.toLocaleString());
             $('#total__sale').html('&#8358;' + totalSales);
             $('#sales__summary-date').val(canadianDateFormat(sale.created_at));
           })

@@ -246,6 +246,8 @@ $(document).ready(function() {
             console.log(error);
           });
       } else if ($clickItem.hasClass('staff__management-remove--user')) {
+	      alert("You can't delete a staff at this moment. Thie section under maintainence!");
+	      return;
         const headingText = 'Confirm Removal of Staff';
         const descriptionText = 'This action cannot be undone !'
         const confirmBtCls = 'staff__management-delete--confirmBtn';
