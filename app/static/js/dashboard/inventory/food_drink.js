@@ -11,6 +11,7 @@ import {
 $(document).ready(function() {
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
   const APP_BASE_URL = getBaseUrl()['appBaseUrl'];
+  const USER_ROLE = localStorage.getItem('role');
 
 
   // Add or Update Food Stock

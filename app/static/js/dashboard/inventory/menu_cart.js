@@ -26,6 +26,12 @@ $(document).ready(function() {
       $clickItem.siblings().removeClass('highlight__inventory-cart');
       $clickItem.addClass('highlight__inventory-cart');
 
+
+	    // Hide to add new stock from manager.
+	    if (USER_ROLE === 'manager') {     
+		    $('.stock__item-heading').hide();         
+	    } 
+
       hideAllInventoryDashboard();
       $('.inventory__filter').empty();
 

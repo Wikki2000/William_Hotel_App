@@ -310,6 +310,9 @@ export function gameTableTemplate(index, data, date) {
  */
 export function drinkTableTemplate(index, data, date) {
   const qtyColor = data.qty_stock < 10 ? 'red': '';
+	  const USER_ROLE = localStorage.getItem('role');                                                                                                                       
+	  const hideClass = USER_ROLE !== 'admin' ? 'hide' : ''; 
+
   const row = `<tr data-id="${data.id}">
       <td class="">
         <p class="ui text size-textmd">${index + 1}</p>
@@ -326,7 +329,7 @@ export function drinkTableTemplate(index, data, date) {
       <td class="">
         <p class="ui text size-textmd amount">₦${data.amount.toLocaleString()}</p>
       </td>
-      <td class="">
+      <td class="${hideClass}">
         <p><i class="fa fa-ellipsis-v"></i></p>
         <p><i style="display: none;" class="fa fa-times"></i></p>
       </td>
@@ -389,6 +392,10 @@ export function salesTableTemplate(index, id, saleStatus, amount, date, userRole
 
 export function foodTableTemplate(index, data, date) {
   const qtyColor = data.qty_stock < 10 ? 'red': '';
+  const USER_ROLE = localStorage.getItem('role');
+
+  const hideClass = USER_ROLE !== 'admin' ? 'hide' : '';
+
   const row = `<tr data-id="${data.id}">
       <td class="">
         <p class="ui text size-textmd">${index + 1}</p>
@@ -405,7 +412,7 @@ export function foodTableTemplate(index, data, date) {
      <td class="">
         <p class="ui text size-textmd amount">₦${data.amount.toLocaleString()}</p>
       </td>
-      <td class="">
+      <td class="${hideClass}">
         <p><i class="fa fa-ellipsis-v"></i></p>
         <p><i style="display: none;" class="fa fa-times"></i></p>
       </td>
@@ -532,6 +539,7 @@ export function bookingServiceListTableTemplate(booking, date) {
   </tr>`;
   return row;
 }
+
 export function orderDetails(
   customer, order, order_items, cleared_by, ordered_by, date, time
 ) {
