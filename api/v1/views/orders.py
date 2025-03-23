@@ -50,11 +50,9 @@ def get_orders(user_role: str, user_id: str):
                     Order, customer_id=guest.id, is_paid=False
                 )
 
-                """
                 for order in orders_by_guest:
                     orders.append(order)
-                """
-                orders.extend(orders_by_guest)
+                #orders.extend(orders_by_guest)
 
 
         if not orders:
