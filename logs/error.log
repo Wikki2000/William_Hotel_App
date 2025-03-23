@@ -18,3 +18,9 @@
 
 08:58 PM	2025-03-21	/api/v1/rooms/101/book	Error 111 connecting to localhost:6379. Connection refused.
 
+07:34 PM	2025-03-23	/api/v1/rooms/101/book	name 'order_data' is not defined
+
+07:35 PM	2025-03-23	/api/v1/rooms/101/book	name 'Vat' is not defined
+
+07:48 PM	2025-03-23	/api/v1/guests/861a43e3-26b9-4a52-b686-47393f1c1bf4/rooms/88d85407-dc3c-4b1f-a736-62c2acf28305/extend-stay	name 'booking_data' is not defined
+

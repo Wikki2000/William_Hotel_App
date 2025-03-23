@@ -18,6 +18,7 @@ from models.receipt import Receipt
 import base64
 from datetime import datetime
 import pytz
+from calendar import monthrange
 
 
 r = Redis(host="localhost", port=6379, db=0)  # Create Redis instance
@@ -360,6 +361,60 @@ def check_reservation(obj_list, checkout_date, checkin_date, room_no):
             return {"error": msg}
 
 
+# ===================================================================== #
+#                          VAT/CAT Helper Function                        #
+# ===================================================================== #
+def create_monthly_task(cls, task_amount: float, due_day: int):
+    """
+    Create or accumulate monthly VAT/CAT.
+
+    :cls - The VAT/CAT class
+    :task_amount - The VAT/CAT amount.
+    :due_day - The time due for VAT/CAT payment.
+    """
+    try:
+        today_date = nigeria_today_date()         
+        day = today_date.day
+        year = today_date.year
+
+        task_month = get_task_month(due_day)
+        task = storage.get_by(cls, month=f"{task_month}_{year}")
+
+        # Vat flag true to be due on 1 day ahead the due day.
+        if task and day == due_day + 1:
+            task.is_due = True
+
+        if not task:
+            task = cls(month=f"{task_month}_{year}", amount=task_amount)
+            storage.new(task)
+        else:
+            task.amount += task_amount
+    except Exception as e:
+        storage.rollback()
+        raise Exception("An Internal Error Occur")
+
+
+def get_task_month(due_day):
+    """
+    Get the month of task base on it due date.
+
+    :due_day - The due date for paymenbt of task.
+    :rtype - The actual month for active task.
+    """
+    month_mapper = {
+        1: "jan", 2: "feb", 3: "march",
+        4: "april", 5: "may", 6: "june",
+        7: "july", 8: "aug", 9: "sept", 
+        10: "oct", 11: "nov", 12: "dec"
+    }
+    today_date = nigeria_today_date()
+    day = today_date.day
+    month = today_date.month
+
+    # Vat for a month is due every 19th.
+    # Accumulation for new month vat start on 20th.
+    vat_month = month_mapper[month] if day <= due_day else month_mapper[month + 1]
+    return vat_month
 
 
 def nigeria_today_date():
@@ -367,3 +422,8 @@ def nigeria_today_date():
     nigeria_date = datetime.now(nigeria_tz).date()
     return nigeria_date
 
+
+def last_month_day():
+    today = nigeria_today_date()
+    last_day = monthrange(today.year, today.month)[1]
+    return last_day

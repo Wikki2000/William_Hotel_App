@@ -2,7 +2,7 @@ import {
   ajaxRequest, getBaseUrl, validateForm, confirmationModal,
   showNotification, fetchData, closeConfirmationModal, togleTableMenuIcon
 } from '../global/utils.js';
-import  { vatListTemplate } from '../global/templates1.js';
+//import  { vatListTemplate } from '../global/templates1.js';
 
 $(document).ready(function() {
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];

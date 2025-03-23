@@ -81,9 +81,7 @@ def delete_vendor(user_role: str, user_id: str, vendor_id: str):
 def get_vendors(user_role: str, user_id: str):
     """Retrieved all vendors"""
     vendors = storage.all(Vendor).values()
-    sorted_vendors = sorted(
-        vendors, key=lambda vendor : vendor.updated_at, reverse=True
-    )
+    sorted_vendors = sorted(vendors, key=lambda vendor : vendor.name)
     if not sorted_vendors:
         return jsonify([]), 200
 

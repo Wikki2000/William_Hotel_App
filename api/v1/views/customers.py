@@ -5,12 +5,15 @@ from models.booking import Booking
 from models.room import Room
 from models.sale import Sale
 from models.order import Order
+from models.cat import Cat
+from models.vat import Vat
 from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import (
     create_receipt, bad_request, role_required, nigeria_today_date,
-    check_reservation, write_to_file
+    check_reservation, write_to_file, create_monthly_task, last_month_day
 )
+from api.v1.views import constant
 from models import storage
 from datetime import date, datetime
 
@@ -106,8 +109,16 @@ def extend_guest_stay(user_role: str, user_id: str, room_id, customer_id):
         receipt = create_receipt("booking_id", book.id) 
         storage.new(receipt)
 
-        storage.save()
+        # Get the monthly vat and cat percentage.   
+        # The VAT/CAT comes last so it only excecute,                         
+        # when all transaction is successfully.    
+        vat_amount = constant.VAT_RATE_MULTIPLIER * data.get("amount")     
+        cat_amount = constant.CAT_RATE_MULTIPLIER * data.get("amount")                                                                                      
+        create_monthly_task(Vat, vat_amount, due_day=constant.VAT_DUE_DAY)   
+        create_monthly_task(Cat, cat_amount, due_day=last_month_day())
+
         book = storage.get_by(Booking, id=book.id)
+        storage.save()
         return jsonify(book.to_dict()), 200
 
     except Exception as e:
