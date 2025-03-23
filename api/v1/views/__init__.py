@@ -21,8 +21,8 @@ from api.v1.views.users_groups import *
 from api.v1.views.messages import *
 from api.v1.views.vendors import *
 from api.v1.views.maintenaces import *
-from api.v1.views.vats import *
-from api.v1.views.cats import *
+from api.v1.views.tasks import *
+#from api.v1.views.cats import *
 from api.v1.views.expenditures import *
 from api.v1.views.sales import *
 from api.v1.views.inventories import *   

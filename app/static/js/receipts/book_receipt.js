@@ -47,7 +47,7 @@ $(document).ready(function() {
 
       // Render customer order table
       let time;
-      if (booking.is_short_rest) {
+      if (booking.is_short_rest || booking.is_half_booking) {
         time = 'Hours';
       } else if (booking.is_late_checkout) {
         time =  'Hours';

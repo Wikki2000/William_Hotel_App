@@ -62,7 +62,7 @@
     <script type="module" defer src="/static/js/dashboard/staff_management.js?v5"></script>
     <script type="module" defer src="/static/js/dashboard/vendor.js?v5"></script>
     <script type="module" defer src="/static/js/dashboard/maintenance.js?v5"></script>
-    <script type="module" defer src="/static/js/dashboard/vat.js?v5"></script>
+    <script type="module" defer src="/static/js/dashboard/task.js?v5"></script>
     <script type="module" defer src="/static/js/dashboard/cat.js?v5"></script>
     <script type="module" defer src="/static/js/dashboard/inventory/food_drink.js?v5"></script>
     <script type="module" defer src="/static/js/dashboard/inventory/menu_cart.js?v5"></script>
@@ -539,35 +539,23 @@
                 </div>
               </div>
 
-              <!-- Popup modal for VAT -->
+              <!-- Popup modal for VAT/CAT -->
               <div id="main__vat-year--inputPopup" class="popup-modal">
                 <div class="popup-modal-content vat__cat-popup--modal">
                   <!-- Close Button -->
                   <button class="close-btn closePopupModal">×</button>
-                  <h3 class="main__monthly-vatCat--title">Enter a year to view monthly VAT details</h3>
+                  <h3 class="main__monthly-vatCat--title"></h3>
                   <form id="main__enter-vat--yearForm">
                     <input id="main__vat-year--input" class="main__vatCat-year--input" type="number" min="2000" placeholder="Please enter a valid year (e.g., 2025)" required />
                     <div class="main__vatCat-container">
-                      <button class="table__header-cell-1 ui heading size-headings highlight-btn">View Monthly VAT</button>
+                      <button id="main__vatCat-btn" class="table__header-cell-1 ui heading size-headings highlight-btn">
+		        <!-- Button content dynamically loaded -->
+		      </button>
                     </div>
                   </form>
+		  <input id="task__type" type="hidden" />
                 </div>
               </div>
-
-              <!-- Popup modal for CAT -->
-              <div id="main__cat-year--inputPopup" class="popup-modal">
-                <div class="popup-modal-content cat__cat-popup--modal">
-                  <!-- Close Button -->
-                  <button class="close-btn closePopupModal">×</button>
-                  <h3 class="main__monthly-vatCat--title">Enter a year to view monthly CAT details</h3>
-                  <form id="main__enter-cat--yearForm">
-                    <input id="main__cat-year--input" class="main__vatCat-year--input" type="number" min="2000" placeholder="Please enter a valid year (e.g., 2025)" required />
-                    <div class="main__vatCat-container">
-                      <button class="table__header-cell-1 ui heading size-headings highlight-btn">View Monthly CAT</button>
-                    </div>
-                  </form>
-                </div>
-              </div>	   
             </section>
           </div>
         </div>

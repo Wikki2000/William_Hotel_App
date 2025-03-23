@@ -5,12 +5,15 @@ from models.customer import Customer
 from models.room import Room
 from models.user import User
 from models.sale import Sale
+from models.cat import Cat
+from models.vat import Vat
 from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import (
     bad_request, role_required, create_receipt, nigeria_today_date,
-    write_to_file, check_reservation
+    write_to_file, check_reservation, create_monthly_task, last_month_day
 )
+from api.v1.views import constant
 from models import storage
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime, date
@@ -312,6 +315,7 @@ def book_room(user_id: str, user_role: str, room_number: str):
     customer_data = data.get("customer") 
     booking_data = data.get("book")
 
+
     # Check that same room is not reserved same time
     checkin_date = booking_data.get("checkin")
     checkout_date = booking_data.get("checkout") 
@@ -369,6 +373,14 @@ def book_room(user_id: str, user_role: str, room_number: str):
         else:
             previous_room_sold = getattr(sale, "room_sold", 0)
             sale.room_sold += booking_data.get("amount")
+        
+        # Get the monthly vat and cat percentage.  
+        # The VAT/CAT comes last so it only excecute,                         
+        # when all transaction is successfully.    
+        vat_amount = constant.VAT_RATE_MULTIPLIER * booking_data.get("amount") 
+        cat_amount = constant.CAT_RATE_MULTIPLIER * booking_data.get("amount")
+        create_monthly_task(Vat, vat_amount, due_day=constant.VAT_DUE_DAY)  
+        create_monthly_task(Cat, cat_amount, due_day=last_month_day())
 
         storage.save()
         return jsonify({

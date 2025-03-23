@@ -671,14 +671,13 @@ $(document).ready(function () {
         } else if ($clickItem.hasClass('confirm__late-checkout--btn')) {
 
           const extensionBookingType = $('#store__typeof-extension').val();
+	  $('#late__checkout-popup--modal').hide();
 
           if (extensionBookingType === 'lateCheckoutBooking') {
             is_late_checkout = true;
             amount = LATE_CHECK_OUT_AMOUNT;
             duration = LATE_CHECK_OUT_DURATION;
             checkout = checkin = canadianDateFormat(new Date());
-
-            $('#late__checkout-popup--modal').hide();
           } else if (extensionBookingType === 'halfDayBooking') {
             const roomRate = $('#room__price-val').val();
             amount = roomRate / 2;
