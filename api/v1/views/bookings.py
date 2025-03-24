@@ -278,10 +278,15 @@ def update_booking_data(user_id: str, user_role: str, booking_id: str):
 
     if booking.is_early_checkin:
         booking.amount = booking_data.get("amount") + constant.IS_EARRLY_CHECK_IN_AMOUNT
+        today_sale.room_sold += constant.IS_EARRLY_CHECK_IN_AMOUNT
+
 
     # Update booking data
     for key, val in booking_data.items():
-        if key != "amount":
+        if booking.is_early_checkin:
+            if key != "amount":
+                setattr(booking, key, val)
+        else:
             setattr(booking, key, val)
     booking.checkin_by_id = user_id  # Update with staff that made changes
     booking.updated_at = TODAY_DATE
