@@ -27,3 +27,7 @@
 07:48 PM	2025-03-23	/api/v1/guests/861a43e3-26b9-4a52-b686-47393f1c1bf4/rooms/88d85407-dc3c-4b1f-a736-62c2acf28305/extend-stay	name 'booking_data' is not defined
 
 >>>>>>> afc0b5180c4598c34ff6f4ae87494a97e75d7999
+05:45 AM	2025-03-24	/api/v1/order-items	unsupported operand type(s) for +: 'NoneType' and 'int'
+
+05:47 AM	2025-03-24	/api/v1/orders/92694b1a-361e-44d8-84f0-9642b39ceb13/order-items	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
