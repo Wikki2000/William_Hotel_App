@@ -260,6 +260,8 @@ $(document).ready(() => {
   $('#dynamic__load-dashboard')
     .off('click', '#guest__dropdown--room-no')
     .on('click', '#guest__dropdown--room-no', function() {
+	    alert("You cannot perform this action now. This section under maintenance");
+	    return;
       const occupiedRoomUrl = API_BASE_URL + '/room-numbers';
       fetchData(occupiedRoomUrl)
         .then((rooms) => {

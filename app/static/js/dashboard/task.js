@@ -61,7 +61,7 @@ $(document).ready(function() {
       $('#dynamic__load-dashboard').load(url, function() {
 
         $('#main__vat-year').text(vatYear);
-
+	$('#task__type').text(TASK_TYPE);
         const vatUrl = API_BASE_URL + `/tasks/${vatYear}/${taskType}/get`;
         fetchData(vatUrl)
           .then((data) => {

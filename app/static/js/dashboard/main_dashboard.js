@@ -77,7 +77,8 @@ $(document).ready(function() {
 
 
   // This values are assign when handling switch case Room Number menu display.
-  let CHECK_IN, CHECK_OUT, AMOUNT, DURATION, SHORT_REST_OPTION, IS_RESERVE;
+  let CHECK_IN, CHECK_OUT, AMOUNT, DURATION;
+  let IS_EARLY_CHECKIN, SHORT_REST_OPTION, IS_RESERVE;
 
   // Handle the form submission for the booking form
   $('#dynamic__load-dashboard').on('submit', '#main__book-form', function (e) {
@@ -122,9 +123,11 @@ $(document).ready(function() {
       book: {
         duration: DURATION, guest_number, amount: AMOUNT, is_reserve,
         is_paid, checkin: CHECK_IN, checkout: CHECK_OUT, is_short_rest,
+	is_early_checkin: IS_EARLY_CHECKIN,
       },
       customer: { gender, name, address, phone, id_type, id_number, email }
     };
+	  console.log(BookingData);
 
     $('#main__popup-modal').css('display', 'flex');
 
@@ -270,6 +273,7 @@ $(document).ready(function() {
                       AMOUNT = DURATION * room.amount;
                       if ($('#main__id--checkin-val').val() === 'Yes') {
                         AMOUNT += EARLY_CHECKIN_AMOUNT;
+			IS_EARLY_CHECKIN = true;
 			$('#main__night-count').val(`${DURATION} Night(s)`);
 
                       }

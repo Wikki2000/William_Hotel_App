@@ -24,6 +24,7 @@ class Booking(BaseModel, Base):
     is_late_checkout = Column(Boolean, default=False)
     is_reserve = Column(Boolean, default=False)
     is_half_booking = Column(Boolean, default=False)
+    is_early_checkin = Column(Boolean, default=False)
 
     guest_number = Column(String(30), nullable=False)
     amount = Column(Float, nullable=False)

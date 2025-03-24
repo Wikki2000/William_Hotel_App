@@ -11,7 +11,7 @@ from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import (
     bad_request, role_required, create_receipt, nigeria_today_date,
-    write_to_file, check_reservation, create_monthly_task, last_month_day
+    get_task_month, write_to_file, check_reservation, create_monthly_task, last_month_day
 )
 from api.v1.views import constant
 from models import storage
@@ -258,8 +258,6 @@ def update_booking_data(user_id: str, user_role: str, booking_id: str):
     if not booking:
         abort(404)
 
-    print(booking.is_reserve)
-
     if not booking.is_use and not booking.is_reserve:
         msg = (
             "You only edit data for reserved guest " +
@@ -272,15 +270,19 @@ def update_booking_data(user_id: str, user_role: str, booking_id: str):
     room_data = data.get("room")
     customer = booking.customer
 
+
     # Update sales record of date when the room was book.
     booking_date = booking.created_at.strftime("%Y-%m-%d")
     today_sale = storage.get_by(Sale, entry_date=booking_date)
     today_sale.room_sold += booking_data.get("amount") - booking.amount
-    
+
+    if booking.is_early_checkin:
+        booking.amount = booking_data.get("amount") + constant.IS_EARRLY_CHECK_IN_AMOUNT
 
     # Update booking data
     for key, val in booking_data.items():
-        setattr(booking, key, val)
+        if key != "amount":
+            setattr(booking, key, val)
     booking.checkin_by_id = user_id  # Update with staff that made changes
     booking.updated_at = TODAY_DATE
 
@@ -345,7 +347,8 @@ def book_room(user_id: str, user_role: str, room_number: str):
         "customer_id": customer.id, "checkin_by_id": user.id,
         "guest_number": booking_data.get("guest_number"),
         "room_id": room.id, "amount": booking_data.get("amount"),
-        "is_short_rest": booking_data.get("is_short_rest")
+        "is_short_rest": booking_data.get("is_short_rest"),
+        "is_early_checkin": booking_data.get("is_early_checkin")
     }
 
     previous_room_sold = 0
