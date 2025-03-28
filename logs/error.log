@@ -96,3 +96,15 @@ WHERE users.email = %s
 
 02:44 PM	2025-03-28	/api/v1/orders/bf31f112-5151-416b-bac3-bee0275fa642/order-items	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
 
+03:57 PM	2025-03-28	/api/v1/bookings/fd0fad31-f6a2-4eb9-9364-0a38482d4a37/booking-details	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+04:01 PM	2025-03-28	/api/v1/orders/98515a61-ce4d-42cd-8039-155e4bdecfdf/order-items	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+07:18 PM	2025-03-28	/api/v1/orders/a06a20a6-33de-4db5-aea2-d1aeb3aae03b/order-items	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+07:23 PM	2025-03-28	/api/v1/orders/85de1627-e7dc-4010-8063-ab271275c979/order-items	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+07:57 PM	2025-03-28	/api/v1/bookings/6d86bf50-fd09-4437-a9b3-6ac5bb98cf9a/booking-details	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+07:58 PM	2025-03-28	/api/v1/bookings/6d86bf50-fd09-4437-a9b3-6ac5bb98cf9a/booking-details	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
