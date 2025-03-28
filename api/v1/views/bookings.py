@@ -10,8 +10,9 @@ from models.vat import Vat
 from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import (
-    bad_request, role_required, create_receipt, nigeria_today_date,
-    get_task_month, write_to_file, check_reservation, create_monthly_task, last_month_day
+    get_current_task, bad_request, role_required, create_receipt,
+    nigeria_today_date, get_task_month, write_to_file, check_reservation,
+    create_monthly_task, last_month_day, update_task, update_room_sold,
 )
 from api.v1.views import constant
 from models import storage
@@ -97,15 +98,20 @@ def bookings(user_id: str, user_role: str):
                 Booking, start_date_obj, end_date_obj, "created_at",
             )
         else:
-            guests = storage.get_start_with(Customer, "name", search_string)
-            for guest in guests:
-                booking = storage.get_by(Booking, customer_id=guest.id)
-                if booking: books.append(booking)
+            if search_string == "active_bookings":
+                books = storage.all_get_by(Booking, is_use=True)
+            elif search_string == "reserve_bookings":
+                books = storage.all_get_by(Booking, is_reserve=True)
+            else:
+                guests = storage.get_start_with(Customer, "name", search_string)
+                for guest in guests:
+                    booking = storage.get_by(Booking, customer_id=guest.id)
+                    if booking: books.append(booking)
             
         if not books:
             return jsonify([]), 200
 
-        sorted_books = sorted(books, key=lambda book : book.updated_at)
+        sorted_books = sorted(books, key=lambda book : book.customer.name)
 
         response = [{
             "booking": booking.to_dict(),
@@ -245,60 +251,94 @@ def clear_booking_bill(user_id: str, user_role: str, booking_id: str):
 @api_views.route("/bookings/<booking_id>/edit", methods=["PUT"])
 @role_required(["staff", "manager", "admin"])
 def update_booking_data(user_id: str, user_role: str, booking_id: str):
-    TODAY_DATE = nigeria_today_date()
-    CURRENT_TIME = time = datetime.now().strftime("%I:%M %p")
     """Update guest data use in booking"""
-    data = request.get_json()
-    required_fields = ["customer", "booking", "room"]
-    error_response = bad_request(data, required_fields)
-    if error_response:
-        return jsonify(error_response), 400
+    try:
+        TODAY_DATE = nigeria_today_date()
+        data = request.get_json()
+        required_fields = ["customer", "booking", "room"]
+        error_response = bad_request(data, required_fields)
+        if error_response:
+            return jsonify(error_response), 400
 
-    booking = storage.get_by(Booking, id=booking_id)
-    if not booking:
-        abort(404)
+        booking_data = data.get("booking") 
+        customer_data = data.get("customer")
+        room_data = data.get("room")
 
-    if not booking.is_use and not booking.is_reserve:
-        msg = (
-            "You only edit data for reserved guest " +
-            "or guest currently lodging"
+        new_room = storage.get_by(Room, number=room_data.get("new_room"))
+        old_room = storage.get_by(Room, number=room_data.get("old_room"))
+
+        booking = storage.get_by(Booking, id=booking_id)
+        if not booking:
+            abort(404)
+
+        if not booking.is_use and not booking.is_reserve:
+            msg = (
+                "You only edit data for reserved guest " +
+                "or guest currently lodging"
+            )
+            return jsonify({"error": f"{msg}"}), 422
+
+        room_status = ""
+        if booking.is_use:
+            room_status = "occupied"
+        elif booking.is_reserve:
+            room_status = "reserved"
+
+        new_room_reservation = storage.all_get_by(
+            Booking, room_id=new_room.id, is_reserve=True
         )
-        return jsonify({"error": f"{msg}"}), 422
+        reservation_error = check_reservation(
+            new_room_reservation, booking_data.get("checkout"),
+            booking_data.get("checkin"), new_room.number
+        )
+        if reservation_error and new_room.number != old_room.number:
+            return jsonify(reservation_error), 422
 
-    booking_data = data.get("booking")
-    customer_data = data.get("customer")
-    room_data = data.get("room")
-    customer = booking.customer
+        customer = booking.customer 
+        bookings = []
+        if booking.is_use:
+            bookings = storage.all_get_by(   
+                Booking, room_id=old_room.id, customer_id=customer.id, is_use=True
+            )
+        elif booking.is_reserve:
+            bookings = storage.all_get_by(
+                Booking, room_id=old_room.id,
+                customer_id=customer.id, is_reserve=True
+            )
 
+        # Move all bookings to new room & update sales status.
+        if new_room.number != old_room.number:
+            for booking in bookings:
+                # Update all bookings of guest to new room.
+                setattr(booking, "room_id", new_room.id)
+        
+            # Update room status.
+            setattr(new_room, "status", room_status)
+            setattr(old_room, "status", "available")
 
-    # Update sales record of date when the room was book.
-    booking_date = booking.created_at.strftime("%Y-%m-%d")
-    today_sale = storage.get_by(Sale, entry_date=booking_date)
-    today_sale.room_sold += booking_data.get("amount") - booking.amount
+        update_task(booking_data.get("amount"), booking.amount)
+        update_room_sold(booking_data.get("amount"), booking.amount)
 
-    if booking.is_early_checkin:
-        booking.amount = booking_data.get("amount") + constant.IS_EARRLY_CHECK_IN_AMOUNT
-        today_sale.room_sold += constant.IS_EARRLY_CHECK_IN_AMOUNT
-
-
-    # Update booking data
-    for key, val in booking_data.items():
-        if booking.is_early_checkin:
-            if key != "amount":
-                setattr(booking, key, val)
-        else:
+        # Update booking data of current selected booking.
+        for key, val in booking_data.items():
             setattr(booking, key, val)
-    booking.checkin_by_id = user_id  # Update with staff that made changes
-    booking.updated_at = TODAY_DATE
+        booking.checkin_by_id = user_id  # Update with staff that made changes
+        booking.updated_at = TODAY_DATE
 
-    # Update customer data
-    for key, val in customer_data.items():
-        setattr(customer, key, val)
-    customer.updated_at = TODAY_DATE
+        # Update customer data of current selected booking.
+        for key, val in customer_data.items():
+            setattr(customer, key, val)
+        customer.updated_at = TODAY_DATE
+        
+        storage.save()
+        storage.close()
+        return jsonify({"message": "Booking Data Updated Successfully"}), 201
 
-    storage.save()
-    storage.close()
-    return jsonify({"message": "Booking Data Updated Successfully"}), 201
+    except Exception as e:
+        print(str(e))
+        return jsonify({"error": str(e)}), 500
+    finally:
+        storage.close()
 
 
 @api_views.route("/rooms/<string:room_number>/book", methods=["POST"])
@@ -329,7 +369,9 @@ def book_room(user_id: str, user_role: str, room_number: str):
 
     bookings = storage.all_get_by(Booking, room_id=room.id, is_reserve=True)
 
-    resarvation_error_msg = check_reservation(bookings, checkout_date, checkin_date, room.number)
+    resarvation_error_msg = check_reservation(
+        bookings, checkout_date, checkin_date, room.number
+    )
     if resarvation_error_msg:
         return jsonify(resarvation_error_msg), 422
 
@@ -370,25 +412,8 @@ def book_room(user_id: str, user_role: str, room_number: str):
         receipt = create_receipt("booking_id", book.id)
         storage.new(receipt)
 
-        # Add new daily transaction if exists else increase sum by existing one
-
-        sale = storage.get_by(Sale, entry_date=TODAY_DATE)
-        if not sale:
-            sale = Sale(
-                entry_date=TODAY_DATE, room_sold=booking_data.get("amount")
-            )
-            storage.new(sale)
-        else:
-            previous_room_sold = getattr(sale, "room_sold", 0)
-            sale.room_sold += booking_data.get("amount")
-        
-        # Get the monthly vat and cat percentage.  
-        # The VAT/CAT comes last so it only excecute,                         
-        # when all transaction is successfully.    
-        vat_amount = constant.VAT_RATE_MULTIPLIER * booking_data.get("amount") 
-        cat_amount = constant.CAT_RATE_MULTIPLIER * booking_data.get("amount")
-        create_monthly_task(Vat, vat_amount, due_day=constant.VAT_DUE_DAY)  
-        create_monthly_task(Cat, cat_amount, due_day=last_month_day())
+        update_task(booking_data.get("amount")) 
+        update_room_sold(booking_data.get("amount"))
 
         storage.save()
         return jsonify({

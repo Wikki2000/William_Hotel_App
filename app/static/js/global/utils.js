@@ -473,3 +473,11 @@ export function togleTableMenuIcon() {
   $('.fa-times').hide();
   $('.manage').hide();
 }
+
+export function bookingDuration(checkoutDate, CheckinDate) {
+  const diffIntTime = (
+    new Date(checkoutDate) - new Date(CheckinDate)
+  );
+  const duration = diffIntTime / (1000 * 60 * 60 *24);
+  return duration;
+}
