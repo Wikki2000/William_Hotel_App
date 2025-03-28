@@ -434,13 +434,13 @@ def get_task_month(due_day):
     return vat_month
 
 
-def update_room_sold(new_amount, old_amount=0):
-    today_date = nigeria_today_date()
+def update_room_sold(new_amount, old_amount=0, date=None):
+    sale_date = date if date else nigeria_today_date()
 
     # Update the room sold.
-    today_sale = storage.get_by(Sale, entry_date=today_date)
+    today_sale = storage.get_by(Sale, entry_date=sale_date)
     if not today_sale:
-        today_sale = Sale(entry_date=today_date, room_sold=new_amount)
+        today_sale = Sale(entry_date=sale_date, room_sold=new_amount)
         storage.new(today_sale)
     else:
         today_sale.room_sold += new_amount - old_amount

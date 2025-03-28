@@ -316,8 +316,9 @@ def update_booking_data(user_id: str, user_role: str, booking_id: str):
             setattr(new_room, "status", room_status)
             setattr(old_room, "status", "available")
 
+        sale_date = booking.created_at.strftime("%Y-%m-%d")
         update_task(booking_data.get("amount"), booking.amount)
-        update_room_sold(booking_data.get("amount"), booking.amount)
+        update_room_sold(booking_data.get("amount"), booking.amount, sale_date)
 
         # Update booking data of current selected booking.
         for key, val in booking_data.items():

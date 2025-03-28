@@ -488,6 +488,7 @@ $(document).ready(() => {
         showNotification('Start date and end date required', true);
         return;
       }
+      $('.guest__list-filter-container .filter').removeClass('highlight-btn');
       const url = API_BASE_URL + `/bookings/${startDate}/${endDate}/get`
       fetchData(url)
         .then(({ bookings, accumulated_sum }) => {

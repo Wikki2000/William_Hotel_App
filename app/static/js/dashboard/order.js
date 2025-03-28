@@ -527,11 +527,12 @@ $(document).ready(function() {
 
       const startDateFormated = britishDateFormat(startDate);
       const endDateFormated = britishDateFormat(endDate);
-
       if (!startDate || !endDate) {
         showNotification('Start date and end date required', true);
         return;
       }
+
+      $('.order__filter').removeClass('highlight-btn'); 
       const url = API_BASE_URL + `/orders/${startDate}/${endDate}/get`
       fetchData(url)
         .then(({ accumulated_sum, orders }) => {
@@ -558,7 +559,5 @@ $(document).ready(function() {
               console.log(error);
             });
         });
-
-
     });
 });
