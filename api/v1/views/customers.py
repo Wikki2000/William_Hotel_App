@@ -11,7 +11,8 @@ from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import (
     create_receipt, bad_request, role_required, nigeria_today_date,
-    check_reservation, write_to_file, create_monthly_task, last_month_day
+    check_reservation, write_to_file, create_monthly_task, last_month_day,
+    update_task, update_room_sold
 )
 from api.v1.views import constant
 from models import storage
@@ -19,37 +20,6 @@ from datetime import date, datetime
 
 
 ERROR_LOG_FILE = "logs/error.log"
-
-
-@api_views.route(
-    "/guests/<string:old_room_number>/<string:new_room_number>/change-room",
-    methods=["PUT"]
-)
-@role_required(["manager", "admin"])
-def change_guest_room(
-    user_role: str, user_id: str, old_room_number, new_room_number
-):
-    """Checkout guest to a different room."""
-    TODAY_DATE = nigeria_today_date()
-    CURRENT_TIME = time = datetime.now().strftime("%I:%M %p")
-    old_room = storage.get_by(Room, number=old_room_number)
-    new_room = storage.get_by(Room, number=new_room_number)
-    if not old_room or not new_room:
-        abort(404)
-
-    old_room.status = "available"
-    new_room.status = "occupied"
-
-    # Book the new room selected for the guest.
-    booking = storage.get_by(Booking, room_id=old_room.id, is_use=True)
-    if booking:
-        booking.room_id = new_room.id
-
-    storage.save()
-    return jsonify({
-        "room": {"name": new_room.name, "amount": new_room.amount},
-    }), 200
-
 
 @api_views.route(
     "/guests/<string:customer_id>/rooms/<string:room_id>/extend-stay",
@@ -72,7 +42,9 @@ def extend_guest_stay(user_role: str, user_id: str, room_id, customer_id):
     room = storage.get_by(Room, id=room_id)
     checkout_date = data.get("checkout")
     checkin_date = data.get("checkin")
-    resarvation_error_msg = check_reservation(bookings, checkout_date, checkin_date, room.number)
+    resarvation_error_msg = check_reservation(
+        bookings, checkout_date, checkin_date, room.number
+    )
     if resarvation_error_msg:
         return jsonify(resarvation_error_msg), 422
 
@@ -80,7 +52,6 @@ def extend_guest_stay(user_role: str, user_id: str, room_id, customer_id):
         "room_id": room_id, "customer_id": customer_id, "checkin_by_id": user_id
     })
 
-    previous_booking_amount = 0
     book = None
     receipt = None
     try:
@@ -89,43 +60,18 @@ def extend_guest_stay(user_role: str, user_id: str, room_id, customer_id):
         storage.new(book)
         storage.save()
 
-        # Add new booking to daily sale
-        transaction = storage.get_by(
-            Sale, entry_date=TODAY_DATE
-        )
-
-        if not transaction:
-            transaction = Sale(
-                entry_date=TODAY_DATE,
-                room_sold=booking_data.get("amount")
-            )
-            storage.new(transaction)
-
-        else:
-            previous_booking_amount = getattr(transaction, "room_sold", 0)
-            transaction.room_sold += data.get("amount")
-
         # Create booking receipt object.
         receipt = create_receipt("booking_id", book.id) 
         storage.new(receipt)
 
-        # Get the monthly vat and cat percentage.   
-        # The VAT/CAT comes last so it only excecute,                         
-        # when all transaction is successfully.    
-        vat_amount = constant.VAT_RATE_MULTIPLIER * data.get("amount")     
-        cat_amount = constant.CAT_RATE_MULTIPLIER * data.get("amount")                                                                                      
-        create_monthly_task(Vat, vat_amount, due_day=constant.VAT_DUE_DAY)   
-        create_monthly_task(Cat, cat_amount, due_day=last_month_day())
-
-        book = storage.get_by(Booking, id=book.id)
+        update_task(data.get("amount"))
+        update_room_sold(data.get("amount"))
         storage.save()
+        book = storage.get_by(Booking, id=book.id) 
         return jsonify(book.to_dict()), 200
 
     except Exception as e:
         storage.delete_many([book, receipt])
-        if transaction:
-            if transaction.room_sold:
-                transaction.room_sold = previous_booking_amount
         storage.save()
         print(str(e))
         error = f"{CURRENT_TIME}\t{TODAY_DATE}\t{api_path}\t{str(e)}\n\n"
@@ -134,6 +80,7 @@ def extend_guest_stay(user_role: str, user_id: str, room_id, customer_id):
 
     finally:
         storage.close()
+
 
 @api_views.route(
     "/guests/<string:customer_id>/<string:booking_id>/<string:status>/service-list"

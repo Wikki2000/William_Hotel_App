@@ -15,10 +15,14 @@ from typing import(
 from redis import Redis
 from models.private_message import PrivateMessage
 from models.receipt import Receipt
+from models.sale import Sale
+from models.vat import Vat
+from models.cat import Cat
 import base64
 from datetime import datetime
 import pytz
 from calendar import monthrange
+from api.v1.views import constant
 
 
 r = Redis(host="localhost", port=6379, db=0)  # Create Redis instance
@@ -346,6 +350,7 @@ def check_reservation(obj_list, checkout_date, checkin_date, room_no):
 
     for booking in obj_list:
         booking_checkin_date = booking.checkin.strftime("%Y-%m-%d")
+
         booking_checkout_date = booking.checkout.strftime("%Y-%m-%d")
         if (
                 booking.is_reserve and
@@ -364,7 +369,9 @@ def check_reservation(obj_list, checkout_date, checkin_date, room_no):
 # ===================================================================== #
 #                          VAT/CAT Helper Function                        #
 # ===================================================================== #
-def create_monthly_task(cls, task_amount: float, due_day: int):
+def create_monthly_task(
+    cls, task_amount: float, due_day: int, old_amount: float
+):
     """
     Create or accumulate monthly VAT/CAT.
 
@@ -378,7 +385,7 @@ def create_monthly_task(cls, task_amount: float, due_day: int):
         year = today_date.year
 
         task_month = get_task_month(due_day)
-        task = storage.get_by(cls, month=f"{task_month}_{year}")
+        task = get_current_task(cls, due_day)
 
         # Vat flag true to be due on 1 day ahead the due day.
         if task and day == due_day + 1:
@@ -388,10 +395,20 @@ def create_monthly_task(cls, task_amount: float, due_day: int):
             task = cls(month=f"{task_month}_{year}", amount=task_amount)
             storage.new(task)
         else:
-            task.amount += task_amount
+            task.amount += task_amount - old_amount
     except Exception as e:
         storage.rollback()
         raise Exception("An Internal Error Occur")
+
+
+def get_current_task(cls, due_day):
+    today_date = nigeria_today_date() 
+    task_month = get_task_month(due_day)
+    year = today_date.year
+    task = storage.get_by(cls, month=f"{task_month}_{year}")
+    if task:
+        return task
+    return None
 
 
 def get_task_month(due_day):
@@ -415,6 +432,28 @@ def get_task_month(due_day):
     # Accumulation for new month vat start on 20th.
     vat_month = month_mapper[month] if day <= due_day else month_mapper[month + 1]
     return vat_month
+
+
+def update_room_sold(new_amount, old_amount=0):
+    today_date = nigeria_today_date()
+
+    # Update the room sold.
+    today_sale = storage.get_by(Sale, entry_date=today_date)
+    if not today_sale:
+        today_sale = Sale(entry_date=today_date, room_sold=new_amount)
+        storage.new(today_sale)
+    else:
+        today_sale.room_sold += new_amount - old_amount
+
+
+def update_task(new_amount, old_amount=0):
+    vat_new_amount = constant.VAT_RATE_MULTIPLIER * new_amount
+    vat_old_amount = constant.VAT_RATE_MULTIPLIER * old_amount
+    create_monthly_task(Vat, vat_new_amount, constant.VAT_DUE_DAY, vat_old_amount)
+
+    cat_new_amount = constant.CAT_RATE_MULTIPLIER * new_amount
+    cat_old_amount = constant.CAT_RATE_MULTIPLIER * old_amount
+    create_monthly_task(Cat, cat_new_amount, last_month_day(), cat_old_amount)
 
 
 def nigeria_today_date():

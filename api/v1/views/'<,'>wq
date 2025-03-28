@@ -98,15 +98,10 @@ def bookings(user_id: str, user_role: str):
                 Booking, start_date_obj, end_date_obj, "created_at",
             )
         else:
-            if search_string == "active_bookings":
-                books = storage.all_get_by(Booking, is_use=True)
-            elif search_string == "reserve_bookings":
-                books = storage.all_get_by(Booking, is_reserve=True)
-            else:
-                guests = storage.get_start_with(Customer, "name", search_string)
-                for guest in guests:
-                    booking = storage.get_by(Booking, customer_id=guest.id)
-                    if booking: books.append(booking)
+            guests = storage.get_start_with(Customer, "name", search_string)
+            for guest in guests:
+                booking = storage.get_by(Booking, customer_id=guest.id)
+                if booking: books.append(booking)
             
         if not books:
             return jsonify([]), 200

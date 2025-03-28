@@ -5,6 +5,10 @@
   }
 }
 
+#guest__booking-type {
+  display: flex;
+  justify-content: space-between;
+}
 .guest-input-column {
   display: flex;
   position: relative;

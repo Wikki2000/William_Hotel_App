@@ -2,7 +2,7 @@ import {
   ajaxRequest, getBaseUrl, validateForm, getFormDataAsDict,
   confirmationModal, displayMenuList, showNotification, fetchData,
   previewImageAndReurnBase64, britishDateFormat, togleTableMenuIcon,
-  canadianDateFormat, closeConfirmationModal
+  bookingDuration, canadianDateFormat, closeConfirmationModal
 } from '../global/utils.js';
 import { displayRoomData, roomTableTemplate } from '../global/templates.js';
 import {
@@ -588,8 +588,7 @@ $(document).ready(function () {
           )
           return;
         } else {
-          const diffIntTime = new Date(checkout) - new Date(checkin);
-          const duration = diffIntTime / (1000 * 60 * 60 *24);
+	  const duration = bookingDuration(checkout, checkin);
           $('#guest__extend-stay--modal #count__nights')
             .val(`${duration} Night(s)`);
         }
@@ -658,8 +657,7 @@ $(document).ready(function () {
         let duration, amount, is_late_checkout, is_half_booking;
         if ($clickItem.hasClass('guest__extend-stay--confirm')) {
 
-          const diffIntTime = new Date(checkout) - new Date(checkin);
-          duration = diffIntTime / (1000 * 60 * 60 *24);
+          duration = bookingDuration(checkout, checkin); 
           is_late_checkout = false;
 
           // Get total amount of room book base on night durations.
@@ -699,9 +697,10 @@ $(document).ready(function () {
             $('#guest__extend-stay--form').trigger('reset');
             $('#guest__extend-stay--form input[name="checkin"]')
               .val(canadianDateFormat(new Date()));
+	    const timeFrame = response.is_late_checkout || response.is_half_booking ? 'Hours' : 'Night(s)';
 
             const msg = (
-              `Duration of guest extended by ${duration} Night(s)`
+              `Duration of guest extended by ${duration} ${timeFrame}`
             );
             showNotification(msg);
 
@@ -709,6 +708,8 @@ $(document).ready(function () {
             const previousServiceCharge = parseFloat(
               $('#total__service-charge--amount').text().replaceAll(',','')
             );
+	    const updatedAmt = previousServiceCharge + amount;
+	    $('#total__service-charge--amount').text(updatedAmt.toLocaleString());
 
             const date = britishDateFormat(response.created_at);
             $('.order__history--table-body').prepend(

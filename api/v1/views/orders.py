@@ -15,7 +15,7 @@ from api.v1.views import api_views
 from api.v1.views.utils import (
     bad_request, create_receipt, role_required, nigeria_today_date,
     update_item_stock, rollback_order_on_error, update_sales_data,
-    write_to_file, create_monthly_task, last_month_day
+    update_task, write_to_file, create_monthly_task, last_month_day
 )
 from api.v1.views import constant
 from models import storage
@@ -333,15 +333,7 @@ def order_items(user_role: str, user_id: str):
         for item in item_data:
             update_item_stock(item, customer, new_order, item_sold)
 
-
-        # Get the monthly vat and cat percentage.
-        # The VAT/CAT comes last so it only excecute,
-        # when all transaction is successfully.
-        vat_amount = constant.VAT_RATE_MULTIPLIER * order_data.get("amount")
-        cat_amount = constant.CAT_RATE_MULTIPLIER * order_data.get("amount")
-
-        create_monthly_task(Vat, vat_amount, due_day=constant.VAT_DUE_DAY)
-        create_monthly_task(Cat, cat_amount, due_day=last_month_day())
+        update_task((order_data.get("amount")))
 
         storage.save()
         return jsonify({"order_id": new_order.id}), 200

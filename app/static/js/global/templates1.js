@@ -7,11 +7,13 @@
 export function taskListTemplate(data) {
   const paymentStatus = data.is_paid ? 'Paid' : 'Pending';
   const paymentStatusColor = data.is_paid ? 'green' : 'red';
+  
+  const taskType = data.__class__ === 'Cat' ? 'cat' : 'vat';
 
   const vatMonthYear = data.month[0].toUpperCase() + data.month.slice(1);
   const vatMonth = vatMonthYear.split('_')[0];
 
-  const vatMonthText = data.is_due ? vatMonth : `${vatMonth} vat accumulating`;
+  const vatMonthText = data.is_due ? vatMonth : `${vatMonth} ${taskType} accumulating`;
   const row = `<tr data-id="${data.id}">
     <td class="">
       <p class="ui text size-textmd left-margin month">${vatMonthText}</p>

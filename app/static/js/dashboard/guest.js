@@ -1,7 +1,7 @@
 import {
   ajaxRequest, britishDateFormat, fetchData, getBaseUrl, canadianDateFormat,
   confirmationModal, showNotification, validateForm, displayMenuList,
-  getFormattedTime, closeConfirmationModal,
+  bookingDuration, getFormattedTime, closeConfirmationModal,
 } from '../global/utils.js';
 import {  guestListTableTemplate }  from '../global/templates.js';
 
@@ -10,6 +10,7 @@ $(document).ready(() => {
   const APP_BASE_URL = getBaseUrl()['appBaseUrl'];
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
   const USER_ROLE = localStorage.getItem('role');
+  let SHORT_REST_OPTION, IS_LATE_CHECKOUT, IS_HALF_DAY;
 
   const $modal = $("#guestModal");
 
@@ -46,10 +47,10 @@ $(document).ready(() => {
               time = 'Hours';
               hide = 'none';
             } else if (booking.is_half_booking) {
-	      bookingType = 'Half Day';
-	      time = 'Hours';
-	      hide = 'none';
-	    } else{
+              bookingType = 'Half Day';
+              time = 'Hours';
+              hide = 'none';
+            } else{
               bookingType = 'Full Tiime';
               time = 'Night(s)';
               hide = '';
@@ -163,12 +164,44 @@ $(document).ready(() => {
         );
         fetchData(bookingUrl)
           .then(({ booking, customer, room }) => {
+
+            let bookingType;
+            if (booking.is_short_rest) {
+              bookingType = 'Short Time';
+              $('#guest__checkout-container, #guest__checkin-container').addClass('hide');
+              $('#guest__night-count').val(`${SHORT_TIME_DURATION} Hours`);
+
+              SHORT_REST_OPTION = true;
+              IS_LATE_CHECKOUT = IS_HALF_DAY = false;
+            } else if (booking.is_late_checkout) {
+              bookingType = 'Late Checkout';
+              $('#guest__checkout-container, #guest__checkin-container').addClass('hide');
+              $('#guest__night-count').val(`${LATE_CHECK_OUT_DURATION} Hours`);
+
+              IS_LATE_CHECKOUT = true;
+              SHORT_REST_OPTION = IS_HALF_DAY = false;
+            } else if (booking.is_half_booking) {
+              bookingType = 'Half Day';
+              $('#guest__checkout-container, #guest__checkin-container').addClass('hide');
+              $('#guest__night-count').val(`${HALF_DAY_DURATION} Hours`);
+
+              IS_HALF_DAY = true;
+              SHORT_REST_OPTION = IS_LATE_CHECKOUT = false;
+            } else {
+              $('#guest__checkout-container, #guest__checkin-container').removeClass('hide');
+              bookingType = 'Full Time';
+              const duration = bookingDuration(booking.checkout, booking.checkin);
+              $('#guest__night-count').val(`${duration} Night(s)`);
+            }
+
+            const is_early_checkin = booking.is_early_checkin ? 'yes' : 'no';
+
+            $('#guest__booking-type span').text(bookingType);
             $('#guest__checkinDate').val(canadianDateFormat(booking.checkin));
-            $('#guest__duration').val(booking.duration);
             $('#guest__checkout').val(canadianDateFormat(booking.checkout));
             $('#guest__roomNumber').val(room.number);
             $('#guest__roomType').val(room.name);
-            $('#guest__roomAmount').val('₦' + room.amount.toLocaleString());
+            $('#guest__roomAmount').val('₦' + booking.amount.toLocaleString());
             $('#guest__name').val(customer.name);
             $('#guest__phoneNumber').val(customer.phone);
             $('#guest-idType span').text(customer.id_type);
@@ -178,11 +211,18 @@ $(document).ready(() => {
             $('#guest__address').val(customer.address);
 
             $('#guest__room-number-menu').text(room.number);
+            $('#guest__room-number').val(room.number);
 
             $('#guest__genderValue').val(customer.gender);
             $('#guest__idTypeValue').val(customer.id_type);
 
             $('#guest__booking-id').val(booking.id);
+            $('#room__rate').val(room.amount);
+            $('#is__early-checkin').val(is_early_checkin);
+
+            SHORT_REST_OPTION = booking.is_short_rest;
+            IS_LATE_CHECKOUT = booking.is_late_checkout;
+            IS_HALF_DAY = booking.is_half_booking;
           })
           .catch((error) => {
             console.log(error);
@@ -196,12 +236,51 @@ $(document).ready(() => {
         }
       });
 
+      let initialCheckin, initialCheckout;
+      // Adjust duration and amount when checkin/checkout date is enter.
+      $('#dynamic__load-dashboard')
+        .off('focus', '#guest__checkinDate, #guest__checkout')
+        .on('focus', '#guest__checkinDate, #guest__checkout', function() {
+          initialCheckin = $('#guest__checkinDate').val();
+          initialCheckout = $('#guest__checkout').val();
+        });
+      $('#dynamic__load-dashboard')
+        .off('input', '#guest__checkinDate, #guest__checkout')
+        .on('input', '#guest__checkinDate, #guest__checkout', function() {
+          const $clickItem = $(this);
+          const checkin = $('#guest__checkinDate').val();
+          const checkout = $('#guest__checkout').val();
+
+          if (new Date(checkout) - new Date(checkin) < 1) {
+            showNotification(  
+              'Check Out date must not be earlier than Check In date', true      
+            );
+
+            $('#guest__checkinDate').val(initialCheckin);
+            $('#guest__checkout').val(initialCheckout);
+            return; 
+          } 
+          /*
+          else if (canadianDateFormat(checkin) <= canadianDateFormat(new Date())) {
+            'Check Out date must not be earlier than Today's date', true
+          }*/
+          const roomRate = parseFloat($('#room__rate').val());
+          const is_early_checkin = $('#is__early-checkin').val();
+          const duration = bookingDuration(checkout, checkin);
+          const bookingAmount = (
+            is_early_checkin === 'no' ? roomRate * duration :
+            roomRate * duration + EARLY_CHECKIN_AMOUNT
+          );
+          $('#guest__roomAmount').val('₦' + bookingAmount.toLocaleString());
+
+          $('#guest__night-count').val(`${duration} Night(s)`);
+        });
+
       // Show dropdown menu
       $('#dynamic__load-dashboard')
-        .on('click', '#guest-gender, #guest-idType', function() {
+        .on('click', '#guest__booking-type, #guest-gender, #guest-idType', function() {
           const $clickMenu = $(this);
           const clickMenuId = $clickMenu.attr('id');
-          const selectedMenu = $clickMenu.find('span').text();
 
           // Ensure that only one dropdown menu show at a time
           $('#guest__idType-dropdown, #guest__gender-dropdown').hide();
@@ -212,7 +291,52 @@ $(document).ready(() => {
             case 'guest-gender':
               $('#guest__gender-dropdown').show();
               break;
+
+            case 'guest__booking-type':
+              $('#guest__booking-type-menu').show();
+              break;
           }
+        });
+
+      // Booking Option handler.
+      $('#dynamic__load-dashboard')
+        .on('click', '.guest__booking-option', function() {
+          const $clickMenu = $(this);                      
+          const clickMenuId = $clickMenu.attr('id');
+          const selectedOption = $clickMenu.text();
+
+          function resetToShortTimeDate(duration, amount) {
+            const todayDate = canadianDateFormat(new Date());
+            const checkin = $('#guest__checkinDate').val(todayDate);
+            const checkout = $('#guest__checkout').val(todayDate);
+
+            $('#guest__checkout-container, #guest__checkin-container').addClass('hide');
+            $('#guest__night-count').val(`${duration} Hours`);
+            $('#guest__roomAmount').val('₦' + amount.toLocaleString());
+          }
+
+          if (selectedOption.toLowerCase() === 'full time') {      
+            $('#guest__checkout-container, #guest__checkin-container').removeClass('hide');    
+            $('#guest__night-count').val('0 Night(s)');
+            $('#guest__roomAmount').val('₦0');
+
+            SHORT_REST_OPTION = IS_LATE_CHECKOUT = IS_HALF_DAY = false;
+
+          } else if (selectedOption.toLowerCase() === 'half day') {
+            IS_HALF_DAY = true;
+            SHORT_REST_OPTION = IS_LATE_CHECKOUT = false;
+            const roomRate = parseFloat($('#room__rate').val());
+            const halfDayAmount = 0.5 * roomRate;
+            resetToShortTimeDate(HALF_DAY_DURATION, halfDayAmount);
+          } else if (selectedOption.toLowerCase() === 'late checkout') {        
+            IS_LATE_CHECKOUT = true;
+            SHORT_REST_OPTION = IS_HALF_DAY = false;
+            resetToShortTimeDate(LATE_CHECK_OUT_DURATION, LATE_CHECK_OUT_AMOUNT);
+          } else if (selectedOption.toLowerCase() === 'short time') {
+            SHORT_REST_OPTION = true;
+            resetToShortTimeDate(SHORT_TIME_DURATION, SHORT_REST_AMOUNT);
+          }
+          $('#guest__booking-type span').text(selectedOption);
         });
 
       // Get option selected from drop-down menu
@@ -229,28 +353,35 @@ $(document).ready(() => {
           $('#guest-gender span').text(selectedMenu); // Display option
         }
         else if($clickItem.hasClass('guest__dropdown--room-no')) {
-          const newRoomNumber = $(this).text();
-          const oldRoomNumber = $('#guest__room-number-menu').text();
+          const $clickItem = $(this);
+          const roomNumber = $clickItem.text();
+          //const newRoomNumber = $(this).text();
+          //const oldRoomNumber = $('#guest__room-number').val();
+          //const bookingId = $('#guest__booking-id').val();
+          //const oldRoomRate = $('#room__rate').val();
 
-          $('#guest__room-number-menu').text(newRoomNumber);
-          const roomUpdateUrl = (
-            API_BASE_URL + 
-            `/guests/${oldRoomNumber}/${newRoomNumber}/change-room`
-          );
-          ajaxRequest(roomUpdateUrl, 'PUT', null,
-            ({ room, customer }) => {
-              $('#guest__roomAmount').val(room.amount);
-              $('#guest__roomType').val(room.name);
-              showNotification(
-                `Guest transfer from room ${oldRoomNumber} to room ${newRoomNumber}`
-              );
-            },
-            (error) => {
-              showNotification('An error: Try Again !', true);
+          $('#guest__room-number-menu').text(roomNumber);
+          const roomUpdateUrl = API_BASE_URL + `/rooms/${roomNumber}`;
+          fetchData(roomUpdateUrl)
+            .then((data) => {
+              $('#room__rate').val(data.amount);  // Update with the new room amount.
+              const bookingType = $('#guest__booking-type span')
+                .text().toLowerCase();
+              const roomCount = parseInt($('#guest__night-count').val().split(' '));
+              if (bookingType === 'full time' && roomCount > 0) {
+                const earlyCheckinAmt = $('#is__early-checkin').val() === 'yes' ? EARLY_CHECKIN_AMOUNT : 0;
+                const bookingAmount = roomCount * data.amount + earlyCheckinAmt;
+                $('#guest__roomAmount').val(`₦${bookingAmount.toLocaleString()}`);
+              } else if (bookingType === 'half day') {
+                const halfBookingAmt = 0.5 * data.amount;
+                $('#guest__roomAmount')
+                  .val(`₦${halfBookingAmt.toLocaleString()}`);
+              }
+              $('#guest__roomType').val(data.name);
+            })
+            .catch((error) => {
               console.log(error);
-            }
-          );
-
+            });
         }
       });
     }
@@ -260,8 +391,6 @@ $(document).ready(() => {
   $('#dynamic__load-dashboard')
     .off('click', '#guest__dropdown--room-no')
     .on('click', '#guest__dropdown--room-no', function() {
-	    alert("You cannot perform this action now. This section under maintenance");
-	    return;
       const occupiedRoomUrl = API_BASE_URL + '/room-numbers';
       fetchData(occupiedRoomUrl)
         .then((rooms) => {
@@ -301,28 +430,33 @@ $(document).ready(() => {
       const checkin = $('#guest__checkinDate').val();
       const checkout =$('#guest__checkout').val();
 
-      if (new Date(checkout) <= new Date(checkin)) {
+      if (checkout === checkin && !SHORT_REST_OPTION &&
+        !IS_LATE_CHECKOUT && !IS_HALF_DAY) {
         showNotification(
           'Check Out date must not be earlier than Check In date', true
         );
         return;
       }
-      const diffIntTime = new Date(checkout) - new Date(checkin);
-      const duration = diffIntTime / (1000 * 60 * 60 *24);
 
       // Get total amount of room book base on night durations.
-      const room_rate = parseFloat(
+      const amount = parseFloat(
         $('#guest__roomAmount').val().replaceAll(',', '').replaceAll('₦', '')
       );
-      const amount = duration * room_rate;
+      const duration = parseInt($('#guest__night-count').val().split(' '));
 
       // Room data
-      const roomNumber = $('#guest__room-number-menu').text();
+      const newRoomNumber = $('#guest__room-number-menu').text();
+      const oldRoomNumber = $('#guest__room-number').val();
 
       const data = {
         customer: { name, address, gender, phone, id_type, id_number },
-        booking: { checkin, duration, checkout, amount },
-        room: { room_number: roomNumber}
+        booking: {
+          checkin, duration, checkout,
+          is_late_checkout: IS_LATE_CHECKOUT,
+          amount, is_short_rest: SHORT_REST_OPTION,
+          is_half_booking: IS_HALF_DAY
+        },
+        room: { old_room: oldRoomNumber, new_room: newRoomNumber }
       }
 
       const bookingId = $('#guest__booking-id').val();
@@ -375,6 +509,79 @@ $(document).ready(() => {
         })
         .catch((error) => {
         });
+    });
+
+  // Filter bookings
+  $('#dynamic__load-dashboard')
+    .off('click', '.guest__list-filter-container .filter')
+    .on('click', '.guest__list-filter-container .filter', function() {
+      const $clickItem = $(this);
+      const clickItemId = $clickItem.attr('id');
+      $clickItem.addClass('highlight-btn');
+      $clickItem.siblings().removeClass('highlight-btn');
+
+      $('.guest-table-body').empty(); 
+
+      switch (clickItemId) {
+        case 'all__bookings': {
+          const url = API_BASE_URL + '/bookings';
+          fetchData(url)
+          .then((bookings) => {
+	    $('#guest__list-title').text('Today\'s Guests List');
+            bookings.forEach(({ guest, booking, room }) => {
+              const checkInDate = britishDateFormat(booking.checkin);
+              const checkoutDate = britishDateFormat(booking.checkout);
+              const date = { checkInDate, checkoutDate };
+              $('.guest-table-body').append(
+                guestListTableTemplate(guest, booking, room, date)
+              );
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+          break;
+        }
+        case 'active__bookings': {
+          const url = API_BASE_URL + '/bookings?search_string=active_bookings';
+	  $('#guest__list-title').text('Active Guests List');
+          fetchData(url)
+          .then((bookings) => {
+            bookings.forEach(({ guest, booking, room }) => {
+              const checkInDate = britishDateFormat(booking.checkin);
+              const checkoutDate = britishDateFormat(booking.checkout);
+              const date = { checkInDate, checkoutDate };
+              $('.guest-table-body').append(
+                guestListTableTemplate(guest, booking, room, date)
+              );
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+          break;
+        }
+        case 'reserve__bookings': {
+	  $('#guest__list-title').text('Reserve Guests List');
+          const url = API_BASE_URL + '/bookings?search_string=reserve_bookings';
+          fetchData(url)
+          .then((bookings) => {
+            bookings.forEach(({ guest, booking, room }) => {
+              const checkInDate = britishDateFormat(booking.checkin);
+              const checkoutDate = britishDateFormat(booking.checkout);
+              const date = { checkInDate, checkoutDate };
+              $('.guest-table-body').append(
+                guestListTableTemplate(guest, booking, room, date)
+              );
+            });
+
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+          break;
+        }
+      }
     });
 
   // Handle printing of booking reciept

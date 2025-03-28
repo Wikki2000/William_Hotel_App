@@ -237,26 +237,17 @@ def filter_rooms(user_role: str, user_id: str, room_status):
 @api_views.route("/rooms/<string:room_number>/booking-data")
 @role_required(["staff", "manager", "admin"])
 def booking_data(user_id: str, user_role: str, room_number):
-    """Fetch booking data of a particular room"""
+    """Fetch guest and room data of given room number."""
     try:
         room = storage.get_by(Room, number=room_number)
         if not room:
             abort(404)
 
-        # Get booking currently in use, so as to get currently lodged guest.
+        # Get the first active booking of a given room.
         book = storage.get_by(Booking, room_id=room.id, is_use=True)
 
         if not book:
-            return jsonify({
-                "room": room.book.to_dict(), "booking": None,
-                "checkin_by": None, "checkout_by": None
-            }), 200
-
-        # Check if room has been checkout by staff
-        checkout_by_dict = (
-            None if not book.checkout_by
-            else book.checkout_by.to_dict()
-        )
+            abort(404, "Room Booking Not Found")
 
         return jsonify({
             "booking": book.to_dict(),

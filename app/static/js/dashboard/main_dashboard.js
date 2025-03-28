@@ -1,5 +1,5 @@
 import {
-  ajaxRequest, fetchData, compareDate,
+  bookingDuration, ajaxRequest, fetchData, compareDate,
   getFormattedDate, validateForm, updateElementCount,
   showNotification, getBaseUrl, displayMenuList, canadianDateFormat
 } from '../global/utils.js';
@@ -127,7 +127,6 @@ $(document).ready(function() {
       },
       customer: { gender, name, address, phone, id_type, id_number, email }
     };
-	  console.log(BookingData);
 
     $('#main__popup-modal').css('display', 'flex');
 
@@ -265,8 +264,7 @@ $(document).ready(function() {
                         );
                         return;
                       }
-                      const diffIntTime = new Date(CHECK_OUT) - new Date(CHECK_IN);
-                      DURATION = diffIntTime / (1000 * 60 * 60 *24);
+                      DURATION = bookingDuration(CHECK_OUT, CHECK_IN); ;
 
                       // Get total amount of room book base on some criterias..
                       const room_rate = $('#main__room-amount').val();
@@ -340,7 +338,6 @@ $(document).ready(function() {
 
                   SHORT_REST_OPTION = false;
 
-                  // Change the newly display input field to required.
                   $('#main__check-in, #main__checkout-date, #main__id--checkin-val').attr('required');
 			$('#main__check-in').val(canadianDateFormat(new Date));
                 } else {

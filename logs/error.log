@@ -1,33 +1,14 @@
-<<<<<<< HEAD
-=======
-09:59 AM	2025-03-21	/api/v1/order-items	'NoneType' object has no attribute 'amount'
+12:01 AM	2025-03-28	/api/v1/guests/62c28777-55eb-4c79-bbad-90945ed30c73/rooms/8edbe585-6073-45ba-8eff-5af83ee21d1d/extend-stay	name 'booking_data' is not defined
 
-09:59 AM	2025-03-21	/api/v1/order-items	'NoneType' object has no attribute 'amount'
+12:28 AM	2025-03-28	/api/v1/guests/62c28777-55eb-4c79-bbad-90945ed30c73/rooms/8edbe585-6073-45ba-8eff-5af83ee21d1d/extend-stay	name 'update_sales_task' is not defined
 
-10:00 AM	2025-03-21	/api/v1/order-items	'NoneType' object has no attribute 'amount'
+09:03 AM	2025-03-28	/api/v1/order-items	name 'booking_data' is not defined
 
-10:18 AM	2025-03-21	/api/v1/order-items	'list' object has no attribute 'customer'
+09:04 AM	2025-03-28	/api/v1/order-items	name 'booking_data' is not defined
 
-10:20 AM	2025-03-21	/api/v1/order-items	'list' object has no attribute 'customer'
+09:38 AM	2025-03-28	/api/v1/order-items	local variable 'cat' referenced before assignment
 
-10:22 AM	2025-03-21	/api/v1/order-items	'list' object has no attribute 'customer'
+09:56 AM	2025-03-28	/api/v1/order-items	create_monthly_task() takes 3 positional arguments but 4 were given
 
-10:22 AM	2025-03-21	/api/v1/order-items	'list' object has no attribute 'customer'
-
-10:22 AM	2025-03-21	/api/v1/order-items	'list' object has no attribute 'customer'
-
-10:22 AM	2025-03-21	/api/v1/order-items	'list' object has no attribute 'customer'
-
-08:58 PM	2025-03-21	/api/v1/rooms/101/book	Error 111 connecting to localhost:6379. Connection refused.
-
-07:34 PM	2025-03-23	/api/v1/rooms/101/book	name 'order_data' is not defined
-
-07:35 PM	2025-03-23	/api/v1/rooms/101/book	name 'Vat' is not defined
-
-07:48 PM	2025-03-23	/api/v1/guests/861a43e3-26b9-4a52-b686-47393f1c1bf4/rooms/88d85407-dc3c-4b1f-a736-62c2acf28305/extend-stay	name 'booking_data' is not defined
-
->>>>>>> afc0b5180c4598c34ff6f4ae87494a97e75d7999
-05:45 AM	2025-03-24	/api/v1/order-items	unsupported operand type(s) for +: 'NoneType' and 'int'
-
-05:47 AM	2025-03-24	/api/v1/orders/92694b1a-361e-44d8-84f0-9642b39ceb13/order-items	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+10:07 AM	2025-03-28	/api/v1/order-items	name 'vat_new_amount' is not defined
 

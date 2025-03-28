@@ -12,6 +12,12 @@ Guest List Section
 
 }
 
+.guest__list-filter-container {
+  display: flex;
+  justify-content: space-between;
+  width: 18%;
+  margin-left: 20px;
+}
 .guest-table-column {
   display: flex;
   position: relative;
@@ -21,6 +27,11 @@ Guest List Section
   background-color: var(--secondary-color);
   border-radius: 20px 20px 0px 0px;
   top: 1rem;
+
+  .guest-tab {
+    margin-top: 25px;
+    margin-left: 0px !important;
+  }
 }
 
 .guest-table-column > table {
