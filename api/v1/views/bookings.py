@@ -440,3 +440,21 @@ def book_room(user_id: str, user_role: str, room_number: str):
 
     finally:
         storage.close()
+
+
+@api_views.route("/bookings/<string:booking_id>/cancel", methods=["DELETE"])
+@role_required(["staff", "manager", "admin"])
+def cancel_reservation(user_id: str, user_role: str, booking_id: str):
+    """Cancel/Delete Reservation."""
+    # Note: Only reservation can be deleted.
+    reservation = storage.get_by(Booking, id=booking_id, is_reserve=True)
+    if not reservation:
+        abort(404)
+
+    sale_date = reservation.created_at.strftime("%Y-%m-%d")
+    update_task(0, reservation.amount)
+    update_room_sold(new_amount=0, old_amount=reservation.amount, date=sale_date)
+
+    storage.delete(reservation)
+    storage.save()
+    return jsonify({"message": "Reservation Remove Successfully"}), 201

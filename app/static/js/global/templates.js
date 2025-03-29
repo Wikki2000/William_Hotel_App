@@ -289,12 +289,14 @@ export function guestListTableTemplate(guest, booking, room, date) {
   } else {
     time = 'Night(s)';
   }
-
+  const userRole = localStorage.getItem('role');
   const bookingStatus = booking.is_reserve ? 'Reserved' : 'Booked';
   const bookingStatusColor = booking.is_reserve ? 'red' : 'green';
   const bookingText = booking.is_reserve ? 'Check-in Guest' : 'Select Guest';
   const bookingIcon = booking.is_reserve ? 'fa fa-sign-in-alt' : 'fa fa-user';
   const bookingReserve = booking.is_reserve ? 'reserve' : 'book';
+
+  const hideClass = booking.is_reserve && userRole != 'staff' ? '' : 'none';
 
   const row = `<tr data-id="${booking.id}">
     <td class="guest-name">
@@ -340,6 +342,9 @@ export function guestListTableTemplate(guest, booking, room, date) {
           <li data-id="${booking.id}" class="manage__item guest__listEdit  guest__listMenu">
             <i class="fa fa-edit"></i>Edit Data
           </li>
+	  <li style="display: ${hideClass};"data-id="${booking.id}" class="manage__item guest__listDelete  guest__listMenu">
+	    <i class="fas fa-ban"></i>Cancel
+	   </li>
           <li data-id="${booking.id}" class="manage__item guest__listPrint  guest__listMenu">
             <i class="fa fa-print"></i>Print Receipt
           </li>

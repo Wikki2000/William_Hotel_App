@@ -155,7 +155,32 @@ $(document).ready(() => {
             console.log(error);
           });
       }
-      // Edit Guest details 
+      // Cancel Reservation 
+    } else if ($clickItem.hasClass('guest__listDelete')) {
+      const headingText = 'Confirm Removal of Reservation';
+      const descriptionText = 'This action cannot be undone !'
+      const confirmBtCls = 'reservation__delete-confirmBtn';
+
+      confirmationModal(headingText, descriptionText, confirmBtCls);
+
+      $('#dynamic__load-dashboard').off('click', '.reservation__delete-confirmBtn')
+        .on('click', '.reservation__delete-confirmBtn', function() {
+          const cancelReservationUrl = API_BASE_URL + `/bookings/${clickItemId}/cancel`;
+
+          $('#order__confirmation-modal').empty();
+
+          ajaxRequest(cancelReservationUrl, 'DELETE', null,
+            (response) => {
+              $(`tr[data-id="${clickItemId}"]`).remove();
+              showNotification(`Reservation Deleted successfully !`);
+            },
+            (error) => {
+              console.log(error);
+            }
+          );
+        });
+
+      // Edit Guest details
     } else if ($clickItem.hasClass('guest__listEdit')) {
       const guestEditUrl = APP_BASE_URL + '/pages/guest_input';
       $('#dynamic__load-dashboard').load(guestEditUrl, function() {
@@ -528,7 +553,7 @@ $(document).ready(() => {
           const url = API_BASE_URL + '/bookings';
           fetchData(url)
           .then((bookings) => {
-	    $('#guest__list-title').text('Today\'s Guests List');
+            $('#guest__list-title').text('Today\'s Guests List');
             bookings.forEach(({ guest, booking, room }) => {
               const checkInDate = britishDateFormat(booking.checkin);
               const checkoutDate = britishDateFormat(booking.checkout);
@@ -545,7 +570,7 @@ $(document).ready(() => {
         }
         case 'active__bookings': {
           const url = API_BASE_URL + '/bookings?search_string=active_bookings';
-	  $('#guest__list-title').text('Active Guests List');
+          $('#guest__list-title').text('Active Guests List');
           fetchData(url)
           .then((bookings) => {
             bookings.forEach(({ guest, booking, room }) => {
@@ -563,7 +588,7 @@ $(document).ready(() => {
           break;
         }
         case 'reserve__bookings': {
-	  $('#guest__list-title').text('Reserve Guests List');
+          $('#guest__list-title').text('Reserve Guests List');
           const url = API_BASE_URL + '/bookings?search_string=reserve_bookings';
           fetchData(url)
           .then((bookings) => {

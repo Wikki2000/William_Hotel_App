@@ -108,3 +108,5 @@ WHERE users.email = %s
 
 07:58 PM	2025-03-28	/api/v1/bookings/6d86bf50-fd09-4437-a9b3-6ac5bb98cf9a/booking-details	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
 
+05:48 PM	2025-03-29	/api/v1/rooms/101/book	Error 111 connecting to localhost:6379. Connection refused.
+
