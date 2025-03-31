@@ -316,6 +316,7 @@ def update_booking_data(user_id: str, user_role: str, booking_id: str):
             setattr(new_room, "status", room_status)
             setattr(old_room, "status", "available")
 
+        print(booking_data.get("amount"), booking.amount)
         sale_date = booking.created_at.strftime("%Y-%m-%d")
         update_task(booking_data.get("amount"), booking.amount)
         update_room_sold(booking_data.get("amount"), booking.amount, sale_date)
@@ -454,8 +455,6 @@ def cancel_reservation(user_id: str, user_role: str, booking_id: str):
     sale_date = reservation.created_at.strftime("%Y-%m-%d")
     update_task(0, reservation.amount)
     update_room_sold(new_amount=0, old_amount=reservation.amount, date=sale_date)
-
-    reservation.room.status = "available"
 
     storage.delete(reservation)
     storage.save()

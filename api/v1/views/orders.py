@@ -333,7 +333,7 @@ def order_items(user_role: str, user_id: str):
         for item in item_data:
             update_item_stock(item, customer, new_order, item_sold)
 
-        update_task((order_data.get("amount")))
+        update_task(order_data.get("amount"))
 
         storage.save()
         return jsonify({"order_id": new_order.id}), 200

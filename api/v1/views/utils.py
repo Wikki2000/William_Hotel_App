@@ -19,9 +19,10 @@ from models.sale import Sale
 from models.vat import Vat
 from models.cat import Cat
 import base64
-from datetime import datetime
+from datetime import date, datetime
 import pytz
 from calendar import monthrange
+from dateutil.relativedelta import relativedelta
 from api.v1.views import constant
 
 
@@ -370,7 +371,8 @@ def check_reservation(obj_list, checkout_date, checkin_date, room_no):
 #                          VAT/CAT Helper Function                        #
 # ===================================================================== #
 def create_monthly_task(
-    cls, task_amount: float, due_day: int, old_amount: float
+    cls, task_amount: float, due_day: int,
+    task_type: str, old_amount: float = 0
 ):
     """
     Create or accumulate monthly VAT/CAT.
@@ -384,10 +386,10 @@ def create_monthly_task(
         day = today_date.day
         year = today_date.year
 
-        task_month = get_task_month(due_day)
-        task = get_current_task(cls, due_day)
+        task_month = get_task_month(due_day, task_type)
+        task = get_current_task(cls, due_day, task_type)
 
-        # Vat flag true to be due on 1 day ahead the due day.
+        # Vat due 1 day ahead the due day.
         if task and day == due_day + 1:
             task.is_due = True
 
@@ -401,9 +403,27 @@ def create_monthly_task(
         raise Exception("An Internal Error Occur")
 
 
-def get_current_task(cls, due_day):
+def update_task(increase_task: float, reduce_task: float = 0):
+    """
+    Update the task (VAT/CAT) of every sales.
+
+    :increase_task - The value to add to the task. E.g., Making new sales
+    :reduce_task - The value to deduct from task. E.g., Canceling reservation.
+    """
+    vat_new_amount = constant.VAT_RATE_MULTIPLIER * increase_task
+    vat_old_amount = constant.VAT_RATE_MULTIPLIER * reduce_task
+    create_monthly_task(Vat, vat_new_amount, constant.VAT_DUE_DAY, "vat", vat_old_amount)
+
+    cat_new_amount = constant.CAT_RATE_MULTIPLIER * increase_task
+    cat_old_amount = constant.CAT_RATE_MULTIPLIER * reduce_task
+    create_monthly_task(Cat, cat_new_amount, last_month_day(), "cat", cat_old_amount)
+
+
+def get_current_task(cls, due_day, task_type):
+    """
+    """
     today_date = nigeria_today_date() 
-    task_month = get_task_month(due_day)
+    task_month = get_task_month(due_day, task_type)
     year = today_date.year
     task = storage.get_by(cls, month=f"{task_month}_{year}")
     if task:
@@ -411,7 +431,7 @@ def get_current_task(cls, due_day):
     return None
 
 
-def get_task_month(due_day):
+def get_task_month(due_day, task_type):
     """
     Get the month of task base on it due date.
 
@@ -424,14 +444,33 @@ def get_task_month(due_day):
         7: "july", 8: "aug", 9: "sept", 
         10: "oct", 11: "nov", 12: "dec"
     }
+    tasks = ["vat", "cat"]
     today_date = nigeria_today_date()
-    day = today_date.day
+    today = today_date.day
     month = today_date.month
 
-    # Vat for a month is due every 19th.
-    # Accumulation for new month vat start on 20th.
-    vat_month = month_mapper[month] if day <= due_day else month_mapper[month + 1]
-    return vat_month
+    last_day = last_month_day()
+    first_day = 1  # First day of the month.
+
+    if task_type not in tasks:
+        return None
+
+    """
+    => VAT for a month is due every 19th.
+    => Accumulation for new month VAT start on 20th.
+    => E.g., 0 - 19th March stills accumulate February VAT.
+    => March VAT start counting from 20th March.
+
+    => CAT is due for every last day of the month.
+    => CAT accumulation depends on the current month.
+    """
+    if task_type == "vat":
+        if due_day < today <= last_day:
+            return month_mapper[month] 
+        elif first_day < today <= due_day:
+            return month_mapper[month - 1]
+    elif task_type == "cat":
+        return month_mapper[month]
 
 
 def update_room_sold(new_amount, old_amount=0, date=None):
@@ -444,16 +483,6 @@ def update_room_sold(new_amount, old_amount=0, date=None):
         storage.new(today_sale)
     else:
         today_sale.room_sold += new_amount - old_amount
-
-
-def update_task(new_amount, old_amount=0):
-    vat_new_amount = constant.VAT_RATE_MULTIPLIER * new_amount
-    vat_old_amount = constant.VAT_RATE_MULTIPLIER * old_amount
-    create_monthly_task(Vat, vat_new_amount, constant.VAT_DUE_DAY, vat_old_amount)
-
-    cat_new_amount = constant.CAT_RATE_MULTIPLIER * new_amount
-    cat_old_amount = constant.CAT_RATE_MULTIPLIER * old_amount
-    create_monthly_task(Cat, cat_new_amount, last_month_day(), cat_old_amount)
 
 
 def nigeria_today_date():
