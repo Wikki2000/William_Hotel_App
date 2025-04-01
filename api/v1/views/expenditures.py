@@ -124,3 +124,31 @@ def get_expenditure_by_date(
         ],
         "daily_expenditure_sum": expenditure_accumulated_sum
     }), 200
+
+
+@api_views.route("/expenditures/<expenditure_id>/delete", methods=["DELETE"])
+@role_required(["manager", "admin", "staff"])
+def delete_expenditure(user_role: str, user_id: str, expenditure_id: str):
+    """Delete expenditure by it ID's."""
+    try:
+        expenditure = storage.get_by(Expenditure, id=expenditure_id)
+
+        if not expenditure:
+            abort(404) 
+
+        # Deduct expenses from daily_expenditures_sum table before deleting
+        expenses_sum_date = expenditure.created_at.strftime("%Y-%m-%d")
+        expenses_sum_amount = expenditure.amount
+        expense_summation = storage.get_by(
+            DailyExpenditureSum, entry_date=expenses_sum_date  
+        ) 
+        expense_summation.amount -= expenses_sum_amount
+
+        storage.delete(expenditure)
+        storage.save()
+        return jsonify({"message": "Deleted Successfully"}), 200
+    except Exception as e:
+        print(str(e))
+        abort(500)
+    finally:
+        storage.close()

@@ -2,7 +2,7 @@ import {
   getBaseUrl, confirmationModal, validateForm, closeConfirmationModal,
   showNotification, ajaxRequest, fetchData, britishDateFormat,
   togleTableMenuIcon, hideAllInventoryDashboard, getFormDataAsDict,
-  sanitizeInput, updateElementCount, canadianDateFormat
+   getActualAmount, sanitizeInput, updateElementCount, canadianDateFormat
 } from '../../global/utils.js';
 
 import {
@@ -13,7 +13,7 @@ import {
 $(document).ready(function() {
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
   const APP_BASE_URL = getBaseUrl()['appBaseUrl'];
-  
+
   const USER_ROLE = localStorage.getItem('role');
 
   // Get sales at any interval of time.
@@ -104,6 +104,49 @@ $(document).ready(function() {
             console.log(error);
           });
         $('#expenditure__details').css('display', 'flex');
+      });
+
+  // Delete expenditure
+  $('#dynamic__load-dashboard')
+    .off('click', '#expenditure__list-table--body .expenditure__delete')
+    .on('click', '#expenditure__list-table--body .expenditure__delete',
+      function() {
+        const $clickItem = $(this);
+        const clickItemId = $clickItem.data('id');
+        const url = API_BASE_URL + `/expenditures/${clickItemId}/delete`;
+
+        togleTableMenuIcon();
+
+        const headingText = 'Confirm';   
+        const descriptionText = 'This action cannot be undone !'     
+        const confirmBtCls = 'expenditure__delete-confirmBtn';
+
+        confirmationModal(headingText, descriptionText, confirmBtCls);
+
+        $('#dynamic__load-dashboard')
+          .off('click', '.expenditure__delete-confirmBtn')
+          .on('click', '.expenditure__delete-confirmBtn', function() {
+            $('#order__confirmation-modal').empty();
+
+            ajaxRequest(url, 'DELETE', null,
+              (response) => {
+                const dailyTotalExpenseStr = $('#daily__expenditures').text();
+                const expensesAmountStr = $clickItem.closest('td')
+                  .siblings('.expenditure__amount').text();
+
+                const dailyTotalExpense = getActualAmount(dailyTotalExpenseStr);
+                const expensesAmount = getActualAmount(expensesAmountStr);
+
+                $('#daily__expenditures').text(dailyTotalExpense - expensesAmount);
+                $(`#expenditure__list-table--body tr[data-id="${clickItemId}"]`).remove();
+                showNotification('Expenditure Remove successfully !');
+              },
+
+              (error) => {
+                console.log(error);
+              }
+            );
+          });
       });
 
   // Add new expenditures

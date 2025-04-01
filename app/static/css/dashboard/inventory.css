@@ -136,6 +136,7 @@
 #expenditure__list-table--body tr {
   .manage {
     right: 25%;
+    top: 35px;
   }
   td:first-child {
     padding-left: 3%;
