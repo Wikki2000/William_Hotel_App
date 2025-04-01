@@ -210,28 +210,28 @@ export function staffManagementCommonCart(title, btn, userRole, icon, cartColor,
 }
 
 export function expenditureTableTemplate(id, title, date, amount) {
-  return `<tr>
+  return `<tr data-id="${id}">
     <td>${date}</td>
     <td>${title}</td>
-    <td>₦${amount.toLocaleString()}</td>
+    <td class="expenditure__amount">₦${amount.toLocaleString()}</td>
 
       <td class="">
-              <p><i class="fa fa-ellipsis-v"></i></p>
-                      <p><i style="display: none;" class="fa fa-times"></i></p>
-                            </td>
+         <p><i class="fa fa-ellipsis-v"></i></p>
+	 <p><i style="display: none;" class="fa fa-times"></i></p>
+      </td>
 
       <td class="manage">
-              <nav class="manage__nav">
-                        <ul class="manage__list">
-                                    <li data-id="${id}" class="manage__item expenditure__details">
-                              <i class="fa fa-eye"></i>Details
-                    </li>
-
-                          </ul>
-                        </nav>
-                      </td>
-
-
+        <nav class="manage__nav">
+	  <ul class="manage__list">
+	    <li data-id="${id}" class="manage__item expenditure__details">
+	      <i class="fa fa-eye"></i>Details
+	    </li>
+	    <li data-id="${id}" class="manage__item expenditure__delete">
+	      <i class="fa fa-trash"></i>Delete
+	    </li>
+	  </ul>
+	</nav>
+      </td>
  </tr>`;
 }
 

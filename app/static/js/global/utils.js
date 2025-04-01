@@ -474,10 +474,27 @@ export function togleTableMenuIcon() {
   $('.manage').hide();
 }
 
+/**
+ * Get numbers of night for booking.
+ *
+ * @param {object} checkoutDate - The date the guest is living the hotel.
+ * @param {object} checkoutDate - The date the guest is entering the hotel.
+ *
+ * @return {integer} - The Number of night to be lodge by guest.
+ */
 export function bookingDuration(checkoutDate, CheckinDate) {
   const diffIntTime = (
     new Date(checkoutDate) - new Date(CheckinDate)
   );
   const duration = diffIntTime / (1000 * 60 * 60 *24);
   return duration;
+}
+
+export function getActualAmount(amountStr, replaceBy = ['₦', ',']) {
+  let replaceAmount = amountStr;
+  replaceBy.forEach((item) => {
+    replaceAmount = replaceAmount.replaceAll(item, '');
+  });
+  const parseAmount = parseFloat(replaceAmount);
+  return parseAmount;
 }
