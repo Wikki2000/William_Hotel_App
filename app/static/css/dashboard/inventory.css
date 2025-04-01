@@ -325,6 +325,7 @@
 /* Style for daily sales */
 #sales__profit-list {
   background: none;
+  height: 80%;
 
   .inventory__filter {
     margin-left: auto;

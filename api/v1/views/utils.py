@@ -452,6 +452,7 @@ def get_task_month(due_day, task_type):
     last_day = last_month_day()
     first_day = 1  # First day of the month.
 
+
     if task_type not in tasks:
         return None
 
@@ -467,7 +468,7 @@ def get_task_month(due_day, task_type):
     if task_type == "vat":
         if due_day < today <= last_day:
             return month_mapper[month] 
-        elif first_day < today <= due_day:
+        elif first_day <= today <= due_day:
             return month_mapper[month - 1]
     elif task_type == "cat":
         return month_mapper[month]
