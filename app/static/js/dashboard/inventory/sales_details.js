@@ -41,7 +41,7 @@ $(document).ready(function() {
           $('.sales-table-body').append(dailyServiceSaleTableTemplate(
             index, sale.booking.id, sale.booking.is_paid, sale.guest.name,
             `${sale.room.name} (${sale.room.number}) ${description}`,
-	    `${sale.booking.duration} ${time}`, sale.booking.amount
+	    `${sale.booking.duration} ${time}`, sale.booking.amount, true
           ));
         });
       })
@@ -66,7 +66,7 @@ $(document).ready(function() {
       data.forEach((sale, index) => {
         $('.sales-table-body').append(dailyServiceSaleTableTemplate(
           index, sale.order_id, sale.is_paid, sale.customer,
-          sale.item_name, sale.quantity, sale.amount
+          sale.item_name, sale.quantity, sale.amount, false
         ));
       });
     })
