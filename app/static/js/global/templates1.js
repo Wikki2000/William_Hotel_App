@@ -8,7 +8,7 @@ export function taskListTemplate(data) {
   const paymentStatus = data.is_paid ? 'Paid' : 'Pending';
   const paymentStatusColor = data.is_paid ? 'green' : 'red';
   
-  const taskType = data.__class__ === 'Cat' ? 'cat' : 'vat';
+  const taskType = data.__class__ === 'Cat' ? 'CAT' : 'VAT';
 
   const vatMonthYear = data.month[0].toUpperCase() + data.month.slice(1);
   const vatMonth = vatMonthYear.split('_')[0];
@@ -54,10 +54,19 @@ export function taskListTemplate(data) {
 }
 
 export function dailyServiceSaleTableTemplate(
-  index, id, is_paid, customer, itemName, qty, amount
+  index, id, is_paid, customer, itemName, qty, amount, is_booking
 ) {
-  const paymentStatus = is_paid ? 'Paid' : 'Pending';
-  const paymentStatusColor = is_paid ? 'green' : 'red';
+  let paymentStatus = '';
+  let paymentStatusColor = '';
+
+  if (!is_booking) {
+    paymentStatus = is_paid ? 'Paid' : 'Pending'; 
+    paymentStatusColor = is_paid ? 'green' : 'red'; 
+  } else {
+    paymentStatus = is_paid === 'yes' ? 'Paid' : 'Pending';
+    paymentStatusColor = is_paid === 'yes' ? 'green' : 'red';
+  }
+
   const row = `
   <tr data-id="${id}">
     <td class="">
