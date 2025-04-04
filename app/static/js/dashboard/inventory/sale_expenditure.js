@@ -7,7 +7,6 @@ import {
 
 import {
   expenditureTableTemplate, inventoryFilterTemplate, salesTableTemplate,
-  dailyServiceSaleTableTemplate
 } from '../../global/templates1.js';
 
 $(document).ready(function() {

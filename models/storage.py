@@ -25,7 +25,7 @@ from models.expenditure import Expenditure
 from models.daily_expenditure_sum import DailyExpenditureSum
 from models.receipt import Receipt
 from models.game import Game
-from models.laundry import Laundry 
+from models.laundry import Laundry
 from models.sale import Sale
 
 from urllib.parse import quote_plus
@@ -79,6 +79,10 @@ class Storage:
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(bind=self.__engine)
         self.__session = scoped_session(session_factory)
+   
+    @property
+    def get_session(self):
+        return self.__session
 
     def refresh(self, obj: object) -> object:
         """Refresh to get current state
@@ -236,3 +240,48 @@ class Storage:
                 .all()
                 )
         return result
+
+    def get_grouped_items(self, item_type: str, start_date, end_date):
+        """
+        Group and sum quantities of ordered items (drink, food, game, laundry)
+        between a date range, using `and_()` for filtering and casting created_at
+
+         Args:
+            db: SQLAlchemy Session.
+            item_type: The type of item ("drink", "food", "game", "laundry").
+            start_date: Start of date range (inclusive).
+            end_date: End of date range (inclusive).
+
+        Returns:
+            List of tuples (item_id, total_qty).
+        """
+
+        item_mapping = {
+            "drink": OrderItem.drink_id,
+            "food": OrderItem.food_id,
+            "game": OrderItem.game_id,
+            "laundry": OrderItem.laundry_id,
+        }
+
+        if item_type not in item_mapping:
+            raise ValueError("Invalid item type specified.")
+
+        item_column = item_mapping[item_type]
+
+        results = (
+            self.__session.query(
+                item_column, func.sum(OrderItem.amount),
+                func.sum(OrderItem.qty_order)
+            )
+            .filter(
+                and_(
+                    item_column.isnot(None),
+                    cast(OrderItem.created_at, Date) >= start_date.date(),
+                    cast(OrderItem.created_at, Date) <= end_date.date()
+                )
+            )
+            .group_by(item_column)
+            .all()
+        )
+
+        return results

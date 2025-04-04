@@ -4,7 +4,7 @@
 from models import storage
 from models.booking import Booking
 from models.room import Room
-
+from datetime import datetime
 from api.v1.views.utils import write_to_file, nigeria_today_date
 
 
@@ -22,7 +22,7 @@ for reservation in reservations:
         reservation.room.status = "occupied"
         storage.save()
 
-        msg = f"Reserve Guest for Room {reservation.room.number} checkin successfully on {TODAY_DATE}\n\n"
+        msg = f"Reserve Guest for Room {reservation.room.number} checkin successfully on {date.now()}\n\n"
         write_to_file(LOG_FILE, msg)
 
 msg = "Testing Crontab"

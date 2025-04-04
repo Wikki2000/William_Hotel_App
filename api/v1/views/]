@@ -9,9 +9,6 @@ from models.sale import Sale
 from models.order_item import OrderItem
 from models.drink import Drink
 from models.food import Food
-from models.game import Game
-from models.laundry import Laundry
-from models.room import Room
 from models import storage
 from sqlalchemy.exc import IntegrityError
 
@@ -153,13 +150,11 @@ def get_sales_summary(
     end_date_obj = datetime.strptime(end_date, "%Y-%m-%d")
 
     services = {
-        "food": Food, "drink": Drink,
-        "game": Game, "laundry": Laundry,
-        "room": Room
+        "food": Food, "drink": Drink
     }
 
     if not service in services:
-        raise ValueError("Invalid Service Type")
+        return jsonify([]), 200  # Invalid service, return empty list
 
     # Retrieve sales filtered by date range and service type
     sales = storage.get_grouped_items(
@@ -173,7 +168,6 @@ def get_sales_summary(
         cls = services[service]
         service_obj = storage.get_by(cls, id=item_id)
         sales_list.append({
-            "id": item_id,
             "name": service_obj.name,
             "quantity": total_qty,
             "amount": total_amount

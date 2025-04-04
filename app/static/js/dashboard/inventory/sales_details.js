@@ -6,7 +6,7 @@ import {
 
 import {
   expenditureTableTemplate, inventoryFilterTemplate,
-  dailyServiceSaleTableTemplate,
+  saleSummaryTemplate, 
 } from '../../global/templates1.js';
 
 $(document).ready(function() {
@@ -38,9 +38,9 @@ $(document).ready(function() {
             description ='Full Time';
 	    time = 'Night(s)';
           }
-          $('.sales-table-body').append(dailyServiceSaleTableTemplate(
-            index, sale.booking.id, sale.booking.is_paid, sale.guest.name,
-            `${sale.room.name} (${sale.room.number}) ${description}`,
+          $('.sales-table-body').append(saleSummaryTemplate(
+            index, sale.id,
+	    `${sale.room.name} (${sale.room.number}) ${description}`,
 	    `${sale.booking.duration} ${time}`, sale.booking.amount, true
           ));
         });
@@ -60,13 +60,12 @@ $(document).ready(function() {
   } else if (service === 'game') {
     $('#sales__record-title').text('Game Sales Record');
   }
-  const url = API_BASE_URL + `/sales/${date}/${date}/${service}`;
+  const url = API_BASE_URL + `/sales/${date}/${date}/${service}/group-summary`;
   fetchData(url)
     .then((data) => {
       data.forEach((sale, index) => {
-        $('.sales-table-body').append(dailyServiceSaleTableTemplate(
-          index, sale.order_id, sale.is_paid, sale.customer,
-          sale.item_name, sale.quantity, sale.amount, false
+        $('.sales-table-body').append(saleSummaryTemplate(
+          index, sale.id, sale.name, sale.quantity, sale.amount, false
         ));
       });
     })
