@@ -53,36 +53,23 @@ export function taskListTemplate(data) {
   return row;
 }
 
-export function dailyServiceSaleTableTemplate(
-  index, id, is_paid, customer, itemName, qty, amount, is_booking
+export function saleSummaryTemplate(
+  index, id,  itemName, qty, amount, is_booking
 ) {
-  let paymentStatus = '';
-  let paymentStatusColor = '';
-
-  if (!is_booking) {
-    paymentStatus = is_paid ? 'Paid' : 'Pending'; 
-    paymentStatusColor = is_paid ? 'green' : 'red'; 
-  } else {
-    paymentStatus = is_paid === 'yes' ? 'Paid' : 'Pending';
-    paymentStatusColor = is_paid === 'yes' ? 'green' : 'red';
-  }
 
   const row = `
   <tr data-id="${id}">
     <td class="">
       <p class="ui text size-textmd">${index + 1}</p>
     </td>
-    <td class="">
-      <p class="ui text size-textmd">${customer}</p>
-    </td>
+    <!--<td class="">
+      <p class="ui text size-textmd">customer</p>
+    </td>-->
     <td class="">
       <p class="ui text size-textmd">${itemName}</p>
     </td>
     <td class="">
       <p class="ui text size-textmd">${qty}</p>
-    </td>
-    <td>
-      <p style="color: ${paymentStatusColor}" class="ui text size-textmd order__bill-status">${paymentStatus}</p>
     </td>
     <td>
       <p class="ui text size-textmd">₦${amount.toLocaleString()}</p>
