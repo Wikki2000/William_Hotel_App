@@ -484,10 +484,14 @@ export function staffListTemplate(data) {
   const hideFromManager = USER_ROLE === 'admin' ? '' : 'hide';
   const salary = data.salary ? `₦${data.salary.toLocaleString()}` : '';
   const performanceColor = data.performance < 50 ? 'red': 'green';
+  const activeColor = data.is_active ? 'green' : '';
   const row = `<tr data-id="${data.id}">
-    <td class="">
+    <td class="staff__name">
+    <div>
       <p class="ui text size-textmd left-margin first_name">${data.first_name}</p>
       <p class="ui text size-textmd left-margin last_name">${data.last_name}</p>
+    </div>
+    <span style="background-color: ${activeColor}" class="staff__status"></span>
     </td>
 
     <td class="">
