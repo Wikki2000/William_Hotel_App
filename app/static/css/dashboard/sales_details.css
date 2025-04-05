@@ -61,6 +61,7 @@ Guest List Section
   td:nth-child(3) {
     padding-left: 12px;
     width: 22%;
+     #background: pink;
   }
   td:nth-child(4) {
     padding-left: 10px;
@@ -78,11 +79,13 @@ Guest List Section
   
   td:nth-child(2) {
     width: 20%;
+    #background: blue;
   }
 
   td:nth-child(1) {
     padding-left: 5px;
     width: 8.7%;
+    #background: red;
   }
   .manage {
     right: 130px;
