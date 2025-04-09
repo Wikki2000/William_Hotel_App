@@ -31,7 +31,7 @@ $(document).ready(function() {
       const paymentType = $('#payment__type span').text();
       const pageId = sessionStorage.getItem('pageId');
       const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
-      const entityId = $clickItem.data('id');
+      const entityId = $('#entity__id').val();
 
       closePaymentModal();
 
