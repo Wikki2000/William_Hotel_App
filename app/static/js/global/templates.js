@@ -603,8 +603,9 @@ export function updatePaymentTemplate(paymentType, entityId) {
       </div>
 
       <div class="latecheckout__button-container">
-        <button data-id="${entityId}" id="confirm__payment-type" class="confirm__payment-type highlight-btn">Confirm</button>
+        <button  id="confirm__payment-type" class="confirm__payment-type highlight-btn">Confirm</button>
       </div>
+      <input type="hidden" id="entity__id" value="${entityId}" />
     </div>
   </div>`
   return row;
