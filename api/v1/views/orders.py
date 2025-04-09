@@ -173,6 +173,25 @@ def update_status(user_role: str, user_id: str, order_id: str):
     return jsonify({"message": "Payment Status Updated to Paid"}), 200
 
 
+@api_views.route("/orders/<string:order_id>/payment-method", methods=["PUT"])
+@role_required(["staff", "manager", "admin"])
+def update_payment_method(user_role: str, user_id: str, order_id: str):
+    """Update payment method."""
+    order = storage.get_by(Order, id=order_id)
+    if not order:
+        abort(404)
+
+    payment_method = request.get_json().get("payment_method")
+    if not payment_method:
+        abort(400, "Invalid JSON")
+    order.payment_type = payment_method
+
+    order.updated_by = datetime.now()
+    storage.save()
+    storage.close()
+    return jsonify({"message": "Payment Method Updated Successfully!"}), 201
+
+
 @api_views.route("/orders/<string:payment_status>")
 @role_required(["staff", "manager", "admin"])
 def filter_orders(user_role: str, user_id: str, payment_status):

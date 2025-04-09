@@ -276,37 +276,41 @@ $(document).ready(function() {
 
     switch (clickItemId) {
       case 'total__food-sale--btn': {
-        const salesDate = $('#sales__summary-date').val();
+	const totalAmount = $('#total__food-sale').text();
         const saleUrl = (
-          APP_BASE_URL + `/pages/sales_details?service=food&date=${salesDate}`
+          APP_BASE_URL + `/pages/sales_details?service=food&date=${salesDate}&total=${totalAmount}`
         );
         window.open(saleUrl, '_blank');
         break;
       }
       case 'total__drink-sale--btn': {
+	const totalAmount = $('#total__drink-sale').text();
         const saleUrl = (
-          APP_BASE_URL + `/pages/sales_details?service=drink&date=${salesDate}`
+          APP_BASE_URL + `/pages/sales_details?service=drink&date=${salesDate}&total=${totalAmount}`
         );
         window.open(saleUrl, '_blank');
         break;
       }
       case 'total__game-sale--btn': {
+	const totalAmount = $('#total__game-sale').text();
         const saleUrl = (
-          APP_BASE_URL + `/pages/sales_details?service=game&date=${salesDate}`
+          APP_BASE_URL + `/pages/sales_details?service=game&date=${salesDate}&total=${totalAmount}`
         );
         window.open(saleUrl, '_blank');
         break;
       }
       case 'total__laundry-sale--btn': {
+	const totalAmount = $('#total__laundry-sale').text();
         const saleUrl = (
-          APP_BASE_URL + `/pages/sales_details?service=laundry&date=${salesDate}`
+          APP_BASE_URL + `/pages/sales_details?service=laundry&date=${salesDate}&total=${totalAmount}`
         );
         window.open(saleUrl, '_blank');
         break;
       }
       case 'total__room-sale--btn': {
+        const totalAmount = $('#total__room-sale').text();
         const saleUrl = (
-          APP_BASE_URL + `/pages/sales_details?service=room&date=${salesDate}`
+          APP_BASE_URL + `/pages/sales_details?service=room&date=${salesDate}&total=${totalAmount}`
         );
         window.open(saleUrl, '_blank');
         break;

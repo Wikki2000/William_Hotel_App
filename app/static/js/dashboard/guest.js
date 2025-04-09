@@ -3,7 +3,7 @@ import {
   confirmationModal, showNotification, validateForm, displayMenuList,
   bookingDuration, getFormattedTime, closeConfirmationModal,
 } from '../global/utils.js';
-import {  guestListTableTemplate }  from '../global/templates.js';
+import { loadUpdatePaymentTemplate, guestListTableTemplate }  from '../global/templates.js';
 
 $(document).ready(() => {
 
@@ -181,6 +181,9 @@ $(document).ready(() => {
         });
 
       // Edit Guest details
+    } else if ($clickItem.hasClass('guest__listPaymethod')) {
+      const paymentMethod = $clickItem.data('payment-type');
+      loadUpdatePaymentTemplate(paymentMethod, clickItemId);  // Template for updating payment status.
     } else if ($clickItem.hasClass('guest__listEdit')) {
       const guestEditUrl = APP_BASE_URL + '/pages/guest_input';
       $('#dynamic__load-dashboard').load(guestEditUrl, function() {

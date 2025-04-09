@@ -498,3 +498,8 @@ export function getActualAmount(amountStr, replaceBy = ['₦', ',']) {
   const parseAmount = parseFloat(replaceAmount);
   return parseAmount;
 }
+
+export function closePaymentModal() {
+  $('#order__update-payment-method').empty();
+  $('#order__update-payment-method').hide();
+}

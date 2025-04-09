@@ -461,7 +461,7 @@ export function orderHistoryTableTemplate(order, date, customer = null) {
       <p class="ui text size-textmd">₦${order.amount.toLocaleString()}</p>
     </td>
     <td>
-      <p class="${hideClass} ui text size-textmd">${order.payment_type}</p>
+      <p class="${hideClass} ui text size-textmd payment__type">${order.payment_type}</p>
     </td>
 
     <td class="order__table-menu">
@@ -474,6 +474,9 @@ export function orderHistoryTableTemplate(order, date, customer = null) {
           <li data-id="${order.id}" data-name="${customerName}" class="manage__item  order__bill order__manageItem">
             <i class="fa fa-money-bill-wave"></i>Clear Bill
           </li>
+	  <li data-id="${order.id}" data-payment-type="${order.payment_type}" class="manage__item order__update-payment--method order__manageItem">
+	    <i class="fa fa-sync-alt"></i>Payment Method
+	  </li>
           <li data-id="${order.id}" class="manage__item order__manageItem order__showConfirmModal">
              <i class="fa fa-shopping-cart"></i>Order Details
            </li>
