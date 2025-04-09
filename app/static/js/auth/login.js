@@ -15,8 +15,8 @@ $(document).ready(function () {
 
     const data = JSON.stringify(
       {
-        email_or_username: $('#email_or_username').val(),
-        password: $('#password').val(),
+        email_or_username: $('#email_or_username').val().trim(),
+        password: $('#password').val().trim(),
       }
     );
     const url = API_BASE_URL + '/account/login';

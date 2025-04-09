@@ -15,8 +15,8 @@ $(document).ready(function () {
     $('.loader').show();
     $('#reset-btn').hide();
 
-    const password1 = $('#password').val();
-    const password2 = $('#verify-password').val();
+    const password1 = $('#password').val().trim();
+    const password2 = $('#verify-password').val().trim();
 
     if (password1 !== password2) {
       $('input[type="password"]').addClass('error-password');

@@ -8,6 +8,9 @@ Room Section
   cursor: pointer;
   border-radius: 15px;
 }
+.room__table-column {
+  height: 510px;
+}
 .room__section-btn {
   display: flex;
   justify-content: space-between;
@@ -360,7 +363,8 @@ Service Section
 }
 
 /* Late Checkout Style */
-#late__checkout-popup--modal > .popup-modal-content {
+#late__checkout-popup--modal > .popup-modal-content,
+#order__update-payment-method > .popup-modal-content {
   width: 52%;
   height: auto;
   padding: 20px;
@@ -379,7 +383,7 @@ Service Section
     justify-content: right;
     margin-top: 10px;
   }
-  .confirm__late-checkout--btn {
+  .confirm__late-checkout--btn, .confirm__payment-type {
     padding: 10px;
     width: 30%;
     border-radius: 5px;

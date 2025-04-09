@@ -251,7 +251,7 @@ def clear_booking_bill(user_id: str, user_role: str, booking_id: str):
 @api_views.route("/bookings/<booking_id>/edit", methods=["PUT"])
 @role_required(["staff", "manager", "admin"])
 def update_booking_data(user_id: str, user_role: str, booking_id: str):
-    """Update guest data use in booking"""
+    """Update guest data use in booking and payment method used"""
     try:
         TODAY_DATE = nigeria_today_date()
         data = request.get_json()
@@ -316,10 +316,12 @@ def update_booking_data(user_id: str, user_role: str, booking_id: str):
             setattr(new_room, "status", room_status)
             setattr(old_room, "status", "available")
 
-        print(booking_data.get("amount"), booking.amount)
-        sale_date = booking.created_at.strftime("%Y-%m-%d")
-        update_task(booking_data.get("amount"), booking.amount)
-        update_room_sold(booking_data.get("amount"), booking.amount, sale_date)
+        # Skip update VAT/CAT and sales for updating,
+        # Payment method use only.
+        if booking_data.get("amount"):
+            sale_date = booking.created_at.strftime("%Y-%m-%d")
+            update_task(booking_data.get("amount"), booking.amount)
+            update_room_sold(booking_data.get("amount"), booking.amount, sale_date)
 
         # Update booking data of current selected booking.
         for key, val in booking_data.items():

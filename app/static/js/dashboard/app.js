@@ -65,7 +65,8 @@ $(document).ready(function() {
     if (
       ($('#sidebar__game').hasClass('highlight-sidebar') ||
         $('#sidebar__restaurant').hasClass('highlight-sidebar') ||
-        $('#sidebar__laundry').hasClass('highlight-sidebar')
+        $('#sidebar__laundry').hasClass('highlight-sidebar') ||
+	$('#sidebar__bar').hasClass('highlight-sidebar') 
       ) && $('#service__menu').hasClass('hide')
     ) {
       $('#sidebar__service').addClass('highlight-sidebar');
@@ -413,7 +414,15 @@ $(document).ready(function() {
           fetchData(userUrl)
             .then((response) => {
               response.forEach((data) => {
-                $('#staff__list-table--body').append(staffListTemplate(data));
+                // Ensure that manager is not shown on staff list,
+                // When he is the login-user.
+                if (USER_ROLE === 'manager') {
+                  if (data.role !== 'manager') {
+                    $('#staff__list-table--body').append(staffListTemplate(data));
+                  }
+                } else {
+                  $('#staff__list-table--body').append(staffListTemplate(data)); 
+                }
               });
 
               // Remove button to add staff for manager.

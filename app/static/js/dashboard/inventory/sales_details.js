@@ -15,11 +15,12 @@ $(document).ready(function() {
 
   const service = getQueryParam('service');
   const date = getQueryParam('date');
+  const totalAmount = getQueryParam('total');
 
   $('#sales__record-date').text(date);
 
   if (service === 'room') {
-    $('#sales__record-title').text('Room Sales Record');
+    $('#sales__record-title').text(`Room Sales Record (Total: ${totalAmount})`);
     const roomSalesUrl = API_BASE_URL + `/bookings/${date}/${date}/get`
     fetchData(roomSalesUrl)
       .then(({ bookings }) => {
@@ -52,20 +53,20 @@ $(document).ready(function() {
   }
 
   if (service === 'food') {
-    $('#sales__record-title').text('Food Sales Record');
+    $('#sales__record-title').text(`Food Sales Record (Total: ${totalAmount})`);
   } else if (service === 'drink') {
-    $('#sales__record-title').text('Drink Sales Record');
+    $('#sales__record-title').text(`Drink Sales Record (Total: ${totalAmount})`);
   } else if (service === 'laundry') {
-    $('#sales__record-title').text('Laundry Sales Record');
+    $('#sales__record-title').text(`Laundry Sales Record (Total: ${totalAmount})`);
   } else if (service === 'game') {
-    $('#sales__record-title').text('Game Sales Record');
+    $('#sales__record-title').text(`Game Sales Record  (Total: ${totalAmount})`);
   }
   const url = API_BASE_URL + `/sales/${date}/${date}/${service}/group-summary`;
   fetchData(url)
     .then((data) => {
       data.forEach((sale, index) => {
         $('.sales-table-body').append(saleSummaryTemplate(
-          index, sale.id, sale.name, sale.quantity, sale.amount, false
+          index, sale.id, sale.name, sale.quantity + ' pcs', sale.amount, false
         ));
       });
     })

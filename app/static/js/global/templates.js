@@ -339,6 +339,9 @@ export function guestListTableTemplate(guest, booking, room, date) {
             <input class="bookingReserveOption" value="${bookingReserve}" type="hidden" \>
             <i class="${bookingIcon}"></i><span>${bookingText}</span>
           </li>
+	  <li data-id="${booking.id}"  data-payment-type="{order.payment_type}" class="manage__item  guest__listMenu guest__listPaymethod">
+	    <i class="fa fa-sync-alt"></i>Payment Method
+	  </li>
           <li data-id="${booking.id}" class="manage__item guest__listEdit  guest__listMenu">
             <i class="fa fa-edit"></i>Edit Data
           </li>
@@ -565,4 +568,50 @@ export function loanDetailTemplate(data) {
   // Handle display for manager status on leave
   $('#loan__ceo-status').text(data.ceo_approval_status);
   $('#loan__ceo-status').css('color', ceoTextColor);
+}
+
+export function updatePaymentTemplate(paymentType, entityId) {
+	console.log(paymentType, entityId);
+  const row = `<div class="popup-modal-content">
+    <!-- Close Button -->
+    <button class="close-btn closePopupModal">&times;</button>
+    <h1>Update Payment Method</h1>
+
+    <div>
+      <p id="latecheckout__confirmation-description">
+        Please select the new payment type from the option and
+        click the "Confirm" button to proceed.
+      </p>
+
+      <div class="latecheckout__drop-down--menu">
+        <p><strong>Payment Method?:
+          <span class="important">*</span>
+        </strong></p>
+        <div class="dropdown latecheckout__dropdown-btn--container">
+          <div id="payment__type" class="late__checkout-dropdown--btn drop-down">
+            <span>${paymentType}</span>
+            <img src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px" alt="dropdown" />
+          </div>
+          <div class="dropdown-menu" id="update__paymentType-dropdown">
+            <ul class="latecheckout__dropdown--menu-list">
+              <li class="update__dropdown-selector dropdown-item">Pos</li>
+              <li class="update__dropdown-selector dropdown-item">Cash</li>
+              <li class="update__dropdown-selector dropdown-item">Transfer</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="latecheckout__button-container">
+        <button data-id="${entityId}" id="confirm__payment-type" class="confirm__payment-type highlight-btn">Confirm</button>
+      </div>
+    </div>
+  </div>`
+  return row;
+}
+
+export function loadUpdatePaymentTemplate(paymentType, entityId) {
+  $('#order__update-payment-method').empty();
+  $('#order__update-payment-method').append(updatePaymentTemplate(paymentType, entityId));
+  $('#order__update-payment-method').css('display', 'flex');
 }

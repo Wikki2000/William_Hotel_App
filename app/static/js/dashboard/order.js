@@ -4,6 +4,7 @@ import {
   getFormattedTime, canadianDateFormat
 } from '../global/utils.js';
 import { orderDetails, orderHistoryTableTemplate } from '../global/templates1.js';
+import { loadUpdatePaymentTemplate } from '../global/templates.js';
 
 $(document).ready(function() {
 
@@ -32,6 +33,9 @@ $(document).ready(function() {
 
       const data = [{ data: 'id', value: clickItemId }, {data: 'name', value: name }];
       confirmationModal(headingText, descriptionText, confirmBtCls, data);
+    } else if ($selectedMenu.hasClass('order__update-payment--method')) {
+      const paymentMethod = $selectedMenu.data('payment-type');
+      loadUpdatePaymentTemplate(paymentMethod, clickItemId);
     } else if ($selectedMenu.hasClass('order__print')) {
       const orderId = $selectedMenu.data('id');
       const receiptUrl = (

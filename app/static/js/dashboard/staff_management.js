@@ -205,12 +205,12 @@ $(document).ready(function() {
             $('input[name="nok"]').val(data.nok);
             $('input[name="nok_number"]').val(data.nok_number);
             $('input[name="portfolio"]').val(data.portfolio);
-            $('input[name="email"]').val(data.email);
+            $('input[name="email"]').val(data.email).trim();
             $('input[name="dob"]').val(canadianDateFormat(data.dob));
             $('input[name="gender"]').val(data.gender);
             $('input[name="number"]').val(data.number);
 	    $('input[name="performance"]').val(data.performance);
-	    $('input[name="username"]').val(data.username);
+	    $('input[name="username"]').val(data.username).trim();
 	    $('input[name="title"]').val(data.title);
             $('input[name="rank_number"]').val('00' + data.rank_number);
 

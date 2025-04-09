@@ -3,6 +3,7 @@ Guest List Section
 ==================================*/
 #guest__list {
   padding: 20px;
+  height: 600px;
 
   .inventory__filter {
     margin-left: auto;
@@ -22,7 +23,7 @@ Guest List Section
   display: flex;
   position: relative;
   width: 100%;
-  height: 70vh;
+  height: 95%;
   overflow: auto;
   background-color: var(--secondary-color);
   border-radius: 20px 20px 0px 0px;
@@ -56,9 +57,8 @@ Guest List Section
   justify-content: space-between;
   align-items: center; /* Center align content vertically */
   border-bottom: 2px solid var(--orange_a100_33); /* Add bottom border to each row */
-  td:nth-child(2),
-  td:nth-child(3),
-  td:nth-child(6) {
+  td:nth-child(2), td:nth-child(3),
+  td:nth-child(6), td:nth-child(7) {
     padding-left: 15px;
   }
   .manage {
