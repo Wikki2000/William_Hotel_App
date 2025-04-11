@@ -399,7 +399,8 @@ def book_room(user_id: str, user_role: str, room_number: str):
         "guest_number": booking_data.get("guest_number"),
         "room_id": room.id, "amount": booking_data.get("amount"),
         "is_short_rest": booking_data.get("is_short_rest"),
-        "is_early_checkin": booking_data.get("is_early_checkin")
+        "is_early_checkin": booking_data.get("is_early_checkin"),
+        "payment_type": booking_data.get("payment_type")
     }
 
     previous_room_sold = 0

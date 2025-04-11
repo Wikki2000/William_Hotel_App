@@ -1,0 +1,2 @@
+ALTER TABLE bookings
+ADD COLUMN payment_type VARCHAR(50) NOT NULL;

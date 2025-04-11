@@ -501,6 +501,8 @@ $(document).ready(function () {
         // Once click on extend stay or late checkout.
         $('#guest__ispaid-menu--selected').val('');
         $('#late__checkout-ispaid span').text('Selected');
+        $('#guest__paymentMethod-menu--selected').val(''); 
+	$('#late__checkout-payMethod span').text('Selected');
         /*
       $clickItem.addClass('highlight-btn');
       $clickItem.siblings().removeClass('highlight-btn');
@@ -532,10 +534,10 @@ $(document).ready(function () {
         }
       });
 
-  // Handle display and selection of payment status menu.
+  // Toggle menu for payment status menu and pay method menu.
   $('#dynamic__load-dashboard')
-    .off('click', '#guest__ispaid, #late__checkout-ispaid')
-    .on('click', '#guest__ispaid, #late__checkout-ispaid', function() {
+    .off('click', '#guest__ispaid, #late__checkout-ispaid, #late__checkout-payMethod, #guest__extendday-payMethod')
+    .on('click', '#guest__ispaid, #late__checkout-ispaid, #late__checkout-payMethod, #guest__extendday-payMethod', function() {
 
       const $clickItem = $(this);
       const clickItemId = $clickItem.attr('id');
@@ -544,27 +546,55 @@ $(document).ready(function () {
         $('#guest__ispaid-dropdown').toggle();
       } else if (clickItemId === 'late__checkout-ispaid') {
         $('#late__checkout-ispaid--dropdown').toggle();
+      } else if (clickItemId === 'late__checkout-payMethod') { 
+        $('#late__checkout-payMethod--dropdown').toggle();
+      } else if (clickItemId === 'guest__extendday-payMethod') {
+        $('#guest__extendday-payMethod--dropdown').toggle();
       }
-
-      $('#dynamic__load-dashboard')
-        .off('click', '.guest__dropdown-selector, .latecheckout__dropdown-selector')
-        .on('click', '.guest__dropdown-selector, .latecheckout__dropdown-selector',
-          function() {
-            const $clickItem = $(this);
-            const selectedOption = $clickItem.text();
-
-            if ($clickItem.hasClass('guest__dropdown-selector')) {
-              $('#guest__ispaid span').text(selectedOption);
-              $('#guest__ispaid-dropdown').hide();
-            } else if (
-              $clickItem.hasClass('latecheckout__dropdown-selector')
-            ) {
-              $('#late__checkout-ispaid span').text(selectedOption);
-              $('#late__checkout-ispaid--dropdown').hide();
-            }
-            $('#guest__ispaid-menu--selected').val(selectedOption.toLowerCase());
-          });
     });
+
+  // Retrieve value of payment status menu selected.
+  $('#dynamic__load-dashboard')
+    .off('click', '.guest__dropdown-selector, .latecheckout__dropdown-selector')
+    .on('click', '.guest__dropdown-selector, .latecheckout__dropdown-selector',
+      function() {
+        const $clickItem = $(this);
+        const selectedOption = $clickItem.text();
+
+        if ($clickItem.hasClass('guest__dropdown-selector')) {
+          $('#guest__ispaid span').text(selectedOption);
+          $('#guest__ispaid-dropdown').hide();
+        } else if (
+          $clickItem.hasClass('latecheckout__dropdown-selector')
+        ) {
+          $('#late__checkout-ispaid span').text(selectedOption);
+          $('#late__checkout-ispaid--dropdown').hide();
+        }
+        $('#guest__ispaid-menu--selected').val(selectedOption.toLowerCase());
+      });
+
+
+  // Retrieve value of payment method menu selected.
+  $('#dynamic__load-dashboard')
+    .off('click', '.guest__payMethod-selector, .latecheckout__payMethod-dropdown-selector')
+    .on('click', '.guest__payMethod-selector, .latecheckout__payMethod-dropdown-selector',
+      function() {                                    
+        const $clickItem = $(this);  
+        const selectedOption = $clickItem.text();
+
+        if ($clickItem.hasClass('guest__payMethod-selector')) {
+          $('#guest__extendday-payMethod span').text(selectedOption);
+	  $('#guest__extendday-payMethod--dropdown').hide();
+        } else if (
+	  $clickItem.hasClass('latecheckout__payMethod-dropdown-selector')
+	) {      
+          $('#late__checkout-payMethod span').text(selectedOption);
+	  $('#late__checkout-payMethod--dropdown').hide(); 
+        }       
+        $('#guest__paymentMethod-menu--selected').val(selectedOption);
+      });
+
+
 
   $('#dynamic__load-dashboard')
     .on('input', '#guest__extend-stay--modal input[name="checkout"]',
@@ -588,7 +618,7 @@ $(document).ready(function () {
           )
           return;
         } else {
-	  const duration = bookingDuration(checkout, checkin);
+          const duration = bookingDuration(checkout, checkin);
           $('#guest__extend-stay--modal #count__nights')
             .val(`${duration} Night(s)`);
         }
@@ -621,6 +651,12 @@ $(document).ready(function () {
         );
         showNotification(msg, true);
         return;
+      } else if (!$('#guest__paymentMethod-menu--selected').val()) {
+        const msg = (
+          'Please select an option for Payment Type' 
+        );
+        showNotification(msg, true); 
+        return;
       }
       confirmationModal(headingText, descriptionText, confirmBtCls);
     });
@@ -638,6 +674,7 @@ $(document).ready(function () {
         let checkout = $('input[name="checkout"]').val();
         const guest_number = $('#guest__occupant-no').val();
         const is_paid = $('#guest__ispaid-menu--selected').val();
+        const payment_type = $('#guest__paymentMethod-menu--selected').val();
         const $button = $(this);
 
         const url = (
@@ -669,7 +706,7 @@ $(document).ready(function () {
         } else if ($clickItem.hasClass('confirm__late-checkout--btn')) {
 
           const extensionBookingType = $('#store__typeof-extension').val();
-	  $('#late__checkout-popup--modal').hide();
+          $('#late__checkout-popup--modal').hide();
 
           if (extensionBookingType === 'lateCheckoutBooking') {
             is_late_checkout = true;
@@ -687,7 +724,7 @@ $(document).ready(function () {
 
         const BookingData = {
           duration, guest_number, amount, is_half_booking,
-          is_paid, checkin, checkout, is_late_checkout,
+          is_paid, checkin, checkout, is_late_checkout, payment_type
         };
 
         ajaxRequest(url, 'POST', JSON.stringify(BookingData),
@@ -697,7 +734,7 @@ $(document).ready(function () {
             $('#guest__extend-stay--form').trigger('reset');
             $('#guest__extend-stay--form input[name="checkin"]')
               .val(canadianDateFormat(new Date()));
-	    const timeFrame = response.is_late_checkout || response.is_half_booking ? 'Hours' : 'Night(s)';
+            const timeFrame = response.is_late_checkout || response.is_half_booking ? 'Hours' : 'Night(s)';
 
             const msg = (
               `Duration of guest extended by ${duration} ${timeFrame}`
@@ -708,8 +745,8 @@ $(document).ready(function () {
             const previousServiceCharge = parseFloat(
               $('#total__service-charge--amount').text().replaceAll(',','')
             );
-	    const updatedAmt = previousServiceCharge + amount;
-	    $('#total__service-charge--amount').text(updatedAmt.toLocaleString());
+            const updatedAmt = previousServiceCharge + amount;
+            $('#total__service-charge--amount').text(updatedAmt.toLocaleString());
 
             const date = britishDateFormat(response.created_at);
             $('.order__history--table-body').prepend(

@@ -359,10 +359,10 @@
                           </div>
                         </div>
                       </div>
-                      <div id="main__earlyin-container" class="hidden__visibility">
-                        <p>Early CheckIn? <span class="important">*</span></p>
+                      <div id="main__payMethod-container">
+                        <p>Payment Method <span class="important">*</span></p>
                         <div class="dropdown">
-                          <div id="main__early-checkin" class="main__dropdown-btn drop-down">
+                          <div id="main__payMethod" class="main__dropdown-btn drop-down">
                             <span>Select </span>
                             <img src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px" alt="dropdown" />
                           </div>
@@ -386,12 +386,10 @@
                         <input id="main__checkout-date" type="date" required>
                       </div>
 
-                      <!-- Hide visibility to maintain serial display -->
-                      <!-- Just a dummy block -->
-                      <div id="main__dummy-block" class="hide">
-                        <p>Instant Payment</p>
+                      <div id="main__earlyin-container" class="hide">
+                        <p>Early CheckIn? <span class="important">*</span></p>
                         <div class="dropdown">
-                          <div class="main__dropdown-btn drop-down">
+                          <div id="main__early-checkin" class="main__dropdown-btn drop-down">
                             <span>Select </span>
                             <img src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px" alt="dropdown" />
                           </div>
@@ -523,6 +521,7 @@
                     <input id="main__id--type-val"  type="hidden" /> <!-- Selected Room No. Option -->
                     <input id="main__id--checkin-val" type="hidden" /> <!-- Selected booking type option -->
                     <input id="main__id--bookingtype-val" type="hidden" /> <!-- Selected if early checkin options -->
+		    <input id="main__id--paymmentType-val" type="hidden" required /> 
 
                   </div>
                 </form>

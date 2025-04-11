@@ -118,12 +118,13 @@ $(document).ready(function() {
     const id_type = $('#main__id--type-val').val().toLowerCase();
     const id_number = $('#main__id--no-val').val();
     const email = $('#main__guest-email').val();
+    const payment_type = $('#main__id--paymmentType-val').val();
 
     const BookingData = {
       book: {
         duration: DURATION, guest_number, amount: AMOUNT, is_reserve,
         is_paid, checkin: CHECK_IN, checkout: CHECK_OUT, is_short_rest,
-	is_early_checkin: IS_EARLY_CHECKIN,
+        is_early_checkin: IS_EARLY_CHECKIN, payment_type
       },
       customer: { gender, name, address, phone, id_type, id_number, email }
     };
@@ -141,7 +142,7 @@ $(document).ready(function() {
             $button.prop('disable', false);
             $('#main__popup-modal').hide();
 
-	    const reserveOrBookText = response.is_reserve ? 'reserved' : 'booked';
+            const reserveOrBookText = response.is_reserve ? 'reserved' : 'booked';
             const msg = (
               `Success! Room [${roomNumber}] has been ${reserveOrBookText} for ${name}`
             );
@@ -153,8 +154,8 @@ $(document).ready(function() {
               updateElementCount($('#main__today-check--in'), true);
             }
 
-	    // Remove guest data if selected from guest list.
-	    sessionStorage.removeItem('guestData');
+            // Remove guest data if selected from guest list.
+            sessionStorage.removeItem('guestData');
 
             // Print receipt immediately room is book.
             const bookingId = response.booking_id;
@@ -258,7 +259,7 @@ $(document).ready(function() {
                       CHECK_OUT = $('#main__checkout-date').val();
 
                       if (new Date(CHECK_IN) >= new Date(CHECK_OUT)) {
-			resetRoomDetails();
+                        resetRoomDetails();
                         showNotification(
                           'Check Out date must not be earlier than Check In date', true
                         );
@@ -271,18 +272,18 @@ $(document).ready(function() {
                       AMOUNT = DURATION * room.amount;
                       if ($('#main__id--checkin-val').val() === 'Yes') {
                         AMOUNT += EARLY_CHECKIN_AMOUNT;
-			IS_EARLY_CHECKIN = true;
-			$('#main__night-count').val(`${DURATION} Night(s)`);
+                        IS_EARLY_CHECKIN = true;
+                        $('#main__night-count').val(`${DURATION} Night(s)`);
 
                       }
                       else if (
                         $('#main__id--bookingtype-val').val().toLowerCase() === 'short time'
                       ) {
                         AMOUNT = SHORT_REST_AMOUNT;
-			$('#main__night-count').val('2 Hours');
+                        $('#main__night-count').val('2 Hours');
                       } else {
-		        $('#main__night-count').val(`${DURATION} Night(s)`); 
-		      }
+                        $('#main__night-count').val(`${DURATION} Night(s)`); 
+                      }
 
 
                       $('#main__room-rate')
@@ -332,18 +333,14 @@ $(document).ready(function() {
 
 
                 if (selectedOption.toLowerCase() === 'full time') {
-                  $('#main__checkin-container, #main__checkout-container, #main__dummy-block').removeClass('hide');
-                  $('#main__earlyin-container').css('visibility', 'visible');
-                  $('#main__dummy-block').css('visibility', 'hidden');
+                  $('#main__checkin-container, #main__checkout-container, #main__earlyin-container').removeClass('hide');
 
                   SHORT_REST_OPTION = false;
 
                   $('#main__check-in, #main__checkout-date, #main__id--checkin-val').attr('required');
-			$('#main__check-in').val(canadianDateFormat(new Date));
+                  $('#main__check-in').val(canadianDateFormat(new Date));
                 } else {
-                  $('#main__checkin-container, #main__checkout-container, #main__dummy-block').addClass('hide');
-                  $('#main__dummy-block').css('visibility', 'hidden');
-                  $('#main__earlyin-container').css('visibility', 'hidden');
+                  $('#main__checkin-container, #main__checkout-container, #main__earlyin-container').addClass('hide');
 
                   SHORT_REST_OPTION = true;
 
@@ -369,7 +366,7 @@ $(document).ready(function() {
               if ($(this).closest('.dropdown')
                 .find('#main__early-checkin').length) {
 
-		resetRoomDetails();
+                resetRoomDetails();
 
                 $('#main__id--checkin-val').val($(this).text());
 
@@ -441,6 +438,24 @@ $(document).ready(function() {
 
                 $('.dropdown-menu').hide();
               }
+            });
+          break;
+        }
+        case 'main__payMethod': {
+          const paymentOptions = ['Transfer', 'POS', 'Cash'];      
+          displayMenuList(paymentOptions, $clickItem);
+          $('#dynamic__load-dashboard').on(       
+            'click', '.dropdown-item', function() {       
+              if ($(this).closest('.dropdown')     
+                .find('#main__payMethod').length) {     
+                $('#main__id--paymmentType-val').val($(this).text());
+                // Populated with selected options from dropdown menu.        
+                $clickItem.closest('.dropdown')       
+                  .find('.main__dropdown-btn span')    
+                  .text($(this).text());
+
+                $('.dropdown-menu').hide();        
+              }         
             });
           break;
         }

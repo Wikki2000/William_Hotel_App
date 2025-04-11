@@ -319,8 +319,11 @@ export function guestListTableTemplate(guest, booking, room, date) {
     <td class="">
       <p class="ui text size-textmd">${date.checkoutDate}</p>
     </td>
-    <td class=""> 
+    <!--<td class=""> 
       <p style="color: ${bookingStatusColor};" class="booking-status ui text size-textmd">${bookingStatus}</p> 
+    </td>-->
+    <td class="">
+      <p class="ui text size-textmd">${booking.payment_type}</p>
     </td>
     <td class="">
       <p class="ui text size-textmd">₦${booking.amount.toLocaleString()}</p>
@@ -571,7 +574,6 @@ export function loanDetailTemplate(data) {
 }
 
 export function updatePaymentTemplate(paymentType, entityId) {
-	console.log(paymentType, entityId);
   const row = `<div class="popup-modal-content">
     <!-- Close Button -->
     <button class="close-btn closePopupModal">&times;</button>

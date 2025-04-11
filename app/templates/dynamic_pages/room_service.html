@@ -128,10 +128,10 @@
         Extend by Night(s)
       </button>
       <button id="half__day-booking" class="tab__item ui heading size-headingxs highlight-btn">
-	Extend by Half Day
+        Extend by Half Day
       </button>
       <button id="late__checkout" class="tab__item ui heading size-headingxs highlight-btn">
-	Late Checkout
+        Late Checkout
       </button>
     </div><br />
     <div class="room__details">
@@ -220,9 +220,9 @@
       <h4 class="charge"><em>Total Charge</em></h4>
       <h4 class="amount">
         <em>
-	  <span id="service__dollar-sign">₦</span>
-	  <span id="total__service-charge--amount">0.00</span>
-	</em>
+          <span id="service__dollar-sign">₦</span>
+          <span id="total__service-charge--amount">0.00</span>
+        </em>
       </h4>
     </div>
 
@@ -297,6 +297,28 @@
             </ul>
           </div>
         </div>
+      </div>
+
+      <div class="guest__drop-down--menu">
+        <br><p><strong>Payment Type:
+          <span class="important">*</span>
+        </strong></p>
+        <div class="dropdown guest__dropdown-btn--container">
+          <div
+	    id="guest__extendday-payMethod"
+	    class="guest__extendday-payMethod-btn drop-down"
+	  >
+            <span>Select </span>
+            <img src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px" alt="dropdown" />
+          </div>
+          <div class="dropdown-menu" id="guest__extendday-payMethod--dropdown">             
+            <ul class="guest__dropdown--menu-list">        
+              <li class="guest__payMethod-selector dropdown-item">POS</li>      
+              <li class="guest__payMethod-selector dropdown-item">Cash</li>         
+              <li class="guest__payMethod-selector dropdown-item">Transfer</li>
+            </ul>       
+          </div>
+        </div>
       </div>    
 
       <div class="guest__add-edit--btnContainer">
@@ -342,26 +364,47 @@
       <p id="latecheckout__confirmation-description">
       <!-- This section dynamically loaded -->
       You are about to extend the duration of Room <span id="booking__extension-room"></span>
-       by <span id="booking__extension-duration"></span>. An additionally charge of
-       N<span id="booking__extension-amoumt"></span> is required. Please select
-       the option and click "confirm" button to proeced. 
+      by <span id="booking__extension-duration"></span>. An additionally charge of
+      N<span id="booking__extension-amoumt"></span> is required. Please select
+      the option and click "confirm" button to proeced. 
       </p>
 
       <div class="latecheckout__drop-down--menu">
-        <p><strong>Instance Payment?:
-          <span class="important">*</span>
-        </strong></p>
-        <div class="dropdown latecheckout__dropdown-btn--container">
-          <div id="late__checkout-ispaid" class="late__checkout-dropdown--btn drop-down">
-            <span>Select </span>
-            <img src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px" alt="dropdown" />
+        <div>
+          <p><strong>Instance Payment?:
+            <span class="important">*</span>
+          </strong></p>
+          <div class="dropdown latecheckout__dropdown-btn--container">
+            <div id="late__checkout-ispaid" class="late__checkout-dropdown--btn drop-down">
+              <span>Select </span>
+              <img src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px" alt="dropdown" />
+            </div>
+            <div class="dropdown-menu" id="late__checkout-ispaid--dropdown">
+              <ul class="latecheckout__dropdown--menu-list">
+                <li class="latecheckout__dropdown-selector dropdown-item">Yes</li>
+                <li class="latecheckout__dropdown-selector dropdown-item">No</li>
+              </ul>
+            </div>
           </div>
-          <div class="dropdown-menu" id="late__checkout-ispaid--dropdown">
-            <ul class="latecheckout__dropdown--menu-list">
-              <li class="latecheckout__dropdown-selector dropdown-item">Yes</li>
-              <li class="latecheckout__dropdown-selector dropdown-item">No</li>
-            </ul>
-          </div>
+        </div>
+
+        <div>
+          <p><strong>Payment Type:
+            <span class="important">*</span>
+          </strong></p>          
+          <div class="dropdown latecheckout__dropdown-btn--container">         
+            <div id="late__checkout-payMethod" class="payMethod-dropdown--btn drop-down">     
+              <span>Select </span>      
+              <img src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px" alt="dropdown" />         
+            </div>       
+            <div class="dropdown-menu" id="late__checkout-payMethod--dropdown">     
+              <ul class="latecheckout__payMethod-dropdown--menu-list">       
+                <li class="latecheckout__payMethod-dropdown-selector dropdown-item">Transfer</li>          
+                <li class="latecheckout__payMethod-dropdown-selector dropdown-item">POS</li>          
+                <li class="latecheckout__payMethod-dropdown-selector dropdown-item">Cash</li>
+              </ul>
+            </div>        
+          </div>        
         </div>
       </div>
 
@@ -377,6 +420,7 @@
 
 <!-- Storage for further use -->
 <input id="guest__ispaid-menu--selected" type="hidden" required />
+<input id="guest__paymentMethod-menu--selected" type="hidden" required />
 
 <!-- Confirmation Modal Dynamically Loaded Here. -->
 <div id="order__confirmation-modal">

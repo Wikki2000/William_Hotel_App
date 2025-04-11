@@ -14,6 +14,7 @@ class Booking(BaseModel, Base):
     """Define class for storing booking of rooms"""
     __tablename__ = "bookings"
     duration = Column(String(20))
+    payment_type = Column(String(50), nullable=False)
     checkin = Column(Date, nullable=False)
     checkout = Column(Date)
     is_paid = Column(ENUM("yes", "no"), nullable=False, default="no")

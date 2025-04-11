@@ -353,7 +353,8 @@ Service Section
       height: 40px;
 
     }
-    .guest__dropdown-btn {
+    .guest__dropdown-btn, 
+    .guest__extendday-payMethod-btn {
       display: flex;
       justify-content: space-between;
       height: 100%;
@@ -373,6 +374,12 @@ Service Section
     text-align: center;
   }
 
+  .latecheckout__drop-down--menu {
+    display: flex;
+    justify-content: space-between; 
+  }
+
+  .payMethod-dropdown--btn,
   .late__checkout-dropdown--btn {
     display: flex;
     justify-content: space-between;
@@ -380,12 +387,12 @@ Service Section
 
   .latecheckout__button-container {
     display: flex;
-    justify-content: right;
-    margin-top: 10px;
+    justify-content: center;
+    margin-top: 20px;
   }
   .confirm__late-checkout--btn, .confirm__payment-type {
     padding: 10px;
-    width: 30%;
-    border-radius: 5px;
+    width: 80%;
+    border-radius: 10px;
   }
 }
