@@ -156,7 +156,10 @@ $(document).ready(() => {
           });
       }
       // Cancel Reservation 
-    } else if ($clickItem.hasClass('guest__listDelete')) {
+    } else if (
+      $clickItem.hasClass('guest__listDelete') || 
+      $clickItem.hasClass('guest__listRemove')
+    ) {
       const headingText = 'Confirm Removal of Reservation';
       const descriptionText = 'This action cannot be undone !'
       const confirmBtCls = 'reservation__delete-confirmBtn';
@@ -165,14 +168,15 @@ $(document).ready(() => {
 
       $('#dynamic__load-dashboard').off('click', '.reservation__delete-confirmBtn')
         .on('click', '.reservation__delete-confirmBtn', function() {
-          const cancelReservationUrl = API_BASE_URL + `/bookings/${clickItemId}/cancel`;
+          const cancelReservationUrl = API_BASE_URL + `/bookings/${clickItemId}/delete`;
+          const text = $clickItem.hasClass('guest__listRemove') ? 'Booking' : 'Reservation';
 
           $('#order__confirmation-modal').empty();
 
           ajaxRequest(cancelReservationUrl, 'DELETE', null,
             (response) => {
               $(`tr[data-id="${clickItemId}"]`).remove();
-              showNotification(`Reservation Deleted successfully !`);
+              showNotification(`${text} Deleted successfully !`);
             },
             (error) => {
               console.log(error);

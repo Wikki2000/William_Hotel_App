@@ -297,6 +297,7 @@ export function guestListTableTemplate(guest, booking, room, date) {
   const bookingReserve = booking.is_reserve ? 'reserve' : 'book';
 
   const hideClass = booking.is_reserve && userRole != 'staff' ? '' : 'none';
+  const showToAdminOnly = userRole === 'admin' ? '' : 'hide';
 
   const row = `<tr data-id="${booking.id}">
     <td class="guest-name">
@@ -348,6 +349,9 @@ export function guestListTableTemplate(guest, booking, room, date) {
           <li data-id="${booking.id}" class="manage__item guest__listEdit  guest__listMenu">
             <i class="fa fa-edit"></i>Edit Data
           </li>
+	  <li data-id="${booking.id}" class="manage__item guest__listRemove guest__listMenu ${showToAdminOnly}">
+	    <i class="fa fa-trash"></i>Delete Booking
+	  </li>
 	  <li style="display: ${hideClass};"data-id="${booking.id}" class="manage__item guest__listDelete  guest__listMenu">
 	    <i class="fas fa-ban"></i>Cancel
 	   </li>

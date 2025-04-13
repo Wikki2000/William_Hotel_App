@@ -21,6 +21,11 @@ def add_maintenance(user_role: str, user_id: str):
     if error_response:
         return jsonify(error_response), 400
 
+    print(len(storage.all(Maintenance)))
+
+    if len(storage.all(Maintenance)) >= 5:
+        return jsonify({"error": "Number of maintainence exceeded"}), 422
+
     user = storage.get_by(User, id=user_id)
     if not user:
         abort(404)
