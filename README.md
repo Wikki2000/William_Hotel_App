@@ -28,9 +28,9 @@ A comprehensive and lightweight hotel management solution built to streamline da
 ## Tech Stack
 
 - **Frontend:** HTML, CSS, JavaScript, jQuery  
-- **Backend:** (Mention if it's PHP, Node.js, etc.)  
+- **Backend:** Python (Flask)
 - **Database:** (e.g., MySQL, MongoDB)  
-- **Others:** (e.g., Firebase for chat, Print.js for receipts, etc.)
+- **Others:** SocketIo, Sqlachemy, 
 
 ## Live Demo
 
