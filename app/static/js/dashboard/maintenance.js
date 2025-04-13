@@ -61,6 +61,7 @@ $(document).ready(function() {
       const selectedOption = $(this).text();
       $('#maintenance__room-menu-btn p').text(selectedOption);
     });
+
   // Handle reporting of fault.
   $('#dynamic__load-dashboard').off('click', '#report-btn')
     .on('click', '#report-btn', function() {
@@ -78,6 +79,10 @@ $(document).ready(function() {
           showNotification('Maintenence Added Successfully');
         },
         (error) => {
+          if (error.status === 422) {
+	    showNotification('Error! ' +  error.responseJSON.error, true);
+	    return;
+	  }
           showNotification('Oops! An Error Ocured, Try Again !', true);
         }
       );
