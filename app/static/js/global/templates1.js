@@ -437,10 +437,12 @@ export function foodTableTemplate(index, data, date) {
 }
 
 export function orderHistoryTableTemplate(order, date, customer = null) {
+  const userRole = localStorage.getItem('role');
   const paymentStatus = order.is_paid ? 'Paid' : 'Pending';
   const textColor = order.is_paid ? 'green' : 'red';
   const hideClass = customer ? '' : 'hide';
   const customerName = customer ? customer.name : 'Guest Ordered';
+  const showToAdminOnly = userRole === 'admin' ? '' : 'hide';
 
   const sliceName = (
     customerName.length >= 14 ? `${customerName.slice(0, 15)}...` : customerName
@@ -476,6 +478,9 @@ export function orderHistoryTableTemplate(order, date, customer = null) {
           </li>
 	  <li data-id="${order.id}" data-payment-type="${order.payment_type}" class="manage__item order__update-payment--method order__manageItem">
 	    <i class="fa fa-sync-alt"></i>Payment Method
+	  </li>
+	  <li data-id="${order.id}" data-name="${customerName}" class="manage__item  order__delete order__manageItem ${showToAdminOnly}">
+	    <i class="fa fa-trash"></i>Delete Order
 	  </li>
           <li data-id="${order.id}" class="manage__item order__manageItem order__showConfirmModal">
              <i class="fa fa-shopping-cart"></i>Order Details

@@ -33,6 +33,30 @@ $(document).ready(function() {
 
       const data = [{ data: 'id', value: clickItemId }, {data: 'name', value: name }];
       confirmationModal(headingText, descriptionText, confirmBtCls, data);
+    } else if ($selectedMenu.hasClass('order__delete')) {
+      const headingText = 'Confirm Removal of Order';
+      const descriptionText = 'This action cannot be undone !'
+      const confirmBtCls = 'order__delete-confirmBtn';
+
+      confirmationModal(headingText, descriptionText, confirmBtCls);
+
+
+      $('#dynamic__load-dashboard').off('click', '.order__delete-confirmBtn')
+        .on('click', '.order__delete-confirmBtn', function() {
+          const deleteOrderUrl = API_BASE_URL + `/orders/${clickItemId}/delete`;
+
+          $('#order__confirmation-modal').empty();
+
+          ajaxRequest(deleteOrderUrl, 'DELETE', null,
+            (response) => {
+              $(`tr[data-id="${clickItemId}"]`).remove();
+              showNotification(`Order Deleted successfully !`);
+            },
+            (error) => {
+              console.log(error);
+            }
+          );
+        });
     } else if ($selectedMenu.hasClass('order__update-payment--method')) {
       const paymentMethod = $selectedMenu.data('payment-type');
       loadUpdatePaymentTemplate(paymentMethod, clickItemId);
@@ -230,7 +254,7 @@ $(document).ready(function() {
       $('#order__history-section').show();
       $('.order__filter').removeClass('highlight-btn');
       $('#order__filter-all').addClass('highlight-btn');
-	     $('.order_history-title ').text('Today Order List');
+      $('.order_history-title ').text('Today Order List');
 
       $('.order__history--table-body').empty();
 

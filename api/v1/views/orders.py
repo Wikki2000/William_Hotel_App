@@ -15,7 +15,8 @@ from api.v1.views import api_views
 from api.v1.views.utils import (
     bad_request, create_receipt, role_required, nigeria_today_date,
     update_item_stock, rollback_order_on_error, update_sales_data,
-    update_task, write_to_file, create_monthly_task, last_month_day
+    update_task, write_to_file, create_monthly_task, last_month_day,
+    update_room_sold
 )
 from api.v1.views import constant
 from models import storage
@@ -370,3 +371,20 @@ def order_items(user_role: str, user_id: str):
 
     finally:
         storage.close()
+
+
+@api_views.route("/orders/<string:order_id>/delete", methods=["DELETE"])
+@role_required(["admin"])
+def delete_order(user_id: str, user_role: str, order_id: str):
+    """Delete customer order."""
+    order = storage.get_by(Order, id=order_id)
+    if not order:
+        abort(404)
+
+    sale_date = order.created_at.strftime("%Y-%m-%d")
+    update_task(0, order.amount)
+    update_room_sold(new_amount=0, old_amount=order.amount, date=sale_date)
+
+    storage.delete(order)
+    storage.save()
+    return jsonify({"message": "Order Remove Successfully"}), 201
