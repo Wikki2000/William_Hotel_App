@@ -38,6 +38,11 @@ $(document).ready(() => {
           ) => {
             let time, hide, bookingType;
 
+
+            const hideCheckOutBy = (
+              booking.is_use || booking.is_reserve ? 'none' : ''
+            );
+
             if (booking.is_short_rest) {
               bookingType = 'Short Tiime';
               time = 'Hours';
@@ -91,7 +96,7 @@ $(document).ready(() => {
              <p style="display: ${hide};"><b>Room(${room.number}) Rate</b> ₦${room.amount.toLocaleString()}</p>
              <p><b>Booking Amount</b> ₦${booking.amount.toLocaleString()}</p>
               <p><b>Checkin  By</b> ${checkin_by.first_name} ${checkin_by.last_name} (${checkin_by.portfolio})</p>
-              <p><b>Checkout  By</b> ${checkout_staff.first_name} ${checkout_staff.last_name} (${checkout_staff.portfolio})</p>`
+              <p style="display: ${hideCheckOutBy}"><b>Checkout  By</b> ${checkout_staff.first_name} ${checkout_staff.last_name} (${checkout_staff.portfolio})</p>`
             );
             $('#room__totalAmount')
               .text('₦' + booking.amount.toLocaleString());

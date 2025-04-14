@@ -458,6 +458,8 @@ def cancel_reservation(user_id: str, user_role: str, booking_id: str):
     update_task(0, booking.amount)
     update_room_sold(new_amount=0, old_amount=booking.amount, date=sale_date)
 
+    booking.room.status = "available"
+
     storage.delete(booking)
     storage.save()
     return jsonify({"message": "Booking Remove Successfully"}), 201
