@@ -32,7 +32,7 @@ A comprehensive and lightweight hotel management solution built to streamline da
 - **Database:** (e.g., MySQL, MongoDB)  
 - **Others:** SocketIo, Sqlachemy, 
 
-<--## Live Demo
+<!--## Live Demo
 
 > Coming soon / [Optional: add link if available]
 
