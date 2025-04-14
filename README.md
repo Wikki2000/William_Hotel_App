@@ -44,4 +44,5 @@ A comprehensive and lightweight hotel management solution built to streamline da
 
 1. Clone the repo:
    ```bash
-   git clone https://github.com/yourusername/hotel-management-system.git-->
+   git clone https://github.com/yourusername/hotel-management-system.git
+-->
