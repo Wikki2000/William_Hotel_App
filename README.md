@@ -32,7 +32,7 @@ A comprehensive and lightweight hotel management solution built to streamline da
 - **Database:** (e.g., MySQL, MongoDB)  
 - **Others:** SocketIo, Sqlachemy, 
 
-## Live Demo
+<--## Live Demo
 
 > Coming soon / [Optional: add link if available]
 
@@ -44,4 +44,4 @@ A comprehensive and lightweight hotel management solution built to streamline da
 
 1. Clone the repo:
    ```bash
-   git clone https://github.com/yourusername/hotel-management-system.git
+   git clone https://github.com/yourusername/hotel-management-system.git-->
