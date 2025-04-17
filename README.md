@@ -42,10 +42,24 @@ A comprehensive and lightweight hotel management solution built to streamline da
 | ![](app/static/images/app_screnshot/Screenshot%20(5).png) | ![](app/static/images/app_screnshot/Screenshot%20(7).png) |
 | ![](app/static/images/app_screnshot/Screenshot%20(8).png) | ![](app/static/images/app_screnshot/Screenshot%20(11).png) |
 
-<!--
 ## How to Run Locally
 
-1. Clone the repo:
+1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/hotel-management-system.git
--->
+   git clone https://github.com/yourusername/William_Hotel_App.git
+
+2. Navigate into the project directory:
+  ```bash
+cd William_Hotel_App
+Set up the MySQL database:
+
+bash
+Copy
+Edit
+cat mysql/setup_mysql_dev_db.sql | sudo mysql -uroot -p
+Run the application:
+
+bash
+Copy
+Edit
+python3 -m app.app
