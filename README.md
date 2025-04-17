@@ -32,14 +32,14 @@ A comprehensive and lightweight hotel management solution built to streamline da
 - **Database:** (e.g., MySQL, MongoDB)  
 - **Others:** SocketIo, Sqlachemy, 
 
-<!--## Live Demo
+## Live Demo
 
-> Coming soon / [Optional: add link if available]
+> Coming soon
 
 ## Screenshots
 
-> (Optional: Add screenshots or GIFs of the dashboard, receipt printing, chat, etc.)
-
+(Optional: Add screenshots or GIFs of the dashboard, receipt printing, chat, etc.)
+<!--
 ## How to Run Locally
 
 1. Clone the repo:
