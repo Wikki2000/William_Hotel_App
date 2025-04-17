@@ -37,9 +37,10 @@ A comprehensive and lightweight hotel management solution built to streamline da
 > Coming soon
 
 ## Screenshots
-| ![](app/static/images/app_screnshot/Screenshot%20(4).png) | ![](app/static/images/app_screnshot/Screenshot%20(4).png) |
+| ![](app/static/images/app_screnshot/Screenshot%20(4).png) | ![](app/static/images/app_screnshot/Screenshot%20(6).png) |
 |------------------------------------------------------------|------------------------------------------------------------|
-| ![](app/static/images/app_screnshot/Screenshot%20(4).png) | ![](app/static/images/app_screnshot/Screenshot%20(4).png) |
+| ![](app/static/images/app_screnshot/Screenshot%20(5).png) | ![](app/static/images/app_screnshot/Screenshot%20(7).png) |
+| ![](app/static/images/app_screnshot/Screenshot%20(8).png) | ![](app/static/images/app_screnshot/Screenshot%20(11).png) |
 
 
 
