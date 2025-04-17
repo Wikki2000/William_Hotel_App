@@ -47,15 +47,19 @@ A comprehensive and lightweight hotel management solution built to streamline da
 1. Clone the repository:
    ```bash
    git clone https://github.com/yourusername/William_Hotel_App.git
+   ```
 
 2. Navigate into the project directory:
   ```bash
 cd William_Hotel_App
+```
 
 3. Set up the MySQL database:
  ```bash
 cat mysql/setup_mysql_dev_db.sql | sudo mysql -uroot -p
+```
 
 4. Run the application:
  ```bash
 python3 -m app.app
+```
