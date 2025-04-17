@@ -51,15 +51,11 @@ A comprehensive and lightweight hotel management solution built to streamline da
 2. Navigate into the project directory:
   ```bash
 cd William_Hotel_App
-Set up the MySQL database:
 
-bash
-Copy
-Edit
+3. Set up the MySQL database:
+ ```bash
 cat mysql/setup_mysql_dev_db.sql | sudo mysql -uroot -p
-Run the application:
 
-bash
-Copy
-Edit
+4. Run the application:
+ ```bash
 python3 -m app.app
