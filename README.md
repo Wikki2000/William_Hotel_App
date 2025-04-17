@@ -37,12 +37,10 @@ A comprehensive and lightweight hotel management solution built to streamline da
 > Coming soon
 
 ## Screenshots
-<p align="center">
-  <img src="app/static/images/app_screnshot/Screenshot%20(4).png" width="200"/>
-  <img src="app/static/images/app_screnshot/Screenshot%20(4).png" width="200"/>
-  <img src="app/static/images/app_screnshot/Screenshot%20(4).png" width="200"/>
-  <img src="app/static/images/app_screnshot/Screenshot%20(4).png" width="200"/>
-</p>
+| ![](app/static/images/app_screnshot/Screenshot%20(4).png) | ![](app/static/images/app_screnshot/Screenshot%20(4).png) |
+|------------------------------------------------------------|------------------------------------------------------------|
+| ![](app/static/images/app_screnshot/Screenshot%20(4).png) | ![](app/static/images/app_screnshot/Screenshot%20(4).png) |
+
 
 
 (Optional: Add screenshots or GIFs of the dashboard, receipt printing, chat, etc.)
