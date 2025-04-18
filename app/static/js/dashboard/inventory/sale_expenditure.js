@@ -14,6 +14,7 @@ $(document).ready(function() {
   const APP_BASE_URL = getBaseUrl()['appBaseUrl'];
 
   const USER_ROLE = localStorage.getItem('role');
+  const USER_ID = localStorage.getItem('userId');
 
   // Get sales at any interval of time.
   $('#dynamic__load-dashboard')
@@ -204,8 +205,8 @@ $(document).ready(function() {
     });
 
   // Handle service table menu
-  $('#dynamic__load-dashboard').off('click', '#sales__profit-table--body .sales__menu')
-    .on('click', '#sales__profit-table--body .sales__menu', function() {
+  $('#dynamic__load-dashboard').off('click', '.sales__menu')
+    .on('click', '.sales__menu', function() {
       const $clickItem = $(this);
       const saleId = $clickItem.data('id');
 
@@ -233,6 +234,58 @@ $(document).ready(function() {
             console.log(error);
           });
         $('#sales__breakdown').css('display', 'flex');
+      } else if ($clickItem.hasClass('make-comment')) {
+        // This operation is handle ini sale_comments.js
+        $("#write__sales-comment").css('display', 'flex');
+	$("#sale__method").val("POST");
+	$("#sale__id").val(saleId);
+      } else if ($clickItem.hasClass('sales__view-comment')) {
+        const year = $(`tr[data-id="${saleId}"] .sale__year`).text();
+        const amount = $(`tr[data-id="${saleId}"] .sale__amount`).text();
+
+        const msg = `${year} Sales Comment (${amount})`;
+        $("#comment__list-heading").text(msg)
+
+        const commentUrl = API_BASE_URL + `/comments/${saleId}/get`;
+
+        fetchData(commentUrl)
+          .then((data) => {
+	    if (data.length === 0) {
+	      alert('Comment Box Empty!');
+	      return;
+	    }
+            $('#sale__comment-container').empty();
+	    $('#view__sales-comment').css('display', 'flex');
+            data.forEach((comment) => {
+              const commentBy = (
+                comment.user_id === USER_ID ? { by: 'Me', role: '' } : 
+                { by: comment.comment_by, role: `(${comment.role})` }
+              );
+              
+              const commentDate = britishDateFormat(comment.created_at);
+              $('#sale__comment-container').append(`
+                <div data-user-id="${comment.user_id}" class="comment__begins">
+                  <strong class="sale__comment-subContainer">
+                    <p class="comment__by">
+                      <i>
+                        By ${commentBy.by} ${commentBy.role} on ${commentDate}
+                      </i>
+                    </p>
+                    <p class="sales__comment-actionIcon">
+                      <i data-id="${comment.id}" class="fa fa-trash cursor delete__sale-comment"></i>&nbsp;&nbsp;
+                      <i data-id="${comment.id}" class="fa fa-edit cursor edit__sale-comment"></i> 
+                    </p> 
+                  </strong>
+
+                  <p class="comment__content">${comment.comment}</p>
+                </div>
+              `);
+            });
+
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       } else if ($clickItem.hasClass('approved__record')) {
         // Load confirmation modal to approved sales.
         const confirmBtCls = 'sale__confirm-btn';

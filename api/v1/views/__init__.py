@@ -28,3 +28,4 @@ from api.v1.views.sales import *
 from api.v1.views.inventories import *   
 from api.v1.views.games import *
 from api.v1.views.laundries import *
+from api.v1.views.sale_comments import *

@@ -49,12 +49,12 @@
 
         <!--<div id="inventory__game-cart" class="inventory-cart">
           <div class="flex-display">
-            <p id="count-games">0</p>
-            <img src="/static/images/dashboard/inventory/transaction_cart_icon.png" />
+          <p id="count-games">0</p>
+          <img src="/static/images/dashboard/inventory/transaction_cart_icon.png" />
           </div>
           <p>Available Games</p>
           <a href="#" style="color: purple">all games</a>
-	</div>-->
+          </div>-->
       </div>
 
       <!-- Form to create daily expendirures -->
@@ -347,19 +347,19 @@
                 Sales Date
                 </p>
               </th>
-	      <th width="380px">
-	        <p class="table__header-cell-1 ui heading size-headings">
-		  Status
-		 </p>
-	      </th>
+              <th width="380px">
+                <p class="table__header-cell-1 ui heading size-headings">
+                Status
+                </p>
+              </th>
               <th width="380px">
                 <p class="table__header-cell-1 ui heading size-headings">
                 Amount
                 </p>
               </th>
-	      <th width="380px">
-	        <!-- Table menu Icon Reservation -->
-	      </th>
+              <th width="380px">
+                <!-- Table menu Icon Reservation -->
+              </th>
             </tr>
           </thead>
           <tbody id="sales__profit-table--body" class="common-table-body">
@@ -367,55 +367,81 @@
           </tbody>
         </table>
 
-       <!-- Popup Modal to for sales details -->
+        <!-- Popup Modal to write sales comment -->
+        <div id="write__sales-comment" class="popup-modal">
+          <div class="popup-modal-content sales__popup-modal-comment">
+            <button class="close-btn closePopupModal">×</button>
+            <!-- Close Button -->
+            <form id="sale__comment-form">
+              <h4 class="write__comment-heading">Write Your Comment</h4>
+              <textarea class="sales__comment" id="sales__comment-input" placeholder="Please write your comment here" required >
+              </textarea><br />
+	      <input id="sale__id" type="hidden" />
+	      <input id="sale__method" type="hidden" />
+              <button class="highlight-btn ui heading size-headingxs comment__btn">Comment</button>  
+            </form>
+          </div>
+        </div>
+
+
+        <!-- Popup modal to view sales comment -->
+	<div id="view__sales-comment" class="popup-modal">
+          <div class="popup-modal-content sales__comment-list">
+            <button class="close-btn closePopupModal">×</button> 
+            <h3 id="comment__list-heading" class="comment__list-heading">
+            </h3>
+            <div id="sale__comment-container">
+            </div>
+          </div>
+        </div>
+
+        <!-- Popup Modal to for sales details -->
         <div id="sales__breakdown" class="popup-modal">
           <div class="popup-modal-content sales__popup-modal-content">
             <!-- Close Button -->
-	    <div class="sale__button-date--container">
-              <p id="sales__date" class="sale__date-summary">2/03/2025</p>
+            <div class="sale__button-date--container">
+              <p id="sales__date" class="sale__date-summary"></p>
               <button class="close-btn closePopupModal">×</button>
-	    </div>
-	      <h5 class="sale__summary-title">
-                Daily Sales Breakdown
-              </h5>
+            </div>
+            <h5 class="sale__summary-title">
+              Daily Sales Breakdown
+            </h5>
 
-              <div>
-                <!-- This section is dynamically loaded -->
-                <div class="sale__summary-flex">
-                  <p>Total Room Sold</p>
-                  <p id="total__room-sale"></p>
-                  <button id="total__room-sale--btn" class="highlight-btn table__header-cell ui heading size-headings item__sold">View Details</p>
-                </div>
-                <div class="sale__summary-flex">
-                  <p>Total Drink Sold</p>
-                  <p id="total__drink-sale"></p>
-                  <button id="total__drink-sale--btn" class="highlight-btn table__header-cell ui heading size-headings item__sold">View Details</p>
-                </div>
-                <div class="sale__summary-flex">
-                  <p>Total Food Sold</p>
-                  <p id="total__food-sale"></p>
-                  <button id="total__food-sale--btn" class="highlight-btn table__header-cell ui heading size-headings item__sold">View Details</p>
-                </div>
-                <div class="sale__summary-flex">
-                  <p>Toatal Game Sold</p>
-                  <p id="total__game-sale"></p>
-                  <button id="total__game-sale--btn" class="item__sold highlight-btn table__header-cell ui heading size-headings item__sold">View Details</p>
-                </div>
-                <div class="sale__summary-flex">
-                  <p>Toatal Laundry Sold</p>
-                  <p id="total__laundry-sale"></p>
-                  <button id="total__laundry-sale--btn" class="highlight-btn table__header-cell ui heading size-headings item__sold">View Details</button>
-                </div>
+            <div>
+              <!-- This section is dynamically loaded -->
+              <div class="sale__summary-flex">
+                <p>Total Room Sold</p>
+                <p id="total__room-sale"></p>
+                <button id="total__room-sale--btn" class="highlight-btn table__header-cell ui heading size-headings item__sold">View Details</p>
+              </div>
+              <div class="sale__summary-flex">
+                <p>Total Drink Sold</p>
+                <p id="total__drink-sale"></p>
+                <button id="total__drink-sale--btn" class="highlight-btn table__header-cell ui heading size-headings item__sold">View Details</p>
+              </div>
+              <div class="sale__summary-flex">
+                <p>Total Food Sold</p>
+                <p id="total__food-sale"></p>
+                <button id="total__food-sale--btn" class="highlight-btn table__header-cell ui heading size-headings item__sold">View Details</p>
+              </div>
+              <div class="sale__summary-flex">
+                <p>Toatal Game Sold</p>
+                <p id="total__game-sale"></p>
+                <button id="total__game-sale--btn" class="item__sold highlight-btn table__header-cell ui heading size-headings item__sold">View Details</p>
+              </div>
+              <div class="sale__summary-flex">
+                <p>Toatal Laundry Sold</p>
+                <p id="total__laundry-sale"></p>
                 <div class="sale__summary-total">
                   <p class="table__header-cell ui heading size-headings">Total Amount</p>
                   <p class="item__sold" id="total__sale"></p>
                 </div>
-		<input id="sales__summary-date" type="hidden" />
+                <input id="sales__summary-date" type="hidden" />
               </div>
 
+            </div>
           </div>
         </div>
-      </div>
 
       </div>
 

@@ -34,14 +34,32 @@ A comprehensive and lightweight hotel management solution built to streamline da
 
 ## Live Demo
 
-> Coming soon / [Optional: add link if available]
+> Coming soon
 
-## Screenshots
-
-> (Optional: Add screenshots or GIFs of the dashboard, receipt printing, chat, etc.)
+## Some Screenshots
+| ![](app/static/images/app_screnshot/Screenshot%20(4).png) | ![](app/static/images/app_screnshot/Screenshot%20(6).png) |
+|------------------------------------------------------------|------------------------------------------------------------|
+| ![](app/static/images/app_screnshot/Screenshot%20(5).png) | ![](app/static/images/app_screnshot/Screenshot%20(7).png) |
+| ![](app/static/images/app_screnshot/Screenshot%20(8).png) | ![](app/static/images/app_screnshot/Screenshot%20(11).png) |
 
 ## How to Run Locally
 
-1. Clone the repo:
-   ```bash
-   git clone https://github.com/yourusername/hotel-management-system.git
+1. Clone the repository:
+  ```bash
+   git clone https://github.com/yourusername/William_Hotel_App.git
+   ```
+
+2. Navigate into the project directory:
+  ```bash
+  cd William_Hotel_App
+  ```
+
+3. Set up the MySQL database:
+ ```bash
+  cat mysql/setup_mysql_dev_db.sql | sudo mysql -uroot -p
+  ```
+
+4. Run the application:
+ ```bash
+  python3 -m app.app
+  ```
