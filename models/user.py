@@ -15,6 +15,7 @@ from models.leave_request import LeaveRequest
 from models.private_message import PrivateMessage
 from models.group_message import GroupMessage
 from models.maintenance import Maintenance
+from models.sale_comment import SaleComment
 
 
 class User(BaseModel, Base):
@@ -99,6 +100,8 @@ class User(BaseModel, Base):
         "GroupMessage", backref="user",
         cascade="all, delete-orphan"
     )
+
+    sale_comments = relationship('SaleComment', backref='user')
 
     # ===================== Method Definition ==================== #
     def hash_password(self):

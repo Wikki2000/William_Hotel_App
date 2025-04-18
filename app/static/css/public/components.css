@@ -388,3 +388,7 @@ tr {
 .rotate__360deg-clockwise {
   transform: rotate(360deg) !important;
 }
+
+.cursor {
+  cursor: pointer;
+}

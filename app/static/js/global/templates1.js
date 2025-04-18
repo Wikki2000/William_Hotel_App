@@ -363,13 +363,13 @@ export function salesTableTemplate(index, id, saleStatus, amount, date, userRole
       <p class="ui text size-textmd">${index + 1}</p>
     </td>
     <td class="">
-      <p class="ui text size-textmd">${date}</p>
+      <p class="ui text size-textmd sale__year">${date}</p>
     </td>
     <td class="">
       <p class="ui text size-textmd sale__status" style="color: ${statusColor};">${isAproved}</p>
     </td>
     <td class="">
-      <p class="ui text size-textmd">₦${amount.toLocaleString()}</p>
+      <p class="ui text size-textmd sale__amount">₦${amount.toLocaleString()}</p>
     </td>
 
     <td class="">
@@ -386,6 +386,12 @@ export function salesTableTemplate(index, id, saleStatus, amount, date, userRole
 
 	  <li data-id="${id}" class="${isHide} manage__item sales__menu approved__record">
 	    <i class="fa fa-thumbs-up"></i>Approve Record
+	  </li>
+	  <li data-id="${id}" class="manage__item sales__menu make-comment">
+	    <i class="fa fa-pen"></i>Make Comment
+	  </li>
+	  <li data-id="${id}" class="manage__item sales__menu sales__view-comment">
+	    <i class="fa fa-comments"></i>View Comment
 	  </li>
 	</ul>
       </nav>
@@ -566,6 +572,7 @@ export function orderDetails(
     cleared_by !== null ? { firstName: cleared_by.first_name, lastName: cleared_by.last_name, role: cleared_by.portfolio  } :
     { firstName: ordered_by.first_name, lastName: ordered_by.last_name, role: ordered_by.portfolio }
   );
+  const hideBillClearBy = !order.is_paid ? 'hide' : '';
   $('#order__info').append(
     `<h3>Order Info.</h3>
       <p><b>Guest Name</b> - ${customer.name}</p>
@@ -575,7 +582,7 @@ export function orderDetails(
       <p><b>Payment Method</b> - ${order.payment_type}</p>
       <p><b>Payment Status</b> - <span style="color: ${paymentStatus.color};">${paymentStatus.status}</span></p><br />
       <p><em><b>Ordered By</b> - ${ordered_by.first_name} ${ordered_by.last_name} (${ordered_by.portfolio})</em></p>
-      <p><em><b>Bill Handle By</b> - ${cleared.firstName} ${cleared.lastName} (${cleared.role})</em></p>
+      <p class="${hideBillClearBy}"><em><b>Bill Handle By</b> - ${cleared.firstName} ${cleared.lastName} (${cleared.role})</em></p>
              `
   );
   order_items.forEach(({ name, qty, amount }) => {
