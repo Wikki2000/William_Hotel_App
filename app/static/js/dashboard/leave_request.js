@@ -138,6 +138,10 @@ $(document).ready(function() {
       const $form = $(this);
       const data = getFormDataAsDict($form);
 
+      // Get staff name from sidebar and add to request body
+      const staff_name = $("#sidebar__name").text();
+      data["staff_name"] = staff_name
+
       // Validate form data and show error messages
       if (!validateForm($form)) {
         showNotification('Please fill out all required fields.', true);
@@ -155,6 +159,7 @@ $(document).ready(function() {
           const $clickItem = $(this);
           $clickItem.prop('disable', true);
 	  $('#order__confirmation-modal').empty();
+	  showNotification('Leave request Pocessing......');
           ajaxRequest(leaveUrl, 'POST', JSON.stringify(data),
             (response) => {
               $('#order__confirmation-modal').empty();

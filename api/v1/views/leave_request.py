@@ -16,16 +16,46 @@ def leave_request(user_role: str, user_id: str):
     """Request for leave"""
     data = request.get_json()
 
-    required_fields = ["leave_type", "start_date", "end_date", "description"]
+    required_fields = ["leave_type", "start_date", "end_date", "description", "staff_name"]
     error_response = bad_request(data, required_fields)
     if error_response:
+        print(error_response)
         return jsonify(error_response), 400
 
     data["staff_id"] = user_id  # Add staff ID to data
+    staff_name = data.get("staff_name")
 
     try:
+        del data["staff_name"]
         req = LeaveRequest(**data)
         storage.new(req)
+
+        manager = storage.get_by(User, role="manager")                     
+        admin = storage.get_by(User, role="admin")
+        manager_name = manager.last_name + " " + manager.first_name       
+        manager_email = manager.email
+
+        admin_name = admin.last_name + " " + admin.first_name         
+        admin_mail = admin.email
+
+        # Read email from file and interpolate with staff data       
+        place_holder = {         
+            "staff_name": staff_name, 
+            "leave_type": data.get("leave_type"),
+            "start_date": data.get("start_date"),
+            "end_date": data.get("end_date"),
+            "description": data.get("description")
+        }
+
+        email_file = "app/templates/email_notification/leave_notify_management.html"          
+        subject = "[William's Court Hotel] Leave Request Notification"        
+        email_content = read_html_file(email_file, place_holder)
+
+        manager_recipient = {"name": manager_name, "email": manager_email}       
+        admin_recipient = {"name": admin_name, "email": admin_mail}
+
+        send_mail(email_content, manager_recipient, subject)       
+        send_mail(email_content, admin_recipient, subject)
         storage.save()
         return jsonify({"message": "Loan Request Sent"}), 200
     except Exception as e:

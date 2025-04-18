@@ -30,9 +30,9 @@ $(document).ready(function() {
           $('#edit-fname').val(response.first_name);
           $('#edit-mname').val(response.middle_name);
           $('#edit-lname').val(response.last_name);
-          $('#edit-username').val(response.username).trim();
+          $('#edit-username').val(response.username.trim());
           $('#edit-gender').val(response.gender);
-          $('#edit-email').val(response.email).trim();
+          $('#edit-email').val(response.email.trim());
           $('#edit-title').val(response.title);
           $('#edit-address').val(response.address);
           $('#edit-phone').val(response.number);
