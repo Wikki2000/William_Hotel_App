@@ -24,7 +24,6 @@ def add_expenditure(user_role: str, user_id: str):
     if error_response:
         return jsonify(error_response), 400
 
-
     # Add the expenditure to daily expenditure sum.
     today_date =  nigeria_today_date()
     expense_summation = storage.get_by(

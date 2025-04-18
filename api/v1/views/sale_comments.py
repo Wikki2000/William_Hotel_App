@@ -92,7 +92,7 @@ def update_comment(user_id: str, user_role: str, comment_id: str) -> Dict:
 
     for key, val in data.items():
         if key != 'id':
-            setattr(drink, key, val)
+            setattr(comment, key, val)
     storage.save()
     comment = storage.get_by(SaleComment, id=comment_id)
-    return jsonify(drink.to_dict()), 201
+    return jsonify(comment.to_dict()), 201
