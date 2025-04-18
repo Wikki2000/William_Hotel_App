@@ -77,7 +77,6 @@ $(document).ready(function() {
         const confirmBtCls = 'comment__delete-confirmBtn';
 
         confirmationModal(headingText, descriptionText, confirmBtCls);
-      //$("#view__sales-comment").hide();
 
         $('#dynamic__load-dashboard')
           .off('click', `.${confirmBtCls}`)
@@ -110,13 +109,13 @@ $(document).ready(function() {
         fetchData(commentUrl)
           .then((data) => {
             $("#sales__comment-input").val(data.comment);
-            $("#sale__method").val("POST");
+            $("#sale__method").val("PUT");
             $("#sale__id").val(data.id);
           })
           .catch((error) => {
             console.log(error);
           });
-        $("#write__sales-comment").show();
+        $("#write__sales-comment").css("display", "flex");
       });
 });
 
