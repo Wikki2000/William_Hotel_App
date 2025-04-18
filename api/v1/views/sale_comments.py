@@ -94,5 +94,4 @@ def update_comment(user_id: str, user_role: str, comment_id: str) -> Dict:
         if key != 'id':
             setattr(comment, key, val)
     storage.save()
-    comment = storage.get_by(SaleComment, id=comment_id)
-    return jsonify(comment.to_dict()), 201
+    return jsonify({"message": "Comment Updated Successfully"}), 201

@@ -98,8 +98,11 @@ $(document).ready(function() {
       const account_number = $('#account-number').val();
       const account_name = $('#account-holder').val();
 
+      // Get staff name from sidebar
+      const staff_name = $("#sidebar__name").text();
+
       const data = {
-        amount, due_month, repayment_mode,
+        amount, due_month, repayment_mode, staff_name,
         bank_name, account_name, account_number
       };
 
@@ -113,10 +116,13 @@ $(document).ready(function() {
       $('#dynamic__load-dashboard').off('click', '.staff__loan-confirmBtn')
         .on('click', '.staff__loan-confirmBtn', function() {
           const loanRequestUrl = API_BASE_URL + '/request-loan';
+
+	$('#order__confirmation-modal').empty();
+	showNotification('Loan Request Processing.........');
+
           ajaxRequest(loanRequestUrl, 'POST', JSON.stringify(data),
             (response) => {
               $('#staff__loan-proceed--btn').prop('disable', false);
-              $('#order__confirmation-modal').empty();
               showNotification('Loan Request Sent Successfully !');
               $('#staff__loan-requestForm').trigger('reset');
             },

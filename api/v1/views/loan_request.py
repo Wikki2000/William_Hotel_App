@@ -16,17 +16,47 @@ def loan_request(user_role: str, user_id: str):
     """Request for loan"""
     data = request.get_json()
 
-    required_fields = ["amount", "due_month", "repayment_mode",
+    required_fields = ["amount", "due_month", "repayment_mode", "staff_name",
                        "bank_name", "account_name", "account_number"]
     error_response = bad_request(data, required_fields)
     if error_response:
         return jsonify(error_response), 400
 
     data["staff_id"] = user_id  # Add staff ID to data
+    staff_name = data.get("staff_name")
 
     try:
+        del data["staff_name"]  # remove staff name
         req = LoanRequest(**data)
         storage.new(req)
+
+        manager = storage.get_by(User, role="manager")
+        admin = storage.get_by(User, role="admin")
+
+        manager_name = manager.last_name + " " + manager.first_name
+        manager_email = manager.email
+        
+        admin_name = admin.last_name + " " + admin.first_name
+        admin_mail = admin.email
+
+        # Read email from file and interpolate with staff data 
+        place_holder = { 
+            "staff_name": staff_name,
+            "amount": str(f"₦{data.get('amount')}"),
+            "due_month": f"{data.get('due_month')} Month(s)",
+            "repayment_mode": data.get("repayment_mode"),
+        }
+
+        email_file = "app/templates/email_notification/loan_notify_management.html"
+        subject = "[William's Court Hotel] Loan Request Notification"
+        email_content = read_html_file(email_file, place_holder)
+
+        manager_recipient = {"name": manager_name, "email": manager_email}
+        admin_recipient = {"name": admin_name, "email": admin_mail}
+
+        send_mail(email_content, manager_recipient, subject)
+        send_mail(email_content, admin_recipient, subject)
+
         storage.save()
         return jsonify({"message": "Loan Request Sent"}), 200
     except Exception as e:
