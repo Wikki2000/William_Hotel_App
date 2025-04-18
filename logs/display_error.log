@@ -1,0 +1,1 @@
+sudo journalctl -u william_hotel_app.service --no-pager --lines=50
