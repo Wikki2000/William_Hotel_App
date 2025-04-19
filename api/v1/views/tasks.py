@@ -36,7 +36,7 @@ def get_vats(user_role: str, user_id: str, year: str, task_type: str):
         return jsonify([]), 200
 
     response = [task.to_dict() for task in sorted_tasks]
-
+    storage.close()
     return jsonify(response), 200
 
 
@@ -55,6 +55,7 @@ def vat_status(user_role: str, user_id: str, task_id: str, task_type: str):
         abort(404)
     task.is_paid = True
     storage.save()
+    storage.close()
     return jsonify({
         "message": f"{task.month} {task_type} Status Updated Successfully"
     }), 200

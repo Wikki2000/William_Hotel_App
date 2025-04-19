@@ -122,6 +122,8 @@ def get_leave_by_id(user_role: str, user_id: str, leave_id: str):
     except Exception as e:
         print(str(e))
         abort(500)
+    finally:
+        storage.close()
 
 
 @api_views.route("/leaves/<string:leave_id>/approve", methods=["PUT"])
@@ -158,6 +160,8 @@ def approve_leave(user_role: str, user_id: str, leave_id: str):
     except Exception as e:
         print(str(e))
         abort(500)
+    finally:
+        storage.close()
 
 
 @api_views.route("/leaves/<string:leave_id>/reject", methods=["PUT"])
@@ -195,3 +199,5 @@ def reject_leave(user_role: str, user_id: str, leave_id: str):
     except Exception as e:
         print(str(e))
         abort(500)
+    finally:
+        storage.close()

@@ -97,4 +97,5 @@ def get_vendor(user_role: str, user_id: str, vendor_id: str):
     vendor = storage.get_by(Vendor, id=vendor_id)
     if not vendor:
         abort(404)
+    storage.close()
     return jsonify(vendor.to_dict()), 200

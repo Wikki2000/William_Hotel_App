@@ -130,6 +130,7 @@ def customer_service_list(
 
     sorted_orders_list = [order.to_dict() for order in sorted_orders]
     sorted_bookings_list = [booking.to_dict() for booking in sorted_bookings]
+    storage.close()
 
     return jsonify({
         "bookings": sorted_bookings_list,

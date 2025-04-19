@@ -62,6 +62,8 @@ def loan_request(user_role: str, user_id: str):
     except Exception as e:
         print(str(e))
         return jsonify({"error": "An Internal Error Occured"}), 500
+    finally:
+        storage.close()
 
 
 @api_views.route("/loans")
@@ -73,6 +75,7 @@ def all_loans(user_role: str, user_id: str):
         return jsonify([]), 200
 
     sorted_loans = sorted(loans, key=lambda loan: loan.updated_at)
+    storage.close()
     return jsonify([{
         **loan.to_dict(),
         "first_name": loan.staff.first_name,
@@ -115,6 +118,8 @@ def get_loan_by_id(user_role: str, user_id: str, loan_id: str):
     except Exception as e:
         print(str(e))
         abort(500)
+    finally:
+        storage.close()
 
 
 @api_views.route("/loans/<string:loan_id>/approve")
@@ -135,6 +140,8 @@ def approve_loan_request(user_role: str, user_id: str, loan_id: str):
     except Exception as e:
         print(str(e))
         abort(500)
+    finally:
+        storage.close()
 
 
 @api_views.route("/loans/<string:loan_id>/reject", methods=["PUT"])
@@ -172,6 +179,8 @@ def reject_loan(user_role: str, user_id: str, loan_id: str):
     except Exception as e:
         print(str(e))
         abort(500)
+    finally:
+        storage.close()
 
 
 @api_views.route("/loans/<string:loan_id>/approve", methods=["PUT"])
@@ -206,3 +215,5 @@ def approve_loan(user_role: str, user_id: str, loan_id: str):
     except Exception as e:
         print(str(e))
         abort(500)
+    finally:
+        storage.close()

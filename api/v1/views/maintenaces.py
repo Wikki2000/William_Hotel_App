@@ -93,6 +93,8 @@ def get_by_id(user_role: str, user_id: str, maintenance_id: str):
     except Exception as e:
         print(str(e))
         abort(500)
+    finally:
+        storage.close()
 
 
 @api_views.route("/maintenances")
@@ -137,4 +139,5 @@ def maintenance_status(
         abort(404)
     maintenance.status = maintenance_status
     storage.save()
+    storage.close()
     return jsonify({"message": "Maintenance Status Updated Successfully"}), 200

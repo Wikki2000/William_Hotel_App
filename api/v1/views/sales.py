@@ -30,6 +30,7 @@ def get_sales(user_role: str, user_id: str):
         key=lambda sale : sale.updated_at,
         reverse=True
     )
+    storage.close()
 
     return jsonify([
         sale.to_dict()
@@ -44,6 +45,7 @@ def get_sale(user_role: str, user_id: str, sale_id: str):
     sale = storage.get_by(Sale, id=sale_id)
     if not sale:
         abort(404)
+    storage.close()
     return jsonify(sale.to_dict())
 
 
@@ -75,6 +77,7 @@ def get_sale_by_date(
         sale.food_sold + sale.drink_sold + sale.room_sold +
         sale.laundry_sold + sale.game_sold for sale in sorted_sales
     )
+    storage.close()
     return jsonify({
         "daily_sales": [
             sale.to_dict()
@@ -121,7 +124,7 @@ def get_service_sales(
     sorted_sales = sorted(
         filtered_sales, key=lambda sale: sale.updated_at, reverse=True
     )
-
+    storage.close()
     return jsonify([
         {
             "item_name": (
@@ -179,7 +182,7 @@ def get_sales_summary(
             "amount": total_amount
         })
         
-    print(sales_list)
+    storage.close()
     return jsonify(sales_list), 200
 
 
@@ -193,4 +196,5 @@ def approve_daily_sales(user_role: str, user_id: str, sale_id: str):
         abort(404)
     sale.is_approved = True
     storage.save()
+    storage.close()
     return jsonify({"message": "Sales Record Appproved Successfully"}), 201

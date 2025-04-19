@@ -39,6 +39,7 @@ def add_drink(user_id: str, user_role: str) -> Dict:
     storage.new(drink)
     storage.save()
     drink = storage.get_by(Drink, id=drink.id)
+    storage.close()
     return jsonify(drink.to_dict())
 
 
@@ -52,8 +53,8 @@ def remove_drink(user_id: str, user_role: str, drink_id: str) -> Dict:
         abort(404)
     storage.delete(drink)
     storage.save()
+    storage.close()
     return jsonify({"message": "Drink successfully remove from stock"}), 200
-
 
 
 @api_views.route("/drinks/<drink_id>/update", methods=["PUT"])
@@ -75,6 +76,7 @@ def update_drink(user_id: str, user_role: str, drink_id: str) -> Dict:
             setattr(drink, key, val)
     storage.save()
     drink = storage.get_by(Drink, id=drink_id)
+    storage.close()
     return jsonify(drink.to_dict()), 201
 
 
@@ -86,4 +88,5 @@ def get_drink(user_id: str, user_role: str, drink_id: str) -> Dict:
     if not drink:
         abort(404)
 
+    storage.close()
     return jsonify(drink.to_dict()), 200

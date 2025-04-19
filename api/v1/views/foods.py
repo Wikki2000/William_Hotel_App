@@ -43,8 +43,8 @@ def update_food(user_id: str, user_role: str, food_id: str) -> Dict:
         if key != 'id':
             setattr(food, key, val)
     storage.save()
-    storage.close()
     food = storage.get_by(Food, id=food_id)
+    storage.close()
     return jsonify(food.to_dict()), 201
 
 
