@@ -58,7 +58,6 @@ def get_orders(user_role: str, user_id: str):
                     orders.append(order)
                 #orders.extend(orders_by_guest)
 
-
         if not orders:
             return jsonify([]), 200
 
