@@ -16,6 +16,7 @@ def get_user(user_role: str, user_id: str, member_id: str):
     member = storage.get_by(User, id=member_id)
     if not member:
         abort(404)
+    storage.close()
     return jsonify(member.to_dict())
 
 
@@ -27,6 +28,7 @@ def get_users(user_role: str, user_id: str):
         return jsonify([]), 200
 
     sorted_users = sorted(users, key=lambda user : int(user.rank_number))
+    storage.close()
     return jsonify([user.to_dict() for user in sorted_users
                     if user.role != 'admin']), 200
 
@@ -100,4 +102,5 @@ def remove_user(user_role: str, user_id: str, member_id: str):
         abort(404)
     storage.delete(user)
     storage.save()
+    storage.close()
     return jsonify({"message": "User Deleted Successfully"}), 200

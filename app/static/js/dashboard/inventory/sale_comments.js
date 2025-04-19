@@ -81,13 +81,13 @@ $(document).ready(function() {
         $('#dynamic__load-dashboard')
           .off('click', `.${confirmBtCls}`)
           .on('click', `.${confirmBtCls}`, function() {
+		  closeConfirmationModal();
 
             const url = API_BASE_URL + `/comments/${commentId}/delete`;
             ajaxRequest(url, 'DELETE', null,
               (response) => {
                 $clickItem.parents('.comment__begins').remove();
                 showNotification(`Comment Remove successfully !`);
-                closeConfirmationModal();
               },
               (error) => {
                 console.log(error);

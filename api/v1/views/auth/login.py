@@ -81,4 +81,5 @@ def login():
         write_to_file(ERROR_LOG_FILE, error)
         print(str(e))
         return jsonify({"error": "An internal error occurred. Please try again later."}), 500
-
+    finally:
+        storage.close()

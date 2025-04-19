@@ -61,6 +61,8 @@ def leave_request(user_role: str, user_id: str):
     except Exception as e:
         print(str(e))
         return jsonify({"error": "An Internal Error Occured"}), 500
+    finally:
+        storage.close()
 
 
 @api_views.route("/members/<string:member_id>/leaves")

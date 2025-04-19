@@ -27,6 +27,7 @@ def add_comment(user_id: str, user_role: str) -> Dict:
     storage.new(comment)
     storage.save()
     comment = storage.get_by(SaleComment, id=comment.id)
+    storage.close()
     return jsonify(comment.to_dict()), 200
 
 
@@ -40,6 +41,7 @@ def remove_comment(user_id: str, user_role: str, comment_id: str) -> Dict:
         abort(404)
     storage.delete(comment)
     storage.save()
+    storage.close()
     return jsonify({"message": "Comment Delete Successfully!"}), 200
 
 
@@ -51,6 +53,7 @@ def get_comment(user_id: str, user_role: str, comment_id: str) -> Dict:
     if not comment:     
         abort(404)
 
+    storage.close()
     return jsonify(comment.to_dict()), 200
 
 
@@ -69,6 +72,7 @@ def get_comments(user_id: str, user_role: str, sale_id) -> Dict:
             key=lambda comment : comment.updated_at, reverse=True
     )
 
+    storage.close()
     return jsonify([{
         **comment.to_dict(), "role": comment.user.portfolio,
         "comment_by": f"{comment.user.first_name} {comment.user.last_name}"
@@ -94,4 +98,5 @@ def update_comment(user_id: str, user_role: str, comment_id: str) -> Dict:
         if key != 'id':
             setattr(comment, key, val)
     storage.save()
+    storage.close()
     return jsonify({"message": "Comment Updated Successfully"}), 201
