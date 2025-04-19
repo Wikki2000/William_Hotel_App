@@ -42,6 +42,9 @@ $(document).ready(() => {
             const hideCheckOutBy = (
               booking.is_use || booking.is_reserve ? 'none' : ''
             );
+	    const checkInReserveByText = (
+              booking.is_reserve ? "Reserve By" : "Checkin By"
+            );
 
             if (booking.is_short_rest) {
               bookingType = 'Short Tiime';
@@ -95,7 +98,7 @@ $(document).ready(() => {
              <p><b>Payment Status</b> <span style="color: ${paymentStatus.color};">${paymentStatus.status}</span></p>
              <p style="display: ${hide};"><b>Room(${room.number}) Rate</b> ₦${room.amount.toLocaleString()}</p>
              <p><b>Booking Amount</b> ₦${booking.amount.toLocaleString()}</p>
-              <p><b>Checkin  By</b> ${checkin_by.first_name} ${checkin_by.last_name} (${checkin_by.portfolio})</p>
+              <p><b>${checkInReserveByText}</b> ${checkin_by.first_name} ${checkin_by.last_name} (${checkin_by.portfolio})</p>
               <p style="display: ${hideCheckOutBy}"><b>Checkout  By</b> ${checkout_staff.first_name} ${checkout_staff.last_name} (${checkout_staff.portfolio})</p>`
             );
             $('#room__totalAmount')
