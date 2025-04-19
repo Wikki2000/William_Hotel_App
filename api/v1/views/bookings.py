@@ -172,6 +172,7 @@ def get_bookings_by_date(
         ],
         "accumulated_sum": accumulated_sum
     }
+    storage.close()
     return jsonify(response), 200
 
 
@@ -335,7 +336,6 @@ def update_booking_data(user_id: str, user_role: str, booking_id: str):
         customer.updated_at = TODAY_DATE
         
         storage.save()
-        storage.close()
         return jsonify({"message": "Booking Data Updated Successfully"}), 201
 
     except Exception as e:
@@ -462,4 +462,5 @@ def cancel_reservation(user_id: str, user_role: str, booking_id: str):
 
     storage.delete(booking)
     storage.save()
+    storage.close() 
     return jsonify({"message": "Booking Remove Successfully"}), 201

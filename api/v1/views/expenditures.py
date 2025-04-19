@@ -68,6 +68,7 @@ def get_expenditures(user_role: str, user_id: str):
         key=lambda expenditure : expenditure.updated_at,
         reverse=True
     )
+    storage.close()
 
     return jsonify([
         expenditure.to_dict()
@@ -82,6 +83,7 @@ def get_expenditure(user_role: str, user_id: str, expense_id: str):
     expenditure = storage.get_by(Expenditure, id=expense_id)
     if not expenditure:
         abort(404)
+    storage.close()
     return jsonify(expenditure.to_dict())
 
 
@@ -116,6 +118,7 @@ def get_expenditure_by_date(
         expense_daily_sum.amount
         for expense_daily_sum in daily_expenditure_sum
     )
+    storage.close()
     return jsonify({
         "daily_expenditures": [
             expenditure.to_dict()

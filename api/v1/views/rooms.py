@@ -51,6 +51,7 @@ def get_available_room_numbers(user_role: str, user_id: str):
     sorted_rooms = sorted(rooms, key=lambda room : room.number)
     response = [room.number for room in sorted_rooms
                     if room.status == "occupied"]
+    storage.close()
     return jsonify(response), 200
 
 
@@ -63,6 +64,7 @@ def room_number(user_role: str, user_id: str):
         return jsonify([]), 200
 
     sorted_rooms = sorted(rooms, key=lambda room : room.number)
+    storage.close()
     return jsonify([
         room.number for room in sorted_rooms
         if room.status == "available" or room.status == "reserved"
@@ -150,6 +152,7 @@ def get_room_numbers(user_role: str, user_id: str):
     if not rooms:
         return jsonify([]), 200
 
+    storage.close()
     return jsonify(sorted([room.number for room in rooms])), 200
 
 
@@ -164,7 +167,7 @@ def guest_lodged_in_room(user_role: str, user_id: str, room_number: str):
     room_101_use_booking = storage.get_by(
         Booking, room_id=room.id, is_use=True
     )
-
+    storage.close()
     return jsonify(room_101_use_booking.customer.to_dict()), 200
 
 
@@ -299,4 +302,5 @@ def check_out(user_id: str, user_role: str, room_id: str, customer_id: str):
         room.status = "reserved"
 
     storage.save()
+    storage.close()
     return jsonify({"message": "Checkout Successful"}), 201

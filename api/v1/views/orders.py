@@ -171,6 +171,7 @@ def update_status(user_role: str, user_id: str, order_id: str):
     order.cleared_by_id = user_id
     order.updated_at = TODAY_DATE
     storage.save()
+    storage.close()
     return jsonify({"message": "Payment Status Updated to Paid"}), 200
 
 
@@ -285,6 +286,7 @@ def get_order_by_date(
             ],
             "accumulated_sum": accumulated_sum
     }
+    storage.close()
     return jsonify(response), 200
 
 
@@ -387,4 +389,5 @@ def delete_order(user_id: str, user_role: str, order_id: str):
 
     storage.delete(order)
     storage.save()
+    storage.close()
     return jsonify({"message": "Order Remove Successfully"}), 201

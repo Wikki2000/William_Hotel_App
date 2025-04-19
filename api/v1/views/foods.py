@@ -43,6 +43,7 @@ def update_food(user_id: str, user_role: str, food_id: str) -> Dict:
         if key != 'id':
             setattr(food, key, val)
     storage.save()
+    storage.close()
     food = storage.get_by(Food, id=food_id)
     return jsonify(food.to_dict()), 201
 
@@ -55,6 +56,7 @@ def get_food(user_id: str, user_role: str, food_id: str) -> Dict:
     if not food:
         abort(404)
 
+    storage.close()
     return jsonify(food.to_dict()), 200
 
 
@@ -72,6 +74,7 @@ def add_food(user_id: str, user_role: str) -> Dict:
     storage.new(food)
     storage.save()
     food = storage.get_by(Food, id=food.id)
+    storage.close()
     return jsonify(food.to_dict())
 
 
@@ -85,4 +88,5 @@ def remove_food(user_id: str, user_role: str, food_id: str) -> Dict:
         abort(404)
     storage.delete(food)
     storage.save()
+    storage.close()
     return jsonify({"message": "Food successfully remove from stock"}), 200
