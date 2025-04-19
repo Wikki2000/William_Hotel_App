@@ -137,10 +137,11 @@ $(document).ready(function() {
 
         const $button = $(this);
         $button.prop('disable', true);  // Disable btn to avoid multiple requests.
+        $('#main__popup-modal').hide();
+	showNotification("Request Proccessing");
         ajaxRequest(bookUrl, 'POST', JSON.stringify(BookingData),
           (response) => {
             $button.prop('disable', false);
-            $('#main__popup-modal').hide();
 
             const reserveOrBookText = response.is_reserve ? 'reserved' : 'booked';
             const msg = (
@@ -173,7 +174,6 @@ $(document).ready(function() {
             } else {
               showNotification('An Error occured. Try Again !', true);
             }
-            $('#main__popup-modal').hide();
           }
         );
       });
