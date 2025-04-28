@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """This modules defines helper function for API"""
 from flask import abort, request, jsonify
+from datetime import timedelta
 from os import environ
 import sib_api_v3_sdk
 from random import randint
@@ -18,7 +19,7 @@ from models.sale import Sale
 from models.vat import Vat
 from models.cat import Cat
 import base64
-from datetime import date, datetime, timedelta
+from datetime import date, datetime
 import pytz
 from calendar import monthrange
 from dateutil.relativedelta import relativedelta
@@ -476,9 +477,14 @@ def get_task_month(due_day, task_type):
 def update_room_sold(new_amount, old_amount=0, date=None):
     sale_date = date if date else nigeria_today_date()
     current_hour = datetime.now().hour
+    current_hour = 5
+    print("******************", current_hour);
 
-    if 0 <= current_hour <= constant.BOOKING_END_BY:
+    # Still flags today sales as yesterday at this time interval.
+    if 0 <= current_hour <= 5:
         sale_date -= timedelta(days=1)
+
+    print("******************", sale_date)
 
     # Update the room sold.
     today_sale = storage.get_by(Sale, entry_date=sale_date)
@@ -486,6 +492,7 @@ def update_room_sold(new_amount, old_amount=0, date=None):
         today_sale = Sale(entry_date=sale_date, room_sold=new_amount)
         storage.new(today_sale)
     else:
+        print(today_sale)
         today_sale.room_sold += new_amount - old_amount
 
 
@@ -501,8 +508,11 @@ def last_month_day():
     return last_day
 
 
+
+
+from sqlalchemy import case, func, cast, Date
+
 def get_payment_totals(session, date):
-    from sqlalchemy import case, func, cast, Date
     from models.order import Order
     from models.booking import Booking
     

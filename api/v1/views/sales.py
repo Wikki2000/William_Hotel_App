@@ -4,7 +4,7 @@ from models.expenditure import Expenditure
 from datetime import date, datetime
 from flask import abort, jsonify, request
 from api.v1.views import api_views
-from api.v1.views.utils import role_required, bad_request
+from api.v1.views.utils import role_required, bad_request, get_payment_totals
 from models.sale import Sale
 from models.order_item import OrderItem
 from models.drink import Drink
@@ -42,11 +42,15 @@ def get_sales(user_role: str, user_id: str):
 @role_required(["manager", "admin"])
 def get_sale(user_role: str, user_id: str, sale_id: str):
     """Get sales by it ID's"""
-    sale = storage.get_by(Sale, id=sale_id)
+    session = storage.session
+    sale = session.query(Sale).filter_by(id=sale_id).first()
+
     if not sale:
         abort(404)
+
+    paymet_totals = get_payment_totals(session, sale.entry_date)
     storage.close()
-    return jsonify(sale.to_dict())
+    return jsonify({**sale.to_dict(), **paymet_totals})
 
 
 @api_views.route("/sales/<string:start_date>/<string:end_date>/get")

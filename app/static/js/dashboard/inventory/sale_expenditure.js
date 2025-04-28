@@ -221,7 +221,7 @@ $(document).ready(function() {
               sale.laundry_sold + sale.game_sold
             );
 
-            $('#sales__date').text(britishDateFormat(sale.created_at));
+            $('#sales__date').text(britishDateFormat(sale.entry_date));
             $('#total__food-sale').html('&#8358;' + sale.food_sold.toLocaleString());
             $('#total__drink-sale').html('&#8358;' + sale.drink_sold.toLocaleString());
             $('#total__game-sale').html('&#8358;' + sale.game_sold.toLocaleString());
@@ -232,7 +232,7 @@ $(document).ready(function() {
             $('#total__cash-sale').html('&#8358;' + sale.cash.toLocaleString());
             $('#total__pending-sale').html('&#8358;' + sale.pending.toLocaleString());
             $('#total__sale').html('&#8358;' + totalSales.toLocaleString());
-            $('#sales__summary-date').val(canadianDateFormat(sale.created_at));
+            $('#sales__summary-date').val(canadianDateFormat(sale.entry_date));
           })
           .catch((error) => {
             console.log(error);

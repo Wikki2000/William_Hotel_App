@@ -14,6 +14,11 @@ class Sale(BaseModel, Base):
     laundry_sold = Column(Float, default=0)
     game_sold = Column(Float, default=0)
     room_sold = Column(Float, default=0)
+
+    sale_by_pos = Column(Float, default=0)
+    sale_by_cash = Column(Float, default=0)
+    sale_by_transfer = Column(Float, default=0)
+
     is_approved = Column(Boolean, default=False)
     entry_date = Column(Date, nullable=False, unique=True)
 

@@ -46,8 +46,7 @@ $(document).ready(function() {
 
           fetchData(url)
           .then(({ daily_expenditures }) => {
-            console.log(daily_expenditures);
-            daily_expenditures.forEach(({ id, title, amount, created_at }) => {
+            daily_expenditures.forEach(({ id, title, amount, created_at, entry_date }) => {
               const date = britishDateFormat(created_at);
               $('#expenditure__list-table--body')
                 .append(expenditureTableTemplate(id, title, date, amount));
@@ -80,7 +79,7 @@ $(document).ready(function() {
                 sale.food_sold + sale.drink_sold + sale.room_sold +
                 sale.laundry_sold + sale.game_sold
               );
-              const date = britishDateFormat(sale.created_at);
+              const date = britishDateFormat(sale.entry_date);
               $('#sales__profit-table--body')
                 .append(
                   salesTableTemplate(index, sale.id, sale.is_approved, totalSales, date, USER_ROLE)

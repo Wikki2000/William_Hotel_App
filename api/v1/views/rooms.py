@@ -167,8 +167,9 @@ def guest_lodged_in_room(user_role: str, user_id: str, room_number: str):
     room_101_use_booking = storage.get_by(
         Booking, room_id=room.id, is_use=True
     )
+    response = room_101_use_booking.customer.to_dict()
     storage.close()
-    return jsonify(room_101_use_booking.customer.to_dict()), 200
+    return jsonify(response), 200
 
 
 @api_views.route("/rooms/<string:room_number>")

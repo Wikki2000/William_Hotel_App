@@ -17,7 +17,7 @@ from api.v1.views.utils import (
 from api.v1.views import constant
 from models import storage
 from sqlalchemy.exc import IntegrityError
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from models.receipt import Receipt
 
 
@@ -412,6 +412,11 @@ def book_room(user_id: str, user_role: str, room_number: str):
         storage.new(book)
         room.status = room_status   # Cheange room status once book
         storage.save()
+
+        current_hour = datetime.now().hour                                                                                                                              
+
+        if 0 <= current_hour <= constant.BOOKING_END_BY:
+            book.created_at -= timedelta(days=1)
 
         # Create receipt for every booking.
         receipt = create_receipt("booking_id", book.id)

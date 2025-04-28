@@ -81,7 +81,7 @@ class Storage:
         self.__session = scoped_session(session_factory)
    
     @property
-    def get_session(self):
+    def session(self):
         return self.__session
 
     def refresh(self, obj: object) -> object:
