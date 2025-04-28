@@ -227,7 +227,11 @@ $(document).ready(function() {
             $('#total__game-sale').html('&#8358;' + sale.game_sold.toLocaleString());
             $('#total__room-sale').html('&#8358;' + sale.room_sold.toLocaleString());
             $('#total__laundry-sale').html('&#8358;' + sale.laundry_sold.toLocaleString());
-            $('#total__sale').html('&#8358;' + totalSales);
+            $('#total__pos-sale').html('&#8358;' + sale.pos.toLocaleString());
+            $('#total__transfer-sale').html('&#8358;' + sale.transfer.toLocaleString());
+            $('#total__cash-sale').html('&#8358;' + sale.cash.toLocaleString());
+            $('#total__pending-sale').html('&#8358;' + sale.pending.toLocaleString());
+            $('#total__sale').html('&#8358;' + totalSales.toLocaleString());
             $('#sales__summary-date').val(canadianDateFormat(sale.created_at));
           })
           .catch((error) => {

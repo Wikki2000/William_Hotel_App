@@ -333,8 +333,8 @@
   }
 
   .sales__popup-modal-content {
-    width: 40%;
-    height: 70%;
+    width: 500px;
+    height: auto;
   }
   .sale__button-date--container {
     display: flex;
@@ -363,7 +363,7 @@
     }
   }
   .sale__summary-total {
-    margin-top: 15%;
+    margin-top: 20px;
     display: flex;
     background-color: var(--secondary-color);
     width: 250px;

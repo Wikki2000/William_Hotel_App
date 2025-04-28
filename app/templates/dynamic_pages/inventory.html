@@ -376,8 +376,8 @@
               <h4 class="write__comment-heading">Write Your Comment</h4>
               <textarea class="sales__comment" id="sales__comment-input" placeholder="Please write your comment here" required >
               </textarea><br />
-	      <input id="sale__id" type="hidden" />
-	      <input id="sale__method" type="hidden" />
+              <input id="sale__id" type="hidden" />
+              <input id="sale__method" type="hidden" />
               <button class="highlight-btn ui heading size-headingxs comment__btn">Comment</button>  
             </form>
           </div>
@@ -385,7 +385,7 @@
 
 
         <!-- Popup modal to view sales comment -->
-	<div id="view__sales-comment" class="popup-modal">
+        <div id="view__sales-comment" class="popup-modal">
           <div class="popup-modal-content sales__comment-list">
             <button class="close-btn closePopupModal">×</button> 
             <h3 id="comment__list-heading" class="comment__list-heading">
@@ -403,8 +403,10 @@
               <p id="sales__date" class="sale__date-summary"></p>
               <button class="close-btn closePopupModal">×</button>
             </div>
+
+	    <div id="summary__item-sold">
             <h5 class="sale__summary-title">
-              Daily Sales Breakdown
+              Daily Sales Breakdown By Item Sold
             </h5>
 
             <div>
@@ -432,8 +434,38 @@
               <div class="sale__summary-flex">
                 <p>Toatal Laundry Sold</p>
                 <p id="total__laundry-sale"></p>
-		<button id="total__laundry-sale--btn" class="item__sold highlight-btn table__header-cell ui heading size-headings item__sold">View Details</p>
+                <button id="total__laundry-sale--btn" class="item__sold highlight-btn table__header-cell ui heading size-headings item__sold">View Details</p>
+              </div>
+	    </div>
+
+	    <div id="summary__payment-type">
+              <h5 class="sale__summary-title">         
+                <br>Daily Sales Breakdown By Payment Method & Pending Payment 
+              </h5>            
+
+              <div>
+                <!-- This section is dynamically loaded -->
+                <div class="sale__summary-flex">
+                  <p>Total Cash at Hand</p>            
+                  <p id="total__cash-sale"></p>
+                </div>
+                <div class="sale__summary-flex">
+
+                  <p>Total Cash from POS</p>
+                  <p id="total__pos-sale"></p>
+
+                </div>          
+                <div class="sale__summary-flex">          
+                  <p>Total Cash from Transfer</p>         
+                  <p id="total__transfer-sale"></p>
+                </div> 
+		<div class="sale__summary-flex">
+		  <p>Total Pending Cash</p>
+		  <p id="total__pending-sale"></p>
+		</div>
 	      </div>
+
+
                 <div class="sale__summary-total">
                   <p class="table__header-cell ui heading size-headings">Total Amount</p>
                   <p class="item__sold" id="total__sale"></p>
