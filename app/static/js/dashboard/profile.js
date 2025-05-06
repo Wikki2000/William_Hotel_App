@@ -59,7 +59,7 @@ $(document).ready(function() {
         $('#edit-religion').prop('readonly', true);
         $('#edit-state').prop('readonly', true);
         $('#edit__nok-phone').prop('readonly', true);
-        $('edit-nok-name').prop('readonly', true);
+        $('#edit-nok-name').prop('readonly', true);
         $('#edit__role').prop('readonly', true);
         $('#edit-dob').prop('readonly', true);
         $('#edit__role').prop('readonly', true);
