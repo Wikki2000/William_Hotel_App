@@ -8,8 +8,6 @@ from models.food import Food
 from models.order_item import OrderItem
 from models.booking import Booking
 from models.sale import Sale
-from models.cat import Cat
-from models.vat import Vat
 from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import (

@@ -15,8 +15,6 @@ from redis import Redis
 from models.private_message import PrivateMessage
 from models.receipt import Receipt
 from models.sale import Sale
-from models.vat import Vat
-from models.cat import Cat
 import base64
 from datetime import date, datetime, timedelta
 import pytz

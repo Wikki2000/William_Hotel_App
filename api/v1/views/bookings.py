@@ -5,8 +5,6 @@ from models.customer import Customer
 from models.room import Room
 from models.user import User
 from models.sale import Sale
-from models.cat import Cat
-from models.vat import Vat
 from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import (

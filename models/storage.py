@@ -12,8 +12,6 @@ from models.booking import Booking
 from models.drink import Drink
 from models.food import Food
 from models.order_item import OrderItem
-from models.vat import Vat
-from models.cat import Cat
 from models.loan_request import LoanRequest
 from models.leave_request import LeaveRequest
 from models.group_message import GroupMessage
