@@ -1,8 +1,9 @@
 import {
   bookingDuration, ajaxRequest, fetchData, compareDate,
-  getFormattedDate, validateForm, updateElementCount,
+  getFormattedDate, validateForm, updateElementCount, britishDateFormat,
   showNotification, getBaseUrl, displayMenuList, canadianDateFormat
 } from '../global/utils.js';
+import { saleBreakdownModal } from '../global/templates1.js';
 
 
 function resetRoomDetails() {
@@ -138,7 +139,7 @@ $(document).ready(function() {
         const $button = $(this);
         $button.prop('disable', true);  // Disable btn to avoid multiple requests.
         $('#main__popup-modal').hide();
-	showNotification("Request Proccessing");
+        showNotification("Request Proccessing");
         ajaxRequest(bookUrl, 'POST', JSON.stringify(BookingData),
           (response) => {
             $button.prop('disable', false);
@@ -461,4 +462,54 @@ $(document).ready(function() {
         }
       }
     });
+
+  $('#dynamic__load-dashboard').on("click", "#main__today-sales--view", function() {
+    const today = britishDateFormat(new Date());
+
+    $("#main__sales-breakdown .sales__popup-modal-content").empty();
+    $("#main__sales-breakdown .sales__popup-modal-content").append(saleBreakdownModal());
+    $("#main__sales-breakdown").css("display", "flex");
+    $("#sales__date").text(today);
+  });
+
+
+  $('#dynamic__load-dashboard').on('click', '.main__item-sold', function() {
+    const $clickItem = $(this);
+    const clickItemId = $clickItem.attr('id');
+    //const salesDate = $('#sales__summary-date').val();
+
+    //const today_date = canadianDateFormat(new Date());
+
+    switch (clickItemId) {
+      case 'maintotal__food-sale--btn': {
+        //const totalAmount = $('#total__food-sale').text();
+        const saleUrl = APP_BASE_URL + "/pages/sales_details?service=food";
+        window.open(saleUrl, '_blank');
+        break;
+      }
+      case 'maintotal__drink-sale--btn': {
+       // const totalAmount = $('#total__drink-sale').text();
+        const saleUrl = APP_BASE_URL + "/pages/today_sales?service=drink";
+        window.open(saleUrl, '_blank');
+        break;
+      }
+      case 'maintotal__game-sale--btn': {
+        //const totalAmount = $('#total__game-sale').text();
+        const saleUrl = APP_BASE_URL + "/pages/today_sales?service=game";
+        window.open(saleUrl, '_blank');
+        break;
+      }
+      case 'maintotal__laundry-sale--btn': {
+        const totalAmount = $('#total__laundry-sale').text();
+        const saleUrl = APP_BASE_URL + `/pages/today_sales?service=laundry`;
+        window.open(saleUrl, '_blank');
+        break;
+      }
+      case 'maintotal__room-sale--btn': {
+        const saleUrl = APP_BASE_URL + `/pages/today_sales?service=room`;
+        window.open(saleUrl, '_blank');
+        break;
+      }
+    }
+  });
 });

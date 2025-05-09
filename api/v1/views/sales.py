@@ -128,8 +128,7 @@ def get_service_sales(
     sorted_sales = sorted(
         filtered_sales, key=lambda sale: sale.updated_at, reverse=True
     )
-    storage.close()
-    return jsonify([
+    response = [
         {
             "item_name": (
                 sale.drink.name if sale.drink_id
@@ -145,7 +144,9 @@ def get_service_sales(
             "order_id": sale.order.id
         }
         for sale in sorted_sales
-    ]), 200
+    ]
+    storage.close()
+    return jsonify(response), 200
 
 
 @api_views.route(

@@ -247,9 +247,28 @@ input:checked + .slider:before {
   }
 }
 
+.scroll-wrapper {
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 1rem 0;
+  scroll-behavior: smooth;
+}
+
+.main__room-status {
+  display: flex;
+  gap: 1rem;
+  min-width: max-content;
+}
+
+.main__room-status > div {
+  flex: 0 0 auto; /* prevent items from shrinking */
+  width: 200px;   /* adjust width as needed */
+}
+
 /* VAT popup modal */
 .vat__cat-popup--modal {
   padding: 20px;
+  width: 500px;
 }
 .main__monthly-vatCat--title {
   margin-top: 20px;
@@ -260,6 +279,15 @@ input:checked + .slider:before {
   height: 45px;
   border-radius: 10px;
   padding: 10px;
+}
+/*
+.main__vatCatAmount {
+  margin-top: 5px;
+}*/
+.main__vatCatAmt-container {
+  display: none;
+  justify-content: space-between;
+  margin-top: 5px; 
 }
 .main__vatCat-container {
   display: flex;
@@ -311,6 +339,6 @@ input:checked + .slider:before {
   .main__container {
   }
   .row {
-	  margin-top: 15px;
+    margin-top: 15px;
   }
 }

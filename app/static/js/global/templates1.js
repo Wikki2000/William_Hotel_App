@@ -7,7 +7,7 @@
 export function taskListTemplate(data) {
   const paymentStatus = data.is_paid ? 'Paid' : 'Pending';
   const paymentStatusColor = data.is_paid ? 'green' : 'red';
-  
+
   const taskType = data.__class__ === 'Cat' ? 'CAT' : 'VAT';
 
   const vatMonthYear = data.month[0].toUpperCase() + data.month.slice(1);
@@ -92,7 +92,7 @@ export function saleSummaryTemplate(
       </nav>
     </td>-->
 </tr>`;
- return row;
+  return row;
 }
 /*
  * Table template for displaying list of vendors.
@@ -213,20 +213,20 @@ export function expenditureTableTemplate(id, title, date, amount) {
 
       <td class="">
          <p><i class="fa fa-ellipsis-v"></i></p>
-	 <p><i style="display: none;" class="fa fa-times"></i></p>
+         <p><i style="display: none;" class="fa fa-times"></i></p>
       </td>
 
       <td class="manage">
         <nav class="manage__nav">
-	  <ul class="manage__list">
-	    <li data-id="${id}" class="manage__item expenditure__details">
-	      <i class="fa fa-eye"></i>Details
-	    </li>
-	    <li data-id="${id}" class="manage__item expenditure__delete">
-	      <i class="fa fa-trash"></i>Delete
-	    </li>
-	  </ul>
-	</nav>
+          <ul class="manage__list">
+            <li data-id="${id}" class="manage__item expenditure__details">
+              <i class="fa fa-eye"></i>Details
+            </li>
+            <li data-id="${id}" class="manage__item expenditure__delete">
+              <i class="fa fa-trash"></i>Delete
+            </li>
+          </ul>
+        </nav>
       </td>
  </tr>`;
 }
@@ -313,8 +313,8 @@ export function gameTableTemplate(index, data, date) {
  */
 export function drinkTableTemplate(index, data, date) {
   const qtyColor = data.qty_stock < 10 ? 'red': '';
-	  const USER_ROLE = localStorage.getItem('role');                                                                                                                       
-	  const hideClass = USER_ROLE !== 'admin' ? 'hide' : ''; 
+  const USER_ROLE = localStorage.getItem('role');                                                                                                                       
+  const hideClass = USER_ROLE !== 'admin' ? 'hide' : ''; 
 
   const row = `<tr data-id="${data.id}">
       <td class="">
@@ -380,20 +380,20 @@ export function salesTableTemplate(index, id, saleStatus, amount, date, userRole
     <td class="manage">
       <nav class="manage__nav">
         <ul class="manage__list">
-	  <li data-id="${id}" class="manage__item sales__menu sales__details">
-	    <i class="fa fa-eye"></i>Details
-	  </li>
+          <li data-id="${id}" class="manage__item sales__menu sales__details">
+            <i class="fa fa-eye"></i>Details
+          </li>
 
-	  <li data-id="${id}" class="${isHide} manage__item sales__menu approved__record">
-	    <i class="fa fa-thumbs-up"></i>Approve Record
-	  </li>
-	  <li data-id="${id}" class="manage__item sales__menu make-comment">
-	    <i class="fa fa-pen"></i>Make Comment
-	  </li>
-	  <li data-id="${id}" class="manage__item sales__menu sales__view-comment">
-	    <i class="fa fa-comments"></i>View Comment
-	  </li>
-	</ul>
+          <li data-id="${id}" class="${isHide} manage__item sales__menu approved__record">
+            <i class="fa fa-thumbs-up"></i>Approve Record
+          </li>
+          <li data-id="${id}" class="manage__item sales__menu make-comment">
+            <i class="fa fa-pen"></i>Make Comment
+          </li>
+          <li data-id="${id}" class="manage__item sales__menu sales__view-comment">
+            <i class="fa fa-comments"></i>View Comment
+          </li>
+        </ul>
       </nav>
     </td>
   </tr>`
@@ -482,12 +482,12 @@ export function orderHistoryTableTemplate(order, date, customer = null) {
           <li data-id="${order.id}" data-name="${customerName}" class="manage__item  order__bill order__manageItem">
             <i class="fa fa-money-bill-wave"></i>Clear Bill
           </li>
-	  <li data-id="${order.id}" data-payment-type="${order.payment_type}" class="manage__item order__update-payment--method order__manageItem">
-	    <i class="fa fa-sync-alt"></i>Payment Method
-	  </li>
-	  <li data-id="${order.id}" data-name="${customerName}" class="manage__item  order__delete order__manageItem ${showToAdminOnly}">
-	    <i class="fa fa-trash"></i>Delete Order
-	  </li>
+          <li data-id="${order.id}" data-payment-type="${order.payment_type}" class="manage__item order__update-payment--method order__manageItem">
+            <i class="fa fa-sync-alt"></i>Payment Method
+          </li>
+          <li data-id="${order.id}" data-name="${customerName}" class="manage__item  order__delete order__manageItem ${showToAdminOnly}">
+            <i class="fa fa-trash"></i>Delete Order
+          </li>
           <li data-id="${order.id}" class="manage__item order__manageItem order__showConfirmModal">
              <i class="fa fa-shopping-cart"></i>Order Details
            </li>
@@ -545,10 +545,10 @@ export function bookingServiceListTableTemplate(booking, date) {
           <li data-id="${booking.id}" data-name="${booking.duration} Night(s) Booking" class="manage__item service__clear-room-bill">
             <i class="fa fa-money-bill-wave"></i>Clear Bill
           </li>
-	    <li data-id="${booking.id}" class="manage__item guest__list-bookDetail guest__listMenu">
-	      <i class="fa fa-eye"></i>Booking Details
+            <li data-id="${booking.id}" class="manage__item guest__list-bookDetail guest__listMenu">
+              <i class="fa fa-eye"></i>Booking Details
            </li>
-	   <li data-id="${booking.id}" class="manage__item guest__listPrint  guest__listMenu">
+           <li data-id="${booking.id}" class="manage__item guest__listPrint  guest__listMenu">
             <i class="fa fa-print"></i>Print Receipt
           </li>
         </ul>
@@ -594,4 +594,90 @@ export function orderDetails(
   });
   $('#order__totalAmount').text('₦' + order.amount.toLocaleString());
   $('#order__print-receipt').attr('data-id', `${order.id}`);
+}
+
+
+export function saleBreakdownModal() {
+  const template = `<div class="sale__button-date--container">
+    <p id="sales__date" class="sale__date-summary"></p>
+    <button class="close-btn closePopupModal">×</button>
+    </div>
+    <div id="summary__item-sold">
+    <h5 class="sale__summary-title">
+    Daily Sales Breakdown By Item Sold
+    </h5>
+    <div>
+    <!-- This section is dynamically loaded -->
+    <div class="sale__summary-flex">
+    <p>Total Room Sold</p>
+    <button id="maintotal__room-sale--btn" class="highlight-btn table__header-cell ui heading size-headings main__item-sold">View Details</p>
+    </div>
+    <div class="sale__summary-flex">
+    <p>Total Drink Sold</p>
+    <button id="maintotal__drink-sale--btn" class="highlight-btn table__header-cell ui heading size-headings main__item-sold">View Details</p>
+    </div>
+    <div class="sale__summary-flex">
+    <p>Total Food Sold</p>
+    <button id="maintotal__food-sale--btn" class="highlight-btn table__header-cell ui heading size-headings main__item-sold">View Details</p>
+    </div>
+    <div class="sale__summary-flex">
+    <p>Toatal Game Sold</p>
+    <button id="maintotal__game-sale--btn" class="item__sold highlight-btn table__header-cell ui heading size-headings main__item-sold">View Details</p>
+    </div>
+    </div>
+    </div>`;
+  return template;
+}
+
+export function dailyServiceSaleTableTemplate(
+  index, id, is_paid, customer, itemName, qty, amount, is_booking
+) {
+  let paymentStatus = '';
+  let paymentStatusColor = '';
+
+  if (!is_booking) {
+    paymentStatus = is_paid ? 'Paid' : 'Pending';
+    paymentStatusColor = is_paid ? 'green' : 'red';
+  } else {
+    paymentStatus = is_paid === 'yes' ? 'Paid' : 'Pending';
+    paymentStatusColor = is_paid === 'yes' ? 'green' : 'red';
+  }
+  const row = `<tr data-id="${id}">
+    <td class="">
+    <p class="ui text size-textmd">${index + 1}</p>
+    </td>
+    <td class="">
+    <p class="ui text size-textmd">${customer}</p>
+    </td>
+    <td class="">
+    <p class="ui text size-textmd">${itemName}</p>
+    </td>
+    <td class="">
+    <p class="ui text size-textmd">${qty}</p>
+    </td>
+    <td>
+    <p style="color: ${paymentStatusColor}; margin-left: 25px;" class="ui text size-textmd order__bill-status">${paymentStatus}</p>
+    </td>
+    <td>
+    <p class="ui text size-textmd" style="text-align: left; margin-left: 10px;">₦${amount.toLocaleString()}</p>
+    </td>
+
+    <td style="visibility: hidden;" class="order__table-menu">
+    <p><i class="fa fa-ellipsis-v"></i></p>
+    <p><i style="display: none;" class="fa fa-times"></i></p>
+    </td>
+    <!--<td class="manage">
+    <nav class="manage__nav">
+    <ul class="manage__list">
+    <li data-id="${id}" class="manage__item order__manageItem order__showConfirmModal">
+    <i class="fa fa-shopping-cart"></i>Order Details
+    </li>
+    <li data-id="${id}" class="manage__item order__print order__manageItem">
+    <i class="fa fa-print"></i>Print Receipt
+    </li>
+    </ul>
+    </nav>
+    </td>-->
+    </tr>;`
+  return row;
 }

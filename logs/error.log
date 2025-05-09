@@ -4,3 +4,5 @@
 
 09:09 AM	2025-04-28	/api/v1/rooms/101/book	name 'timedelta' is not defined
 
+07:29 AM	2025-05-09	/api/v1/order-items	module 'api.v1.views.constant' has no attribute 'VAT_RATE_MULTIPLIER'
+

@@ -12,7 +12,7 @@ from api.v1.views import api_views
 from api.v1.views.utils import (
     get_current_task, bad_request, role_required, create_receipt,
     nigeria_today_date, get_task_month, write_to_file, check_reservation,
-    create_monthly_task, last_month_day, update_task, update_room_sold,
+    update_room_sold
 )
 from api.v1.views import constant
 from models import storage
@@ -321,7 +321,6 @@ def update_booking_data(user_id: str, user_role: str, booking_id: str):
         # Payment method use only.
         if booking_data.get("amount"):
             sale_date = booking.created_at.strftime("%Y-%m-%d")
-            update_task(booking_data.get("amount"), booking.amount)
             update_room_sold(booking_data.get("amount"), booking.amount, sale_date)
 
         # Update booking data of current selected booking.
@@ -422,7 +421,6 @@ def book_room(user_id: str, user_role: str, room_number: str):
         receipt = create_receipt("booking_id", book.id)
         storage.new(receipt)
 
-        update_task(booking_data.get("amount")) 
         update_room_sold(booking_data.get("amount"))
 
         storage.save()
@@ -460,7 +458,6 @@ def cancel_reservation(user_id: str, user_role: str, booking_id: str):
         abort(404)
 
     sale_date = booking.created_at.strftime("%Y-%m-%d")
-    update_task(0, booking.amount)
     update_room_sold(new_amount=0, old_amount=booking.amount, date=sale_date)
 
     booking.room.status = "available"
