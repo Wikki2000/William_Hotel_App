@@ -1,6 +1,6 @@
 import {
   getBaseUrl, closeConfirmationModal,
-  showNotification, fetchData, britishDateFormat,
+  showNotification, fetchData, canadianDateFormat,
   togleTableMenuIcon, updateElementCount, getQueryParam
 } from '../../global/utils.js';
 
@@ -14,12 +14,12 @@ $(document).ready(function() {
   const APP_BASE_URL = getBaseUrl()['appBaseUrl'];
 
   const service = getQueryParam('service');
-  const date = getQueryParam('date');
+  const date = canadianDateFormat(new Date());
 
   $('#sales__record-date').text(date);
 
   if (service === 'room') {
-    $('#sales__record-title').text('Room Sales Record');
+    $('#sales__record-title').text('Today Room Sales Record');
     const roomSalesUrl = API_BASE_URL + `/bookings/${date}/${date}/get`
     fetchData(roomSalesUrl)
       .then(({ bookings }) => {
@@ -52,13 +52,13 @@ $(document).ready(function() {
   }
 
   if (service === 'food') {
-    $('#sales__record-title').text('Food Sales Record');
+    $('#sales__record-title').text('Today Food Sales Record');
   } else if (service === 'drink') {
-    $('#sales__record-title').text('Drink Sales Record');
+    $('#sales__record-title').text('Today Drink Sales Record');
   } else if (service === 'laundry') {
-    $('#sales__record-title').text('Laundry Sales Record');
+    $('#sales__record-title').text('Today Laundry Sales Record');
   } else if (service === 'game') {
-    $('#sales__record-title').text('Game Sales Record');
+    $('#sales__record-title').text('Today Game Sales Record');
   }
   const url = API_BASE_URL + `/sales/${date}/${date}/${service}`;
   fetchData(url)

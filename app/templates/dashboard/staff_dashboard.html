@@ -240,57 +240,70 @@
                   </div>
                 </div>
 
-                <div class="main__room-status">
-                  <div class="main__room-status1">
-                    <div>
-                      <div class="main__row-1 green">
-                        <i class="fas fa-calendar"></i>
+                <div class="scroll-wrapper">
+                  <div class="main__room-status">
+                    <div class="main__room-status3">
+                      <div>
+                        <div class="main__row-1 blue">
+                          <i class="fas fa-cash-register"></i>
+                        </div>
+                        <p>Today Sale's </p>                                                                                                                                                  </div>
+                      <div class="main__row-2">
+                        <button id="main__today-sales--view" class="highlight-btn">View Sale's </button>
+                        <h1><em></em></h1>
                       </div>
-                      <p>Today's Checkin </p>
+                    </div> 
+                    <div class="main__room-status1">
+                      <div>
+                        <div class="main__row-1 green">
+                          <i class="fas fa-calendar"></i>
+                        </div>
+                        <p>Today's Checkin </p>
+                      </div>
+                      <div class="main__row-2">
+                        <button id="main__room-available--view" class="highlight-btn">View Rooms </button>
+                        <h1><em id="main__today-check--in">0</em></h1>
+                      </div>
                     </div>
-                    <div class="main__row-2">
-                      <button id="main__room-available--view" class="highlight-btn">View Rooms </button>
-                      <h1><em id="main__today-check--in">0</em></h1>
-                    </div>
-                  </div>
 
-                  <div class="main__room-status2">
-                    <div>
-                      <div class="main__row-1 red">
-                        <i class="fas fa-users"></i>
+                    <div class="main__room-status3">
+                      <div>
+                        <div class="main__row-1 blue">
+                          <i class="fas fa-home"></i>
+                        </div>
+                        <p>Rooms Available </p>
                       </div>
-                      <p>Vendor's List </p>
+                      <div class="main__row-2">
+                        <button class="highlight-btn">View Rooms </button>
+                        <h1><em id="main__room-available">0</em></h1>
+                      </div>
                     </div>
-                    <div class="main__row-2">
-                      <button id="vendor__list-btn" class="highlight-btn">View Vendors </button>
-                      <h1 id="count__vendors"><em></em></h1>
-                    </div>
-                  </div>
 
-                  <div class="main__room-status3">
-                    <div>
-                      <div class="main__row-1 blue">
-                        <i class="fas fa-home"></i>
+                    <div class="main__room-status4">
+                      <div>
+                        <div class="main__row-1 orange">
+                          <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <p>Today Order's </p>
                       </div>
-                      <p>Rooms Available </p>
+                      <div class="main__row-2">
+                        <button class="highlight-btn">View Orders </button>
+                        <h1><em id="main__todays-order">0</em></h1>
+                      </div>
                     </div>
-                    <div class="main__row-2">
-                      <button class="highlight-btn">View Rooms </button>
-                      <h1><em id="main__room-available">0</em></h1>
+                    <div class="main__room-status2">
+                      <div>
+                        <div class="main__row-1 red">
+                          <i class="fas fa-users"></i>
+                        </div>
+                        <p>Vendor's List </p>
+                      </div>
+                      <div class="main__row-2">
+                        <button id="vendor__list-btn" class="highlight-btn">View Vendors </button>
+                        <h1 id="count__vendors"><em></em></h1>
+                      </div>
                     </div>
-                  </div>
 
-                  <div class="main__room-status4">
-                    <div>
-                      <div class="main__row-1 orange">
-                        <i class="fas fa-shopping-cart"></i>
-                      </div>
-                      <p>Today Order's </p>
-                    </div>
-                    <div class="main__row-2">
-                      <button class="highlight-btn">View Orders </button>
-                      <h1><em id="main__todays-order">0</em></h1>
-                    </div>
                   </div>
                 </div>
 
@@ -355,7 +368,7 @@
                       </div>
 
                       <div id="main__earlyin-container" class="hide">
-			<p>Early CheckIn? <span class="important">*</span></p>
+                        <p>Early CheckIn? <span class="important">*</span></p>
                         <div class="dropdown">
                           <div id="main__early-checkin" class="main__dropdown-btn drop-down">
                             <span>Select </span>
@@ -490,7 +503,7 @@
                     <input id="main__id--type-val" type="hidden" /> <!-- Selected Room No. Option -->
                     <input id="main__id--checkin-val" type="hidden" /> <!-- Selected booking type option -->
                     <input id="main__id--bookingtype-val" type="hidden" required /> <!-- Selected if early checkin options -->
-		    <input id="main__id--paymmentType-val" type="hidden" required />
+                    <input id="main__id--paymmentType-val" type="hidden" required />
 
                     <!--<input id="main__room-amount" required type="idden" />-->
 
@@ -507,6 +520,12 @@
                     <button id="main__cancel-btn" class="highlight-btn cancel-btn">Cancel</button>
                     <button id="main__confirm-btn" class="highlight-btn confirm-btn">Confirm</button>
                   </div>
+                </div>
+              </div>
+
+              <!-- Popup Modal to for sales details -->
+              <div id="main__sales-breakdown" class="popup-modal">
+                <div class="popup-modal-content sales__popup-modal-content">
                 </div>
               </div>
             </section>

@@ -11,8 +11,7 @@ from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import (
     create_receipt, bad_request, role_required, nigeria_today_date,
-    check_reservation, write_to_file, create_monthly_task, last_month_day,
-    update_task, update_room_sold
+    check_reservation, write_to_file, update_room_sold
 )
 from api.v1.views import constant
 from models import storage
@@ -64,7 +63,6 @@ def extend_guest_stay(user_role: str, user_id: str, room_id, customer_id):
         receipt = create_receipt("booking_id", book.id) 
         storage.new(receipt)
 
-        update_task(data.get("amount"))
         update_room_sold(data.get("amount"))
         storage.save()
         book = storage.get_by(Booking, id=book.id) 

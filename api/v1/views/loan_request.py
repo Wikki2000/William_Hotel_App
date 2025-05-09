@@ -75,12 +75,13 @@ def all_loans(user_role: str, user_id: str):
         return jsonify([]), 200
 
     sorted_loans = sorted(loans, key=lambda loan: loan.updated_at)
-    storage.close()
-    return jsonify([{
+    response = [{
         **loan.to_dict(),
         "first_name": loan.staff.first_name,
         "last_name": loan.staff.last_name
-    } for loan in sorted_loans]), 200
+    } for loan in sorted_loans]
+    storage.close()
+    return jsonify(response), 200 
 
 
 @api_views.route("/members/<member_id>/loans")

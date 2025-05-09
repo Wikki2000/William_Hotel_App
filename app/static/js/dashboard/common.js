@@ -10,6 +10,9 @@ $(document).ready(function() {
   $('#dynamic__load-dashboard').on('click', '#order__cancel-btn, .closePopupModal', function(){
     $('#order__popup-modal').hide();
     $('.popup-modal').hide();
+
+    // Reset form for VAT/CAT Modal when cancel.
+    $('#main__enter-vat--yearForm').trigger("reset");
   });
 
   // Display Table menu

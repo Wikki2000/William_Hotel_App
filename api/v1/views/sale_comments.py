@@ -72,11 +72,12 @@ def get_comments(user_id: str, user_role: str, sale_id) -> Dict:
             key=lambda comment : comment.updated_at, reverse=True
     )
 
-    storage.close()
-    return jsonify([{
+    comment_data = [{
         **comment.to_dict(), "role": comment.user.portfolio,
         "comment_by": f"{comment.user.first_name} {comment.user.last_name}"
-    } for comment in sorted_comments]), 200 
+    } for comment in sorted_comments] 
+    storage.close()
+    return jsonify(comment_data), 200
 
 
 

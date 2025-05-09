@@ -35,39 +35,50 @@
     </div>
   </div>
 
-  <div class="main__room-status">	  
-    <div id="main__common-cart--staffManagement" class="main__room-status1">
-      <!-- Cart content will be loaded base on Logged-In User -->
-    </div>
-
-    <div class="main__room-status2">
-      <div>
-        <div class="main__row-1 red">
-          <i class="fas fa-users"></i>
+  <div class="scroll-wrapper">
+    <div class="main__room-status">	  
+      <div class="main__room-status3">
+        <div>
+          <div class="main__row-1 blue">
+            <i class="fas fa-cash-register"></i>
+          </div>
+          <p>Today Sale's </p>
         </div>
-        <p>Vendor's List </p>
-      </div>
-      <div class="main__row-2">
-        <button id="vendor__list-btn" class="highlight-btn">View Vendors </button>
-        <h1 id="count__vendors"><em></em></h1>
-      </div>
-    </div>
-
-    <div class="main__room-status3">
-      <div>
-        <div class="main__row-1 blue">
-          <i class="fas fa-home"></i>
+        <div class="main__row-2">
+          <button id="main__today-sales--view" class="highlight-btn">View Sale's </button>
+          <h1><em></em></h1>
         </div>
-        <p>Rooms Available </p>
       </div>
-      <div class="main__row-2">
-        <button id="main__room-available--view" class="highlight-btn">View Rooms </button>
-        <h1><em id="main__room-available">0</em></h1>
+      <div id="main__common-cart--staffManagement" class="main__room-status1">
+        <!-- Cart content will be loaded base on Logged-In User -->
       </div>
-    </div>
+      <div id="main__cart-loaded" class="main__room-status4">
+        <!-- This dynamically loaded -->
+      </div>
+      <div class="main__room-status3">
+        <div>
+          <div class="main__row-1 blue">
+            <i class="fas fa-home"></i>
+          </div>
+          <p>Rooms Available </p>
+        </div>
+        <div class="main__row-2">
+          <button id="main__room-available--view" class="highlight-btn">View Rooms </button>
+          <h1><em id="main__room-available">0</em></h1>
+        </div>
+      </div>
+      <div class="main__room-status2">
+        <div>
+          <div class="main__row-1 red">
+            <i class="fas fa-users"></i>
+          </div>
+          <p>Vendor's List </p>
+        </div>
+        <div class="main__row-2">                                                                                                                                                 <button id="vendor__list-btn" class="highlight-btn">View Vendors </button>
+          <h1 id="count__vendors"><em></em></h1>
+        </div>
+      </div>
 
-    <div id="main__cart-loaded" class="main__room-status4">
-      <!-- Cart content will be loaded base on Logged-In User -->
     </div>
   </div>
 
@@ -289,16 +300,28 @@
   <div class="popup-modal-content vat__cat-popup--modal">
     <!-- Close Button -->
     <button class="close-btn closePopupModal">×</button>
-    <h3 class="main__monthly-vatCat--title"><!-- Title dynamically loaded --></h3>
     <form id="main__enter-vat--yearForm">
-      <input id="main__vat-year--input" class="main__vatCat-year--input" type="number" min="2000" placeholder="Please enter a valid year (e.g., 2025)" required />
+      <p><br />Start Date: </p>
+      <input  name="start_date" class="main__vatCat-year--input" type="date" />                                                                                        
+      <p><br /><i>End Date: </i></p>
+      <input  id="main__vatCat-year--input" name="end_date" class="main__vatCat-year--input" type="date" required />
+      <div class="main__vatCatAmt-container">
+        <p><strong>Sales:</strong> <span id="sales__amount"></span></p>
+        <p class="main__vatCatAmount">
+          <!-- The VAT/CAT is dynamically loaded here -->
+        </p>
+      </div>
       <div class="main__vatCat-container">
         <button id="main__vatCat-btn" class="table__header-cell-1 ui heading size-headings highlight-btn">
           <!-- Button content dynamically loaded -->
-	</button>
+        </button>
       </div>
     </form>
     <input id="task__type" type="hidden" />
   </div>
 </div>
 
+<div id="main__sales-breakdown" class="popup-modal">
+  <div class="popup-modal-content sales__popup-modal-content">
+  </div>
+</div>
