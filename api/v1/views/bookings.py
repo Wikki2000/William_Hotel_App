@@ -8,8 +8,8 @@ from models.sale import Sale
 from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import (
-    get_current_task, bad_request, role_required, create_receipt,
-    nigeria_today_date, get_task_month, write_to_file, check_reservation,
+    bad_request, role_required, create_receipt,
+    nigeria_today_date, write_to_file, check_reservation,
     update_room_sold
 )
 from api.v1.views import constant
