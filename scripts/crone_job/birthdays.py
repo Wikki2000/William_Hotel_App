@@ -2,7 +2,7 @@
 from models.user import User
 from models import storage
 from datetime import datetime
-from api.v1.views.utils import read_html_file, send_mail
+from api.v1.views.utils import read_html_file, send_mail, write_to_file
 
 users = [
     user for user in storage.all(User).values()
@@ -18,3 +18,6 @@ for user in users:
         recipient = {"name": name, "email": user.email} 
         mail = read_html_file(email_file, place_holder)
         send_mail(mail, recipient, subject) 
+
+content = "I execute"
+write_to_file("cron_test.log", content)

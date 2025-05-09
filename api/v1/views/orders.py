@@ -8,14 +8,12 @@ from models.food import Food
 from models.order_item import OrderItem
 from models.booking import Booking
 from models.sale import Sale
-from models.cat import Cat
-from models.vat import Vat
 from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import (
     bad_request, create_receipt, role_required, nigeria_today_date,
     update_item_stock, rollback_order_on_error, update_sales_data,
-    update_task, write_to_file, update_room_sold
+    write_to_file, update_room_sold
 )
 from api.v1.views import constant
 from models import storage
