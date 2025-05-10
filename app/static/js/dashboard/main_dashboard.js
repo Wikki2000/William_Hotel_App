@@ -483,7 +483,7 @@ $(document).ready(function() {
     switch (clickItemId) {
       case 'maintotal__food-sale--btn': {
         //const totalAmount = $('#total__food-sale').text();
-        const saleUrl = APP_BASE_URL + "/pages/sales_details?service=food";
+        const saleUrl = APP_BASE_URL + "/pages/today_sales?service=food";
         window.open(saleUrl, '_blank');
         break;
       }
