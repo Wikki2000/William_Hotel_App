@@ -476,31 +476,24 @@ $(document).ready(function() {
   $('#dynamic__load-dashboard').on('click', '.main__item-sold', function() {
     const $clickItem = $(this);
     const clickItemId = $clickItem.attr('id');
-    //const salesDate = $('#sales__summary-date').val();
-
-    //const today_date = canadianDateFormat(new Date());
 
     switch (clickItemId) {
       case 'maintotal__food-sale--btn': {
-        //const totalAmount = $('#total__food-sale').text();
         const saleUrl = APP_BASE_URL + "/pages/today_sales?service=food";
         window.open(saleUrl, '_blank');
         break;
       }
       case 'maintotal__drink-sale--btn': {
-       // const totalAmount = $('#total__drink-sale').text();
         const saleUrl = APP_BASE_URL + "/pages/today_sales?service=drink";
         window.open(saleUrl, '_blank');
         break;
       }
       case 'maintotal__game-sale--btn': {
-        //const totalAmount = $('#total__game-sale').text();
         const saleUrl = APP_BASE_URL + "/pages/today_sales?service=game";
         window.open(saleUrl, '_blank');
         break;
       }
       case 'maintotal__laundry-sale--btn': {
-        const totalAmount = $('#total__laundry-sale').text();
         const saleUrl = APP_BASE_URL + `/pages/today_sales?service=laundry`;
         window.open(saleUrl, '_blank');
         break;

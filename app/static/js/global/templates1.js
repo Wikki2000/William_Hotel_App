@@ -624,6 +624,10 @@ export function saleBreakdownModal() {
     <p>Toatal Game Sold</p>
     <button id="maintotal__game-sale--btn" class="item__sold highlight-btn table__header-cell ui heading size-headings main__item-sold">View Details</p>
     </div>
+    <div class="sale__summary-flex">
+    <p>Toatal Laundry Sold</p>
+    <button id="maintotal__laundry-sale--btn" class="item__sold highlight-btn table__header-cell ui heading size-headings main__item-sold">View Details</p>
+    </div>
     </div>
     </div>`;
   return template;
