@@ -55,13 +55,13 @@ $(document).ready(function() {
             $('#roster__table-body').append(`
               <tr>
                 <td>${data.name} (${data.portfolio})</td>
-                <td>${mondayOption}</td>
-                <td>${tuesdayOption}</td>
-                <td>${wendesdayOption}</td>
-                <td>${thursdayOption}</td>
-                <td>${fridayOption}</td>
-                <td>${saturdayOption}</td>
-                <td>${sundayOption}</td>
+                <td style="color: ${mondayOption === 'DAY' || mondayOption === 'NIGHT' ? 'green': 'red'}">${mondayOption}</td>
+                <td style="color: ${tuesdayOption === 'DAY' || tuesdayOption === 'NIGHT' ? 'green': 'red'}">${tuesdayOption}</td>
+                <td style="color: ${wendesdayOption === 'DAY' || wendesdayOption === 'NIGHT' ? 'green': 'red'}"">${wendesdayOption}</td>
+                <td style="color: ${thursdayOption === 'DAY' || thursdayOption === 'NIGHT' ? 'green': 'red'}">${thursdayOption}</td>
+                <td style="color: ${fridayOption === 'DAY' || fridayOption === 'NIGHT' ? 'green': 'red'}">${fridayOption}</td>
+                <td style="color: ${saturdayOption === 'DAY' || saturdayOption === 'NIGHT' ? 'green': 'red'}">${saturdayOption}</td>
+                <td style="color: ${sundayOption === 'DAY' || sundayOption === 'NIGHT' ? 'green': 'red'}">${sundayOption}</td>
             </tr>
           `);
           }
