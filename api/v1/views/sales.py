@@ -94,7 +94,7 @@ def get_sale_by_date(
 @api_views.route(
     "/sales/<string:start_date>/<string:end_date>/<string:service>"
 )
-@role_required(["manager", "admin"])
+@role_required(["manager", "admin", "staff"])
 def get_service_sales(
     user_role: str, user_id: str, start_date: str, end_date: str, service: str
 ):
