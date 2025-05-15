@@ -20,6 +20,23 @@ def get_user(user_role: str, user_id: str, member_id: str):
     return jsonify(member.to_dict())
 
 
+@api_views.route("/user-roster")
+@role_required(["staff", "admin", "manager"])
+def get_rosters(user_role: str, user_id: str):
+    users = storage.all(User).values()
+    if not users:
+        return jsonify([]), 200
+
+    sorted_users = sorted(users, key=lambda user : int(user.rank_number))
+    response = [{
+        "name": f"{user.first_name} {user.last_name}",
+        "portfolio": user.portfolio,
+        "roster": user.roster,
+    } for user in sorted_users if user.role != 'admin']
+    storage.close()
+    return jsonify(response), 200
+
+
 @api_views.route("/users")
 @role_required(["staff", "admin", "manager"])
 def get_users(user_role: str, user_id: str):
@@ -106,3 +123,16 @@ def remove_user(user_role: str, user_id: str, member_id: str):
     storage.save()
     storage.close()
     return jsonify({"message": "User Deleted Successfully"}), 200
+
+
+@api_views.route("/users/<string:staff_id>/upsert-roster", methods=["PUT"])
+@role_required(["admin", "manager"])
+def create_update_roster(user_role: str, user_id: str, staff_id: str):
+    """Update or create staff roster"""
+    data = request.get_json()
+    user = storage.get_by(User, id=staff_id)
+    if not user:
+        abort(404)
+    user.roster = data
+    storage.save()
+    return jsonify({"message": "Staff Roster Updated Successfully !"}), 200

@@ -521,6 +521,27 @@ export function staffListTemplate(data) {
     </td>
 
     <td class="">
+      <p><i class="fa fa-ellipsis-v"></i></p>
+      <p><i style="display: none;" class="fa fa-times"></i></p>
+    </td>
+
+    <td class="manage" style="margin-right: 200px; margin-top: 20px;">
+      <nav class="manage__nav">
+        <ul class="manage__list">
+          <li data-id="${data.id}" class="manage__item ui text size-textmd staff__management-table--menu staff__management-view--profile">
+            <i class="fa fa-edit"></i>Edit
+          </li>
+	  <li class="${hideFromManager} manage__item ui text size-textmd staff__management-table--menu staff__management-remove--user" data-id="${data.id}">
+	    <i class="fa fa-trash"></i>Delete
+	  </li>
+	  <li class="manage__item ui text size-textmd staff__management-roster" data-id="${data.id}">
+	    <i class="fas fa-user-edit"></i>Update Roster
+	  </li>
+        </ul>
+      </nav>
+    </td>
+
+    <!--<td class="">
       <p class="ui text size-textmd staff__management-table--menu staff__management-view--profile" data-id="${data.id}">
         <i class="fa fa-edit"></i>
       </p>
@@ -530,7 +551,7 @@ export function staffListTemplate(data) {
       <p class="ui text size-textmd staff__management-table--menu staff__management-remove--user" data-id="${data.id}">
         <i class="fa fa-trash ${hideFromManager}"></i>
       </p>
-    </td>
+    </td>-->
    </tr>`;
   return row;
 }

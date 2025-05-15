@@ -505,4 +505,10 @@ $(document).ready(function() {
       }
     }
   });
+
+  $('#dynamic__load-dashboard').on('click', '.track-btn', function() {
+    const url = APP_BASE_URL + "/pages/roster";
+    sessionStorage.setItem('pageId', 'roster')
+    window.open(url, '_blank');
+  });
 });

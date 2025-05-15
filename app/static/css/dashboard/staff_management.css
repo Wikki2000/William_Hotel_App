@@ -140,3 +140,31 @@
     }
   }
 }
+
+
+.roster__modal-content {
+  width: 550px;
+}
+.roster__row {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .drop-down {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.roster__update-btn-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.roster__update-btn {
+  padding: 10px;
+  border-radius: 10px;
+  width: 70%;
+}

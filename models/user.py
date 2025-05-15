@@ -3,7 +3,7 @@
 from datetime import datetime
 from models.base_model import Base, BaseModel
 from sqlalchemy import (
-    Column, Text, String, Boolean, LargeBinary, DateTime, Float, Integer
+    Column, Text, String, Boolean, LargeBinary, DateTime, Float, Integer, JSON
 )
 from sqlalchemy.dialects.mysql import ENUM, LONGBLOB 
 from sqlalchemy.orm import relationship
@@ -45,6 +45,7 @@ class User(BaseModel, Base):
     performance = Column(Integer)
     is_active = Column(Boolean, default=False)
     last_active = Column(DateTime)
+    roster = Column(JSON)  # Holds weekly shift from monday to sunday of staffs.
 
     maintenences = relationship("Maintenance", backref="user")
 
