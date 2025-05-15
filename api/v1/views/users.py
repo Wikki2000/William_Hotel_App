@@ -32,6 +32,7 @@ def get_rosters(user_role: str, user_id: str):
         "name": f"{user.first_name} {user.last_name}",
         "portfolio": user.portfolio,
         "roster": user.roster,
+        "role": user.role,
     } for user in sorted_users if user.role != 'admin']
     storage.close()
     return jsonify(response), 200

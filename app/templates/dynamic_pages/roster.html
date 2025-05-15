@@ -13,6 +13,22 @@
       font-family: Arial, sans-serif;
       padding: 20px;
     }
+    .roster__head {
+      display: flex;
+      justify-content: space-between; 
+      align-items: center;
+      .print-button {
+        border-radius: 5px;
+	padding: 5px;
+	background-color: orange;
+	border: none;
+	height: 30px;
+	color: white;
+	&:hover {
+	  cursor: pointer;
+	}
+      }
+    }
     table {
       border-collapse: collapse;
       width: 100%;
@@ -29,11 +45,28 @@
       font-weight: bold;
       background-color: #e9f5ff;
     }
+
+    @media print {
+      .print-button {
+        display: none;
+      }
+
+      @page {
+	padding: 0;
+	margin: 0;
+	padding-left: 10px;
+	padding-right: 10px;
+      }
+    }
+
   </style>
 </head>
 <body>
 
-  <h2>Weekly Shift Roster</h2>
+  <div class="roster__head">
+    <h2>Weekly Shift Roster</h2>
+    <button onclick="showPrintAlert()" class="print-button">Print Roster</button>
+  </div>
 
   <table>
     <thead>
@@ -52,6 +85,12 @@
    </tbody>
   </table>
 
+  <script>
+    function showPrintAlert() {
+      alert('🛈 For best results, uncheck “Headers and Footers” in your print settings.'  );
+      window.print(); // Trigger the print dialog after the alert
+    }
+  </script>
 </body>
 </html>
 
