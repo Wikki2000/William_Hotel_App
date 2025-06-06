@@ -17,6 +17,7 @@ from models import storage
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime, date, timedelta
 from models.receipt import Receipt
+import pytz
 
 
 ERROR_LOG_FILE = "logs/error.log"
@@ -34,7 +35,6 @@ def update_booking_status(user_id: str, user_role: str, booking_id: str):
     book = None
     room_status =""
     try:
-
         book = storage.get_by(Booking, id=booking_id)
         if not book:
             abort(404)
@@ -44,7 +44,7 @@ def update_booking_status(user_id: str, user_role: str, booking_id: str):
         room_status = book.room.status
         if room_status == "occupied":
             msg = (
-                f"{book.room.number} currently occupied. " +
+                f"Room {book.room.number} currently occupied. " +
                 "Please check out existing guest"
             )
             return jsonify({"error": msg}), 422
@@ -57,6 +57,7 @@ def update_booking_status(user_id: str, user_role: str, booking_id: str):
             book.room.status = "occupied"
             storage.save()
             return jsonify({"msg": "Booking Status Update Successfully"}), 200
+        """
         else:
             msg = (
                 "Guest can only be check-in during reservation duration " +
@@ -64,6 +65,7 @@ def update_booking_status(user_id: str, user_role: str, booking_id: str):
                 "management for change of date"
             )
             return jsonify({"error": msg}), 422
+        """
         
     except Exception as e:
         book.is_reserve = True
@@ -410,7 +412,9 @@ def book_room(user_id: str, user_role: str, room_number: str):
         room.status = room_status   # Cheange room status once book
         storage.save()
 
-        current_hour = datetime.now().hour                                                                                                                              
+        #current_hour = datetime.now().hour
+        nigeria_time = datetime.now(pytz.timezone('Africa/Lagos'))
+        current_hour = nigeria_time.hour
 
         if 0 <= current_hour <= constant.BOOKING_END_BY:
             book.created_at -= timedelta(days=1)
