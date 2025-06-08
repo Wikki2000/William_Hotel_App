@@ -462,3 +462,17 @@ def get_payment_totals(session, date):
 
     return final_result
 
+
+def get_url_param(url_query):
+    """
+    Retrieve the url params into dictionary.
+
+    :url_query - The url parameter
+    :rtype - Dict of url param or empty dict if param is None.
+    """
+    kwargs = {}
+    if url_query:
+        param = dict(url_query)  # Convert to dictionary.
+
+        if param: kwargs.update(param)
+    return kwargs

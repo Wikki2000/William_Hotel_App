@@ -13,7 +13,7 @@ from api.v1.views import api_views
 from api.v1.views.utils import (
     bad_request, create_receipt, role_required, nigeria_today_date,
     update_item_stock, rollback_order_on_error, update_sales_data,
-    write_to_file, update_room_sold
+    write_to_file, update_room_sold, get_url_param
 )
 from api.v1.views import constant
 from models import storage
@@ -34,13 +34,29 @@ def get_orders(user_role: str, user_id: str):
     try:
         start_date_obj = end_date_obj = TODAY_DATE
         search_string = request.args.get('search_string');
+        url_query = request.args
+        filter_param = get_url_param(url_query)
         orders = []
 
-        if not search_string:
+        if not search_string and not filter_param:
             orders = storage.get_by_date(
                 Order, start_date_obj, end_date_obj, "created_at",
             )
-        else:
+        elif filter_param:
+            parameters = {}
+
+            # Handle filtering base on payment status
+            payment_status_available = {"pending": False, "paid": True}
+            if filter_param.get("payment_status") in payment_status_available:
+                parameters["is_paid"] = payment_status_available[filter_param.get("payment_status")]
+            if filter_param.get("start_date"):
+                parameters["start_date"] = filter_param.get("start_date")
+            if filter_param.get("end_date"):
+                parameters["end_date"] = filter_param.get("end_date")
+            print(parameters)
+            orders = storage.all_get_by(Order, **parameters)
+
+        elif search_string:
             guests = storage.get_start_with(Customer, "name", search_string)
 
             for guest in guests:
@@ -378,7 +394,7 @@ def delete_order(user_id: str, user_role: str, order_id: str):
         abort(404)
 
     sale_date = order.created_at.strftime("%Y-%m-%d")
-    update_task(0, order.amount)
+    #update_task(0, order.amount)
     update_room_sold(new_amount=0, old_amount=order.amount, date=sale_date)
 
     storage.delete(order)
