@@ -232,58 +232,92 @@ def user_friend_messages(
 # ===================================================================== #
 #                     Order Module Helper Function                   #
 # ===================================================================== #
+from models.food import Food
+from models.drink import Drink
+from models.order_item import OrderItem
+
+
 def update_item_stock(item, customer, new_order, item_sold):
     """Update stock levels and sales records based on item type."""
-
-    from models.food import Food
-    from  models.drink import Drink
-    from models.order_item import OrderItem
 
     item_type = item.get("itemType")
     item_id = item.get("itemId")
     item_qty = item.get("itemQty")
     item_amount = item.get("itemAmount")
 
+    # Validate inputs
+    if not item_type or not item_id:
+        raise ValueError("Item must have type and ID.")
+    if not isinstance(item_qty, int) or item_qty <= 0:
+        raise ValueError("Item quantity must be a positive integer.")
+    if not isinstance(item_amount, (int, float)) or item_amount <= 0:
+        raise ValueError("Item amount must be a positive number.")
+
     stock_model = {"food": Food, "drink": Drink}.get(item_type)
     sales_field = f"{item_type}_sold" if item_type in ["food", "drink", "game", "laundry"] else None
 
-    if stock_model and (item_type == "food" or item_type == "drink"):
+    # Save original states for rollback
+    original_stock_qty = None
+    if stock_model and item_type in ["food", "drink"]:
         stock_item = storage.get_by(stock_model, id=item_id)
         if stock_item.qty_stock < item_qty:
             raise ValueError(f"{stock_item.name} low in stock ({stock_item.qty_stock} available)")
+        original_stock_qty = stock_item.qty_stock
 
+    original_sales = {}
+    if sales_field:
+        original_sales[sales_field] = getattr(item_sold, sales_field, 0)
+
+    # Update stock
+    if stock_model and item_type in ["food", "drink"]:
         stock_item.qty_stock -= item_qty
 
+    # Update sales
+    print(sales_field)
     if sales_field:
-        setattr(
-            item_sold, sales_field,
-            getattr(item_sold, sales_field, 0) + 
-            item_amount
+        safe_original = original_sales.get(sales_field) or 0
+        setattr(item_sold, sales_field, safe_original + item_amount)
+        #setattr(item_sold, sales_field, original_sales[sales_field] + item_amount)
+
+    # Create order item only if item_type is food or drink
+    if item_type in ["food", "drink", "game", "laundry"]:
+        order_item = OrderItem(
+            amount=item_amount,
+            qty_order=item_qty,
+            order_id=new_order.id,
+            **{f"{item_type}_id": item_id}
         )
+        storage.new(order_item)
+        print(order_item)
 
-    # Store ordered item
-    order_item = OrderItem(
-        amount=item_amount, qty_order=item_qty, order_id=new_order.id,
-        **{f"{item_type}_id": item_id}
-    )
-    storage.new(order_item)
+    # Commit changes
+    #storage.save()
 
 
-def rollback_order_on_error(new_order, item_sold, prev_sales):
-    """Rollback order and restore sales data on error."""
+def rollback_order_on_error(new_order, item_sold, prev_sales, stock_model=None, item_id=None, original_stock_qty=None):
+    """Rollback order and restore sales and stock data on error."""
+
+    # Restore stock quantity if applicable
+    if stock_model and item_id is not None and original_stock_qty is not None:
+        stock_item = storage.get_by(stock_model, id=item_id)
+        if stock_item:
+            stock_item.qty_stock = original_stock_qty
+
+    # Restore sales values
+    if item_sold and prev_sales:
+        update_sales_data(item_sold, prev_sales)
+
+    # Delete the new order if it exists
     if new_order:
         storage.delete(new_order)
 
-    if item_sold:
-        update_sales_data(item_sold, prev_sales)
-
-    storage.save()
+    #storage.save()
 
 
 def update_sales_data(item_sold, prev_sales):
     """Restore previous sales values after an error."""
     for key, value in prev_sales.items():
-        setattr(item_sold, f"{key}_sold", value)
+        setattr(item_sold, key, value)
 
 
 # ===================================================================== #
@@ -476,3 +510,5 @@ def get_url_param(url_query):
 
         if param: kwargs.update(param)
     return kwargs
+
+

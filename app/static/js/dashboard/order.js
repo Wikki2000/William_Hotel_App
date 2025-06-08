@@ -227,6 +227,9 @@ $(document).ready(function() {
             showNotification('An error occured, please try again !', true);
           }
           $button.prop('disabled', false);
+		setTimeout(function() {
+			window.location.reload();
+		}, 1000);
           console.log(error);
         }
       );
@@ -386,7 +389,11 @@ $(document).ready(function() {
     const $clickItem = $(this);
     const $countValueSelector = $clickItem.siblings('.order__counter-value');
     const itemId = $clickItem.data('id');
-    const unitPrice = parseFloat($clickItem.data('price'));
+    //const unitPrice = parseFloat($clickItem.data('price'));
+    const unitPrice = parseFloat(
+      $clickItem.closest('.order__items--list-content')
+        .find('.order-item-price').text()
+    );
 
     const itemData = CART.get(itemId);  // Retrieve item from cart
 

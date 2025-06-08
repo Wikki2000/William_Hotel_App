@@ -371,12 +371,18 @@ def order_items(user_role: str, user_id: str):
         return jsonify({"order_id": new_order.id}), 200
 
     except ValueError as e:
+        print("Value Error Occcur")
+        print(prev_sales)
+        storage.rollback()
         rollback_order_on_error(new_order, item_sold, prev_sales)
+        storage.save()
         return jsonify({"error": str(e)}), 422
 
     except Exception as e:
         print(str(e))
         rollback_order_on_error(new_order, item_sold, prev_sales)
+        storage.rollback()
+        storage.save()
         error = f"{CURRENT_TIME}\t{TODAY_DATE}\t{api_path}\t{str(e)}\n\n"
         write_to_file(ERROR_LOG_FILE, error)
         return jsonify({"error": str(e)}), 500
