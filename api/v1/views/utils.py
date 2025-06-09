@@ -405,7 +405,10 @@ def check_reservation(obj_list, checkout_date, checkin_date, room_no):
 
 def update_room_sold(new_amount, old_amount=0, date=None):
     sale_date = date if date else nigeria_today_date()
-    current_hour = datetime.now().hour
+    #current_hour = datetime.now().hour
+
+    nigeria_time = datetime.now(pytz.timezone('Africa/Lagos'))
+    current_hour = nigeria_time.hour
 
     if 0 <= current_hour <= constant.BOOKING_END_BY:
         sale_date -= timedelta(days=1)
