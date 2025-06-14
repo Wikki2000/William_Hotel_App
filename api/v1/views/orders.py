@@ -400,8 +400,9 @@ def delete_order(user_id: str, user_role: str, order_id: str):
         abort(404)
 
     sale_date = order.created_at.strftime("%Y-%m-%d")
-    #update_task(0, order.amount)
-    update_room_sold(new_amount=0, old_amount=order.amount, date=sale_date)
+    old_amount=order.amount
+    today_sale = storage.get_by(Sale, entry_date=sale_date)
+    #today_sale
 
     storage.delete(order)
     storage.save()

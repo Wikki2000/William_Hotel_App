@@ -212,10 +212,10 @@ $(document).ready(function() {
           } else if (bookingType === 'full time' && !$('#main__checkout-date').val()) {
             showNotification('Please enter Checkout date', true);
             return;
-          } else if ($('#main__check-in').val() < canadianDateFormat(new Date()) && bookingType === 'full time') {
+          } /*else if ($('#main__check-in').val() < canadianDateFormat(new Date()) && bookingType === 'full time') {
             showNotification('Check-in date must be earlier than today\'s date', true);
             return;
-          }
+          }*/
 
           fetchData(roomUrl)
           .then((rooms) => {

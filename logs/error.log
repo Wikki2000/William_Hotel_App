@@ -1,0 +1,32 @@
+10:23 AM	2025-06-09	/api/v1/bookings/0f2feb92-b702-4970-b9da-1e9db031dd7a/booking-details	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+12:51 PM	2025-06-09	/api/v1/account/login	This Session's transaction has been rolled back due to a previous exception during flush. To begin a new transaction with this Session, first issue Session.rollback(). Original exception was: (raised as a result of Query-invoked autoflush; consider using a session.no_autoflush block if this flush is occurring prematurely)
+(MySQLdb.IntegrityError) (1452, 'Cannot add or update a child row: a foreign key constraint fails (`wills_dev_db`.`bookings`, CONSTRAINT `bookings_ibfk_4` FOREIGN KEY (`checkout_by_id`) REFERENCES `users` (`id`))')
+[SQL: UPDATE bookings SET is_use=%s, checkout_by_id=%s, updated_at=%s WHERE bookings.id = %s]
+[parameters: (0, '3fc85f10-4c47-43cd-8ae3-a520191cd1ed', datetime.datetime(2025, 6, 9, 13, 1, 3, 245149), '3123639f-ad0e-40db-80ff-a37d9e3122b1')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj) (Background on this error at: https://sqlalche.me/e/20/7s2a)
+
+12:51 PM	2025-06-09	/api/v1/account/login	This Session's transaction has been rolled back due to a previous exception during flush. To begin a new transaction with this Session, first issue Session.rollback(). Original exception was: (raised as a result of Query-invoked autoflush; consider using a session.no_autoflush block if this flush is occurring prematurely)
+(MySQLdb.IntegrityError) (1452, 'Cannot add or update a child row: a foreign key constraint fails (`wills_dev_db`.`bookings`, CONSTRAINT `bookings_ibfk_4` FOREIGN KEY (`checkout_by_id`) REFERENCES `users` (`id`))')
+[SQL: UPDATE bookings SET is_use=%s, checkout_by_id=%s, updated_at=%s WHERE bookings.id = %s]
+[parameters: (0, '3fc85f10-4c47-43cd-8ae3-a520191cd1ed', datetime.datetime(2025, 6, 9, 13, 2, 27, 784331), '3123639f-ad0e-40db-80ff-a37d9e3122b1')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj) (Background on this error at: https://sqlalche.me/e/20/7s2a)
+
+12:51 PM	2025-06-09	/api/v1/account/login	This Session's transaction has been rolled back due to a previous exception during flush. To begin a new transaction with this Session, first issue Session.rollback(). Original exception was: (raised as a result of Query-invoked autoflush; consider using a session.no_autoflush block if this flush is occurring prematurely)
+(MySQLdb.IntegrityError) (1452, 'Cannot add or update a child row: a foreign key constraint fails (`wills_dev_db`.`orders`, CONSTRAINT `orders_ibfk_3` FOREIGN KEY (`cleared_by_id`) REFERENCES `users` (`id`))')
+[SQL: UPDATE orders SET is_paid=%s, cleared_by_id=%s, updated_at=%s WHERE orders.id = %s]
+[parameters: (1, '3fc85f10-4c47-43cd-8ae3-a520191cd1ed', datetime.datetime(2025, 6, 9, 13, 26, 48, 230959), '04de14ec-b2e6-4e35-bcd8-b2bd983a636c')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj) (Background on this error at: https://sqlalche.me/e/20/7s2a)
+
+02:23 PM	2025-06-09	/api/v1/orders/18ae50b0-28a2-4cd2-8fb5-5ddcb13f8074/order-items	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+11:38 PM	2025-06-10	/api/v1/orders/e61412e0-a42d-4237-bc74-29257dc63ff8/order-items	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+11:49 PM	2025-06-10	/api/v1/bookings/0384d087-5c9a-48cc-bfdf-4214f17f7a63/booking-details	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+12:36 AM	2025-06-10	/api/v1/guests/8d655d12-69c8-4cbc-8424-fb1a1ac760d2/rooms/0ce469ad-2c11-4c0b-a2a3-3b0538886ffd/extend-stay	name 'timedelta' is not defined
+
+12:38 AM	2025-06-10	/api/v1/guests/8d655d12-69c8-4cbc-8424-fb1a1ac760d2/rooms/0ce469ad-2c11-4c0b-a2a3-3b0538886ffd/extend-stay	name 'timedelta' is not defined
+
+03:03 PM	2025-06-11	/api/v1/orders/8af1fc71-4145-4fd1-9ee2-7a64bfe2319d/order-items	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+

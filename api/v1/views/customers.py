@@ -13,7 +13,8 @@ from api.v1.views.utils import (
 )
 from api.v1.views import constant
 from models import storage
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
+import pytz
 
 
 ERROR_LOG_FILE = "logs/error.log"
@@ -46,7 +47,7 @@ def extend_guest_stay(user_role: str, user_id: str, room_id, customer_id):
         return jsonify(resarvation_error_msg), 422
 
     data.update({
-        "room_id": room_id, "customer_id": customer_id, "checkin_by_id": user_id
+        "room_id": room_id, "customer_id": customer_id, "checkin_by_id": user_id,
     })
 
     book = None
@@ -56,6 +57,11 @@ def extend_guest_stay(user_role: str, user_id: str, room_id, customer_id):
         book = Booking(**data)
         storage.new(book)
         storage.save()
+
+        nigeria_time = datetime.now(pytz.timezone('Africa/Lagos'))
+        current_hour = nigeria_time.hour                                                                                                                                
+        if 0 <= current_hour <= constant.BOOKING_END_BY:
+            book.created_at -= timedelta(days=1)
 
         # Create booking receipt object.
         receipt = create_receipt("booking_id", book.id) 

@@ -186,7 +186,7 @@ export function orderItemsTempleate(itemId, itemDataObject) {
      <h3 class="order__item-title" title="${itemDataObject.itemName}">
        ${itemDataObject.itemName.slice(0, 12)}${paddingSpaceString}
      </h3>
-     <p class="order__item-price">Price: ₦${itemDataObject.itemAmount}</p>
+     <p class="order__item-price">Price: ₦${itemDataObject.itemPrice}</p>
       <p>Total:
         <span class="order__item-amount"> ₦${itemDataObject.itemAmount}</span>
       </p>
@@ -197,9 +197,9 @@ export function orderItemsTempleate(itemId, itemDataObject) {
        </p>
 
        <div class="order__counter">
-         <button data-id="${itemId}" data-price="${itemDataObject.itemAmount}" class="order__count-btn">-</button>
+         <button data-id="${itemId}" data-price="${itemDataObject.itemPrice}" class="order__count-btn">-</button>
          <span class="order__counter-value">${itemDataObject.itemQty}</span>
-         <button data-id="${itemId}" data-price="${itemDataObject.itemAmount}" class="order__count-btn order__btn-increase">+</button>
+         <button data-id="${itemId}" data-price="${itemDataObject.itemPrice}" class="order__count-btn order__btn-increase">+</button>
        </div>
      </div>
    </div>

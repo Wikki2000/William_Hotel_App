@@ -10,6 +10,7 @@ $(document).ready(function() {
     const itemId = $clickBtn.data('id');
     const itemType = $clickBtn.data('type');  // E.g., food or drink
     const itemAmount = $clickBtn.data('amount');
+    const itemPrice = itemAmount
     const itemName = $clickBtn.data('name');
     const itemQty = 1; // Initiate count to one once an item is selected
 
@@ -19,7 +20,7 @@ $(document).ready(function() {
       $clickBtn.removeClass('highlight-btn');
     } else {
       // If item does not exist, add it
-      CART.set(itemId, { itemType, itemName, itemAmount, itemQty });
+      CART.set(itemId, { itemType, itemName, itemAmount, itemPrice, itemQty });
       $clickBtn.addClass('highlight-btn');
     }
 
