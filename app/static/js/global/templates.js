@@ -329,6 +329,7 @@ export function guestListTableTemplate(guest, booking, room, date) {
     <td class="">
       <p class="ui text size-textmd">₦${booking.amount.toLocaleString()}</p>
     </td>
+    <td><input type="checkbox" class="guest__checkbox" value=${booking.id}>
     <td>
       <p><i class="fa fa-ellipsis-v"></i></p>
       <p><i style="display: none;" class="fa fa-times"></i></p>

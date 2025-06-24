@@ -1,12 +1,12 @@
 <div id="guest__list">
-<!--  <div class="guest-tab">
-    <div class="tab ui heading size-headingmd">Today's Guests List</div>
-</div>-->
-  <div class="guest__list-filter-container">                  
-    <h3 id="all__bookings" class="tab__item-2 ui heading size-texts filter highlight-btn">Today Bookings</h3>
-    <h3 id="active__bookings" class="tab__item-2 ui heading size-texts filter">Active Bookings</h3>
-    <h5 id="reserve__bookings" class="tab__item-2 ui heading size-texts filter">Reserved Bookings</h5>
-  </div>  
+  <div style="display: flex; justify-content: space-between;">
+    <div class="guest__list-filter-container">                  
+      <h3 id="all__bookings" class="tab__item-2 ui heading size-texts filter highlight-btn">Today Bookings</h3>
+      <h3 id="active__bookings" class="tab__item-2 ui heading size-texts filter">Active Bookings</h3>
+      <h5 id="reserve__bookings" class="tab__item-2 ui heading size-texts filter">Reserved Bookings</h5>
+    </div>  
+    <h5 id="print__joint-receipt" class="tab__item-2 ui heading size-texts filter hide">Print Joint Receipt</h5>
+  </div>
 
   <!-- room table section -->
   <div class="guest-table-column">
@@ -57,6 +57,9 @@
           <th width="200px">
             <p class="table__header-cell-1 ui heading size-headings">Amount</p>
           </th>
+	  <th width="200px">
+	    <p class="table__header-cell ui heading size-headings"></p>
+	  </th>
           <th width="200px">
             <p class="table__header-cell ui heading size-headings"></p>
           </th>

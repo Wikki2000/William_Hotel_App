@@ -14,6 +14,41 @@ $(document).ready(() => {
 
   const $modal = $("#guestModal");
 
+  let firstSelected = "";
+  // Display icon for join receipt printing.
+  $('#dynamic__load-dashboard').on('change', ".guest__checkbox", function() {
+    const total = $(".guest__checkbox:checked").length;
+    const $currentCheckbox = $(this);
+    const currentCheckName = $currentCheckbox.closest("tr").find(".featured p").text();
+
+    if (!firstSelected) {
+      firstSelected = currentCheckName
+    }
+
+    if (total > 0) {
+      $("#print__joint-receipt").removeClass("hide");
+      if (firstSelected !== currentCheckName) {
+	alert("You can only print joint receipt for same guest.");
+	$currentCheckbox.prop("checked", false);
+      }
+    } else {
+      $("#print__joint-receipt").addClass("hide");
+      firstSelected = "";
+    }
+  });
+
+  // Handle printing of guest join receipts.
+  $('#dynamic__load-dashboard').on('click', '#print__joint-receipt', function() {
+    const booking_ids = $(".guest__checkbox:checked").map(function() {
+      return $(this).val();
+    }).get();
+
+    const receiptUrl = (
+      APP_BASE_URL + `/bookings/print-receipt?booking_id=${JSON.stringify(booking_ids)}&booking_count=multiple`
+    );
+    window.open(receiptUrl, '_blank');
+  });
+
   $('#dynamic__load-dashboard').on('click', '.guest__listMenu', function() {
     const $clickItem = $(this);
     const clickItemId = $clickItem.data('id');
@@ -631,7 +666,7 @@ $(document).ready(() => {
       function() {
         const bookingId = $(this).data('id');
         const receiptUrl = (
-          APP_BASE_URL + `/bookings/print-receipt?booking_id=${bookingId}`
+          APP_BASE_URL + `/bookings/print-receipt?booking_id=${bookingId}&booking_count=single`
         );
         window.open(receiptUrl, '_blank');
       });

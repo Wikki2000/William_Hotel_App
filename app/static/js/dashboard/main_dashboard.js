@@ -162,7 +162,7 @@ $(document).ready(function() {
             // Print receipt immediately room is book.
             const bookingId = response.booking_id;
             const receiptUrl = (
-              APP_BASE_URL + `/bookings/print-receipt?booking_id=${bookingId}`
+              APP_BASE_URL + `/bookings/print-receipt?booking_id=${bookingId}&booking_count=single`
             );
             window.open(receiptUrl, '_blank');
           },
@@ -219,6 +219,7 @@ $(document).ready(function() {
 
           fetchData(roomUrl)
           .then((rooms) => {
+            rooms[0] = "Select Multiple"
 
             displayMenuList(rooms, $clickItem, 'order__menu');
           })
