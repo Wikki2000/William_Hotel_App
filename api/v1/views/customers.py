@@ -95,7 +95,7 @@ def customer_service_list(
     """Retrieve all services given to a guest."""
     TODAY_DATE = nigeria_today_date()
     CURRENT_TIME = time = datetime.now().strftime("%I:%M %p")
-    customer = storage.get_by(Customer, id=customer_id)
+    customer = storage.get_by(Customer, id=customer_id, is_guest=True)
     if not customer:
         abort(404)
 

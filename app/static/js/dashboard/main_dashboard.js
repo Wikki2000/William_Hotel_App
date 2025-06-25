@@ -11,7 +11,8 @@ function resetRoomDetails() {
     .val('Auto-filled based on room no');
   $('#main__room--no-val').val('');
   $('#main__dropdown--room-no span').text('Select ');
-  $('#main__night-count').val('');}
+  $('#main__night-count').val('');
+}
 
 $(document).ready(function() {
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
@@ -109,7 +110,7 @@ $(document).ready(function() {
     const is_short_rest = SHORT_REST_OPTION;
 
     // Room data
-    const roomNumber = $('#main__room--no-val').val();
+    const roomNumber = $('#main__room--no-val').val().split(",");
 
     // Customer data
     const name = $('#main__guest-name').val();
@@ -123,18 +124,22 @@ $(document).ready(function() {
 
     const BookingData = {
       book: {
-        duration: DURATION, guest_number, amount: AMOUNT, is_reserve,
+        duration: DURATION, guest_number, /*amount: AMOUNT,*/ is_reserve,
         is_paid, checkin: CHECK_IN, checkout: CHECK_OUT, is_short_rest,
         is_early_checkin: IS_EARLY_CHECKIN, payment_type
       },
-      customer: { gender, name, address, phone, id_type, id_number, email }
+      customer: { gender, name, address, phone, id_type, id_number, email },
+      room_number: AMOUNT
     };
+
+    console.log(BookingData);
+    //return;
 
     $('#main__popup-modal').css('display', 'flex');
 
     $('#dynamic__load-dashboard').off('click', '#main__confirm-btn')
       .on('click', '#main__confirm-btn', function() {
-        const bookUrl =  API_BASE_URL + `/rooms/${roomNumber}/book`;
+        const bookUrl =  API_BASE_URL + "/book";
 
         const $button = $(this);
         $button.prop('disable', true);  // Disable btn to avoid multiple requests.
@@ -160,11 +165,21 @@ $(document).ready(function() {
             sessionStorage.removeItem('guestData');
 
             // Print receipt immediately room is book.
-            const bookingId = response.booking_id;
-            const receiptUrl = (
-              APP_BASE_URL + `/bookings/print-receipt?booking_id=${bookingId}&booking_count=single`
-            );
-            window.open(receiptUrl, '_blank');
+            if (roomNumber <= 1) {
+              // Handle case where only one room is selected.
+              const bookingId = response.booking_id;
+              const receiptUrl = (
+                APP_BASE_URL + `/bookings/print-receipt?booking_id=${bookingId}&booking_count=single`
+              );
+              window.open(receiptUrl, '_blank');
+            } else {
+              // Handle case where multiple room is selected.
+              //const roomIdsList = $("#room__ids-list").val().split(",");
+              const receiptUrl = (
+                APP_BASE_URL + `/bookings/print-receipt?booking_id=${JSON.stringify(response.booking_id_list)}&booking_count=multiple`
+              );
+              window.open(receiptUrl, '_blank');
+            }
           },
           (error) => {
             $button.prop('disable', false);
@@ -219,7 +234,7 @@ $(document).ready(function() {
 
           fetchData(roomUrl)
           .then((rooms) => {
-            rooms[0] = "Select Multiple"
+            rooms.unshift("Select Multiple");
 
             displayMenuList(rooms, $clickItem, 'order__menu');
           })
@@ -247,6 +262,28 @@ $(document).ready(function() {
                     .find('.main__dropdown-btn span').text('Select');
                   $('#main__room-rate, #main__room-type')
                     .val('Auto-filled based on room no');
+
+                  if (roomNumberSelected === "Select Multiple") {
+                    $("#book__multiple-room").css("display", "flex");
+                    const roomUrl = API_BASE_URL + '/room-numbers';
+
+                    fetchData(roomUrl)
+                      .then((rooms) => {
+                        $("#dropdown-content").empty();
+
+                        rooms.forEach((room) => {
+                          $("#dropdown-content").append(`
+                                  <label style="display: inline-flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 14px; cursor: pointer;">
+                                    <input type="checkbox" value="${room}" style="width: 16px; height: 16px;"> ${room}
+                                  </label><br>
+                                `);
+                        });
+                        $("#dropdown-content").append(`<button id="submit__selected-room" style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 5px; background: #f5f5f5; cursor: pointer; text-align: center;">Continue</button>`);
+                      })
+                      .catch((error) => {
+                        console.log(error);
+                      });
+                  }
                 } else {
                   const roomUrl = (
                     API_BASE_URL + `/rooms/${roomNumberSelected}`
@@ -267,13 +304,14 @@ $(document).ready(function() {
                         );
                         return;
                       }
-                      DURATION = bookingDuration(CHECK_OUT, CHECK_IN); ;
+                      DURATION = bookingDuration(CHECK_OUT, CHECK_IN);
 
                       // Get total amount of room book base on some criterias..
                       const room_rate = $('#main__room-amount').val();
-                      AMOUNT = DURATION * room.amount;
+                      let tempAmt;
+                      tempAmt = DURATION * room.amount;
                       if ($('#main__id--checkin-val').val() === 'Yes') {
-                        AMOUNT += EARLY_CHECKIN_AMOUNT;
+                        tempAmt += EARLY_CHECKIN_AMOUNT;
                         IS_EARLY_CHECKIN = true;
                         $('#main__night-count').val(`${DURATION} Night(s)`);
 
@@ -281,21 +319,16 @@ $(document).ready(function() {
                       else if (
                         $('#main__id--bookingtype-val').val().toLowerCase() === 'short time'
                       ) {
-                        AMOUNT = SHORT_REST_AMOUNT;
+                        tempAmt = SHORT_REST_AMOUNT;
                         $('#main__night-count').val('2 Hours');
                       } else {
                         $('#main__night-count').val(`${DURATION} Night(s)`); 
                       }
 
-
+                      AMOUNT = [{ room_number: roomNumberSelected, room_amount: tempAmt }]
                       $('#main__room-rate')
-                        .val('₦' + AMOUNT.toLocaleString());
+                        .val('₦' + tempAmt.toLocaleString());
                       $('#main__room-type').val(room.name);
-
-                      // The room amount to be retrieve when booking.
-                      // Stored in hidden input fields.
-
-                      //$('#main__room-amount').val(room.amount);
 
                     })
                     .catch((error) => {
@@ -308,9 +341,9 @@ $(document).ready(function() {
                     .text(roomNumberSelected);
 
                   $('#main__room--no-val').val(roomNumberSelected);
-                  $('.dropdown-menu').hide(); // Hide once option is selected
                 }
               }
+              $('.dropdown-menu').hide(); // Hide once option is selected
 
             });
           break;
@@ -464,6 +497,96 @@ $(document).ready(function() {
       }
     });
 
+  // Collect all selected room number.
+  $('#dynamic__load-dashboard').on("click", "#submit__selected-room", function() {
+    const $checkedItem = $("#dropdown-content input[type='checkbox']:checked");
+    const roomNumberList = $checkedItem.map(function() {
+      return $(this).val();
+    }).get()
+    const totalCheckItem = $checkedItem.length;
+    const roomNumberString = roomNumberList.join(",");
+
+    if (totalCheckItem <= 1) {
+      alert("You must select atleast two rooms number");
+      return;
+    }
+
+    const roomUrl = (
+      API_BASE_URL +  `/rooms/${JSON.stringify(roomNumberList)}/get-multiple`
+    );
+    fetchData(roomUrl)
+      .then((rooms) => {
+        const UniquerRoomTypeList = [...new Set(rooms.map(room => room.name))];
+        $('#main__room-type').val(UniquerRoomTypeList.join(", "));
+
+        const roomRateList = rooms.map(room => {
+          return {
+            roomNumber: room.number,
+            roomAmount: room.amount
+          };
+        });
+
+
+        /*
+        const roomIdsList = rooms.map(room => room.id);
+        $("#room__ids-list").val(roomIdsList.join(","));
+        */
+
+        CHECK_IN = $('#main__check-in').val();
+        CHECK_OUT = $('#main__checkout-date').val();
+        DURATION = bookingDuration(CHECK_OUT, CHECK_IN);
+
+        if (new Date(CHECK_IN) >= new Date(CHECK_OUT)) {
+          resetRoomDetails();
+          showNotification(
+            'Check Out date must not be earlier than Check In date', true
+          );
+          return;
+        }
+
+        const totalAmountList = [];
+        roomRateList.forEach((room) => {
+
+          let tempAmount = room.roomAmount;
+          if ($('#main__id--checkin-val').val() === 'Yes') {
+            tempAmount += EARLY_CHECKIN_AMOUNT;
+            IS_EARLY_CHECKIN = true;
+            $('#main__night-count').val(`${DURATION} Night(s)`);
+
+          }
+          else if (
+            $('#main__id--bookingtype-val').val().toLowerCase() === 'short time'
+          ) {
+            tempAmount = SHORT_REST_AMOUNT;
+            $('#main__night-count').val('2 Hours');
+          } else {
+            $('#main__night-count').val(`${DURATION} Night(s)`);
+          }
+
+         totalAmountList.push({room_number: room.roomNumber, room_amount: tempAmount});
+        });
+
+        const accumulatedAmt = totalAmountList.reduce((acc, val) => acc + val.room_amount, 0);
+        AMOUNT = totalAmountList
+
+        //console.log(totalAmountList);
+        $('#main__room-rate')
+          .val('₦' + accumulatedAmt.toLocaleString());
+
+
+        $('#main__room--no-val').val(roomNumberString);
+        $("#main__dropdown--room-no span").text(
+          roomNumberString.length <= 23 ? roomNumberString : roomNumberString.slice(0, 23) + "..."
+        );
+
+        $("#book__multiple-room").hide();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    //$('#main__room-type').val("You'");
+  });
+
   $('#dynamic__load-dashboard').on("click", "#main__today-sales--view", function() {
     const today = britishDateFormat(new Date());
 
@@ -472,7 +595,6 @@ $(document).ready(function() {
     $("#main__sales-breakdown").css("display", "flex");
     $("#sales__date").text(today);
   });
-
 
   $('#dynamic__load-dashboard').on('click', '.main__item-sold', function() {
     const $clickItem = $(this);

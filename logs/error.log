@@ -30,3 +30,75 @@
 
 03:03 PM	2025-06-11	/api/v1/orders/8af1fc71-4145-4fd1-9ee2-7a64bfe2319d/order-items	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
 
+01:45 PM	2025-06-24	/api/v1/bookings/8/booking-details	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+01:46 PM	2025-06-24	/api/v1/bookings/8/booking-details	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+01:47 PM	2025-06-24	/api/v1/bookings/8/booking-details	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+01:51 PM	2025-06-24	/api/v1/bookings/8/booking-details	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+02:37 PM	2025-06-24	/api/v1/bookings/["7e6940d7-6d0b-436e-9ae1-1660c7e473f8","df60d7cc-42fb-4833-ac5a-54f4619cb347"]/booking-details	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+03:20 PM	2025-06-24	/api/v1/bookings/["7e6940d7-6d0b-436e-9ae1-1660c7e473f8","df60d7cc-42fb-4833-ac5a-54f4619cb347"]/booking-details	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+03:23 PM	2025-06-24	/api/v1/bookings/["7e6940d7-6d0b-436e-9ae1-1660c7e473f8","df60d7cc-42fb-4833-ac5a-54f4619cb347"]/booking-details	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+03:24 PM	2025-06-24	/api/v1/bookings/["7e6940d7-6d0b-436e-9ae1-1660c7e473f8","df60d7cc-42fb-4833-ac5a-54f4619cb347"]/multiple-bookings-details	'str' object has no attribute 'read'
+
+03:24 PM	2025-06-24	/api/v1/bookings/["7e6940d7-6d0b-436e-9ae1-1660c7e473f8","df60d7cc-42fb-4833-ac5a-54f4619cb347"]/multiple-bookings-details	'str' object has no attribute 'read'
+
+03:26 PM	2025-06-24	/api/v1/bookings/["7e6940d7-6d0b-436e-9ae1-1660c7e473f8","df60d7cc-42fb-4833-ac5a-54f4619cb347"]/multiple-bookings-details	'str' object has no attribute 'read'
+
+04:32 PM	2025-06-24	/api/v1/bookings/["7e6940d7-6d0b-436e-9ae1-1660c7e473f8","df60d7cc-42fb-4833-ac5a-54f4619cb347"]/multiple-bookings-details	name 'booking' is not defined
+
+12:52 PM	2025-06-25	/api/v1/bookings/["2fa75065-4ce5-4028-ba51-8bf3194c629c","2fd01ac9-4749-4392-bd3c-d8fdba8b5159","91a049bd-0a2c-4262-aa7f-437561870452"]/multiple-bookings-details	name 'book' is not defined
+
+12:52 PM	2025-06-25	/api/v1/bookings/["2fa75065-4ce5-4028-ba51-8bf3194c629c","2fd01ac9-4749-4392-bd3c-d8fdba8b5159","91a049bd-0a2c-4262-aa7f-437561870452"]/multiple-bookings-details	name 'book' is not defined
+
+01:15 PM	2025-06-25	/api/v1/bookings/["204","205"]/multiple-bookings-details	'NoneType' object has no attribute 'room'
+
+01:16 PM	2025-06-25	/api/v1/bookings/["204","205"]/multiple-bookings-details	'NoneType' object has no attribute 'room'
+
+01:18 PM	2025-06-25	/api/v1/bookings/["204","205"]/multiple-bookings-details	Entity namespace for "bookings" has no property "number"
+
+01:18 PM	2025-06-25	/api/v1/bookings/["204","205"]/multiple-bookings-details	Entity namespace for "bookings" has no property "number"
+
+01:20 PM	2025-06-25	/api/v1/bookings/["204","205"]/multiple-bookings-details	'NoneType' object has no attribute 'id'
+
+01:20 PM	2025-06-25	/api/v1/bookings/["204","205"]/multiple-bookings-details	'NoneType' object has no attribute 'id'
+
+01:27 PM	2025-06-25	/api/v1/bookings/["5c607987-f0fa-46ad-9fe5-6efc47c246b4","fe718c97-06e0-4d2b-96dc-b1a8c7b0b7b8"]/multiple-bookings-details	'NoneType' object has no attribute 'room'
+
+01:27 PM	2025-06-25	/api/v1/bookings/["5c607987-f0fa-46ad-9fe5-6efc47c246b4","fe718c97-06e0-4d2b-96dc-b1a8c7b0b7b8"]/multiple-bookings-details	'NoneType' object has no attribute 'room'
+
+01:27 PM	2025-06-25	/api/v1/bookings/["5c607987-f0fa-46ad-9fe5-6efc47c246b4","fe718c97-06e0-4d2b-96dc-b1a8c7b0b7b8"]/multiple-bookings-details	'NoneType' object has no attribute 'room'
+
+02:25 PM	2025-06-25	/api/v1/book	unsupported operand type(s) for -: 'NoneType' and 'int'
+
+02:25 PM	2025-06-25	/api/v1/book	unsupported operand type(s) for -: 'NoneType' and 'int'
+
+02:25 PM	2025-06-25	/api/v1/book	unsupported operand type(s) for -: 'NoneType' and 'int'
+
+02:26 PM	2025-06-25	/api/v1/bookings/["f806c9fc-e4a6-4e72-86bf-cb8983cbd373","481cd74d-cd87-4185-b58f-17551d2ce594","fa724b63-a3e4-437f-b8d5-f0970b009c31"]/multiple-bookings-details	'NoneType' object has no attribute 'room'
+
+02:27 PM	2025-06-25	/api/v1/book	unsupported operand type(s) for -: 'NoneType' and 'int'
+
+02:27 PM	2025-06-25	/api/v1/book	unsupported operand type(s) for -: 'NoneType' and 'int'
+
+02:27 PM	2025-06-25	/api/v1/book	unsupported operand type(s) for -: 'NoneType' and 'int'
+
+02:27 PM	2025-06-25	/api/v1/bookings/["c1163ec8-5384-4b3f-b474-28ca67c98505","222738ca-9656-4042-a263-12fa05a99577","5be368b1-a8b5-4e19-abef-d98c53815131"]/multiple-bookings-details	'NoneType' object has no attribute 'room'
+
+02:30 PM	2025-06-25	/api/v1/book	unsupported operand type(s) for -: 'NoneType' and 'int'
+
+02:30 PM	2025-06-25	/api/v1/book	unsupported operand type(s) for -: 'NoneType' and 'int'
+
+02:30 PM	2025-06-25	/api/v1/book	unsupported operand type(s) for -: 'NoneType' and 'int'
+
+02:33 PM	2025-06-25	/api/v1/book	unsupported operand type(s) for -: 'NoneType' and 'int'
+
+02:33 PM	2025-06-25	/api/v1/book	unsupported operand type(s) for -: 'NoneType' and 'int'
+
+02:33 PM	2025-06-25	/api/v1/bookings/["01402f8d-c529-4206-996d-44976ae6a81e","1c7770d7-68db-4fc9-abfc-e10e91edd188"]/multiple-bookings-details	'NoneType' object has no attribute 'room'
+

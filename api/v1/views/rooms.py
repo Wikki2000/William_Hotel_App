@@ -9,6 +9,7 @@ from api.v1.views.utils import role_required, bad_request, convert_to_binary
 from models import storage
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime
+from json import loads
 
 
 @api_views.route("/rooms", methods=["POST"])
@@ -292,7 +293,7 @@ def check_out(user_id: str, user_role: str, room_id: str, customer_id: str):
         booking.is_paid = "yes"
         booking.is_use = False
         booking.updated_at = datetime.utcnow()
-        
+
         # Ensure that no two staff can clear guest booking bills from room.
         if not booking.checkout_by_id:
             booking.checkout_by_id = user_id
@@ -305,3 +306,19 @@ def check_out(user_id: str, user_role: str, room_id: str, customer_id: str):
     storage.save()
     storage.close()
     return jsonify({"message": "Checkout Successful"}), 201
+
+
+@api_views.route("/rooms/<string:room_ids_list>/get-multiple")
+@role_required(["staff", "manager", "admin"])
+def get_multiple_room(user_role: str, user_id: str, room_ids_list: str):
+    """Retrieved all rooms"""
+    room_number = loads(room_ids_list)
+
+    rooms = []
+    for num in room_number:
+        room = storage.get_by(Room, number=num)
+        rooms.append(room)
+
+    response = [room.to_dict() for room in rooms]
+    storage.close()
+    return jsonify(response), 200

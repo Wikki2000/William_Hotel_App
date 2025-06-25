@@ -17,6 +17,7 @@ class Customer(BaseModel, Base):
     is_guest = Column(Boolean, default=False)
     id_type = Column(String(225))
     id_number =  Column(String(225))
+
     email = Column(String(225))
 
     books = relationship('Booking', backref='customer',

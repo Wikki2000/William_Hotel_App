@@ -47,7 +47,7 @@ def booking_data_by_ids(user_id: str, user_role: str, booking_id: str):
                 "book_receipt": book.receipt.receipt_no,
                 "room_number": book.room.number,
                 "room_name": book.room.name,
-            } for book in bookings],
+                } for book in sorted(bookings, key=lambda book: book.room.number)],
             "customer": bookings[0].customer.to_dict(),
             "checkin_by": bookings[0].checkin_by.to_dict(),
             "user": bookings[0].checkin_by.to_dict(),

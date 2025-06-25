@@ -33,7 +33,7 @@ def update_booking_status(user_id: str, user_role: str, booking_id: str):
     CURRENT_TIME = time = datetime.now().strftime("%I:%M %p")
     api_path = request.path
     book = None
-    room_status =""
+    room_status = ""
     try:
         book = storage.get_by(Booking, id=booking_id)
         if not book:
@@ -344,9 +344,9 @@ def update_booking_data(user_id: str, user_role: str, booking_id: str):
         storage.close()
 
 
-@api_views.route("/rooms/<string:room_number>/book", methods=["POST"])
+@api_views.route("/book", methods=["POST"])
 @role_required(["staff", "manager", "admin"])
-def book_room(user_id: str, user_role: str, room_number: str):
+def book_room(user_id: str, user_role: str):
     """Book a room"""
     TODAY_DATE = nigeria_today_date()
     CURRENT_TIME = time = datetime.now().strftime("%I:%M %p")
@@ -358,97 +358,115 @@ def book_room(user_id: str, user_role: str, room_number: str):
         return jsonify({"error": "Bad Request"}), 400
 
     user = storage.get_by(User, id=user_id)
-    room = storage.get_by(Room, number=room_number)
-    if not user or not room:
+    #room = storage.get_by(Room, number=room_number)
+    if not user:
         abort(404)
 
     customer_data = data.get("customer") 
     booking_data = data.get("book")
+    room_numbers = data.get("room_number")
 
+    """
+    customer = Customer(**customer_data)
+    storage.new(customer)
+    customer.is_guest = True
+    storage.save()
+    """
 
     # Check that same room is not reserved same time
     checkin_date = booking_data.get("checkin")
     checkout_date = booking_data.get("checkout") 
 
-    bookings = storage.all_get_by(Booking, room_id=room.id, is_reserve=True)
+    book = None
+    booking_id_list = []
+    for room_data in room_numbers:
+        room = storage.get_by(Room, number=room_data.get("room_number"))
+        bookings = storage.all_get_by(Booking, room_id=room.id, is_reserve=True)
 
-    resarvation_error_msg = check_reservation(
-        bookings, checkout_date, checkin_date, room.number
-    )
-    if resarvation_error_msg:
-        return jsonify(resarvation_error_msg), 422
+        resarvation_error_msg = check_reservation(
+            bookings, checkout_date, checkin_date, room.number
+        )
+        if resarvation_error_msg:
+            return jsonify(resarvation_error_msg), 422
 
-    reserve_status = booking_data.get("is_reserve")
-    is_use = True if not reserve_status else False
+        reserve_status = booking_data.get("is_reserve")
+        is_use = True if not reserve_status else False
 
-    # Ensure that can't book room already in use 
-    if room.status == "occupied":
-        return jsonify({"error": f"Room {room.number} is occupied"}), 409
+        # Ensure that can't book room already in use 
+        if room.status == "occupied":
+            return jsonify({"error": f"Room {room.number} is occupied"}), 409
 
-    customer = Customer(**customer_data)
-    storage.new(customer)
-    customer.is_guest = True
-    storage.save()
-
-    book_attr = {
-        "checkin": checkin_date, "checkout": checkout_date,
-        "duration": booking_data.get("duration"), "is_reserve": reserve_status,
-        "is_paid": booking_data.get("is_paid"), "is_use": is_use,
-        "customer_id": customer.id, "checkin_by_id": user.id,
-        "guest_number": booking_data.get("guest_number"),
-        "room_id": room.id, "amount": booking_data.get("amount"),
-        "is_short_rest": booking_data.get("is_short_rest"),
-        "is_early_checkin": booking_data.get("is_early_checkin"),
-        "payment_type": booking_data.get("payment_type")
-    }
-
-    previous_room_sold = 0
-    receipt = sale = book = receipt = None
-
-    try:
-        room_status = "occupied" if not reserve_status else "reserved"
-        book = Booking(**book_attr)
-        storage.new(book)
-        room.status = room_status   # Cheange room status once book
+        customer = Customer(**customer_data)
+        storage.new(customer)
+        customer.is_guest = True
         storage.save()
 
-        #current_hour = datetime.now().hour
-        nigeria_time = datetime.now(pytz.timezone('Africa/Lagos'))
-        current_hour = nigeria_time.hour
+        book_attr = {
+            "checkin": checkin_date, "checkout": checkout_date,
+            "duration": booking_data.get("duration"), "is_reserve": reserve_status,
+            "is_paid": booking_data.get("is_paid"), "is_use": is_use,
+            "customer_id": customer.id, "checkin_by_id": user.id,
+            "guest_number": booking_data.get("guest_number"),
+            "room_id": room.id, "amount": room_data.get("room_amount"),
+            "is_short_rest": booking_data.get("is_short_rest"),
+            "is_early_checkin": booking_data.get("is_early_checkin"),
+            "payment_type": booking_data.get("payment_type")
+        }
 
-        if 0 <= current_hour <= constant.BOOKING_END_BY:
-            book.created_at -= timedelta(days=1)
+        previous_room_sold = 0
+        receipt = sale = book = receipt = None
 
-        # Create receipt for every booking.
-        receipt = create_receipt("booking_id", book.id)
-        storage.new(receipt)
+        try:
+            room_status = "occupied" if not reserve_status else "reserved"
+            book = Booking(**book_attr)
+            storage.new(book)
+            room.status = room_status   # Cheange room status once book
+            storage.save()
+            booking_id_list.append(book.id)
 
-        update_room_sold(booking_data.get("amount"))
+            #current_hour = datetime.now().hour
+            nigeria_time = datetime.now(pytz.timezone('Africa/Lagos'))
+            current_hour = nigeria_time.hour
 
-        storage.save()
-        return jsonify({
-            "booking_id": book.id, 
-            "is_reserve": book.is_reserve
-        }), 200
+            if 0 <= current_hour <= constant.BOOKING_END_BY:
+                book.created_at -= timedelta(days=1)
 
-    except Exception as e:
-        storage.delete_many([customer, book, receipt])
+            # Create receipt for every booking.
+            receipt = create_receipt("booking_id", book.id)
+            storage.new(receipt)
+    
+            update_room_sold(room_data.get("room_amount"))
 
-        if sale:
-            if sale.room_sold:
-                setattr(sale, "room_sold", previous_room_sold)
+            storage.save()
+            """
+            return jsonify({
+                "booking_id": book.id, 
+                "is_reserve": book.is_reserve
+            }), 200
+            """
 
-        if room:
-            room.status = "available"
+        except Exception as e:
+            storage.delete_many([customer, book, receipt])
 
-        storage.save()
-        print(str(e))
-        error = f"{CURRENT_TIME}\t{TODAY_DATE}\t{api_path}\t{str(e)}\n\n"
-        write_to_file(ERROR_LOG_FILE, error)
-        return jsonify({"error": str(e)}), 500
+            if sale:
+                if sale.room_sold:
+                    setattr(sale, "room_sold", previous_room_sold)
 
-    finally:
-        storage.close()
+            if room:
+                room.status = "available"
+
+            storage.save()
+            print(str(e))
+            error = f"{CURRENT_TIME}\t{TODAY_DATE}\t{api_path}\t{str(e)}\n\n"
+            write_to_file(ERROR_LOG_FILE, error)
+            #return jsonify({"error": str(e)}), 500
+
+    return jsonify({
+        "booking_id": book.id,
+        "booking_id_list": booking_id_list,
+        "is_reserve": book.is_reserve
+    }), 200
+    storage.close()
 
 
 @api_views.route("/bookings/<string:booking_id>/delete", methods=["DELETE"])

@@ -26,7 +26,7 @@
 
     <!-- Link Staff_dashboard CSS Files-->
     <link rel="stylesheet" type="text/css" href="/static/css/dashboard/room_service.css" />
-    <link rel="stylesheet" type="text/css" href="/static/css/dashboard/main_dashboard.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/dashboard/main_dashboard.css?V10" />
     <link rel="stylesheet" type="text/css" href="/static/css/dashboard/restaurant.css" />
     <link rel="stylesheet" type="text/css" href="/static/css/dashboard/order.css" />
     <link rel="stylesheet" type="text/css" href="/static/css/dashboard/empty_cart.css" />
@@ -47,12 +47,12 @@
     <script type="module" defer src="/static/js/dashboard/common.js"></script>
     <script type="module" defer src="/static/js/dashboard/constant.js"></script>
 
-    <script type="module" defer src="/static/js/dashboard/restaurant.js?v1"></script>
-    <script type="module" defer src="/static/js/dashboard/room_service.js"></script>
+    <script type="module" defer src="/static/js/dashboard/restaurant.js?v10"></script>
+    <script type="module" defer src="/static/js/dashboard/room_service.js?v10"></script>
     <script type="module" defer src="/static/js/dashboard/app.js?v2"></script>
-    <script type="module" defer src="/static/js/dashboard/main_dashboard.js?v3"></script>
+    <script type="module" defer src="/static/js/dashboard/main_dashboard.js?v10"></script>
     <script type="module" defer src="/static/js/dashboard/order.js?v1"></script>
-    <script type="module" defer src="/static/js/dashboard/guest.js"></script>
+    <script type="module" defer src="/static/js/dashboard/guest.js?10"></script>
     <script type="module" defer src="/static/js/dashboard/profile.js"></script>
     <script type="module" defer src="/static/js/dashboard/loan_request.js"></script>
     <script type="module" defer src="/static/js/dashboard/leave_request.js"></script>
@@ -235,7 +235,7 @@
 
                     <div class="performance">
                       <p>Performance <span class="percent"><em id="staff_performance-indexing"><!-- Staff performance dynamically loaded here --></em></span></p>
-		      <button class="track-btn ui heading size-headings" style="color: white;">View Roster</button>
+                      <button class="track-btn ui heading size-headings" style="color: white;">View Roster</button>
                     </div>
                   </div>
                 </div>
@@ -528,6 +528,46 @@
                 <div class="popup-modal-content sales__popup-modal-content">
                 </div>
               </div>
+
+              <!-- Popup Container -->
+              <div id="book__multiple-room" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 9999;">
+
+                <!-- Modal Content -->
+                <div style="max-height: 300px; overflow-y: scroll;background: white; padding: 20px; border-radius: 8px; width: 300px; position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
+
+                  <!-- Close Button -->
+                  <button onclick="document.getElementById('book__multiple-room').style.display='none'"
+                          style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 24px; cursor: pointer;">
+                    ×
+                  </button>
+
+                  <!-- Dropdown Area -->
+                  <div style="margin-top: 30px;">
+                    <!-- Trigger Button -->
+                    <button onclick="toggleDropdown()"
+                            style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 5px; background: #f5f5f5; cursor: pointer; text-align: left;">
+                      Select Options
+                    </button>
+
+                    <!-- Dropdown Content -->
+                    <div id="dropdown-content" style="display: none; margin-top: 10px; border: 1px solid #ccc; border-radius: 5px; padding: 10px; background: #fff;">
+                      <!-- This section will be dynamically loaded -->
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- JavaScript -->
+              <script>
+                function toggleDropdown() {
+                  const dropdown = document.getElementById("dropdown-content");
+                  dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+                }
+              </script>
+
+
+
             </section>
           </div>
         </div>
