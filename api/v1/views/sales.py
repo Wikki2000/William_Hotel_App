@@ -36,7 +36,7 @@ def get_sales(user_role: str, user_id: str):
 
     return jsonify([
         sale.to_dict()
-        for sale in sorted_sales
+        for sale in sorted_sales[:31]
     ]), 200
 
 
@@ -197,8 +197,17 @@ def get_sales_summary(
             stock_obj = storage.get_by(
                 stock_record_modal[service], **stock_record_param
             )
+
+            """
             opening_stock = stock_obj.opening_stock
             remaining_stock = stock_obj.opening_stock - total_qty
+            """
+            if stock_obj and stock_obj.opening_stock is not None:
+                opening_stock = stock_obj.opening_stock
+                remaining_stock = opening_stock - total_qty
+            else:
+                opening_stock = None
+                remaining_stock = None
 
         sales_list.append({
             "id": item_id,
