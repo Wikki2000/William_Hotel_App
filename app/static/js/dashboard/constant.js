@@ -5,3 +5,6 @@ window.LATE_CHECK_OUT_AMOUNT = 5000;
 window.LATE_CHECK_OUT_DURATION = '2';
 window.SHORT_TIME_DURATION = '2';
 window.HALF_DAY_DURATION = '6';
+window.INDEX_DB_STORES = ['html', 'image', 'drinks', 'data'];
+window.IS_ONLINE = true;
+window.DEFAULT_IMAGE = "/static/images/public/hotel_logo.png";

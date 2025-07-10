@@ -1,9 +1,10 @@
 import {
   bookingDuration, ajaxRequest, fetchData, compareDate,
   getFormattedDate, validateForm, updateElementCount, britishDateFormat,
-  showNotification, getBaseUrl, displayMenuList, canadianDateFormat
+  showNotification, getBaseUrl, displayMenuList, canadianDateFormat,
 } from '../global/utils.js';
 import { saleBreakdownModal } from '../global/templates1.js';
+import { loadDashbard } from './load_dashboard.js';
 
 
 function resetRoomDetails() {
@@ -36,47 +37,35 @@ $(document).ready(function() {
     $('#main__guest-id--type span').text(guestData.id_typ); 
   }
 
-  // Function to fetch rooms data
-  async function getRoom() {
-    try {
-      const url = API_BASE_URL + '/rooms';
-
-      // Fetch data only if not already fetched
-      const rooms = await $.get(url); 
-      if (!rooms) {
-        return;
-      }
-      const roomCounts = rooms.rooms_count;
-
-      // Update room stats in the UI
-      $('#main__room-available').text(roomCounts.total_available_room);
-
-      // Get sumnary of today's order
-      const today = canadianDateFormat(new Date());
-      const todayOrderUrl = API_BASE_URL + `/orders/${today}/${today}/get`;
-      const todayOrders = await $.get(todayOrderUrl)
-      $('#main__todays-order').text(todayOrders.orders.length);
-
-      // Get sumnary of today bookings
-      const todayBookingUrl = API_BASE_URL + `/bookings/${today}/${today}/get`;
-      const todayBookings = await $.get(todayBookingUrl)
-      $('#main__today-check--in').text(todayBookings.bookings.length);
-
-    } catch (error) {
-      console.error('An error occurred while retrieving rooms data:', error);
-    }
+  const sideBarClick = sessionStorage.getItem('pageId');
+  if (sideBarClick) {                
+    $(document).ready(function() {  
+      $(`#${sideBarClick}`).click();
+    });
   }
 
-  // Fetch rooms data when the page loads
-  (async () => {
-    await getRoom();
-  })();
+  $('#dynamic__load-dashboard').on("change", "#toggle-switch", function() {
+    const $element = $(this);
+
+    if (this.checked) {
+      $(".status").css("color", "green");
+      $("#toggle-state").text("Online");
+    } else {
+      $(".status").css("color", "#6c757d");
+      $("#toggle-state").text("Offline");
+    }
+  });
+
+  // Load Main Dashboard
+  const dashboardUrl = APP_BASE_URL + '/pages/main_dashboard';
+  $('#dynamic__load-dashboard').load(dashboardUrl, function() {
+    loadDashbard();
+  });
 
   // Reset room details once the date input field is click.
   $('#dynamic__load-dashboard').on('click', '#main__check-in, #main__checkout-date', function() {
     resetRoomDetails();
   });
-
 
   // This values are assign when handling switch case Room Number menu display.
   let CHECK_IN, CHECK_OUT, AMOUNT, DURATION;
@@ -131,9 +120,6 @@ $(document).ready(function() {
       customer: { gender, name, address, phone, id_type, id_number, email },
       room_number: AMOUNT
     };
-
-    console.log(BookingData);
-    //return;
 
     $('#main__popup-modal').css('display', 'flex');
 
@@ -227,10 +213,10 @@ $(document).ready(function() {
           } else if (bookingType === 'full time' && !$('#main__checkout-date').val()) {
             showNotification('Please enter Checkout date', true);
             return;
-          } /*else if ($('#main__check-in').val() < canadianDateFormat(new Date()) && bookingType === 'full time') {
+          } else if ($('#main__check-in').val() < canadianDateFormat(new Date()) && bookingType === 'full time') {
             showNotification('Check-in date must be earlier than today\'s date', true);
             return;
-          }*/
+          }
 
           fetchData(roomUrl)
           .then((rooms) => {
@@ -247,7 +233,6 @@ $(document).ready(function() {
             'click', '.order__menu',
             function() {
               const $clickItem = $(this);
-
               // Check if the clicked dropdown is within Room No. dropdown
               if ($(this).closest('.dropdown')
                 .find('#main__dropdown--room-no').length) {
@@ -320,7 +305,7 @@ $(document).ready(function() {
                         $('#main__id--bookingtype-val').val().toLowerCase() === 'short time'
                       ) {
                         tempAmt = SHORT_REST_AMOUNT;
-                        $('#main__night-count').val('2 Hours');
+                        $('#main__night-count').val(`${SHORT_TIME_DURATION} Hours`);
                       } else {
                         $('#main__night-count').val(`${DURATION} Night(s)`); 
                       }
@@ -563,7 +548,7 @@ $(document).ready(function() {
             $('#main__night-count').val(`${DURATION} Night(s)`);
           }
 
-         totalAmountList.push({room_number: room.roomNumber, room_amount: tempAmount});
+          totalAmountList.push({room_number: room.roomNumber, room_amount: tempAmount});
         });
 
         const accumulatedAmt = totalAmountList.reduce((acc, val) => acc + val.room_amount, 0);
@@ -634,4 +619,14 @@ $(document).ready(function() {
     sessionStorage.setItem('pageId', 'roster')
     window.open(url, '_blank');
   });
+
+  $('#dynamic__load-dashboard')
+    .on("click", "#main__room-available--view", function() {
+      $("#sidebar__Room").click();
+    });
+
+  $('#dynamic__load-dashboard')
+    .on("click", "#main__orders-view", function() {
+      $("#sidebar__ordes").click();
+    });
 });

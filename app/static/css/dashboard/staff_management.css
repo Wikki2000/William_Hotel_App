@@ -15,6 +15,10 @@
   td:nth-child(5) {
     padding-left: 10px;
   }
+  td {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
 }
 
 #staff__loan-list #staff__loan-table--body tr {

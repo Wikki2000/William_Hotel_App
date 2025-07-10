@@ -15,7 +15,7 @@
         <h3 id="all__rooms" class="tab__item-2 ui heading size-texts filter highlight-btn">All Rooms</h3>
         <h3 id="rooms__available" class="tab__item-2 ui heading size-texts filter">Available</h3>
         <h4 id="rooms__occupied" class="tab__item-2 ui heading size-texts filter">Occupied</h4>
-        <h5 id="rooms__reserved" class="tab__item-2 ui heading size-texts filter">Reserved</h5>
+	<!--<h5 id="rooms__reserved" class="tab__item-2 ui heading size-texts filter">Reserved</h5>-->
       </div>
       <h6 class="info-text ui heading size-texts">All Rooms come with a complementary breakfast!</h6>
     </div>
@@ -58,18 +58,18 @@
       <h2 id="room__action-edit--add"><!-- Edit or Add title goes here --></h2>
       <div class="room_img">
         <img
-          src="/static/images/public/profile_photo_placeholder.png"
+	  src="/static/images/public/hotel_logo.png"
           alt="Hotel Room Photo"
           class="room__image room__edit-icon"
           id="add__new-room"
           />
         <div class="edit">
-          <img
+          <!--<img
             src="/static/images/public/edit_icon.png"
             alt="Edit Icon"
             class="room__edit-icon"
             id="room__image-selector"
-            />
+	    />-->
           <!-- Triggered when profile image is clicked -->
           <input type="file" style="display: none;" id="room__image-fileInput" accept="image/*"  />
 
@@ -127,12 +127,12 @@
       <button id="guest__extend-stay" class="tab__item ui heading size-headingxs highlight-btn">
         Extend by Night(s)
       </button>
-      <button id="half__day-booking" class="tab__item ui heading size-headingxs highlight-btn">
+      <!--<button id="half__day-booking" class="tab__item ui heading size-headingxs highlight-btn">
         Extend by Half Day
       </button>
       <button id="late__checkout" class="tab__item ui heading size-headingxs highlight-btn">
         Late Checkout
-      </button>
+      </button>-->
     </div><br />
     <div class="room__details">
       <div>
@@ -308,7 +308,7 @@
 	    id="guest__extendday-payMethod"
 	    class="guest__extendday-payMethod-btn drop-down"
 	  >
-            <span>Select </span>
+            <span id="selected__payment-type-option">Select </span>
             <img src="/static/images/public/img_arrow_down_black_900_01.svg" width="15px" alt="dropdown" />
           </div>
           <div class="dropdown-menu" id="guest__extendday-payMethod--dropdown">             

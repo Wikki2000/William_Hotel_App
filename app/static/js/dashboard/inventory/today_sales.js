@@ -1,6 +1,6 @@
 import {
-  getBaseUrl, closeConfirmationModal,
-  showNotification, fetchData, canadianDateFormat,
+  getBaseUrl, closeConfirmationModal, confirmationModal,
+  showNotification, fetchData, canadianDateFormat, ajaxRequest,
   togleTableMenuIcon, updateElementCount, getQueryParam
 } from '../../global/utils.js';
 
@@ -12,6 +12,7 @@ import {
 $(document).ready(function() {
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
   const APP_BASE_URL = getBaseUrl()['appBaseUrl'];
+  const USER_ROLE = localStorage.getItem('role');
 
   const service = getQueryParam('service');
   const date = canadianDateFormat(new Date());
@@ -27,21 +28,25 @@ $(document).ready(function() {
           let description = '', time;
           if (sale.booking.is_short_rest) {
             description ='Short Time';
-	    time = 'Hours';
+            time = 'Hours';
           } else if (sale.booking.is_late_checkout) {
             description ='Late Checkout';
-	     time = 'Hours';
+            time = 'Hours';
           } else if (sale.booking.is_half_booking) {
-	    description ='Half Day';
-	    time = 'Hours';
-	  } else {
+            description ='Half Day';
+            time = 'Hours';
+          } else {
             description ='Full Time';
-	    time = 'Night(s)';
+            time = 'Night(s)';
           }
+
+          const roomName = sale.room ? sale.room.name : "Deleted Room";
+          const roomNumber = sale.room ? sale.room.number : "xxx";
+
           $('.sales-table-body').append(dailyServiceSaleTableTemplate(
             index, sale.booking.id, sale.booking.is_paid, sale.guest.name,
-            `${sale.room.name} (${sale.room.number}) ${description}`,
-	    `${sale.booking.duration} ${time}`, sale.booking.amount, true
+            `${roomName} (${roomNumber}) ${description}`,
+            `${sale.booking.duration} ${time}`, sale.booking.amount, true
           ));
         });
       })
@@ -64,6 +69,7 @@ $(document).ready(function() {
   fetchData(url)
     .then((data) => {
       data.forEach((sale, index) => {
+	      console.log(sale)
         $('.sales-table-body').append(dailyServiceSaleTableTemplate(
           index, sale.order_id, sale.is_paid, sale.customer,
           sale.item_name, sale.quantity, sale.amount, false
@@ -72,6 +78,56 @@ $(document).ready(function() {
     })
     .catch((error) => {
       console.log(error);
+    });
+
+  // Show delete icon when hover on a particular row.
+  /*
+  $("#sales-table-body").on("mouseenter", "tr, .delete__cell", function() {
+    if (USER_ROLE !== "staff") {
+      $(this).find(".fa-trash.daily__sale-delete").css("visibility", "visible");
+    }
+  });*/
+
+  // Hide delete icon when hover on a particular row.
+  /*
+  $("#sales-table-body").on("mouseleave", "tr, .delete__cell", function() {
+    $(this).find(".fa-trash.daily__sale-delete").css("visibility", "hidden");
+  });*/
+
+
+  // Cancel deletion of order.
+  $("body").on("click", ".cancel-btn", function() {
+    closeConfirmationModal();
+  });
+
+  $("#sales-table-body")
+    .off("click", ".fa-trash")
+    .on("click", ".fa-trash", function() {
+      const id = $(this).data("id");
+
+      const headingText = 'Confirm Removal of Order';
+      const descriptionText = 'This action cannot be undone !'
+      const confirmBtCls = 'order__delete-confirmBtn';
+
+      confirmationModal(headingText, descriptionText, confirmBtCls);
+
+
+      $('body').off('click', '.order__delete-confirmBtn')
+        .on('click', '.order__delete-confirmBtn', function() {
+          const deleteOrderUrl = API_BASE_URL + `/orders/${id}/delete`;
+
+          closeConfirmationModal();
+
+          ajaxRequest(deleteOrderUrl, 'DELETE', null,
+            (response) => {
+              $(`tr[data-id="${id}"]`).remove();
+              showNotification(`Order Deleted successfully !`);
+            },
+            (error) => {
+              console.log(error);
+            }
+          );
+        });
     });
 
 });

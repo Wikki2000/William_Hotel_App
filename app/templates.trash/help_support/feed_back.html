@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Give Feedback - Wuventory</title>
+  <link rel="icon" type="image/x-icon" href="/static/images/public/hotel_logo.png" />
+
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script type="module" src="/static/js/dashboard/contact_feedback_message.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background-color: #fffdfb;
+      color: #333;
+    }
+
+    .feedback-container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .feedback-container h1 {
+      text-align: center;
+      color: #e67e22;
+      margin-bottom: 30px;
+    }
+
+    .back-arrow {
+      display: inline-block;
+      margin-bottom: 20px;
+      font-size: 18px;
+      color: #e67e22;
+      cursor: pointer;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .back-arrow:hover {
+      color: #c56e00;
+    }
+
+    .feedback-form {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .feedback-form input, .feedback-form textarea {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+      box-sizing: border-box;
+      transition: border-color 0.3s;
+    }
+
+    .feedback-form textarea {
+      height: 150px;
+    }
+
+    .feedback-form input:focus, .feedback-form textarea:focus {
+      border-color: #e67e22;
+      outline: none;
+    }
+
+    .feedback-form button {
+      background-color: #e67e22;
+      color: #fff;
+      font-size: 16px;
+      padding: 15px 25px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .feedback-form button:hover {
+      background-color: #c56e00;
+    }
+
+    .thank-you-message {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 18px;
+      color: #4CAF50;
+    }
+
+  </style>
+</head>
+<body>
+
+  <section class="feedback-container">
+    <!-- Back Arrow -->
+    <a href="javascript:history.back()" class="back-arrow">← Back</a>
+
+    <h1>Give Feedback</h1>
+
+    <!-- Feedback Form -->
+    <div class="feedback-form" id="feedbackFormBox">
+      <form id="feedbackForm">
+        <!--<input type="text" name="name" placeholder="Your Name (Optional)" />
+        <input type="email" name="email" placeholder="Your Email (Optional)" />-->
+        <textarea name="message" placeholder="Your Feedback" required></textarea>
+        <button type="submit">Submit Feedback</button>
+      </form>
+    </div>
+
+    <!-- Thank You Message with Image -->
+    <div class="thank-you-message" id="thankYouMessage" style="display: none;">
+       🎉 Thank you for your feedback! We appreciate your input.
+    </div>
+  </section>
+
+  <script>
+    document.getElementById('feedbackForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      document.getElementById('feedbackFormBox').style.display = 'none';
+      document.getElementById('thankYouMessage').style.display = 'block';
+    });
+  </script>
+
+</body>
+</html>
+

@@ -6,7 +6,7 @@
   margin: 1rem;
   white-space: nowrap;
   overflow-y: auto;
-  height: 600px;
+  height: 700px;
 }
 
 div[class="card"] {
@@ -95,8 +95,13 @@ div[class="card"] {
   border-radius: 50%;
 }
 
+.status {
+  color: green;
+}
+
 input:checked + .slider {
-  background-color: #ffa500;
+  #background-color: #ffa500;
+  background-color: green;
 }
 
 input:checked + .slider:before {

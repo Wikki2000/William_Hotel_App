@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Subscription Required | Wiventory - Smart Business Platform</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="icon" type="image/x-icon" href="/static/images/public/hotel_logo.png" />
+  <style>
+    :root {
+      --primary-color: orange; /* Wiventory Orange */
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .container {
+      text-align: center;
+      background: #fff;
+      padding: 40px 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+      max-width: 420px;
+      width: 90%;
+    }
+
+    .logo {
+      max-width: 100px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+    }
+
+    .title {
+      font-size: 22px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 12px;
+    }
+
+    .message {
+      font-size: 15px;
+      color: #555;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    .btn-renew {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 10px 20px;
+      font-size: 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      margin-bottom: 15px;
+    }
+
+    .btn-renew:hover {
+      background-color: #e65c00;
+    }
+
+    .support-box {
+      font-size: 14px;
+      color: #444;
+      line-height: 1.6;
+      margin-top: 10px;
+    }
+
+    .support-box i {
+      margin-right: 6px;
+      color: var(--primary-color);
+    }
+
+    .contact-link {
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+
+    .contact-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Replace with your actual logo path -->
+    <img src="/static/images/public/hotel_logo.png" alt="Wiventory Logo" class="logo"/>
+
+    <div class="title">Subscription Inactive</div>
+
+    <div class="message">
+      Your Wiventory subscription has expired or is inactive.<br/>
+      Please renew to continue accessing your account.
+    </div>
+
+    <!--<a href="/renew-subscription" class="btn-renew">
+      <i class="fas fa-undo-alt"></i> Renew Subscription
+    </a>-->
+
+    <div class="support-box">
+      <p><i class="fas fa-envelope"></i>
+        <a href="mailto:support@wiventory.com" class="contact-link">support@wiventory.com</a>
+      </p>
+      <p><i class="fas fa-phone-alt"></i>
+        <a href="tel:+2348100143154" class="contact-link">+234 810 014 3154</a>
+      </p>
+    </div>
+  </div>
+
+</body>
+</html>
+

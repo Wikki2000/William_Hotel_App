@@ -102,3 +102,17 @@
 
 02:33 PM	2025-06-25	/api/v1/bookings/["01402f8d-c529-4206-996d-44976ae6a81e","1c7770d7-68db-4fc9-abfc-e10e91edd188"]/multiple-bookings-details	'NoneType' object has no attribute 'room'
 
+01:08 AM	2025-07-10	/api/v1/order-items	name 'DailyFoodStock' is not defined
+
+01:12 AM	2025-07-10	/api/v1/order-items	name 'is_duplicate_order' is not defined
+
+01:14 AM	2025-07-10	/api/v1/order-items	name 'hotel_id' is not defined
+
+01:15 AM	2025-07-10	/api/v1/order-items	name 'hotel_id' is not defined
+
+01:16 AM	2025-07-10	/api/v1/order-items	name 'NIGERIA_TZ' is not defined
+
+01:17 AM	2025-07-10	/api/v1/order-items	name 'and_' is not defined
+
+01:18 AM	2025-07-10	/api/v1/order-items	name 'hotel_id' is not defined
+

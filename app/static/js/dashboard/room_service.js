@@ -503,10 +503,7 @@ $(document).ready(function () {
         $('#late__checkout-ispaid span').text('Selected');
         $('#guest__paymentMethod-menu--selected').val(''); 
 	$('#late__checkout-payMethod span').text('Selected');
-        /*
-      $clickItem.addClass('highlight-btn');
-      $clickItem.siblings().removeClass('highlight-btn');
-      */
+	$("#option__display").text('Selected');
 
         if (clickId  === 'guest__extend-stay') {
           $('#guest__extend-stay--modal').css('display', 'flex');

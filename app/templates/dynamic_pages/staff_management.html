@@ -196,6 +196,7 @@
                 </div>
                 <div id="profile__role-dropdown" class="dropdown-menu">
                   <ul class="order__dropdown--menu-list">
+		    <li class="table__header-cell-1 ui heading size-headings profile__dropdown-selector dropdown-item">Admin</li>
                     <li class="table__header-cell-1 ui heading size-headings profile__dropdown-selector dropdown-item">Manager</li>
                     <li class="table__header-cell-1 ui heading size-headings profile__dropdown-selector dropdown-item">Staff</li>
                   </ul>
@@ -219,9 +220,9 @@
 
           <div class="combo-flex">
             <div class="input-label-combo">
-              <label for="edit-performance">Performance
+	      <label for="edit-performance">Performance <span>*</span>
               </label>
-              <input type="number" min="0" max="100" name="performance" />
+              <input type="number" min="0" max="100" name="performance" placeholder="e.g., 60" required />
             </div>
             <div class="input-label-combo">
               <label for="edit-phone">Phone Number</label>
@@ -274,7 +275,7 @@
             </div>
             <div class="input-label-combo">
               <label for="rank_number">Rank Number  <span>*</span></label>
-              <input type="number" min="0" name="rank_number" required />
+              <input type="number" min="0" name="rank_number" required placeholder="e.g., 5"/>
             </div>
           </div>
 
@@ -286,6 +287,7 @@
           <!-- Hidden field to store user field -->
           <input name="role" type="hidden" required />
           <input name="id" type="hidden" />
+	  <input id="guest__add-editUpdate" type="hidden"/>
         </form>
       </div>
     </div>

@@ -13,7 +13,7 @@ from api.v1.views import api_views
 from api.v1.views.utils import (
     bad_request, create_receipt, role_required, nigeria_today_date,
     update_item_stock, rollback_order_on_error, update_sales_data,
-    write_to_file, update_room_sold, get_url_param
+    write_to_file, update_room_sold, get_url_param, is_duplicate_order
 )
 from api.v1.views import constant
 from models import storage
@@ -157,6 +157,43 @@ def get_order(user_role: str, user_id: str, order_id: str):
         return jsonify({"error": str(e)}), 500
     finally:
         storage.close()
+
+
+@api_views.route("/orders/<string:order_id>/delete", methods=["DELETE"])
+@role_required(["admin"])
+def delete_order(user_id: str, user_role: str, order_id: str):
+    """Delete customer order."""
+    order = storage.get_by(OrderItem, id=order_id)
+    print(order)
+    if not order:
+        abort(404)
+
+    sale_date = order.created_at.strftime("%Y-%m-%d")
+    order_amount = order.amount
+
+    today_sale = storage.get_by(Sale, entry_date=sale_date)
+
+    if order.drink_id:
+        today_sale.drink_sold -= order_amount
+    if order.food_id:
+        today_sale.food_sold -= order_amount
+    if order.game_id:
+        today_sale.game_sold -= order_amount
+    if order.laundry_id:
+        today_sale.laundry_sold -= order_amount
+
+    # Subtract from grand total order
+    total_order = order.order
+    total_order.amount -= order_amount
+
+    # Delete order if no order items attach to it.
+    if total_order.amount == 0:
+        storage.delete(total_order)
+
+    storage.delete(order)
+    storage.save()
+    storage.close()
+    return jsonify({"message": "Order Remove Successfully"}), 201
 
 
 @api_views.route("/orders/<string:order_id>/update-payment", methods=["PUT"])
@@ -327,6 +364,20 @@ def order_items(user_role: str, user_id: str):
     item_sold = None
 
     try:
+        # Check for possible duplicate order.
+        sess = storage.session
+        verify_duplicate = data.get("isDuplicateOrder")
+        if not verify_duplicate:
+            is_duplicate = is_duplicate_order(
+                sess, customer_data.get("name"),
+                user_id, order_data.get("amount"),
+                order_data.get("payment_type"),
+                Customer, Order,
+            )
+            if is_duplicate:
+                return jsonify({"error": "Duplicate Order"}), 409
+        sess.close()
+
         user = storage.get_by(User, id=user_id)
         customer = storage.get_by(Customer, id=data.get("customer_id"))
 
@@ -371,8 +422,6 @@ def order_items(user_role: str, user_id: str):
         return jsonify({"order_id": new_order.id}), 200
 
     except ValueError as e:
-        print("Value Error Occcur")
-        print(prev_sales)
         storage.rollback()
         rollback_order_on_error(new_order, item_sold, prev_sales)
         storage.save()
@@ -389,22 +438,3 @@ def order_items(user_role: str, user_id: str):
 
     finally:
         storage.close()
-
-
-@api_views.route("/orders/<string:order_id>/delete", methods=["DELETE"])
-@role_required(["admin"])
-def delete_order(user_id: str, user_role: str, order_id: str):
-    """Delete customer order."""
-    order = storage.get_by(Order, id=order_id)
-    if not order:
-        abort(404)
-
-    sale_date = order.created_at.strftime("%Y-%m-%d")
-    old_amount=order.amount
-    today_sale = storage.get_by(Sale, entry_date=sale_date)
-    #today_sale
-
-    storage.delete(order)
-    storage.save()
-    storage.close()
-    return jsonify({"message": "Order Remove Successfully"}), 201

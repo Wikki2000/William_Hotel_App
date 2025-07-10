@@ -9,6 +9,8 @@ from models.sale import Sale
 from models.order_item import OrderItem
 from models.drink import Drink
 from models.food import Food
+from models.daily_drink_stock import DailyDrinkStock
+from models.daily_food_stock import DailyFoodStock
 from models.game import Game
 from models.laundry import Laundry
 from models.room import Room
@@ -166,6 +168,11 @@ def get_sales_summary(
         "room": Room
     }
 
+    stock_record_modal = {
+        "drink": DailyDrinkStock,
+        "food": DailyFoodStock
+    }
+
     if not service in services:
         raise ValueError("Invalid Service Type")
 
@@ -175,21 +182,36 @@ def get_sales_summary(
     )
     if not sales:
         return jsonify([]), 200
-    
+
+    opening_stock, remaining_stock = None, None
     sales_list = []
     for item_id, total_amount, total_qty in sales:
         cls = services[service]
         service_obj = storage.get_by(cls, id=item_id)
+
+        if service in stock_record_modal:
+            stock_record_param = {
+                f"{service}_id": item_id,
+                "date": start_date_obj
+            }
+            stock_obj = storage.get_by(
+                stock_record_modal[service], **stock_record_param
+            )
+            opening_stock = stock_obj.opening_stock
+            remaining_stock = stock_obj.opening_stock - total_qty
+
         sales_list.append({
             "id": item_id,
             "name": service_obj.name,
+            "unit_price": service_obj.amount,
+            "opening_stock": opening_stock,
+            "remaining_stock": remaining_stock,
             "quantity": total_qty,
             "amount": total_amount
         })
-        
+
     storage.close()
     return jsonify(sales_list), 200
-
 
 
 @api_views.route("/sales/<string:sale_id>/approve-sale", methods=["PUT"])

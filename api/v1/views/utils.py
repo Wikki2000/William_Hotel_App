@@ -15,18 +15,21 @@ from redis import Redis
 from models.private_message import PrivateMessage
 from models.receipt import Receipt
 from models.sale import Sale
+from models.daily_drink_stock import DailyDrinkStock
+from models.daily_food_stock import DailyFoodStock
 import base64
 from datetime import date, datetime, timedelta
 import pytz
 from calendar import monthrange
 from dateutil.relativedelta import relativedelta
 from api.v1.views import constant
-from sqlalchemy import case, func
+from sqlalchemy import case, func, and_
 
 
 r = Redis(host="localhost", port=6379, db=0)  # Create Redis instance
 load_dotenv()   # Load environ variables
 F = TypeVar("F", bound=Callable[..., any])  # Generic type for callable
+NIGERIA_TZ = pytz.timezone('Africa/Lagos')
 
 
 # =================================================== #
@@ -237,6 +240,29 @@ from models.drink import Drink
 from models.order_item import OrderItem
 
 
+def record_opening_stock(item_type, item_id, stock_qty):
+    """Record Opening Stock"""
+    today = date.today()
+
+    stocks = {
+        "food": {"model": DailyFoodStock, "id_field": "food_id"},
+        "drink": {"model": DailyDrinkStock, "id_field": "drink_id"}
+    }
+
+    id_field = stocks[item_type]["id_field"]
+    param = {
+        id_field: item_id,
+        "date": today
+    }
+
+    id_field = stocks[item_type]["id_field"]
+    stock_record_obj = storage.get_by(stocks[item_type]["model"], **param)
+    if not stock_record_obj:
+        attr = {id_field: item_id, "opening_stock": stock_qty}
+        new_stock_record = stocks[item_type]["model"](**attr)
+        storage.new(new_stock_record)
+
+
 def update_item_stock(item, customer, new_order, item_sold):
     """Update stock levels and sales records based on item type."""
 
@@ -263,6 +289,7 @@ def update_item_stock(item, customer, new_order, item_sold):
         if stock_item.qty_stock < item_qty:
             raise ValueError(f"{stock_item.name} low in stock ({stock_item.qty_stock} available)")
         original_stock_qty = stock_item.qty_stock
+        record_opening_stock(item_type, item_id, original_stock_qty)
 
     original_sales = {}
     if sales_field:
@@ -273,7 +300,6 @@ def update_item_stock(item, customer, new_order, item_sold):
         stock_item.qty_stock -= item_qty
 
     # Update sales
-    print(sales_field)
     if sales_field:
         safe_original = original_sales.get(sales_field) or 0
         setattr(item_sold, sales_field, safe_original + item_amount)
@@ -423,8 +449,7 @@ def update_room_sold(new_amount, old_amount=0, date=None):
 
 
 def nigeria_today_date():
-    nigeria_tz = pytz.timezone('Africa/Lagos')
-    nigeria_date = datetime.now(nigeria_tz).date()
+    nigeria_date = datetime.now(NIGERIA_TZ).date()
     return nigeria_date
 
 
@@ -515,3 +540,44 @@ def get_url_param(url_query):
     return kwargs
 
 
+def is_duplicate_order(
+    session, name: str, user_id: str, amount: float,
+    payment_type: str, CustomerModel, OrderModel
+) -> bool:
+    """
+    Checks if a duplicate order has been placed within the last 30 seconds
+    by a customer with the given name, amount, and payment type.
+
+    Args:
+        session (Session): The SQLAlchemy database session.
+        name (str): Customer name.
+        amount (float): Order amount.
+        payment_type (str): Payment method.
+        CustomerModel: SQLAlchemy model for Customer.
+        OrderModel: SQLAlchemy model for Order.
+
+    Returns:
+        bool: True if a duplicate order exists, False otherwise.
+    """
+    time_threshold = datetime.now(NIGERIA_TZ) - timedelta(seconds=60)
+
+    duplicate = session.query(OrderModel).join(CustomerModel).filter(
+        and_(
+            CustomerModel.name == name,
+            OrderModel.amount == amount,
+            OrderModel.payment_type == payment_type,
+            OrderModel.created_at >= time_threshold,
+            #OrderModel.ordered_by_id == user_id
+        )
+    ).first()
+
+    return duplicate is not None
+
+
+def add_substract_from_date(date_obj, num_of_days, is_add=True):
+    new_date = None
+    if is_add:
+        new_date = date_obj + timedelta(days=num_of_days)
+    else:
+        new_date = date_obj - timedelta(days=num_of_days)
+    return new_date

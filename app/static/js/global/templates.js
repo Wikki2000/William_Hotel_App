@@ -13,7 +13,7 @@ export function roomTableTemplate(room, statusClass, isStaff = false, roomStatus
   // Create the table row HTML
   const defaultRoomImage = '/static/images/public/default_room_img.png';
   const image = (
-    room.image ? 'data:image/;base64, ' + room.image : room.image_path
+    room.image ? 'data:image/;base64, ' + room.image_path : DEFAULT_IMAGE
   );
   const hideClass = isStaff ? 'hide' : '';
   const row = `<tr data-id="${room.id}">
@@ -25,7 +25,7 @@ export function roomTableTemplate(room, statusClass, isStaff = false, roomStatus
 
     <td>
       <div class="room-info">
-        <p class="ui text size-textmd">${room.name}</p>
+        <p class="ui text size-textmd">${room.name.toUpperCase()}</p>
         <p class="room-number-1 ui heading size-textlg">#${room.number}</p>
       </div>
     </td>
@@ -110,7 +110,7 @@ export function foodDrinkTemplate(id, name, type, amount, image_path) {
 
 export function gameTemplate(data) {
   const row = `<div class="food-item">
-    <img src="data:image/;base64, ${data.image}" alt="Food Image" class="food-img" />
+    <img src="${DEFAULT_IMAGE}" alt="Food Image" class="food-img" />
     <h3 class="food-title">${data.name}</h3>
     <p>Price: ₦${data.amount.toLocaleString()}</p>
     <button
@@ -126,7 +126,7 @@ export function gameTemplate(data) {
 export function laundryTableTemplate(data) {
 
   const row = `<div class="food-item">
-    <img src="${data.image}" alt="Clothe Image" class="food-img" />
+    <img src="${DEFAULT_IMAGE}" alt="Clothe Image" class="food-img" />
     <h3 class="food-title">${data.name}</h3>
     <p>Price: ₦${data.amount.toLocaleString()}</p>
     <button
@@ -298,6 +298,8 @@ export function guestListTableTemplate(guest, booking, room, date) {
 
   const hideClass = booking.is_reserve && userRole != 'staff' ? '' : 'none';
   const showToAdminOnly = userRole === 'admin' ? '' : 'hide';
+  const roomNumber = room ? room.number : "xxx";
+  const roomName = room ? room.name : "Deleted Room";
 
   const row = `<tr data-id="${booking.id}">
     <td class="guest-name">
@@ -307,8 +309,8 @@ export function guestListTableTemplate(guest, booking, room, date) {
     </td>
     <td class="">
       <div class="room-info">
-        <p class="ui text size-textmd">${room.name}</p>
-        <p class="room-number-1 ui heading size-textlg">#${room.number}</p>
+        <p class="ui text size-textmd">${roomName}</p>
+        <p class="room-number-1 ui heading size-textlg">#${roomNumber}</p>
       </div>
     </td>
     <td class="">
@@ -499,8 +501,8 @@ export function staffListTemplate(data) {
   const row = `<tr data-id="${data.id}">
     <td class="staff__name">
     <div>
-      <p class="ui text size-textmd left-margin first_name">${data.first_name}</p>
-      <p class="ui text size-textmd left-margin last_name">${data.last_name}</p>
+      <p class="ui text size-textmd left-margin first_name">${data.first_name} ${data.last_name}</p>
+      <!--<p class="ui text size-textmd left-margin last_name">${data.last_name}</p>-->
     </div>
     <span style="background-color: ${activeColor}" class="staff__status"></span>
     </td>

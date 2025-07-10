@@ -46,8 +46,22 @@ def extend_guest_stay(user_role: str, user_id: str, room_id, customer_id):
     if resarvation_error_msg:
         return jsonify(resarvation_error_msg), 422
 
+    # Ensure that u don't book when current booking not expured.
+    print(TODAY_DATE, type(TODAY_DATE))
+    main_bookings = storage.all_get_by(Booking, room_id=room_id, is_use=True)
+    if not data.get("is_late_checkout"):
+        for booking in main_bookings:
+            if TODAY_DATE <= booking.checkout:
+                error_msg = (
+                    "The Extension start date must be after current booking's"
+                    + f" checkout date. This booking ends on {booking.checkout}"
+                )
+                return jsonify({"error": error_msg}), 409
+
     data.update({
-        "room_id": room_id, "customer_id": customer_id, "checkin_by_id": user_id,
+        "room_id": room_id,
+        "customer_id": customer_id,
+        "checkin_by_id": user_id,
     })
 
     book = None
@@ -59,7 +73,8 @@ def extend_guest_stay(user_role: str, user_id: str, room_id, customer_id):
         storage.save()
 
         nigeria_time = datetime.now(pytz.timezone('Africa/Lagos'))
-        current_hour = nigeria_time.hour                                                                                                                                
+        current_hour = nigeria_time.hour
+
         if 0 <= current_hour <= constant.BOOKING_END_BY:
             book.created_at -= timedelta(days=1)
 

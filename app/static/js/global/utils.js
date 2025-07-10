@@ -203,11 +203,12 @@ export function compareDate(serverDate) {
  * @param {function} onSuccess - Callback function to execute if the request succeeds.
  * @param {function} onError - Callback function to execute if the request fails.
  */
-export function ajaxRequest(url, method, data = {}, onSuccess, onError) { $.ajax({
+export function ajaxRequest(url, method, data = {}, onSuccess, onError, timeout = 5000) { $.ajax({
   url: url,
   method: method,
   contentType: 'application/json',
   data: method == 'POST' || method == 'PUT' ? data : null,
+  timeout: timeout,
   success: onSuccess,
   error: onError,
 });
@@ -502,4 +503,67 @@ export function getActualAmount(amountStr, replaceBy = ['₦', ',']) {
 export function closePaymentModal() {
   $('#order__update-payment-method').empty();
   $('#order__update-payment-method').hide();
+}
+
+export async function renderReceiptData(cache) {
+
+  function displayData(hotel) {
+    $("#hotelWebsite").text(hotel?.website === "null" ? "" : hotel?.website);
+    $("#hotelLocation").text(hotel?.address);
+    $(".hotelName").text(hotel?.name);
+    $("#hotelLogo").attr("src", `data:image/;base64, ${hotel?.logo}`);
+    $('#hotelContactInfo').html(`☎️ 0${hotel?.contact} |  📧 ${hotel?.email}`);
+  }
+
+  const API_BASE_URL = getBaseUrl()['apiBaseUrl'];
+  const url = API_BASE_URL + '/hotels';
+  const hotel = await cache.get_by("data", { id: "hotel" });
+
+  if (hotel) {
+    displayData(hotel);
+  } else {
+    fetchData(url)
+      .then((response) => {
+        displayData(response);
+        cache.save_one('data', { id: 'hotel', value: response });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+}
+
+export function formatedTime(isoString) {
+  const now = new Date(isoString);
+  let hours = now.getHours();
+  const minutes = now.getMinutes();
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+
+  hours = hours % 12 || 12; // Convert to 12-hour format and handle midnight (0 -> 12)
+  const formattedMinutes = minutes < 10 ? '0' + minutes : minutes; // Add leading zero if needed
+
+  const formattedTime = hours + ':' + formattedMinutes + ' ' + ampm;
+  return formattedTime;
+}
+
+export function getHtmlTemplate(
+  $selector = $('#dynamic__load-dashboard')
+) {
+  const loadedHtml = $selector.html();
+  return loadedHtml;
+}
+
+export function restoreOnline() {
+  $(".status").css("color", "green");
+  $("#toggle-state").text("Online");
+  $("#toggle-switch").prop("checked", true);
+  $("#offline__banner").hide();
+}
+
+export function restoreOffline() {
+  $("#toggle-state").text("Offline");
+  $(".status").css("color", "#6c757d");
+  $("#toggle-switch").prop("checked", false);
+  $(".close__btn").hide();
+  $("#offline__banner").show();
 }

@@ -6,8 +6,9 @@ import {
 } from '../../global/utils.js';
 
 import {
-  expenditureTableTemplate, inventoryFilterTemplate, gameTableTemplate,
-  drinkTableTemplate, salesTableTemplate, foodTableTemplate
+  expenditureTableTemplate, inventoryFilterTemplate,
+  gameLaundryTableTemplate, drinkTableTemplate, 
+  salesTableTemplate, foodTableTemplate
 } from '../../global/templates1.js';
 
 $(document).ready(function() {
@@ -27,10 +28,10 @@ $(document).ready(function() {
       $clickItem.addClass('highlight__inventory-cart');
 
 
-	    // Hide to add new stock from manager.
-	    if (USER_ROLE === 'manager') {     
-		    $('.stock__item-heading').hide();         
-	    } 
+      // Hide to add new stock from manager.
+      if (USER_ROLE === 'manager') {     
+        $('.stock__item-heading').hide();         
+      } 
 
       hideAllInventoryDashboard();
       $('.inventory__filter').empty();
@@ -98,7 +99,9 @@ $(document).ready(function() {
           $('input[name="Search Input"]')
           .attr('placeholder', 'Search for Food Name');
 
+          $("#current__stock-cart").val("food");
           sessionStorage.setItem('pageId', 'inventoryFoodList');
+		$("#only__food-drink-field").show();
 
           const foodUrl = API_BASE_URL + '/foods';
           fetchData(foodUrl)
@@ -122,9 +125,11 @@ $(document).ready(function() {
           $('#drink__stock-list').show();
           const drinkUrl = API_BASE_URL + '/drinks';
           $('#drink__stock-table--body').empty();
+		$("#only__food-drink-field").show();
 
           // To be used by search bar to search for item depending on the page
           sessionStorage.setItem('pageId', 'inventoryDrinkList');
+          $("#current__stock-cart").val("drink");
           $('input[name="Search Input"]')
           .attr('placeholder', 'Search for Drink Name');
 
@@ -147,18 +152,49 @@ $(document).ready(function() {
         }
         case 'inventory__game-cart': {
           $('#games__list-container').show();
+          $("#current__stock-cart").val("game");
           const gameUrl = API_BASE_URL + '/games';
+
+	  $("#title__game-laundry").text("All Games");
+	  $("#add__game-laundry").text("Add Game");
+
           fetchData(gameUrl)
           .then((data) => {
+            $('#games__table--body').empty();
+            $("#only__food-drink-field").hide();
             data.forEach((game, index) => {
               const date = britishDateFormat(game.updated_at);
               $('#games__table--body')
-                .append(gameTableTemplate(index, game, date));
+                .append(gameLaundryTableTemplate(index, game, date));
             });
           })
           .catch((error) => {
             console.log(error);
           });
+          break;
+        }
+        case 'inventory__laundry-cart': {
+          $('#games__list-container').show();
+          $("#current__stock-cart").val("laundry");
+          const url = API_BASE_URL + '/laundries';
+
+	  $("#title__game-laundry").text("All laundries");
+	  $("#add__game-laundry").text("Add Laundry");
+
+          fetchData(url)
+          .then((data) => {
+            $('#games__table--body').empty();
+            $("#only__food-drink-field").hide();
+            data.forEach((laundry, index) => {
+              const date = britishDateFormat(laundry.updated_at);
+              $('#games__table--body')
+                .append(gameLaundryTableTemplate(index, laundry, date));
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+          break;
         }
       }
     });

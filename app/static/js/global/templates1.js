@@ -54,7 +54,7 @@ export function taskListTemplate(data) {
 }
 
 export function saleSummaryTemplate(
-  index, id,  itemName, qty, amount, is_booking
+  index, id,  itemName, qty, amount, is_booking, unitPrice
 ) {
 
   const row = `
@@ -62,38 +62,44 @@ export function saleSummaryTemplate(
     <td class="">
       <p class="ui text size-textmd">${index + 1}</p>
     </td>
-    <!--<td class="">
-      <p class="ui text size-textmd">customer</p>
-    </td>-->
     <td class="">
       <p class="ui text size-textmd">${itemName}</p>
+    </td>
+    <td class="">
+      <p class="ui text size-textmd">${unitPrice}</p>
     </td>
     <td class="">
       <p class="ui text size-textmd">${qty}</p>
     </td>
     <td>
-      <p class="ui text size-textmd">₦${amount.toLocaleString()}</p>
+      <p class="ui text size-textmd">₦${amount?.toLocaleString()}</p>
     </td>
 
-    <td style="visibility: hidden;" class="order__table-menu">
-      <p><i class="fa fa-ellipsis-v"></i></p>
-      <p><i style="display: none;" class="fa fa-times"></i></p>
-    </td>
-    <!--<td class="manage">
-      <nav class="manage__nav">
-        <ul class="manage__list">
-          <li data-id="${id}" class="manage__item order__manageItem order__showConfirmModal">
-             <i class="fa fa-shopping-cart"></i>Order Details
-           </li>
-          <li data-id="${id}" class="manage__item order__print order__manageItem">
-            <i class="fa fa-print"></i>Print Receipt
-          </li>
-        </ul>
-      </nav>
-    </td>-->
+/tr>`;
+  return row;
+}
+
+
+export function saleSummaryTemplateFoodDrink(
+  index, id,  itemName, qty, amount, is_booking,
+  openingStock, remainingStock, unitPrice
+) {
+
+  const row = `
+  <tr data-id="${id}">
+    <td class="">${index + 1}</td>
+    <td class="">${itemName}</td>
+    <td class="">${unitPrice?.toLocaleString()}</td>
+    <td class="">${openingStock}</td>
+    <td class="">${qty}</td>
+    <td class="">${remainingStock}</td>
+    <td>₦${amount?.toLocaleString()}</td>
 </tr>`;
   return row;
 }
+
+
+
 /*
  * Table template for displaying list of vendors.
  *
@@ -263,14 +269,14 @@ export function inventoryFilterTemplate() {
  *
  * @return {string} - The row of table.
  */
-export function gameTableTemplate(index, data, date) {
+export function gameLaundryTableTemplate(index, data, date) {
   const qtyColor = data.qty_stock < 10 ? 'red': '';
   const row = `<tr data-id="${data.id}">
       <td class="">
         <p class="ui text size-textmd">${index + 1}</p>
       </td>
       <td class="">
-        <p class="ui text size-textmd">${date}</p>
+        <p class="ui text size-textmd date">${date}</p>
       </td>
       <td class="">
         <p class="ui text size-textmd name">${data.name}</p>
@@ -289,10 +295,10 @@ export function gameTableTemplate(index, data, date) {
       <td class="manage">
         <nav class="manage__nav">
           <ul class="manage__list">
-            <li data-id="${data.id}" class="manage__item inventory__update-stock">
+            <li data-id="${data.id}" class="manage__item add__update-stock update-stock">
               <i class="fa fa-wine-bottle"></i>Update Stock
             </li>
-            <li data-id="${data.id}" class="manage__item inventory__delete-stock">
+            <li data-id="${data.id}" class="manage__item delete-stock">
               <i class="fa fa-trash"></i>Remove Item
             </li>
           </ul>
@@ -321,7 +327,7 @@ export function drinkTableTemplate(index, data, date) {
         <p class="ui text size-textmd">${index + 1}</p>
       </td>
       <td class="">
-        <p class="ui text size-textmd">${date}</p>
+        <p class="ui text size-textmd date">${date}</p>
       </td>
       <td class="">
         <p class="ui text size-textmd name">${data.name}</p>
@@ -340,10 +346,10 @@ export function drinkTableTemplate(index, data, date) {
       <td class="manage">
         <nav class="manage__nav">
           <ul class="manage__list">
-            <li data-id="${data.id}" class="manage__item inventory__update-stock">
+            <li data-id="${data.id}" class="manage__item add__update-stock update-stock">
               <i class="fa fa-wine-bottle"></i>Update Stock
             </li>
-            <li data-id="${data.id}" class="manage__item inventory__delete-stock">
+            <li data-id="${data.id}" class="manage__item delete-stock">
               <i class="fa fa-trash"></i>Remove Item
             </li>
           </ul>
@@ -410,7 +416,7 @@ export function foodTableTemplate(index, data, date) {
         <p class="ui text size-textmd">${index + 1}</p>
       </td>
       <td class="">
-        <p class="ui text size-textmd">${date}</p>
+        <p class="ui text size-textmd date">${date}</p>
       </td>
       <td class="">
         <p class="ui text size-textmd name">${data.name}</p>
@@ -429,10 +435,10 @@ export function foodTableTemplate(index, data, date) {
       <td class="manage">
         <nav class="manage__nav">
           <ul class="manage__list">
-            <li data-id="${data.id}" class="manage__item food__update-stock">
+            <li data-id="${data.id}" class="manage__item add__update-stock update-stock">
               <i class="fa fa-utensils"></i>Update Stock
             </li>
-            <li data-id="${data.id}" class="manage__item food__delete-stock">
+            <li data-id="${data.id}" class="manage__item delete-stock">
               <i class="fa fa-trash"></i>Remove Item
             </li>
           </ul>
@@ -485,9 +491,9 @@ export function orderHistoryTableTemplate(order, date, customer = null) {
           <li data-id="${order.id}" data-payment-type="${order.payment_type}" class="manage__item order__update-payment--method order__manageItem">
             <i class="fa fa-sync-alt"></i>Payment Method
           </li>
-          <li data-id="${order.id}" data-name="${customerName}" class="manage__item  order__delete order__manageItem ${showToAdminOnly}">
+          <!--<li data-id="${order.id}" data-name="${customerName}" class="manage__item  order__delete order__manageItem ${showToAdminOnly}">
             <i class="fa fa-trash"></i>Delete Order
-          </li>
+          </li>-->
           <li data-id="${order.id}" class="manage__item order__manageItem order__showConfirmModal">
              <i class="fa fa-shopping-cart"></i>Order Details
            </li>
@@ -567,11 +573,20 @@ export function orderDetails(
     {status: 'Pending', color: 'red' }
   );
 
-  // Check if bill has been cleared
+  const orderedFirstName = ordered_by ? ordered_by.first_name : "Former Staff";
+  const orderedLastName = ordered_by ? ordered_by.last_name : "";
+  const orderedRole = ordered_by ? ordered_by.portfolio : "";
+
+  const ordered = { firstName: orderedFirstName, lastName: orderedLastName, role: orderedRole };
   const cleared = (
-    cleared_by !== null ? { firstName: cleared_by.first_name, lastName: cleared_by.last_name, role: cleared_by.portfolio  } :
-    { firstName: ordered_by.first_name, lastName: ordered_by.last_name, role: ordered_by.portfolio }
+    cleared_by ?
+    {
+      firstName: cleared_by.first_name, 
+      lastName: cleared_by.last_name, 
+      role: cleared_by.portfolio 
+    } : ordered
   );
+
   const hideBillClearBy = !order.is_paid ? 'hide' : '';
   $('#order__info').append(
     `<h3>Order Info.</h3>
@@ -581,7 +596,7 @@ export function orderDetails(
       <p><b>Purchase Time</b> - ${time}</p> 
       <p><b>Payment Method</b> - ${order.payment_type}</p>
       <p><b>Payment Status</b> - <span style="color: ${paymentStatus.color};">${paymentStatus.status}</span></p><br />
-      <p><em><b>Ordered By</b> - ${ordered_by.first_name} ${ordered_by.last_name} (${ordered_by.portfolio})</em></p>
+      <p><em><b>Ordered By</b> - ${ordered.firstName} ${ordered.lastName} (${ordered.role})</em></p>
       <p class="${hideBillClearBy}"><em><b>Bill Handle By</b> - ${cleared.firstName} ${cleared.lastName} (${cleared.role})</em></p>
              `
   );
@@ -656,32 +671,18 @@ export function dailyServiceSaleTableTemplate(
     <td class="">
     <p class="ui text size-textmd">${itemName}</p>
     </td>
-    <td class="">
+    <td style="padding-left: 40px;">
     <p class="ui text size-textmd">${qty}</p>
     </td>
     <td>
-    <p style="color: ${paymentStatusColor}; margin-left: 25px;" class="ui text size-textmd order__bill-status">${paymentStatus}</p>
+    <p style="color: ${paymentStatusColor}" class="ui text size-textmd order__bill-status">${paymentStatus}</p>
     </td>
     <td>
-    <p class="ui text size-textmd" style="text-align: left; margin-left: 10px;">₦${amount.toLocaleString()}</p>
+    <p class="ui text size-textmd">₦${amount.toLocaleString()}</p>
     </td>
-
-    <td style="visibility: hidden;" class="order__table-menu">
-    <p><i class="fa fa-ellipsis-v"></i></p>
-    <p><i style="display: none;" class="fa fa-times"></i></p>
+    <td style="visibility: hidde;">
+      <p><i data-id="${id}" class="fa fa-trash daily__sale-delete"></i></p>
     </td>
-    <!--<td class="manage">
-    <nav class="manage__nav">
-    <ul class="manage__list">
-    <li data-id="${id}" class="manage__item order__manageItem order__showConfirmModal">
-    <i class="fa fa-shopping-cart"></i>Order Details
-    </li>
-    <li data-id="${id}" class="manage__item order__print order__manageItem">
-    <i class="fa fa-print"></i>Print Receipt
-    </li>
-    </ul>
-    </nav>
-    </td>-->
     </tr>;`
   return row;
 }

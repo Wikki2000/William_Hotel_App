@@ -141,10 +141,12 @@ $(document).ready(function() {
     });
 
   // Handle submission of order form
+  let IS_DUPLICATE_ORDER;
   $('#dynamic__load-dashboard').on('submit', '#order__form', function(e) {
     e.preventDefault();
 
     const $formSelector = $(this);
+    IS_DUPLICATE_ORDER = false;
 
     // Validate form data and show error messages
     if (!validateForm($formSelector)) {
@@ -202,6 +204,7 @@ $(document).ready(function() {
         customerData: { name, is_guest},
         orderData: { payment_type, is_paid, amount },
         itemOrderData: cartItemsList, customer_id,
+        isDuplicateOrder: IS_DUPLICATE_ORDER,
       };
 
       $('#order__confirmation-modal').empty();
@@ -220,17 +223,29 @@ $(document).ready(function() {
           window.open(receiptUrl, '_blank');
         },
         (error) => {
+          if (error.status === 409) {
+            const confirmDuplicate = confirm(
+              "This looks like a duplicate order. Do you want to proceed?"
+            );
 
-          if (error.status === 422) {
+            if (confirmDuplicate) {
+              const headingText = 'Confirm Order';
+              const descriptionText = 'This action cannot be undone !'
+              const confirmBtCls = 'order__confirm';
+              IS_DUPLICATE_ORDER = true;
+
+              confirmationModal(headingText, descriptionText, confirmBtCls);
+            }
+          } else if (error.status === 422) {
             showNotification('Error: ' + error.responseJSON.error, true);
           } else {
             showNotification('An error occured, please try again !', true);
           }
           $button.prop('disabled', false);
-		/*
-		setTimeout(function() {
-			window.location.reload();
-		}, 1000);*/
+          /*
+                setTimeout(function() {
+                        window.location.reload();
+                }, 1000);*/
           console.log(error);
         }
       );
