@@ -37,6 +37,8 @@ $(document).ready(function() {
     $('#main__guest-id--type span').text(guestData.id_typ); 
   }
 
+
+
   const sideBarClick = sessionStorage.getItem('pageId');
   if (sideBarClick) {                
     $(document).ready(function() {  
@@ -223,6 +225,7 @@ $(document).ready(function() {
             rooms.unshift("Select Multiple");
 
             displayMenuList(rooms, $clickItem, 'order__menu');
+	    $(".dropdown-menu").focus();
           })
           .catch((error) => {
             console.log(error);
@@ -282,14 +285,17 @@ $(document).ready(function() {
                       CHECK_IN = $('#main__check-in').val();
                       CHECK_OUT = $('#main__checkout-date').val();
 
+			    /*
                       if (new Date(CHECK_IN) >= new Date(CHECK_OUT)) {
                         resetRoomDetails();
                         showNotification(
                           'Check Out date must not be earlier than Check In date', true
                         );
                         return;
-                      }
+                      }*/
                       DURATION = bookingDuration(CHECK_OUT, CHECK_IN);
+
+		      DURATION = DURATION === 0 ? 1 : DURATION;
 
                       // Get total amount of room book base on some criterias..
                       const room_rate = $('#main__room-amount').val();
