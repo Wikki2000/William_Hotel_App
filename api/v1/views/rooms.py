@@ -214,8 +214,6 @@ def filter_rooms(user_role: str, user_id: str, room_status):
             abort(404)
 
         rooms = storage.all_get_by(Room, status=room_status)
-        if not rooms:
-            return jsonify([]), 200
 
         # Ensure that reserved room are also shown for available rooms
         if room_status == "available":

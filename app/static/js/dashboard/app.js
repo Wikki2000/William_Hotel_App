@@ -2,16 +2,16 @@ import {
   britishDateFormat, compareDate, getFormattedDate, fetchData, ajaxRequest,
   canadianDateFormat, getBaseUrl, highLightOrderBtn, cartItemsTotalAmount,
   getHtmlTemplate
-} from '../global/utils.js?v1';
+} from '../global/utils.js';
 import  {
   displayFoodDrink, displayRoomData, guestListTableTemplate, gameTemplate,
   roomTableTemplate, orderItemsTempleate, staffListTemplate,
   laundryTableTemplate
-} from '../global/templates.js?v2';
+} from '../global/templates.js';
 import {
   expenditureTableTemplate, displayMaintenance, staffManagementCommonCart,
   inventoryFilterTemplate
-} from '../global/templates1.js?v2';
+} from '../global/templates1.js';
 import { initAllStores } from '../global/init_cache.js';
 import { loadDashbard } from './load_dashboard.js';
 
