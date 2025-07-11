@@ -51,7 +51,7 @@ def extend_guest_stay(user_role: str, user_id: str, room_id, customer_id):
     main_bookings = storage.all_get_by(Booking, room_id=room_id, is_use=True)
     if not data.get("is_late_checkout"):
         for booking in main_bookings:
-            if TODAY_DATE <= booking.checkout:
+            if TODAY_DATE < booking.checkout:
                 error_msg = (
                     "The Extension start date must be after current booking's"
                     + f" checkout date. This booking ends on {booking.checkout}"
