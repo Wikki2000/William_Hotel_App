@@ -290,6 +290,7 @@ $(document).ready(function () {
           displayMenuList(
             occupiedNumberList, $($(this)), 'room__menu'
           );
+	  $(".dropdown-menu").focus();
         })
         .catch((error)  => {
           console.log(error);

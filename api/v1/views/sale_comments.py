@@ -17,7 +17,6 @@ def add_comment(user_id: str, user_role: str) -> Dict:
 
     required_fields = ["comment", "sale_id"]
     error_400 = bad_request(data, required_fields)
-    print(error_400)
     if error_400:
         return jsonify(error_400), 400
 
