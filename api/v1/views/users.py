@@ -137,3 +137,30 @@ def create_update_roster(user_role: str, user_id: str, staff_id: str):
     user.roster = data
     storage.save()
     return jsonify({"message": "Staff Roster Updated Successfully !"}), 200
+
+
+@api_views.route("/users/update-password", methods=["POST"])
+@role_required(["staff", "admin", "manager"])
+def reset_password(user_role: str, user_id: str):
+    """Update User Password."""
+    data = request.get_json()
+
+    required_fields = ["new_password"]
+    error_response = bad_request(data, required_fields)
+    if error_response:
+        return jsonify(error_response), 400
+
+    user = storage.get_by(User, id=user_id)
+    if not user:
+        abort(404)
+
+    """
+    is_valid = check_password(data.get("old_password"))
+    if not is_valid:
+        return jsonify({"error": "Invalid Old Password"}), 401
+    """
+
+    user.password = data.get("new_password")
+    user.hash_password()
+    storage.save()
+    return jsonify({"message": "Password Updated Successfully"}), 200

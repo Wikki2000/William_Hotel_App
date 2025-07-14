@@ -37,8 +37,6 @@ $(document).ready(function() {
     $('#main__guest-id--type span').text(guestData.id_typ); 
   }
 
-
-
   const sideBarClick = sessionStorage.getItem('pageId');
   if (sideBarClick) {                
     $(document).ready(function() {  
@@ -199,7 +197,7 @@ $(document).ready(function() {
       switch(clickId) {
         case 'main__dropdown--room-no': {
           //const roomUrl = API_BASE_URL + '/rooms/available/filter';
-          const roomUrl = API_BASE_URL + '/room-numbers';
+          const roomUrl = API_BASE_URL + $("#room__url").val();
 
           const bookingType = $('#main__id--bookingtype-val').val().toLowerCase();
 
@@ -253,7 +251,7 @@ $(document).ready(function() {
 
                   if (roomNumberSelected === "Select Multiple") {
                     $("#book__multiple-room").css("display", "flex");
-                    const roomUrl = API_BASE_URL + '/room-numbers';
+                    const roomUrl = API_BASE_URL + $("#room__url").val();;
 
                     fetchData(roomUrl)
                       .then((rooms) => {

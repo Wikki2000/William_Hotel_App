@@ -25,6 +25,7 @@ from models.receipt import Receipt
 from models.game import Game
 from models.laundry import Laundry
 from models.sale import Sale
+from models.hotel_setting import HotelSetting
 
 from urllib.parse import quote_plus
 from dotenv import load_dotenv
@@ -144,7 +145,7 @@ class Storage:
         column = getattr(cls, field)
         obj_list = self.__session.query(cls).filter(
             column.ilike(f"%{prefix}%")
-        ).all()
+        ).all()[:1]
         return obj_list
 
     def count_by(self, cls, **kwargs):

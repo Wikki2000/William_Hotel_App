@@ -82,7 +82,8 @@ export function saleSummaryTemplate(
 
 export function saleSummaryTemplateFoodDrink(
   index, id,  itemName, qty, amount, is_booking,
-  openingStock, remainingStock, unitPrice
+  openingStock, remainingStock, additionalStock,
+  spoilage, totalIn, unitPrice
 ) {
 
   const row = `
@@ -91,6 +92,9 @@ export function saleSummaryTemplateFoodDrink(
     <td class="">${itemName}</td>
     <td class="">${unitPrice?.toLocaleString()}</td>
     <td class="">${openingStock}</td>
+    <td class="">${additionalStock}</td>
+    <td class="">${spoilage}</td>
+    <td class="">${totalIn}</td>
     <td class="">${qty}</td>
     <td class="">${remainingStock}</td>
     <td>₦${amount?.toLocaleString()}</td>

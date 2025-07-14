@@ -3,7 +3,7 @@
 from models.drink import Drink
 from flask import abort, jsonify, request
 from api.v1.views import api_views
-from api.v1.views.utils import bad_request, role_required
+from api.v1.views.utils import bad_request, role_required, record_additional_stock
 from models import storage
 from typing import Dict
 
@@ -71,13 +71,19 @@ def update_drink(user_id: str, user_role: str, drink_id: str) -> Dict:
     if not drink:
         abort(404)
 
+    stock_type = "drink"
+    stock_new_qty = data.get("qty_stock")
+    stock_old_qty = drink.qty_stock
+    record_additional_stock(
+        stock_type, drink_id, stock_new_qty, stock_old_qty
+    )
     for key, val in data.items():
         if key != 'id':
             setattr(drink, key, val)
     storage.save()
-    drink = storage.get_by(Drink, id=drink_id)
+    updated = storage.get_by(Drink, id=drink_id)
     storage.close()
-    return jsonify(drink.to_dict()), 201
+    return jsonify(updated.to_dict()), 201
 
 
 @api_views.route("/drinks/<drink_id>/get")

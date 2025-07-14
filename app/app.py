@@ -5,9 +5,11 @@ from flask_jwt_extended import JWTManager
 from flasgger import Swagger
 from api.v1.views import api_views
 from app.routes import app_views
+from app.routes import app_guests
 from app.config import Config
 from models.storage import Storage
 from api.v1.views.chat_socket import socketio
+from schedulers import init_schedulers
 
 
 # Initialize storage
@@ -26,6 +28,9 @@ Swagger(app)
 # Register blueprint
 app.register_blueprint(api_views, url_prefix="/api/v1")
 app.register_blueprint(app_views, url_prefix="/app")
+app.register_blueprint(app_guests)
+
+init_schedulers()
 
 
 @app.errorhandler(404)

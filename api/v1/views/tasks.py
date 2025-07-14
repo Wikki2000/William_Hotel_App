@@ -1,9 +1,5 @@
 #!/usr/bin/python3
 """Handle API request for vat module"""
-"""
-from models.vat import Vat
-from models.cat import Cat
-"""
 from flask import abort, jsonify, request
 from api.v1.views import api_views
 from api.v1.views.utils import role_required, bad_request
@@ -12,7 +8,7 @@ from sqlalchemy.exc import IntegrityError
 from dateutil.relativedelta import relativedelta
 from datetime import date, datetime
 from models.sale import Sale
-
+from models.hotel_setting import HotelSetting
 
 
 @api_views.route(
@@ -24,11 +20,12 @@ def get_vats(
 ):
     """ Retrieve vats for a duration of time.
     """
-    tasks = {"vat": 0.075, "cat": 0.05}
+    hotel = storage.get_by(HotelSetting)
+    vat_rate = hotel.vat_rate / 100
+    cat_rate = hotel.cat_rate / 100
+    tasks = {"vat": vat_rate, "cat": cat_rate}
     if not task_type in tasks:
         return jsonify({"Task Not Found"}), 404
-
-    print(start_date, end_date)
 
     start_date_obj = datetime.strptime(start_date, "%Y-%m-%d") 
     end_date_obj = datetime.strptime(end_date, "%Y-%m-%d")

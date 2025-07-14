@@ -17,7 +17,7 @@ from api.v1.views.drinks import *
 from api.v1.views.orders import *
 from api.v1.views.loan_request import *
 from api.v1.views.leave_request import *
-from api.v1.views.users_groups import *
+#from api.v1.views.users_groups import *
 from api.v1.views.messages import *
 from api.v1.views.vendors import *
 from api.v1.views.maintenaces import *
@@ -29,4 +29,5 @@ from api.v1.views.games import *
 from api.v1.views.laundries import *
 from api.v1.views.sale_comments import *
 from api.v1.views.multiple_booking_receipt import *
+from api.v1.views.hotels import *
 from api.v1.views.ping import *

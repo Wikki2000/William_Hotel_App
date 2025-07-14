@@ -108,40 +108,62 @@ $(document).ready(function() {
           <label>Early Check-in Amount:</label><br>
           <input type="number" min="1" name="early_checkin_amount" required /><br><br>
 
-          <label>Short Time Duration (minutes):</label><br>
+          <label>Late Check-out Amount:</label><br>
+          <input type="number" min="1" name="late_checkout_amount" required /><br><br>
+
+          <label>Short Time Duration (Hours):</label><br>
           <input type="number" min="1" name="short_time_hours" required /><br><br>
+
+          <label>Late Checkout Duration (Hours):</label><br>
+          <input type="number" min="1" name="late_checkout_time" required /><br><br>
+
+          <label>Half Day Duration (Hours):</label><br>
+          <input type="number" min="1" name="half_day_duration" required /><br><br>
 
           <button style="background: orange; color: white; padding: 8px 12px; border: none; border-radius: 5px;">Save Prices</button>
          </form>
       `);
 
-      const SHORT_REST_AMOUNT = parseInt(
-        localStorage.getItem('shortRestAmount')
-      );
+      const SHORT_REST_AMOUNT = parseInt(localStorage.getItem('shortRestAmount'));
       const EARLY_CHECKIN_AMOUNT = parseInt(
         localStorage.getItem('earlyCheckinAmount')
       );
-      const SHORT_TIME_DURATION = (
-        localStorage.getItem('shortTimeDuration')
+      const SHORT_TIME_DURATION = localStorage.getItem('shortTimeDuration');
+      const LATE_CHECKOUT_AMOUNT = parseInt(
+        localStorage.getItem("lateCheckoutAmount")
       );
+      const LATE_CHECKOUT_TIME = localStorage.getItem("lateCheckoutDuration");
+      const HALF_DAY_TIME = localStorage.getItem("halfDayDuration");
 
       $('input[name="short_time_hours"]').val(SHORT_TIME_DURATION);
       $('input[name="early_checkin_amount"]').val(EARLY_CHECKIN_AMOUNT);
       $('input[name="short_time_amount"]').val(SHORT_REST_AMOUNT);
 
+      $('input[name="late_checkout_time"]').val(LATE_CHECKOUT_TIME);
+      $('input[name="half_day_duration"]').val(HALF_DAY_TIME);
+      $('input[name="late_checkout_amount"]').val(LATE_CHECKOUT_AMOUNT);
+
     } else if (title === "Tax Settings") {
       $('#modal-content').html(`
-        <form>
+        <form id="setting__tax-price">
           <label>VAT Rate (%):</label><br>
-          <input type="number" required /><br><br>
+          <input type="number" step="any" required name="vat_rate"/><br><br>
           <label>CAT Rate (%):</label><br>
-          <input type="number" required /><br><br>
+          <input type="number" step="any" required name="cat_rate" /><br><br>
           <button style="background: orange; color: white; padding: 8px 12px; border: none; border-radius: 5px;">Save Tax</button>
         </form>
       `);
+      const url = API_BASE_URL + "/hotel_settings";
+      fetchData(url)
+        .then((response) => {
+          $("input[name='vat_rate']").val(response.vat_rate);
+          $("input[name='cat_rate']").val(response.cat_rate);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     } else if (title === "Generate Guest QR Code") {
-      return;
-      const guestUrl = "https://yourhotel.wiventory.com/guest"; // Replace as needed
+      const guestUrl = "https://williamscourthotel.com/guest";
       $('#modal-content').html(`
         <p>Scan this QR code to visit the guest portal:</p>
         <canvas id="guestQrCanvas" width="200" height="200"></canvas>

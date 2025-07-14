@@ -393,7 +393,7 @@ def book_room(user_id: str, user_role: str):
         is_use = True if not reserve_status else False
 
         # Ensure that can't book room already in use 
-        if room.status == "occupied":
+        if room.status == "occupied" and not reserve_status:
             return jsonify({"error": f"Room {room.number} is occupied"}), 409
 
         customer = Customer(**customer_data)
@@ -417,10 +417,10 @@ def book_room(user_id: str, user_role: str):
         receipt = sale = book = receipt = None
 
         try:
-            room_status = "occupied" if not reserve_status else "reserved"
             book = Booking(**book_attr)
             storage.new(book)
-            room.status = room_status   # Cheange room status once book
+            if not reserve_status:
+                room.status = "occupied"   # Cheange room status once book
             storage.save()
             booking_id_list.append(book.id)
 

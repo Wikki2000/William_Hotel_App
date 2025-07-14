@@ -47,7 +47,6 @@ def extend_guest_stay(user_role: str, user_id: str, room_id, customer_id):
         return jsonify(resarvation_error_msg), 422
 
     # Ensure that u don't book when current booking not expured.
-    print(TODAY_DATE, type(TODAY_DATE))
     main_bookings = storage.all_get_by(Booking, room_id=room_id, is_use=True)
     if not data.get("is_late_checkout"):
         for booking in main_bookings:

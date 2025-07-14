@@ -68,13 +68,38 @@ $(document).ready(() => {
       $('#settings-modal-overlay').fadeOut(200);
 
       ajaxRequest(url, 'PUT', JSON.stringify(data),
-        (response) => {
-          localStorage.setItem('shortRestAmount', data.short_time_amount);
-          localStorage.setItem(
-            'earlyCheckinAmount', data.early_checkin_amount
-          );
-          localStorage.setItem('shortTimeDuration', data.short_time_hours);
+        (hotel) => {
+
+          localStorage.setItem("shortRestAmount", hotel.short_time_amount);
+          localStorage.setItem("earlyCheckinAmount", hotel.early_checkin_amount);
+          localStorage.setItem("lateCheckoutAmount", hotel.late_checkout_amount);
+          localStorage.setItem("lateCheckoutDuration", hotel.late_checkout_time);
+          localStorage.setItem("shortTimeDuration", hotel.short_time_hours);
+          localStorage.setItem("halfDayDuration", hotel.half_day_duration);
           showNotification("Hotel Price updated successfully.");
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    })
+
+  $('#dynamic__load-dashboard')
+    .on('submit', '#setting__tax-price', async function(e) {
+
+      e.preventDefault();
+      const $form = $(this);
+      const data = getFormDataAsDict($form);
+
+      const isConfirm = confirm("Confirm TAX rate update. Click OK to proceed.");
+      if (!isConfirm) return;
+
+      const url = API_BASE_URL + "/hotel_settings";
+      $('#settings-modal-overlay').fadeOut(200);
+
+      ajaxRequest(url, 'PUT', JSON.stringify(data),
+        (response) => {
+          showNotification("TAX rate updated successfully.");
         },
         (error) => {
           console.log(error);

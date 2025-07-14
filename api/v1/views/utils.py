@@ -17,6 +17,9 @@ from models.receipt import Receipt
 from models.sale import Sale
 from models.daily_drink_stock import DailyDrinkStock
 from models.daily_food_stock import DailyFoodStock
+from models.food import Food
+from models.drink import Drink
+from models.order_item import OrderItem
 import base64
 from datetime import date, datetime, timedelta
 import pytz
@@ -235,9 +238,43 @@ def user_friend_messages(
 # ===================================================================== #
 #                     Order Module Helper Function                   #
 # ===================================================================== #
-from models.food import Food
-from models.drink import Drink
-from models.order_item import OrderItem
+def record_additional_stock(stock_type, stock_id, stock_new_qty, stock_old_qty):
+    """Record additional stock or spoilage adjustment for today."""
+    stocks = {
+        "food": DailyFoodStock,
+        "drink": DailyDrinkStock
+    }
+
+    if stock_type not in stocks:
+        return None
+
+    try:
+        stock_new_qty = int(stock_new_qty)
+        stock_old_qty = int(stock_old_qty)
+    except (TypeError, ValueError):
+        print("Invalid stock values")
+        return None
+
+    stock_difference = stock_new_qty - stock_old_qty
+    today = date.today()
+
+    param = {"date": today, f"{stock_type}_id": stock_id}
+    stock = storage.get_by(stocks[stock_type], **param)
+
+    if not stock:
+        param["opening"] = stock_old_qty
+        param["additional"] = max(0, stock_difference)
+        param["spoilage"] = abs(stock_difference) if stock_difference < 0 else 0
+        stock = stocks[stock_type](**param)
+        storage.new(stock)
+    else:
+        if stock_difference >= 0:
+            stock.additional += stock_difference
+        else:
+            stock.spoilage += abs(stock_difference)
+
+    #storage.save()
+    return stock
 
 
 def record_opening_stock(item_type, item_id, stock_qty):
@@ -258,7 +295,7 @@ def record_opening_stock(item_type, item_id, stock_qty):
     id_field = stocks[item_type]["id_field"]
     stock_record_obj = storage.get_by(stocks[item_type]["model"], **param)
     if not stock_record_obj:
-        attr = {id_field: item_id, "opening_stock": stock_qty}
+        attr = {id_field: item_id, "opening": stock_qty}
         new_stock_record = stocks[item_type]["model"](**attr)
         storage.new(new_stock_record)
 
@@ -314,7 +351,6 @@ def update_item_stock(item, customer, new_order, item_sold):
             **{f"{item_type}_id": item_id}
         )
         storage.new(order_item)
-        print(order_item)
 
     # Commit changes
     #storage.save()
@@ -581,3 +617,6 @@ def add_substract_from_date(date_obj, num_of_days, is_add=True):
     else:
         new_date = date_obj - timedelta(days=num_of_days)
     return new_date
+
+
+
