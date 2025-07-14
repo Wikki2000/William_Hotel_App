@@ -10,11 +10,12 @@ from datetime import date
 class DailyDrinkStock(BaseModel, Base):
     __tablename__ = 'daily_drink_stock'
 
-    id = Column(Integer, primary_key=True)
     drink_id = Column(
         String(60),
         ForeignKey('drinks.id', ondelete="CASCADE"),
         nullable=False
     )
-    date = Column(Date, default=date.today, nullable=False)
-    opening_stock = Column(Integer, nullable=False)
+    date = Column(Date, default=lambda: date.today(), nullable=False)
+    opening = Column(Integer, default=0, nullable=False)
+    additional = Column(Integer, default=0, nullable=False)
+    spoilage = Column(Integer, default=0, nullable=False)

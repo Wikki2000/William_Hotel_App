@@ -27,7 +27,6 @@ $(document).ready(() => {
       ajaxRequest(url, 'POST', JSON.stringify(data),
         (response) => {
           showNotification("Password Update Successfully !");
-          console.log(response)
         },
         (error) => {
           console.log(error);

@@ -11,11 +11,12 @@ from datetime import date
 class DailyFoodStock(BaseModel, Base):
     __tablename__ = 'daily_food_stock'
 
-    id = Column(Integer, primary_key=True)
     food_id = Column(
         String(60),
         ForeignKey('foods.id', ondelete="CASCADE"),
         nullable=False
     )
-    date = Column(Date, default=date.today, nullable=False)
-    opening_stock = Column(Integer, nullable=False)
+    date = Column(Date, default=lambda: date.today(), nullable=False)
+    opening = Column(Integer, nullable=False)
+    additional = Column(Integer, default=0, nullable=False)
+    spoilage = Column(Integer, default=0, nullable=False)

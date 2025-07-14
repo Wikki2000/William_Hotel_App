@@ -25,6 +25,12 @@ $(document).ready(function() {
     });
   });
 
+  $(`.${service}`).remove(); // Remove calculation analysis not related in popup
+  /*
+  $("#view__analysis-btn").click(function() {
+    $(`.${service}`).remove();
+  });*/
+
   if (service === 'room') {
     $("#food__drink-salesContainer").remove();
     $('#sales__record-title').text(`Room Sales Record (Total: ${totalAmount})`);
@@ -49,7 +55,7 @@ $(document).ready(function() {
 
           const roomName = sale.room ? sale.room.name : "Deleted Room";
           const roomNumber = sale.room ? sale.room.number : "xxx";
-          $('.sales-table-body').append(saleSummaryTemplate(
+          $('#sales-table-body').append(saleSummaryTemplate(
             index, sale.id,
             `${roomName} (${roomNumber}) ${description}`,
             `${sale.booking.duration} ${time}`, sale.booking.amount, true, sale.room.amount
@@ -81,13 +87,15 @@ $(document).ready(function() {
     .then((data) => {
       data.forEach((sale, index) => {
         if (service === 'game' || service === 'laundry') {
-          $('.sales-table-body').append(saleSummaryTemplate(
-            index, sale.id, sale.name, sale.quantity + ' pcs', sale.amount, false, sale.unit_price
+          $('#sales-table-body').append(saleSummaryTemplate(
+            index, sale.id, sale.name, sale.sold_stock + ' pcs', sale.amount, false, sale.unit_price
           ));
         } else {
           $('.drink__food-salesTable-body').append(saleSummaryTemplateFoodDrink(
-            index, sale.id, sale.name, sale.quantity + ' pcs', sale.amount, false,
-            sale.opening_stock + ' pcs', sale.remaining_stock + ' pcs', sale.unit_price
+            index, sale.id, sale.name, sale.sold_stock + ' pcs', sale.amount, false,
+            sale.opening_stock + ' pcs', sale.remaining_stock + ' pcs',
+	    sale.additional_stock + ' pcs', sale.spoil_stock + ' pcs',
+	    sale.total_in + ' pcs', sale.unit_price
           ));
         }
       });

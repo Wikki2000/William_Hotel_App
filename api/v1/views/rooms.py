@@ -145,7 +145,7 @@ def get_rooms(user_role: str, user_id: str):
     return jsonify(response), 200
 
 
-@api_views.route("/room-number")
+@api_views.route("/rooms/all-number")
 @role_required(["staff", "manager", "admin"])
 def get_room_numbers(user_role: str, user_id: str):
     """Get numbers associated with rooms."""
@@ -154,7 +154,8 @@ def get_room_numbers(user_role: str, user_id: str):
         return jsonify([]), 200
 
     storage.close()
-    return jsonify(sorted([room.number for room in rooms])), 200
+    response = sorted([room.number for room in rooms])
+    return jsonify(response), 200
 
 
 @api_views.route("/rooms/<string:room_number>/guest-occupied")

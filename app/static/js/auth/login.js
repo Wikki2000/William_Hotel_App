@@ -21,12 +21,19 @@ $(document).ready(function () {
     );
     const url = API_BASE_URL + '/account/login';
     ajaxRequest(url, "POST", data,
-      (response) => {
+      ({ user, hotel }) => {
         // Set user ID and name in session for quick recovery.
-	localStorage.setItem('userName', response.username);
-        localStorage.setItem('userId', response.id);
-        localStorage.setItem('role', response.role);
-	localStorage.setItem('performance', response.performance);
+	localStorage.setItem('userName', user.username);
+        localStorage.setItem('userId', user.id);
+        localStorage.setItem('role', user.role);
+	localStorage.setItem('performance', user.performance);
+
+	localStorage.setItem("shortRestAmount", hotel.short_time_amount);
+	localStorage.setItem("earlyCheckinAmount", hotel.early_checkin_amount);
+	localStorage.setItem("lateCheckoutAmount", hotel.late_checkout_amount);
+	localStorage.setItem("lateCheckoutDuration", hotel.late_checkout_time);
+	localStorage.setItem("shortTimeDuration", hotel.short_time_hours);
+	localStorage.setItem("halfDayDuration", hotel.half_day_duration);
 
 	$('input').addClass('correct-password');
         setTimeout(() => {

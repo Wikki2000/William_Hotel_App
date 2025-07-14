@@ -116,3 +116,9 @@
 
 01:18 AM	2025-07-10	/api/v1/order-items	name 'hotel_id' is not defined
 
+10:34 AM	2025-07-14	/api/v1/account/login	'NoneType' object has no attribute 'to_dict'
+
+10:34 AM	2025-07-14	/api/v1/account/login	'NoneType' object has no attribute 'to_dict'
+
+11:18 AM	2025-07-14	/api/v1/order-items	'opening_stock' is an invalid keyword argument for DailyFoodStock
+

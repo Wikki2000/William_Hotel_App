@@ -2,6 +2,7 @@
 """Sign in user with valid credentials."""
 from flask import request, jsonify
 from models.user import User
+from models.hotel_setting import HotelSetting
 from flask_jwt_extended import create_access_token, set_access_cookies
 from api.v1.views.utils import nigeria_today_date, write_to_file
 import datetime
@@ -66,13 +67,18 @@ def login():
         user.is_active = True
         storage.save()
 
+        hotel = storage.get_by(HotelSetting)
+
         # Create JWT token with additional claims
         access_token = create_access_token(
             identity=user.id, additional_claims={"role": user.role}
         )
 
         # Return response with access token
-        response = jsonify({**user.to_dict()})
+        response = jsonify({
+            "user": user.to_dict(),
+            "hotel": hotel.to_dict()
+        })
         set_access_cookies(response, access_token)  # Set JWT in cookie
         return response, 200
 

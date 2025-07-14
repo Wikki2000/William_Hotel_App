@@ -183,11 +183,19 @@ def get_sales_summary(
     if not sales:
         return jsonify([]), 200
 
-    opening_stock, remaining_stock = None, None
     sales_list = []
-    for item_id, total_amount, total_qty in sales:
+    for item_id, total_amount, sold_qty in sales:
         cls = services[service]
         service_obj = storage.get_by(cls, id=item_id)
+        previous_stock = getattr(service_obj, 'qty_stock', 0) if service_obj else 0
+
+        stock_value = {
+            "opening": 0,
+            "spoilage": 0,
+            "total_in": previous_stock,
+            "remaining": 0,
+            "additional": 0,
+        }
 
         if service in stock_record_modal:
             stock_record_param = {
@@ -198,25 +206,27 @@ def get_sales_summary(
                 stock_record_modal[service], **stock_record_param
             )
 
-            """
-            opening_stock = stock_obj.opening_stock
-            remaining_stock = stock_obj.opening_stock - total_qty
-            """
-            if stock_obj and stock_obj.opening_stock is not None:
-                opening_stock = stock_obj.opening_stock
-                remaining_stock = opening_stock - total_qty
-            else:
-                opening_stock = None
-                remaining_stock = None
+            if stock_obj:
+                stock_value["opening"] = stock_obj.opening
+                stock_value["total_in"] = (
+                    stock_obj.additional + 
+                    stock_obj.opening - stock_obj.spoilage
+                )
+                stock_value["remaining"] = stock_value["total_in"] - sold_qty
+                stock_value["additional"] = stock_obj.additional
+                stock_value["spoilage"] = stock_obj.spoilage
 
         sales_list.append({
             "id": item_id,
             "name": service_obj.name,
             "unit_price": service_obj.amount,
-            "opening_stock": opening_stock,
-            "remaining_stock": remaining_stock,
-            "quantity": total_qty,
-            "amount": total_amount
+            "opening_stock": stock_value["opening"],
+            "additional_stock": stock_value["additional"],
+            "remaining_stock": stock_value["remaining"],
+            "spoil_stock": stock_value["spoilage"],
+            "sold_stock": sold_qty,
+            "amount": total_amount,
+            "total_in": stock_value["total_in"],
         })
 
     storage.close()

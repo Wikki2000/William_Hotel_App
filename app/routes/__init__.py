@@ -3,6 +3,7 @@
 from flask import Blueprint
 
 app_views = Blueprint("app_views", __name__)
+app_guests = Blueprint("app_guests", __name__)
 """
 web_static = Blueprint(
     "web_static", __name__, template_folder='../web_static'
@@ -13,3 +14,4 @@ from app.routes.index import *
 from app.routes.dashboard import *
 from app.routes.receipt import *
 from app.routes.member_chat_group import *
+from app.routes.guest import *
