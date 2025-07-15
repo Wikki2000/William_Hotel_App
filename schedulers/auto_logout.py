@@ -11,5 +11,4 @@ def auto_logout_inactive_users():
         if user.is_active:
             user.is_active = False
     storage.save()
-    print("✅ Auto-logout completed.")
-
+    print("Auto-logout completed.")

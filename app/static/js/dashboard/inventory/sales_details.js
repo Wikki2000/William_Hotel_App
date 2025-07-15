@@ -2,12 +2,12 @@ import {
   getBaseUrl, closeConfirmationModal,
   showNotification, fetchData, britishDateFormat,
   togleTableMenuIcon, updateElementCount, getQueryParam
-} from '../../global/utils.js';
+} from '../../global/utils.js?v1';
 
 import {
   expenditureTableTemplate, inventoryFilterTemplate,
   saleSummaryTemplate, saleSummaryTemplateFoodDrink,
-} from '../../global/templates1.js';
+} from '../../global/templates1.js?v1';
 
 $(document).ready(function() {
   const API_BASE_URL = getBaseUrl()['apiBaseUrl'];

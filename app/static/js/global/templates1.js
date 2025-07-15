@@ -97,8 +97,9 @@ export function saleSummaryTemplateFoodDrink(
     <td class="">${totalIn}</td>
     <td class="">${qty}</td>
     <td class="">${remainingStock}</td>
-    <td>₦${amount?.toLocaleString()}</td>
+    <td>${amount?.toLocaleString()}</td>
 </tr>`;
+	console.log(row)
   return row;
 }
 

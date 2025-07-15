@@ -8,7 +8,7 @@ from models.game import Game
 from models.laundry import Laundry
 from models import storage
 
-def cache_burst_versioning(version_id="v1"):
+def cache_burst_versioning(version_id="v3"):
     """Version ID for static files cache bursting."""
     return version_id if version_id else str(uuid4())
 

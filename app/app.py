@@ -28,7 +28,7 @@ Swagger(app)
 # Register blueprint
 app.register_blueprint(api_views, url_prefix="/api/v1")
 app.register_blueprint(app_views, url_prefix="/app")
-app.register_blueprint(app_guests)
+app.register_blueprint(app_guests, url_prefix="/guest")
 
 init_schedulers()
 

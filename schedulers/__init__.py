@@ -9,5 +9,4 @@ def init_schedulers():
     # scheduler.add_job(create_daily_stock_summary, 'cron', hour=0, id='stock_summary_job')
 
     scheduler.start()
-    print("📅 APScheduler started with background jobs.")
-
+    print("APScheduler started with background jobs.")
