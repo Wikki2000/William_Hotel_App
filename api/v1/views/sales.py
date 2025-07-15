@@ -215,6 +215,8 @@ def get_sales_summary(
                 stock_value["remaining"] = stock_value["total_in"] - sold_qty
                 stock_value["additional"] = stock_obj.additional
                 stock_value["spoilage"] = stock_obj.spoilage
+            else:
+                stock_value["opening"] = previous_stock
 
         sales_list.append({
             "id": item_id,
