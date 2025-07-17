@@ -8,7 +8,7 @@ from models.game import Game
 from models.laundry import Laundry
 from models import storage
 
-def cache_burst_versioning(version_id="v3"):
+def cache_burst_versioning(version_id="v1"):
     """Version ID for static files cache bursting."""
     return version_id if version_id else str(uuid4())
 
@@ -16,7 +16,8 @@ def cache_burst_versioning(version_id="v3"):
 def get_service(category):
     models = {
         "foods": Food, "drinks": Drink,
-        "games": Game, "laundry": Laundry
+        "games": Game, "laundry": Laundry,
+        "rooms": Room
     }
 
     if category not in models:
