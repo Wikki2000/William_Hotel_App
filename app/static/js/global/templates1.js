@@ -104,7 +104,6 @@ export function saleSummaryTemplateFoodDrink(
 }
 
 
-
 /*
  * Table template for displaying list of vendors.
  *
