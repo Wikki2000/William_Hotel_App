@@ -54,7 +54,7 @@ $(document).ready(function () {
 
 	const $button = $(this);
         const url = API_BASE_URL + "/online/booking/initiate-payment";
-        const timeout = 9000;
+        const timeout = 15000;
 	
 	$button.prop("disabled", true);
 
