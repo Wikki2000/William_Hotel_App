@@ -31,3 +31,4 @@ from api.v1.views.sale_comments import *
 from api.v1.views.multiple_booking_receipt import *
 from api.v1.views.hotels import *
 from api.v1.views.ping import *
+from api.v1.views.online_booking import *

@@ -321,3 +321,49 @@ def get_multiple_room(user_role: str, user_id: str, room_ids_list: str):
     response = [room.to_dict() for room in rooms]
     storage.close()
     return jsonify(response), 200
+
+
+@api_views.route("/rooms/<string:room_type>/check-availability", methods=["POST"])
+def check_availability(room_type):
+    """Check room availability."""
+    if room_type.lower() not in ["standard", "deluxe"]:
+        abort(404)
+
+    data = request.get_json()
+    required_fields = ["checkin", "checkout"]
+    error_response = bad_request(data, required_fields)
+    if error_response:
+        return jsonify(error_response), 400
+
+    # Convert strings to datetime
+    try:
+        checkin_date = datetime.strptime(data.get("checkin"), "%Y-%m-%d").date()
+        checkout_date = datetime.strptime(data.get("checkout"), "%Y-%m-%d").date()
+    except Exception:
+        return jsonify({"error": "Invalid date format. Use YYYY-MM-DD."}), 400
+
+    if checkin_date > checkout_date:
+        return jsonify({"error": "Check-out date must be after check-in date."}), 400
+
+    rooms = storage.all_get_by(Room, name=room_type)
+    available_rooms = 0
+
+    for room in rooms:
+        # Get all bookings for this room that are reserved or in use
+        bookings = storage.all_get_by(Booking, room_id=room.id, is_reserve=True) + \
+                storage.all_get_by(Booking, room_id=room.id, is_use=True)
+
+        room_available = True
+
+        for booking in bookings:
+            if not (booking.checkout <= checkin_date or booking.checkin >= checkout_date):
+                # Booking overlaps with requested range
+                room_available = False
+                break
+
+        if room_available:
+            available_rooms += 1
+
+
+    return jsonify({"available_rooms": available_rooms}), 200
+

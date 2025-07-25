@@ -202,6 +202,9 @@ class Storage:
         """ Delete an instance of a class. """
         self.__session.delete(obj)
 
+    def flush(self):
+        self.__session.flush()
+
     def delete_many(self, obj_list):
         """ Delete multiple instance of a class. """
         for obj in obj_list:
