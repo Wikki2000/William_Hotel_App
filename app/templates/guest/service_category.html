@@ -34,7 +34,7 @@
         {% for item in items %}
         {% if item.get('qty_stock', 1) > 0 %}
         <div class="menu-card">
-          <div class="menu-name">{{ item.name }}</div>
+          <div class="menu-name">{{ item.name.upper() }}</div>
           <div class="menu-price">₦{{ "{:,.0f}".format(item.amount or 0) }}</div>
         </div>
         {% endif %}

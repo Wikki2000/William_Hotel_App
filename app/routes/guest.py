@@ -11,7 +11,7 @@ def get_unique_rooms_by_name(rooms):
     unique_rooms = []
 
     for room in rooms:
-        name = room.get("name")
+        name = room.get("name").lower()
         if name not in seen_names:
             unique_rooms.append(room)
             seen_names.add(name)

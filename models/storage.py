@@ -145,7 +145,7 @@ class Storage:
         column = getattr(cls, field)
         obj_list = self.__session.query(cls).filter(
             column.ilike(f"%{prefix}%")
-        ).all()[:1]
+        ).all()[:20]
         return obj_list
 
     def count_by(self, cls, **kwargs):

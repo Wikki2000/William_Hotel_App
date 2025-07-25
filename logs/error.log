@@ -2,3 +2,7 @@
 
 11:09 PM	2025-07-15	/api/v1/account/login	'NoneType' object has no attribute 'to_dict'
 
+12:05 PM	2025-07-17	/api/v1/account/login	email_or_username must be a valid string
+
+04:49 PM	2025-07-23	/api/v1/order-items	'NoneType' object has no attribute 'qty_stock'
+
