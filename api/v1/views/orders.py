@@ -53,7 +53,6 @@ def get_orders(user_role: str, user_id: str):
                 parameters["start_date"] = filter_param.get("start_date")
             if filter_param.get("end_date"):
                 parameters["end_date"] = filter_param.get("end_date")
-            print(parameters)
             orders = storage.all_get_by(Order, **parameters)
 
         elif search_string:
@@ -210,10 +209,14 @@ def update_status(user_role: str, user_id: str, order_id: str):
     elif order.is_paid:
         user_obj = order.cleared_by if order.cleared_by else order.ordered_by
 
-        name = (
-            "You" if user_id == order.cleared_by.id
-            else f"{user_obj.first_name} {user_obj.last_name}"
-        )
+        if (
+            order.cleared_by_id == user_id
+        ) or (
+            order.ordered_by_id == user_id
+        ):
+            name = "You"
+        else:
+            name = f"{user_obj.first_name} {user_obj.last_name}"
         return jsonify({"error": f"Bill Already Cleared by {name} !"}), 409
 
     order.is_paid = True
@@ -386,7 +389,7 @@ def order_items(user_role: str, user_id: str):
             customer_data["created_at"] = TODAY_DATE
             customer = Customer(**customer_data)
             storage.new(customer)
-            storage.save()
+            storage.flush()
 
         order_data["customer_id"] = customer.id
 
@@ -397,12 +400,13 @@ def order_items(user_role: str, user_id: str):
         })
         new_order = Order(**order_data)
         storage.new(new_order)
-        storage.save()
+        #storage.save()
+        storage.flush()
 
         # Generate receipt
         receipt = create_receipt("order_id", new_order.id)
         storage.new(receipt)
-        storage.save()
+        storage.flush()
 
         # Get or create sales entry for today
         item_sold = storage.get_by(Sale, entry_date=TODAY_DATE)
@@ -418,7 +422,10 @@ def order_items(user_role: str, user_id: str):
         for item in item_data:
             update_item_stock(item, customer, new_order, item_sold)
 
-        storage.save()
+        # Commit only if order has items
+        if not new_order.order_items:
+            return jsonify({"error": "Unable to process your order. Please try again."}), 422
+
         return jsonify({"order_id": new_order.id}), 200
 
     except ValueError as e:

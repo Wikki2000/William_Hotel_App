@@ -445,20 +445,18 @@ def check_reservation(obj_list, checkout_date, checkin_date, room_no):
 
     for booking in obj_list:
         booking_checkin_date = booking.checkin.strftime("%Y-%m-%d")
+        
 
         booking_checkout_date = booking.checkout.strftime("%Y-%m-%d")
-        if (
-                booking.is_reserve and
-                booking_checkin_date <= checkin_date or
-                booking_checkin_date < checkout_date
-            ):
-            msg = (
-                f"Room {room_no} already reserved for " +
-                f"{booking.customer.name} from {booking_checkin_date} to " +
-                f"{booking_checkout_date}. Please contact the management " +
-                "to cancel or adjust reservation date."
-            )
-            return {"error": msg}
+        if booking.is_reserve:
+            if not (booking_checkout_date <= checkin_date or booking_checkin_date >= checkout_date):
+                msg = (
+                    f"Room {room_no} already reserved for " +
+                    f"{booking.customer.name} from {booking_checkin_date} to " +
+                    f"{booking_checkout_date}. Please contact the management " +
+                    "to cancel or adjust reservation date."
+                )
+                return {"error": msg}
 
 
 # ===================================================================== #

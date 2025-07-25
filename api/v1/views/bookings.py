@@ -57,7 +57,6 @@ def update_booking_status(user_id: str, user_role: str, booking_id: str):
             book.room.status = "occupied"
             storage.save()
             return jsonify({"msg": "Booking Status Update Successfully"}), 200
-        """
         else:
             msg = (
                 "Guest can only be check-in during reservation duration " +
@@ -65,7 +64,6 @@ def update_booking_status(user_id: str, user_role: str, booking_id: str):
                 "management for change of date"
             )
             return jsonify({"error": msg}), 422
-        """
         
     except Exception as e:
         book.is_reserve = True
@@ -76,6 +74,7 @@ def update_booking_status(user_id: str, user_role: str, booking_id: str):
         error = f"{CURRENT_TIME}\t{TODAY_DATE}\t{api_path}\t{str(e)}\n\n"
         write_to_file(ERROR_LOG_FILE, error)
         return jsonify({"error": str(e)}), 500
+
     finally:
         storage.close()
 
@@ -399,7 +398,7 @@ def book_room(user_id: str, user_role: str):
         customer = Customer(**customer_data)
         storage.new(customer)
         customer.is_guest = True
-        storage.save()
+        storage.flush()
 
         book_attr = {
             "checkin": checkin_date, "checkout": checkout_date,
@@ -421,7 +420,7 @@ def book_room(user_id: str, user_role: str):
             storage.new(book)
             if not reserve_status:
                 room.status = "occupied"   # Cheange room status once book
-            storage.save()
+            storage.flush()
             booking_id_list.append(book.id)
 
             #current_hour = datetime.now().hour
@@ -455,6 +454,7 @@ def book_room(user_id: str, user_role: str):
             if room:
                 room.status = "available"
 
+            storage.rollback()
             storage.save()
             print(str(e))
             error = f"{CURRENT_TIME}\t{TODAY_DATE}\t{api_path}\t{str(e)}\n\n"
