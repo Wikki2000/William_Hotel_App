@@ -6,3 +6,13 @@
 
 04:49 PM	2025-07-23	/api/v1/order-items	'NoneType' object has no attribute 'qty_stock'
 
+04:30 PM	2025-07-25	/api/v1/orders/cf762d34-2255-413f-8791-0424232dd42f/order-items	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+04:46 PM	2025-07-25	/api/v1/orders/8422cf33-35de-419f-85cb-fcdf309375cd/order-items	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+07:23 PM	2025-07-25	/api/v1/orders/7f68ddbf-abf3-4528-9d57-9b8d2809a7c0/order-items	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+07:23 PM	2025-07-25	/api/v1/orders/7f68ddbf-abf3-4528-9d57-9b8d2809a7c0/order-items	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+10:34 PM	2025-07-25	/api/v1/orders/7524a30f-15ca-4a7a-b0e0-b63871ccb711/order-items	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+

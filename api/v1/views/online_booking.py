@@ -16,7 +16,7 @@ from models.booking import Booking
 import pytz
 
 
-PAYSTACK_SECRET_KEY = os.getenv('PAYSTACK_SECRET_KEY_TEST')
+PAYSTACK_SECRET_KEY = os.getenv('PAYSTACK_SECRET_KEY_LIVE')
 
 @api_views.route('/online/booking/initiate-payment', methods=['POST'])
 def start_payment():
