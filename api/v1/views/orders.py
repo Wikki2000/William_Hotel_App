@@ -426,6 +426,7 @@ def order_items(user_role: str, user_id: str):
         if not new_order.order_items:
             return jsonify({"error": "Unable to process your order. Please try again."}), 422
 
+        storage.save()
         return jsonify({"order_id": new_order.id}), 200
 
     except ValueError as e:
