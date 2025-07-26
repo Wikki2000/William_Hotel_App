@@ -80,6 +80,27 @@ def send_mail(
         return False
 
 
+def zoho_send_email(
+    sender_email, app_password, recipient, subject, body, mail_type="html"
+):
+    # Prepare the email content
+    try:
+        msg = MIMEText(body, mail_type)
+        msg["Subject"] = subject
+        msg["From"] = sender_email
+        msg["To"] = recipient
+
+        # Connect to Zoho SMTP and send the email
+        with smtplib.SMTP_SSL("smtp.zoho.com", 465) as server:
+            server.login(sender_email, app_password)
+            server.send_message(msg)
+        return True
+
+    except Exception as e:
+        print(str(e))
+        return  False
+
+
 def read_html_file(
         file_path: str, placeholders: Dict[Any, Any] = None
 ) -> str:

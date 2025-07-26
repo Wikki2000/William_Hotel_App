@@ -1,6 +1,6 @@
 import {
   bookingDuration, ajaxRequest, fetchData,
-  getFormDataAsDict, getBaseUrl, canadianDateFormat,
+  getFormDataAsDict, getBaseUrl, britishDateFormat,
 } from '../global/utils.js';
 
 $(document).ready(function () {
@@ -46,6 +46,8 @@ $(document).ready(function () {
       $("#guestName").text(data.name);
       $("#guestPhone").text(data.phone);
       $("#guestEmail").text(data.email);
+      $("#checkin").text(britishDateFormat(checkin));
+      $("#checkout").text(britishDateFormat(checkout));
 
       const modal = new bootstrap.Modal(document.getElementById("summaryModal"));
       modal.show();
