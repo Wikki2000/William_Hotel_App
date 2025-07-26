@@ -130,4 +130,21 @@ export async function loadDashbard() {
         console.error('Failed to fetch room data:', error);
       });
   }
+
+  // Auto fill if a guest is selected
+  const guestDataStr = sessionStorage.getItem('guestData');
+  if (guestDataStr) {
+    const guestData = JSON.parse(guestDataStr);
+    $('#main__guest-name').val(guestData.name);
+    $('#main__guest-phone').val(guestData.phone);
+    $('#main__guest-address').val(guestData.address);
+    $('#main__guest-email').val(guestData.email);
+    $('#main__id--no-val').val(guestData.id_numbe);
+
+    $('#main__guest--gender-val').val(guestData.gender);
+    $('#main__guest-gender span').text(guestData.gender);
+
+    $('#main__id--type-val').val(guestData.id_typ);
+    $('#main__guest-id--type span').text(guestData.id_typ);
+  }
 }

@@ -22,24 +22,27 @@
 <body>
   <div class="email-container">
     <div class="header">
-      <img src="https://williamscourthotel.com/static/images/logo.png" alt="Williams Court Hotel Logo">
+      <img src="https://www.wiventory.com/static/images/public/hotel_logo.png" alt="Williams Court Hotel Logo">
       <h1>Booking Confirmation</h1>
     </div>
     <div class="content">
-      <h2>Dear {{ guest_name }},</h2>
+      <h2>Dear [ guest_name ],</h2>
       <p>Thank you for booking with <strong class="highlight">Williams Court Hotel & Suites</strong>. Your reservation is confirmed.</p>
       
       <table class="details-table">
         <tr><th>Booking Reference:</th><td>{{ booking_reference }}</td></tr>
-        <tr><th>Room Type:</th><td>{{ room_type }}</td></tr>
-        <tr><th>Number of Rooms:</th><td>{{ number_of_rooms }}</td></tr>
-        <tr><th>Check-in Date:</th><td>{{ checkin_date }}</td></tr>
-        <tr><th>Check-out Date:</th><td>{{ checkout_date }}</td></tr>
-        <tr><th>Number of Guests:</th><td>{{ guest_count }}</td></tr>
-        <tr><th>Total Amount Paid:</th><td>₦{{ total_amount }}</td></tr>
+        <tr><th>Room Type:</th><td>[ room_type ]</td></tr>
+        <tr><th>Number of Rooms:</th><td>[ number_of_rooms ]</td></tr>
+        <tr><th>Check-in Date:</th><td>[ checkin_date ]</td></tr>
+        <tr><th>Check-out Date:</th><td>[ checkout_date ]</td></tr>
+        <tr><th>Total Amount Paid:</th><td>₦[ total_amount ]</td></tr>
       </table>
 
-      <p>If you have any questions or need assistance, email us at <a href="mailto:info@williamscourthotel.com">info@williamscourthotel.com</a> or call <strong>+234 800 123 4567</strong>.</p>
+      <p>
+        If you have any questions or need assistance, email us at 
+        <a href="mailto:support@williamscourthotel.com">support@williamscourthotel.com</a> or call 
+        <strong>+234 916 000 0188</strong>.
+      </p>
 
       <a href="https://williamscourthotel.com" class="btn">Visit Our Website</a>
     </div>
