@@ -395,18 +395,15 @@ def order_items(user_role: str, user_id: str):
 
         # Create new order
         order_data.update({
-            "ordered_by_id": user.id, 
-            #"created_at": TODAY_DATE
+            "ordered_by_id": user.id
         })
         new_order = Order(**order_data)
         storage.new(new_order)
-        #storage.save()
         storage.flush()
 
         # Generate receipt
         receipt = create_receipt("order_id", new_order.id)
         storage.new(receipt)
-        storage.flush()
 
         # Get or create sales entry for today
         item_sold = storage.get_by(Sale, entry_date=TODAY_DATE)
@@ -431,15 +428,15 @@ def order_items(user_role: str, user_id: str):
 
     except ValueError as e:
         storage.rollback()
-        rollback_order_on_error(new_order, item_sold, prev_sales)
-        storage.save()
+        #rollback_order_on_error(new_order, item_sold, prev_sales)
+        #storage.save()
         return jsonify({"error": str(e)}), 422
 
     except Exception as e:
         print(str(e))
-        rollback_order_on_error(new_order, item_sold, prev_sales)
+        #rollback_order_on_error(new_order, item_sold, prev_sales)
         storage.rollback()
-        storage.save()
+        #storage.save()
         error = f"{CURRENT_TIME}\t{TODAY_DATE}\t{api_path}\t{str(e)}\n\n"
         write_to_file(ERROR_LOG_FILE, error)
         return jsonify({"error": str(e)}), 500
