@@ -130,7 +130,7 @@ def payment_complete():
         customer.is_guest = True
         storage.flush()
 
-        user_id = "54db7b8f-8336-4c0c-8679-f7328a2663e0"
+        user_id = "7482d23a-3875-4f75-bbbb-d3107303f7d5"
 
         booking_id_list = []
         for room in rooms:

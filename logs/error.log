@@ -1,0 +1,74 @@
+10:54 PM	2025-07-27	/api/v1/orders/bb59b6e9-3f70-469e-a013-f4fc52817b1f/order-items	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+11:19 PM	2025-07-28	/api/v1/order-items	'NoneType' object has no attribute 'qty_stock'
+
+11:26 AM	2025-07-30	/api/v1/bookings/c5b321ab-527a-491b-8848-1f713c4d2750/booking-details	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+08:25 PM	2025-07-31	/api/v1/order-items	'NoneType' object has no attribute 'qty_stock'
+
+08:31 PM	2025-07-31	/api/v1/order-items	'NoneType' object has no attribute 'qty_stock'
+
+08:35 PM	2025-07-31	/api/v1/orders/f480b306-6264-411a-be0b-21f4b2b35806/order-items	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+02:08 PM	2025-08-01	/api/v1/orders/9e1c1f74-6384-4c97-b165-90814f804dbb/order-items	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+08:19 PM	2025-08-01	/api/v1/account/login	email_or_username must be a valid string
+
+08:19 PM	2025-08-01	/api/v1/account/login	email_or_username must be a valid string
+
+06:39 PM	2025-08-01	/api/v1/account/login	email_or_username must be a valid string
+
+06:39 PM	2025-08-01	/api/v1/account/login	email_or_username must be a valid string
+
+08:19 PM	2025-08-01	/api/v1/account/login	email_or_username must be a valid string
+
+06:50 PM	2025-08-01	/api/v1/account/login	email_or_username must be a valid string
+
+08:19 PM	2025-08-01	/api/v1/account/login	email_or_username must be a valid string
+
+08:19 PM	2025-08-01	/api/v1/account/login	email_or_username must be a valid string
+
+08:19 PM	2025-08-01	/api/v1/account/login	email_or_username must be a valid string
+
+08:19 PM	2025-08-01	/api/v1/account/login	email_or_username must be a valid string
+
+08:19 PM	2025-08-01	/api/v1/account/login	email_or_username must be a valid string
+
+06:50 PM	2025-08-01	/api/v1/account/login	email_or_username must be a valid string
+
+06:39 PM	2025-08-01	/api/v1/account/login	email_or_username must be a valid string
+
+06:50 PM	2025-08-01	/api/v1/account/login	email_or_username must be a valid string
+
+06:39 PM	2025-08-01	/api/v1/account/login	email_or_username must be a valid string
+
+06:50 PM	2025-08-01	/api/v1/account/login	email_or_username must be a valid string
+
+06:50 PM	2025-08-01	/api/v1/account/login	email_or_username must be a valid string
+
+06:50 PM	2025-08-01	/api/v1/account/login	email_or_username must be a valid string
+
+06:50 PM	2025-08-01	/api/v1/account/login	email_or_username must be a valid string
+
+08:19 PM	2025-08-01	/api/v1/account/login	email_or_username must be a valid string
+
+08:19 PM	2025-08-01	/api/v1/account/login	email_or_username must be a valid string
+
+08:19 PM	2025-08-01	/api/v1/account/login	email_or_username must be a valid string
+
+06:50 PM	2025-08-01	/api/v1/account/login	email_or_username must be a valid string
+
+06:50 PM	2025-08-01	/api/v1/account/login	email_or_username must be a valid string
+
+08:19 PM	2025-08-01	/api/v1/account/login	email_or_username must be a valid string
+
+09:04 AM	2025-08-03	/api/v1/bookings/["22ccf617-6fcc-411f-835f-8d737f97c7ec"]/multiple-bookings-details	'NoneType' object has no attribute 'room'
+
+08:12 PM	2025-08-03	/api/v1/order-items	'NoneType' object has no attribute 'qty_stock'
+
+08:13 PM	2025-08-03	/api/v1/order-items	'NoneType' object has no attribute 'qty_stock'
+
+10:42 PM	2025-08-03	/api/v1/orders/55738670-d497-4a9b-a450-c9679f535b1e/order-items	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+09:07 AM	2025-08-06	/api/v1/orders/3fd98a10-605d-4dbb-9930-15119a149d85/order-items	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
