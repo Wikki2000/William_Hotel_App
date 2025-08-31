@@ -21,6 +21,7 @@ function removeBtnHighlight() {
   $('#staff__list-btn').removeClass('highlight-btn');
   $('.staff__management-loan--history').removeClass('highlight-btn');
   $('.staff__management-leave-history').removeClass('highlight-btn');
+  $('.staff__management-former-staff').removeClass('highlight-btn');
 }
 
 $(document).ready(function() {
