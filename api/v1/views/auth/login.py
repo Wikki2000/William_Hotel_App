@@ -61,7 +61,7 @@ def login():
 
         user = login_user(email_or_username)
 
-        if not user or not user.check_password(password):
+        if not user or not user.check_password(password) or user.is_delete:
             return jsonify({"error": "Invalid email or password"}), 401
 
         user.is_active = True

@@ -72,3 +72,9 @@
 
 09:07 AM	2025-08-06	/api/v1/orders/3fd98a10-605d-4dbb-9930-15119a149d85/order-items	404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
 
+03:22 PM	2025-08-31	/api/v1/account/login	'User' object has no attribute 'is_delete'
+
+03:22 PM	2025-08-31	/api/v1/account/login	'User' object has no attribute 'is_delete'
+
+03:22 PM	2025-08-31	/api/v1/account/login	'User' object has no attribute 'is_delete'
+

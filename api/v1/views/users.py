@@ -41,7 +41,10 @@ def get_rosters(user_role: str, user_id: str):
 @api_views.route("/users")
 @role_required(["staff", "admin", "manager"])
 def get_users(user_role: str, user_id: str):
-    users = storage.all(User).values()
+    is_delete = request.args.get('is_delete')
+    
+    bools = {"true": True, "false": False}
+    users = storage.all_get_by(User, is_delete=bools[is_delete])
     if not users:
         return jsonify([]), 200
 

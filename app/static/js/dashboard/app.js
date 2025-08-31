@@ -368,7 +368,7 @@ $(document).ready(function() {
         const url = APP_BASE_URL + '/pages/staff_management';
         $('#dynamic__load-dashboard').load(url, function() {
 
-          const userUrl = API_BASE_URL + '/users';
+          const userUrl = API_BASE_URL + '/users?is_delete=false';
           fetchData(userUrl)
             .then((response) => {
               response.forEach((data) => {
