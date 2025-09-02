@@ -28,6 +28,9 @@ from dateutil.relativedelta import relativedelta
 from api.v1.views import constant
 from sqlalchemy import case, func, and_
 
+import smtplib
+from email.mime.text import MIMEText
+from email.message import EmailMessage
 
 r = Redis(host="localhost", port=6379, db=0)  # Create Redis instance
 load_dotenv()   # Load environ variables

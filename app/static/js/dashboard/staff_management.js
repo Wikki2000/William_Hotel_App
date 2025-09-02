@@ -502,4 +502,41 @@ $(document).ready(function() {
     );
   });
 
+  $('#dynamic__load-dashboard').on('submit', '#invite__new-staff', function(e) {
+    e.preventDefault();
+    const $formElement = $(this);
+    const data = getFormDataAsDict($formElement);
+
+    const staffInvite = API_BASE_URL + "/users/staff-invites";
+    $('#settings-modal-overlay').fadeOut(200);
+    ajaxRequest(staffInvite, 'POST', JSON.stringify(sanitizeInput(data)),
+      (response) => {
+        showNotification('Staff invitation link sent successfully.');
+      },
+      (error) => {
+        showNotification('Oops! An Error Ocured, Try Again !', true);
+      }
+    );
+  });
+
+  $('body').on('submit', '#staff__reg-form', function(e) {
+    e.preventDefault();
+    const $formElement = $(this);
+    const data = getFormDataAsDict($formElement);
+
+    const addStaffUrl = API_BASE_URL + "/staff/register";
+    ajaxRequest(addStaffUrl, 'POST', JSON.stringify(sanitizeInput(data)),
+      (response) => {
+        alert("Registration successful! Please proceed to log in.");
+      },
+      (error) => {
+        if (error.status === 409) {
+          alert("User already exists. Please try a different email.");
+        } else {
+        showNotification('Oops! An Error Ocured, Try Again !', true);
+        }
+      }
+    );
+  });
+
 });

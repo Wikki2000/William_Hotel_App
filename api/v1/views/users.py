@@ -3,9 +3,15 @@
 from models.user import User
 from flask import abort, jsonify, request
 from api.v1.views import api_views
-from api.v1.views.utils import bad_request, role_required, convert_to_binary
+from api.v1.views.utils import (
+    bad_request, role_required, convert_to_binary,
+    read_html_file, send_mail, zoho_send_email
+)
 from models import storage
 from sqlalchemy.exc import IntegrityError
+
+import os, jwt, secrets
+from datetime import datetime, timedelta
 
 
 @api_views.route("/members/<string:member_id>")
@@ -167,3 +173,102 @@ def reset_password(user_role: str, user_id: str):
     user.hash_password()
     storage.save()
     return jsonify({"message": "Password Updated Successfully"}), 200
+
+
+JWT_SECRET = os.environ["JWT_SECRET_KEY"]
+
+
+@api_views.route("/staff/register", methods=["POST"])
+def add_staff():
+    """Add new user."""
+    data = request.get_json()
+    try:
+        required_fields = ["email", "first_name", "last_name", "portfolio"]
+        error_response = bad_request(data, required_fields)
+        if error_response:
+            return jsonify(error_response), 400
+
+        # Add a default password oncce user is created
+        data.update({"role": "staff", "rank_number": 40, "performance": 50})
+
+        user = User(**data)
+        user.hash_password()
+        storage.new(user)
+        storage.save()
+        subject = f"New Staff Registration: {user.first_name} {user.last_name}"
+        body = f"""
+        Hello Management,
+
+        A new staff member has successfully registered.
+
+        Name: {user.first_name} {user.last_name}
+        Email: {user.email}
+        Role: {user.role}
+        Portfolio: {user.portfolio}
+
+        Best regards,
+        Williams Court Hotel Team
+        """
+        admin = storage.get_by(User, role="admin")
+        app_password = os.getenv("MAIL_PASSWORD")
+        sender_email = "info@williamscourthotel.com"
+        zoho_send_email(sender_email, app_password, admin.email, subject, body, "plain")
+        return jsonify({"message": "Registration Successfully."}), 200
+    except IntegrityError as e:
+        return jsonify({"error": "User Exist's Already"}), 409
+    except Exception as e:
+        print(str(e))
+        abort(500)
+    finally:
+        storage.close()
+
+
+@api_views.route("/users/staff-invites", methods=["POST"])
+def create_invite():
+    data = request.get_json()
+    required_fields = ["email"]
+    error_response = bad_request(data, required_fields)
+    if error_response:
+        print(error_response)
+        return jsonify(error_response), 400
+
+    # Generate token
+    jti = secrets.token_hex(16)
+    exp = datetime.utcnow() + timedelta(hours=2)
+    payload = {"jti": jti, "exp": exp}
+    token = jwt.encode(payload, JWT_SECRET, algorithm="HS256")
+
+    FRONTEND_URL = "https://williamscourthotel.com/app/staff/register"
+    link = f"{FRONTEND_URL}?token={token}"
+
+    # Email setup
+    recipient = data["email"]
+    subject = "[William's Court Hotel] Staff Invitation – Activate Your Account"
+    app_password = os.getenv("MAIL_PASSWORD")
+    sender_email = "support@williamscourthotel.com"
+
+    # Email body
+    body = f"""
+    Hello {data.get("name") or "Staff Member"},
+
+    You’ve been invited to join the William's Court Hotel Staff Portal. 
+    This portal gives you access to tools and resources for managing bookings, services, and daily operations.
+
+    To activate your account and get started, please click the link below:
+
+    👉 {link}
+
+    If the link doesn’t work, copy and paste it into your browser.
+
+    For security reasons, this link will expire in 2 hours. 
+    If you didn’t expect this invitation, please ignore this email.
+
+    Best regards,
+    William's Court Hotel Team
+    """
+    zoho_send_email(sender_email, app_password, recipient, subject, body, "plain")
+
+    return jsonify({
+        "link": link,
+        "expiresAt": exp.isoformat()
+    }), 201

@@ -185,6 +185,14 @@ $(document).ready(function() {
         link.click();
       });
 
+    } else if (title === "Invite New Staff") {
+      $('#modal-content').html(`
+        <form id="invite__new-staff">
+          <label>Staff Email:</label><br>
+          <input type="email" required name="email"/><br><br>
+          <button style="background: orange; color: white; padding: 8px 12px; border: none; border-radius: 5px;">Send Invite Link</button>
+        </form>
+      `);
     } else {
       return;
       $('#modal-content').text(title + " COMING SOON");
